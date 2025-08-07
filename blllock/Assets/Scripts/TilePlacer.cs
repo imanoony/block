@@ -4,51 +4,46 @@ using System.IO;
 
 public class TilePlacer : MonoBehaviour
 {
-    public string csvFileName = "Data.csv"; // Resources 기준
+    
     public GameObject tilePrefab;
 
-    private Dictionary<int, DataParser.RowData> gridDataById;
-
-    private void Awake()
-    {
-        LoadGridData();
-    }
 
     void Start()
     {
-        PlaceTilesForID(3); // 예시로 ID 3에 해당하는 타일을 배치
-    }
-
-    private void LoadGridData()
-    {
-        string filePath = Path.Combine(Application.dataPath, "Data", csvFileName);
-        List<DataParser.RowData> rows = DataParser.ParseCSV(filePath);
-
-        gridDataById = new Dictionary<int, DataParser.RowData>();
-
-        foreach (var row in rows)
-        {
-            if (row.TryGetInt("ID", out int id))
-            {
-                gridDataById[id] = row;
-            }
-        }
+        PlaceTilesForID(4); // 예시로 ID 3에 해당하는 타일을 배치
     }
 
     public bool PlaceTilesForID(int id)
     {
-        if (!gridDataById.ContainsKey(id))
+        if (!GridManager.GridData.ContainsKey(id))
         {
             Debug.LogWarning($"ID {id}에 해당하는 데이터가 없습니다.");
             return false;
         }
 
-        var row = gridDataById[id];
+        var row = GridManager.GridData[id];
 
         if (!row.TryGetInt("Width", out int width) || !row.TryGetInt("Height", out int height))
         {
             Debug.LogError($"ID {id}의 Width/Height 파싱 실패");
             return false;
+        }
+
+        // Grid point initialization and setup
+        GridManager.InitGridPoint(width, height);
+        GridPoint gridPoint;
+
+        foreach (var (pos, expr) in row.Inputs)
+        {
+            gridPoint = GridManager.GetGridPoint(pos.x, pos.y);
+            gridPoint.Type = GridPointType.Input;
+            gridPoint.Expr = expr;
+        }
+        foreach (var (pos, expr) in row.Outputs)
+        {
+            gridPoint = GridManager.GetGridPoint(pos.x, pos.y);
+            gridPoint.Type = GridPointType.Output;
+            gridPoint.Expr = expr;
         }
 
         float xOffset = (width - 1) * Utils.TILE_SPACING / (2f * Utils.DENOMINATOR);
@@ -68,6 +63,18 @@ public class TilePlacer : MonoBehaviour
             }
         }
 
+
+        // check if the grid points are set correctly
+        foreach (var (pos, _) in row.Inputs)
+        {
+            gridPoint = GridManager.GetGridPoint(pos.x, pos.y);
+            Debug.Log($"Input Tile at ({pos.x}, {pos.y}): Type = {gridPoint.Type}, Expr = {gridPoint.Expr}");
+        }
+        foreach (var (pos, _) in row.Outputs)
+        {
+            gridPoint = GridManager.GetGridPoint(pos.x, pos.y);
+            Debug.Log($"Output Tile at ({pos.x}, {pos.y}): Type = {gridPoint.Type}, Expr = {gridPoint.Expr}");
+        }
 
         return true;
     }
