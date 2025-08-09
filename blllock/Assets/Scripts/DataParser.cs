@@ -91,7 +91,7 @@ public static class DataParser
         private static LogicExpr ParseOr()
         {
             var operands = new List<LogicExpr> { ParseAnd() };
-            while (Match('*'))
+            while (Match('+'))
             {
                 operands.Add(ParseAnd());
             }
@@ -102,7 +102,7 @@ public static class DataParser
         private static LogicExpr ParseAnd()
         {
             var operands = new List<LogicExpr> { ParsePrimary() };
-            while (Match('+'))
+            while (Match('*'))
             {
                 operands.Add(ParsePrimary());
             }
