@@ -12,7 +12,7 @@ public class TilePlacer : MonoBehaviour
 
     void Start()
     {
-        PlaceTilesForID(4); // 예시로 ID 3에 해당하는 타일을 배치
+        PlaceTilesForID(5); // 예시로 ID 3에 해당하는 타일을 배치
     }
 
     public bool PlaceTilesForID(int id)
@@ -105,17 +105,56 @@ public class TilePlacer : MonoBehaviour
         GameObject gpObj = Instantiate(gridPrefab, finalPos, Quaternion.identity, transform);
         gpObj.name = $"GridPoint_{pos.x}_{pos.y}";
 
+        Color color = Color.white;
+        string colorCode = gridPoint.Type == GridPointType.Input ? Utils.RED : Utils.BLUE;
+        if (gridPoint.Expr is ConstantExpr) colorCode = Utils.BLACK;
+
+        if (!ColorUtility.TryParseHtmlString(colorCode, out color))
+        {
+            Debug.LogWarning($"Invalid color code: {colorCode}");
+            color = Color.white;
+        }
+
         var sr = gpObj.GetComponentInChildren<SpriteRenderer>();
         if (sr != null)
         {
-            sr.color = gridPoint.Type == GridPointType.Input ? Color.red : Color.blue;
+            sr.color = color;
         }
 
         var tmp = gpObj.GetComponentInChildren<TMPro.TextMeshPro>();
         if (tmp != null)
         {
             tmp.text = gridPoint.Expr.ToString();
-            tmp.color = gridPoint.Type == GridPointType.Input ? Color.red : Color.blue;
+            tmp.color = color;
+
+            // 중앙 위치 (world 좌표)
+            float centerX = origin.x + (width - 1) * Utils.TILE_SPACING / (2f * Utils.DENOMINATOR);
+            float centerY = origin.y - (height - 1) * Utils.TILE_SPACING / (2f * Utils.DENOMINATOR);
+            Vector3 centerPos = new Vector3(centerX, centerY, 0);
+
+            // 방향 벡터 (중앙 → 원)
+            Vector3 dir = (finalPos - centerPos).normalized;
+
+            // 가장자리 여부 판단
+            bool isEdge = pos.x == 0 || pos.x == height || pos.y == 0 || pos.y == width;
+            if (isEdge)
+            {
+                dir = Vector3.zero;
+                if (pos.x == 0) dir += Vector3.up;
+                if (pos.x == height) dir += Vector3.down;
+                if (pos.y == 0) dir += Vector3.left;
+                if (pos.y == width) dir += Vector3.right;
+                dir = dir.normalized;
+            }
+
+            // 텍스트 길이(폭)만큼 spacing 보정
+            tmp.ForceMeshUpdate();
+            float widthAdjust = tmp.preferredWidth * 0.5f * tmp.transform.lossyScale.x;
+            float spacing = Utils.GRID_TEXT_SPACING / (float)Utils.DENOMINATOR;
+            Vector3 textPos = finalPos + dir * (spacing + widthAdjust);
+
+            // 텍스트 로컬 위치 = 텍스트 world 위치 - circle world 위치
+            tmp.transform.localPosition = textPos - finalPos;
         }
     }
 }
