@@ -9,7 +9,6 @@ public class TilePlacer : MonoBehaviour
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private GameObject gridPrefab;
 
-
     void Start()
     {
         PlaceTilesForID(5); // 예시로 ID 3에 해당하는 타일을 배치
@@ -30,6 +29,9 @@ public class TilePlacer : MonoBehaviour
             Debug.LogError($"ID {id}의 Width/Height 파싱 실패");
             return false;
         }
+
+        // Tiles initialization
+        GridManager.InitTiles(width, height);
 
         // Grid point initialization and setup
         GridManager.InitGridPoint(width, height);
