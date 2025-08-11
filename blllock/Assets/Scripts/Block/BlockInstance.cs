@@ -14,6 +14,7 @@ public class BlockInstance : MonoBehaviour
     private void SetupVisuals()
     {
         GetComponent<SpriteRenderer>().sprite = property.Sprite;
+        GetComponent<PortPositioner>().PositionPorts(property);
     }
 
     public void BeginDrag()

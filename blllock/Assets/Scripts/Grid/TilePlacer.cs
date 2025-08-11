@@ -11,7 +11,7 @@ public class TilePlacer : MonoBehaviour
 
     void Start()
     {
-        PlaceTilesForID(5); // 예시로 ID 3에 해당하는 타일을 배치
+        PlaceTilesForID(4); // 예시로 ID 3에 해당하는 타일을 배치
     }
 
     public bool PlaceTilesForID(int id)

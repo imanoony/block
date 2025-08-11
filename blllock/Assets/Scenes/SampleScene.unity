@@ -137,7 +137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &217507950
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -229,7 +229,11 @@ MonoBehaviour:
     - {x: 0, y: 2}
     - {x: 1, y: 0}
     - {x: 2, y: 0}
+    Grid: []
+    Ports: []
     Sprite: {fileID: 6093172502660832412, guid: 5bdd2b907e59a2a42a1a8627e1e62b2c, type: 3}
+    IsFlipped: 0
+    Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
 --- !u!61 &217507953
 BoxCollider2D:
@@ -289,6 +293,7 @@ GameObject:
   - component: {fileID: 369208050}
   - component: {fileID: 369208052}
   - component: {fileID: 369208053}
+  - component: {fileID: 369208054}
   m_Layer: 0
   m_Name: block1_0
   m_TagString: Untagged
@@ -385,7 +390,21 @@ MonoBehaviour:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
     - {x: 1, y: 1}
+    Grid:
+    - {x: 0, y: 0}
+    - {x: 0, y: 2}
+    - {x: 1, y: 0}
+    - {x: 2, y: 1}
+    - {x: 2, y: 2}
+    Ports:
+    - Name: A
+    - Name: B
+    - Name: C
+    - Name: D
+    - Name: E
     Sprite: {fileID: 135982579003634019, guid: 469d3a917c181b342b3ba42bc89fddea, type: 3}
+    IsFlipped: 0
+    Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
 --- !u!61 &369208053
 BoxCollider2D:
@@ -433,6 +452,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.32, y: 0.32}
   m_EdgeRadius: 0
+--- !u!114 &369208054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 369208049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b5ad1f07f789cf46a3ab313dabcb59c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portPrefab: {fileID: 8911687307832093218, guid: 6eee64277162bc346b5ae1211c5f7e8c, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,6 +660,7 @@ GameObject:
   - component: {fileID: 1307555139}
   - component: {fileID: 1307555141}
   - component: {fileID: 1307555142}
+  - component: {fileID: 1307555143}
   m_Layer: 0
   m_Name: block2_0
   m_TagString: Untagged
@@ -725,7 +758,19 @@ MonoBehaviour:
     - {x: 0, y: 1}
     - {x: 1, y: 0}
     - {x: 1, y: 1}
+    Grid:
+    - {x: 0, y: 0}
+    - {x: 0, y: 2}
+    - {x: 2, y: 0}
+    - {x: 2, y: 2}
+    Ports:
+    - Name: A
+    - Name: B
+    - Name: C
+    - Name: D
     Sprite: {fileID: -4356277896208165297, guid: 14e4ba031ce9dbc4bbee9b684732b367, type: 3}
+    IsFlipped: 0
+    Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
 --- !u!61 &1307555142
 BoxCollider2D:
@@ -773,6 +818,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.32, y: 0.32}
   m_EdgeRadius: 0
+--- !u!114 &1307555143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307555138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b5ad1f07f789cf46a3ab313dabcb59c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portPrefab: {fileID: 8911687307832093218, guid: 6eee64277162bc346b5ae1211c5f7e8c, type: 3}
 --- !u!1 &1362661796
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,6 +843,7 @@ GameObject:
   - component: {fileID: 1362661797}
   - component: {fileID: 1362661799}
   - component: {fileID: 1362661800}
+  - component: {fileID: 1362661801}
   m_Layer: 0
   m_Name: block3_0
   m_TagString: Untagged
@@ -883,7 +942,23 @@ MonoBehaviour:
     - {x: 1, y: 1}
     - {x: 2, y: 0}
     - {x: 2, y: 1}
+    Grid:
+    - {x: 0, y: 0}
+    - {x: 0, y: 2}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 3, y: 0}
+    - {x: 3, y: 2}
+    Ports:
+    - Name: a
+    - Name: ab
+    - Name: b
+    - Name: b
+    - Name: a
+    - Name: ab
     Sprite: {fileID: -8567008635747675834, guid: 852ffef727b4a09478d91902d4268a88, type: 3}
+    IsFlipped: 0
+    Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
 --- !u!61 &1362661800
 BoxCollider2D:
@@ -931,6 +1006,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.32, y: 0.48}
   m_EdgeRadius: 0
+--- !u!114 &1362661801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362661796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b5ad1f07f789cf46a3ab313dabcb59c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portPrefab: {fileID: 8911687307832093218, guid: 6eee64277162bc346b5ae1211c5f7e8c, type: 3}
 --- !u!1 &1895555903
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,7 +1082,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1962319754
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1086,7 +1174,11 @@ MonoBehaviour:
     - {x: 1, y: 0}
     - {x: 1, y: 1}
     - {x: 2, y: 0}
+    Grid: []
+    Ports: []
     Sprite: {fileID: -2786479164405747103, guid: f778ed74a319c8d42953b7d18db1280b, type: 3}
+    IsFlipped: 0
+    Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
 --- !u!61 &1962319757
 BoxCollider2D:

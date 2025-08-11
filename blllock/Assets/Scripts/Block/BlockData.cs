@@ -2,25 +2,39 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum Rotate
+{
+    None = 0,
+    Rotate90 = 90,
+    Rotate180 = 180,
+    Rotate270 = 270
+}
+
 [System.Serializable]
 public class BlockData
 {
     public int ID;
     public Vector2Int Size; // (height, width)
     public List<Vector2Int> Tile; // 블록 형태 타일 위치 리스트
-    public Dictionary<Vector2Int, LogicExpr> Grid; // 각 타일 위치별 LogicExpr (포트 포함)
-    public List<PortExpr> Ports; // 포트 리스트
+    public List<Vector2Int> Grid; // 포트 위치 리스트 (Ports와 인덱스 동기화)
+    public List<PortExpr> Ports; // 포트 리스트 (Grid와 인덱스 동기화)
+    public List<LogicExpr> Substs; // 치환된 포트 리스트 (Ports와 인덱스 동기화)
     public Sprite Sprite; // 블록 스프라이트
+    public bool IsFlipped; // 블록이 뒤집혔는지 여부
+    public Rotate Rotation; // 블록의 회전 상태
+
 
     // 포트 ID -> LogicExpr 매핑 (런타임 변경 가능)
     public Dictionary<int, LogicExpr> PortDict;
 
-    public BlockData()
+    public void Init()
     {
-        Tile = new List<Vector2Int>();
-        Grid = new Dictionary<Vector2Int, LogicExpr>();
-        Ports = new List<PortExpr>();
-        PortDict = new Dictionary<int, LogicExpr>();
+        Tile ??= new List<Vector2Int>();
+        Grid ??= new List<Vector2Int>();
+        Ports ??= new List<PortExpr>();
+        PortDict ??= new Dictionary<int, LogicExpr>();
+
+        Substs = new List<LogicExpr>(Ports);
     }
 
     // 새 포트 매핑 시도 (같은 포트에 기존 매핑과 다르면 모순)
@@ -39,10 +53,9 @@ public class BlockData
         PortDict[portId] = expr;
 
         // Grid 내 해당 포트 표현 치환 (포트 매핑 반영)
-        var keys = new List<Vector2Int>(Grid.Keys);
-        foreach (var pos in keys)
+        for (int i = 0; i < Substs.Count; i++)
         {
-            Grid[pos] = ReplacePortExprRecursive(Grid[pos], portId, expr);
+            Substs[i] = ReplacePortExprRecursive(Substs[i], portId, expr);
         }
 
         return true;

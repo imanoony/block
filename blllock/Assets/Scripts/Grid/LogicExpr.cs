@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 
+[Serializable]
 public abstract class LogicExpr : IEquatable<LogicExpr>, IComparable<LogicExpr>
 {
     public abstract override string ToString();
@@ -20,12 +21,13 @@ public abstract class LogicExpr : IEquatable<LogicExpr>, IComparable<LogicExpr>
 }
 
 // PortExpr
+[Serializable]
 public class PortExpr : LogicExpr
 {
-    public string Name { get; private set; }
+    public string Name;
     public PortExpr(string name) => Name = name;
 
-    public override string ToString() => $"[{Name}]";
+    public override string ToString() => $"{Name.ToLower()}";
 
     public override bool Equals(LogicExpr other)
     {
@@ -43,9 +45,10 @@ public class PortExpr : LogicExpr
 }
 
 // ConstantExpr
+[Serializable]
 public class ConstantExpr : LogicExpr
 {
-    public bool Value { get; private set; }
+    public bool Value;
     public ConstantExpr(bool value) => Value = value;
 
     public override string ToString() => Value ? "1" : "0";
@@ -66,9 +69,10 @@ public class ConstantExpr : LogicExpr
 }
 
 // VarExpr
+[Serializable]
 public class VarExpr : LogicExpr
 {
-    public string Name { get; private set; }
+    public string Name;
     public VarExpr(string name) => Name = name;
 
     public override string ToString() => Name;
@@ -89,9 +93,10 @@ public class VarExpr : LogicExpr
 }
 
 // NotExpr
+[Serializable]
 public class NotExpr : LogicExpr
 {
-    public LogicExpr Inner { get; private set; }
+    public LogicExpr Inner;
     public NotExpr(LogicExpr inner) => Inner = inner;
 
     public override string ToString()
@@ -117,9 +122,10 @@ public class NotExpr : LogicExpr
 }
 
 // AndExpr (순서 무시 비교)
+[Serializable]
 public class AndExpr : LogicExpr
 {
-    public List<LogicExpr> Operands { get; private set; }
+    public List<LogicExpr> Operands;
 
     public AndExpr(List<LogicExpr> operands)
     {
@@ -187,9 +193,10 @@ public class AndExpr : LogicExpr
 }
 
 // OrExpr (순서 무시 비교)
+[Serializable]
 public class OrExpr : LogicExpr
 {
-    public List<LogicExpr> Operands { get; private set; }
+    public List<LogicExpr> Operands;
 
     public OrExpr(List<LogicExpr> operands)
     {
