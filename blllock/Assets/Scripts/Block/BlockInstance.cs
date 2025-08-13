@@ -4,9 +4,15 @@ public class BlockInstance : MonoBehaviour
 {
     private BlockData property;
     private bool isDragging = false;
+    private PortPositioner portPositioner;
 
     public void Initialize(BlockData prop)
     {
+        if (prop == null)
+        {
+            Debug.LogError("BlockData cannot be null");
+            return;
+        }
         property = prop;
         SetupVisuals();
     }
@@ -14,7 +20,8 @@ public class BlockInstance : MonoBehaviour
     private void SetupVisuals()
     {
         GetComponent<SpriteRenderer>().sprite = property.Sprite;
-        GetComponent<PortPositioner>().PositionPorts(property);
+        portPositioner = GetComponent<PortPositioner>();
+        portPositioner.PositionPorts(property);
     }
 
     public void BeginDrag()
@@ -48,10 +55,12 @@ public class BlockInstance : MonoBehaviour
         Vector2Int? snapPos = GridManager.GetNearestGridPosition(
             transform.position - new Vector3(blockWidth / 2f * unit, (-1) * blockHeight / 2f * unit, 0));
 
-        if (snapPos != null && GridManager.PlaceBlock((Vector2Int)snapPos, property.Tile))
+        if (snapPos != null && GridManager.PlaceBlock(property, (Vector2Int)snapPos, property.Tile))
         {
             Vector3 topLeftPos = GridManager.GridToWorld(snapPos.Value);
             transform.position = topLeftPos + new Vector3(blockWidth / 2f * unit, (-1) * blockHeight / 2f * unit, 0);
+
+            portPositioner.UpdateText(property); // 포트 텍스트 업데이트
         }
         else
         {

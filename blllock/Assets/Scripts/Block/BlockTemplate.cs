@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockTemplate : MonoBehaviour
@@ -23,7 +24,20 @@ public class BlockTemplate : MonoBehaviour
     {
         var instanceObj = Instantiate(blockInstancePrefab);
         var instanceScript = instanceObj.GetComponent<BlockInstance>();
-        instanceScript.Initialize(property);
+        BlockData blockData = new BlockData
+        {
+            ID = property.ID,
+            Size = property.Size,
+            Tile = new List<Vector2Int>(property.Tile),
+            Grid = new List<Vector2Int>(property.Grid),
+            Port = new List<LogicExpr>(property.Port),
+            Sprite = property.Sprite,
+            IsFlipped = property.IsFlipped,
+            Rotation = property.Rotation,
+            portExprs = new List<PortExpr>(property.portExprs),
+        };
+        blockData.Init(); // 초기화
+        instanceScript.Initialize(blockData);
 
         // 드래그 상태 시작
         instanceScript.BeginDrag();

@@ -41,7 +41,11 @@ public class ConstantExpr : LogicExpr
     public override string ToString() => Value ? "1" : "0";
     public override bool Equals(LogicExpr other)
     {
-        return other is ConstantExpr c && Value == c.Value;
+        if (other is NotExpr not && not.Inner is NotExpr innerNot)
+        {
+            return innerNot.Inner is ConstantExpr c && Value == c.Value;
+        }
+        return other is ConstantExpr oc && Value == oc.Value;
     }
     public override int GetHashCode() => Value.GetHashCode();
 }
@@ -56,7 +60,11 @@ public class VarExpr : LogicExpr
     public override string ToString() => Name;
     public override bool Equals(LogicExpr other)
     {
-        return other is VarExpr v && Name == v.Name;
+        if (other is NotExpr not && not.Inner is NotExpr innerNot)
+        {
+            return innerNot.Inner is VarExpr v && Name == v.Name;
+        }
+        return other is VarExpr ov && Name == ov.Name;
     }
     public override int GetHashCode() => Name.GetHashCode();
 }

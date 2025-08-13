@@ -25,8 +25,7 @@ public class BlockData
     public Rotate Rotation; // 블록의 회전 상태
 
     // Port <-> LogicExpr 매핑을 위한 변수
-    private List<List<int>> map; // portExprs -> 해당 포트 변수가 들어 있는 Port index 리스트
-    private List<PortExpr> portExprs; // 단위 포트 변수만 있는 리스트
+    public List<PortExpr> portExprs; // 단위 포트 변수만 있는 리스트
     private Dictionary<int, LogicExpr> portDict; // 포트 ID -> LogicExpr 매핑 (런타임 변경 가능)
 
     public void Init()
@@ -38,57 +37,38 @@ public class BlockData
         portExprs ??= new List<PortExpr>();
         portDict ??= new Dictionary<int, LogicExpr>();
 
-        InitMap();
+        for (int i = 0; i < Port.Count; i++) InitPortExprsRecursive(Port[i]);
     }
 
-    private void InitMap() {
-        map = new List<List<int>>(portExprs.Count);
-        for (int i = 0; i < portExprs.Count; i++)
-        {
-            for (int j = 0; j < Port.Count; j++)
-            {
-                if (ContainsPortExpr(Port[j], portExprs[i])) map[i].Add(j);
-            }
-        }
-    }
-
-    public bool IsCompleted(int portIndex)
+    private void InitPortExprsRecursive(LogicExpr expr)
     {
-        for (int i = 0; i < map.Count; i++) // i is portId
-        {
-            if (map[i].Contains(portIndex))
-            {
-                if (portDict.ContainsKey(i)) continue;
-                else return false;
-            }
-        }
-        return true;
-    }
-
-    private bool ContainsPortExpr(LogicExpr expr, PortExpr portExpr)
-    {
-        if (expr is PortExpr port)
-        {
-            return port.Equals(portExpr);
-        }
+        if (expr is PortExpr) portExprs.Add((PortExpr)expr);
         else if (expr is NotExpr not)
         {
-            return ContainsPortExpr(not.Inner, portExpr);
+            InitPortExprsRecursive(not.Inner);
         }
         else if (expr is AndExpr and)
         {
-            return and.Operands.Any(op => ContainsPortExpr(op, portExpr));
+            foreach (var operand in and.Operands)
+            {
+                InitPortExprsRecursive(operand);
+            }
         }
         else if (expr is OrExpr or)
         {
-            return or.Operands.Any(op => ContainsPortExpr(op, portExpr));
+            foreach (var operand in or.Operands)
+            {
+                InitPortExprsRecursive(operand);
+            }
         }
-        return false;
     }
 
     // 새 포트 매핑 시도 (같은 포트에 기존 매핑과 다르면 모순)
     public bool AddPortMapping(int portIndex, LogicExpr expr)
     {
+        List<LogicExpr> backupPort = new List<LogicExpr>(Port); // 백업
+        Dictionary<int, LogicExpr> backupDict = new Dictionary<int, LogicExpr>(portDict); // 백업
+
         if (portIndex < 0 || portIndex >= Port.Count)
         {
             Debug.LogWarning($"Invalid port index: {portIndex}");
@@ -98,123 +78,146 @@ public class BlockData
         // Port 리스트 내 해당 LogicExpr
         var targetExpr = Port[portIndex];
 
-        // 해당 포트가 완전히 논리식으로 채워져 있는 경우
-        if (IsCompleted(portIndex))
-        {
-            if (targetExpr.Equals(expr)) return true;
-            else
-            {
-                Debug.LogWarning($"[BlockData] Contradiction: PortExpr {portIndex} already has a different expr.");
-                return false;
-            }
-        }
-
-        // 해당 포트에 포트식이 남아 있는 경우
-        // 조건 분기로 처리
-        Dictionary<int, LogicExpr> backup = new Dictionary<int, LogicExpr>(portDict); // 백업
         LogicExpr subst = ReplacePortExprRecursive(targetExpr, expr);
         if (subst == null)
         {
-            Debug.LogWarning($"[BlockData] Failed to replace PortExpr {portIndex} with {expr}");
-            portDict = backup; // 백업으로 복원
+            Debug.LogWarning($"[BlockData] Failed to replace Port {portIndex} with {expr}");
+            Port = backupPort; // 백업으로 복원
+            portDict = backupDict; // 백업으로 복원
             return false; // 교체 실패
         }
         Port[portIndex] = subst; // 포트 업데이트
-        
 
-        if (!ReplacePortExprRecursive(targetExpr, expr))
+        for (int i = 0; i < Port.Count; i++)
         {
-            Debug.LogWarning($"[BlockData] Failed to replace PortExpr {portIndex} with {expr}");
-            return false; // 교체 실패
+            Port[i] = SynchronizePort(Port[i]); // 포트 동기화
         }
-
-
-        bool success = true;
-
-        return success;
+        return true;
     }
 
     private LogicExpr ReplacePortExprRecursive(LogicExpr target, LogicExpr newExpr)
     {
+        LogicExpr expr = newExpr;
+        if (expr is NotExpr enot && enot.Inner is NotExpr einnerNot) expr = einnerNot.Inner; // 중첩된 NotExpr 제거
+        
         if (target is PortExpr port)
-        {
-            int index = portExprs.IndexOf(port);
-            if (portDict.ContainsKey(index))
             {
-                Debug.LogWarning($"[BlockData] PortExpr {port} already exists in portDict.");
-                return null; // 이미 존재하는 포트는 교체할 수 없음
+                int index = portExprs.IndexOf(port);
+                if (portDict.ContainsKey(index))
+                {
+                    Debug.LogWarning($"[BlockData] PortExpr {port} already exists in portDict (value: {portDict[index]}).");
+                    return null; // 이미 존재하는 포트는 교체할 수 없음
+                }
+                if (expr != null && !ContainsPort(expr)) portDict[index] = expr; // 포트 딕셔너리 업데이트
+                return port;
             }
-            portDict[index] = newExpr; // 포트 딕셔너리 업데이트
-            return port;
-        }
-        else if (target is NotExpr not)
-        {
-            NotExpr newNot = new(newExpr);
-            return ReplacePortExprRecursive(not.Inner, newExpr);
-        }
-        else if (target is AndExpr and)
-        {
-            if (newExpr is not AndExpr)
+            else if (target is NotExpr not)
             {
-                Debug.LogWarning($"[BlockData] AndExpr는 AndExpr로만 교체할 수 있습니다: {and} -> {newExpr}");
-                return null; // AndExpr가 아닌 경우 실패
+                NotExpr newNot = new(expr);
+                LogicExpr inner = ReplacePortExprRecursive(not.Inner, newNot);
+                return new NotExpr(inner);
             }
-            AndExpr newAnd = (AndExpr)newExpr;
-            
-            LogicExpr left = ReplacePortExprRecursive(and.Operands[0], newAnd.Operands[0]);
-            LogicExpr right = ReplacePortExprRecursive(and.Operands[1], newAnd.Operands[1]);
-            if (left != null && right != null) return new AndExpr(new List<LogicExpr> { left, right });
-            else
+            else if (target is AndExpr and)
             {
-                Debug.LogWarning($"[BlockData] AndExpr 내부 교체 실패: {and} -> {newExpr}");
-                return null; // 내부 교체 실패
-            }
-        }
-        else if (target is OrExpr or)
-        {
-            if (newExpr is not OrExpr)
-            {
-                Debug.LogWarning($"[BlockData] OrExpr는 OrExpr로만 교체할 수 있습니다: {or} -> {newExpr}");
-                return null; // OrExpr가 아닌 경우 실패
-            }
-            OrExpr newOr = (OrExpr)newExpr;
+                if (expr is not AndExpr)
+                {
+                    Debug.LogWarning($"[BlockData] AndExpr는 AndExpr로만 교체할 수 있습니다: {and} -> {expr}");
+                    return null; // AndExpr가 아닌 경우 실패
+                }
+                AndExpr newAnd = (AndExpr)expr;
 
-            LogicExpr left = ReplacePortExprRecursive(or.Operands[0], newOr.Operands[0]);
-            LogicExpr right = ReplacePortExprRecursive(or.Operands[1], newOr.Operands[1]);
-            if (left != null && right != null) return new OrExpr(new List<LogicExpr> { left, right });
-            else
-            {
-                Debug.LogWarning($"[BlockData] OrExpr 내부 교체 실패: {or} -> {newExpr}");
-                return null; // 내부 교체 실패
+                LogicExpr left = ReplacePortExprRecursive(and.Operands[0], newAnd.Operands[0]);
+                LogicExpr right = ReplacePortExprRecursive(and.Operands[1], newAnd.Operands[1]);
+                if (left != null && right != null) return new AndExpr(new List<LogicExpr> { left, right });
+                else
+                {
+                    Debug.LogWarning($"[BlockData] AndExpr 내부 교체 실패: {and} -> {expr}");
+                    return null; // 내부 교체 실패
+                }
             }
-        }
-        else if (target is VarExpr || target is ConstantExpr)
-        {
-            if (target.Equals(newExpr)) return target;
-            else
+            else if (target is OrExpr or)
             {
-                Debug.LogWarning($"[BlockData] VarExpr 혹은 ConstantExpr는 동일한 표현식으로만 교체할 수 있습니다");
-                return null; // VarExpr가 아닌 경우 실패
+                if (expr is not OrExpr)
+                {
+                    Debug.LogWarning($"[BlockData] OrExpr는 OrExpr로만 교체할 수 있습니다: {or} -> {expr}");
+                    return null; // OrExpr가 아닌 경우 실패
+                }
+                OrExpr newOr = (OrExpr)expr;
+
+                LogicExpr left = ReplacePortExprRecursive(or.Operands[0], newOr.Operands[0]);
+                LogicExpr right = ReplacePortExprRecursive(or.Operands[1], newOr.Operands[1]);
+                if (left != null && right != null) return new OrExpr(new List<LogicExpr> { left, right });
+                else
+                {
+                    Debug.LogWarning($"[BlockData] OrExpr 내부 교체 실패: {or} -> {expr}");
+                    return null; // 내부 교체 실패
+                }
             }
-        }
+            else if (target is VarExpr || target is ConstantExpr)
+            {
+                if (target.Equals(expr)) return target;
+                else
+                {
+                    Debug.LogWarning($"[BlockData] VarExpr 혹은 ConstantExpr는 동일한 표현식으로만 교체할 수 있습니다 (target: {target}, newExpr: {expr})");
+                    return null; // VarExpr가 아닌 경우 실패
+                }
+            }
 
         // 그 외의 경우, 예외를 던지는 게 안전
         throw new System.InvalidOperationException($"지원하지 않는 LogicExpr 타입입니다: {target.GetType()}");
     }
 
-    private void ReplaceLogicExprRecursive(LogicExpr target, int portId)
+    private bool ContainsPort(LogicExpr expr)
     {
-        // target 내부에서 port를 찾아 subst로 대체한다
-        // target 내부에는 반드시 port가 있어야 한다 (map으로 관리함)
-        PortExpr port = portExprs[portId];
-        LogicExpr subst = portDict[portId];
+        if (expr is PortExpr port) return true;
+        else if (expr is NotExpr not) return ContainsPort(not.Inner);
+        else if (expr is AndExpr and) return and.Operands.Any(ContainsPort);
+        else if (expr is OrExpr or) return or.Operands.Any(ContainsPort);
+        else return false; // VarExpr, ConstantExpr 등은 포트가 아님
+    }
 
-        if (target is PortExpr)
+    private LogicExpr SynchronizePort(LogicExpr expr)
+    {
+        DebugDictionary(); // 디버그용: 현재 포트 딕셔너리 상태 출력
+        if (expr is PortExpr port)
         {
-            if (target.Equals(port))
+            int index = portExprs.IndexOf(port);
+            if (portDict.ContainsKey(index))
+            {
+                return portDict[index]; // 이미 존재하는 포트는 그대로 반환
+            }
+            return port;
+        }
+        else if (expr is NotExpr not)
+        {
+            LogicExpr inner = SynchronizePort(not.Inner);
+            return new NotExpr(inner);
+        }
+        else if (expr is AndExpr and)
+        {
+            LogicExpr left = SynchronizePort(and.Operands[0]);
+            LogicExpr right = SynchronizePort(and.Operands[1]);
+            return new AndExpr(new List<LogicExpr> { left, right });
+        }
+        else if (expr is OrExpr or)
+        {
+            LogicExpr left = SynchronizePort(or.Operands[0]);
+            LogicExpr right = SynchronizePort(or.Operands[1]);
+            return new OrExpr(new List<LogicExpr> { left, right });
+        }
+        else
+        {
+            return expr; // 그대로 반환
         }
     }
 
+    private void DebugDictionary()
+    {
+        foreach (var kvp in portDict)
+        {
+            Debug.Log($"Port: {portExprs[kvp.Key]}, LogicExpr: {kvp.Value}");
+        }
+    }
 
     #region Grid to Port Conversion
     public int GridToIndex(Vector2Int gridPos) => Grid.IndexOf(gridPos);

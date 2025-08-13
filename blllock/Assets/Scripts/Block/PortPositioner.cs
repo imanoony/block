@@ -5,6 +5,7 @@ using TMPro;
 public class PortPositioner : MonoBehaviour
 {
     [SerializeField] private GameObject portPrefab;
+    private List<GameObject> portInstances = new List<GameObject>();
     private BlockData blockData;
     private float tileSize = 0.16f;
 
@@ -33,6 +34,7 @@ public class PortPositioner : MonoBehaviour
             port.name = $"Port_{gridPos.x}_{gridPos.y}";
             TextMeshPro text = port.GetComponent<TextMeshPro>();
             text.text = expr != null ? expr.ToString() : "";
+            portInstances.Add(port);
 
             // 1. Base Position 
             Vector2 localPos = new Vector2(
@@ -64,7 +66,7 @@ public class PortPositioner : MonoBehaviour
                 localPos.x += Utils.PORT_OFFSET / Utils.DENOMINATOR; // 좌측 경계
                 text.rectTransform.pivot = new Vector2(0, text.rectTransform.pivot.y);
             }
-            
+
 
             // 3. 회전 적용
             localPos = RotatePoint(localPos, blockData.Rotation);
@@ -94,5 +96,15 @@ public class PortPositioner : MonoBehaviour
             point.x * cos - point.y * sin,
             point.x * sin + point.y * cos
         );
+    }
+
+    public void UpdateText(BlockData bd)
+    {
+        for (int i = 0; i < portInstances.Count; i++)
+        {
+            TextMeshPro text = portInstances[i].GetComponent<TextMeshPro>();
+            LogicExpr expr = bd.Port[i];
+            text.text = expr != null ? expr.ToString() : "";
+        }
     }
 }

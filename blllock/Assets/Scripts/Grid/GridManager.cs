@@ -63,13 +63,13 @@ public class GridManager : MonoBehaviour
         return GridPoint[x, y];
     }
 
-    private static void BlockGridPoint(int x, int y, LogicExpr expr, Vector2Int blockGrid)
+    private static void BlockGridPoint(int x, int y, BlockData blockData, Vector2Int blockGrid)
     {
         Assert.IsNotNull(GridPoint, "GridPoint array is not initialized.");
         Assert.IsTrue(x >= 0 && y >= 0, "GridPoint indices must be non-negative.");
         Assert.IsTrue(x < GridPoint.GetLength(0) && y < GridPoint.GetLength(1), "GridPoint indices must be within bounds.");
 
-        ////
+        GridPoint[x, y].AddBlockData(blockData, blockGrid);
     }
     #endregion
 
@@ -90,7 +90,7 @@ public class GridManager : MonoBehaviour
     }
 
     // base position is the top-left corner of the block
-    public static bool PlaceBlock(Vector2Int basePos, List<Vector2Int> tileOffsets)
+    public static bool PlaceBlock(BlockData blockData, Vector2Int basePos, List<Vector2Int> tileOffsets)
     {
         TileType[,] backup = (TileType[,])Tiles.Clone(); // Backup current tile state
 
@@ -105,6 +105,13 @@ public class GridManager : MonoBehaviour
                 Tiles = backup; // Restore from backup if any tile is invalid
                 return false;
             }
+        }
+
+        // Register block data to grid points
+        foreach (var offset in blockData.Grid)
+        {
+            Vector2Int pos = basePos + offset;
+            BlockGridPoint(pos.x, pos.y, blockData, offset);
         }
         return true;
     }
