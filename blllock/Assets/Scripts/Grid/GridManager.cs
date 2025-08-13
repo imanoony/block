@@ -62,6 +62,15 @@ public class GridManager : MonoBehaviour
 
         return GridPoint[x, y];
     }
+
+    private static void BlockGridPoint(int x, int y, LogicExpr expr, Vector2Int blockGrid)
+    {
+        Assert.IsNotNull(GridPoint, "GridPoint array is not initialized.");
+        Assert.IsTrue(x >= 0 && y >= 0, "GridPoint indices must be non-negative.");
+        Assert.IsTrue(x < GridPoint.GetLength(0) && y < GridPoint.GetLength(1), "GridPoint indices must be within bounds.");
+
+        ////
+    }
     #endregion
 
     #region Tiles

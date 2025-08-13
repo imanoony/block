@@ -11,7 +11,7 @@ public class PortPositioner : MonoBehaviour
     public void PositionPorts(BlockData bd)
     {
         blockData = bd;
-        if (blockData == null || blockData.Ports == null || blockData.Ports.Count == 0)
+        if (blockData == null || blockData.Port == null || blockData.Port.Count == 0)
         {
             Debug.LogWarning("포트 데이터가 없습니다.");
             return;
@@ -23,10 +23,10 @@ public class PortPositioner : MonoBehaviour
         float offsetY = blockData.Size.y * tileSize / 2f;
         float offsetX = blockData.Size.x * tileSize / 2f;
 
-        for (int i = 0; i < blockData.Ports.Count; i++)
+        for (int i = 0; i < blockData.Port.Count; i++)
         {
             Vector2Int gridPos = blockData.Grid[i];
-            LogicExpr expr = blockData.Substs[i];
+            LogicExpr expr = blockData.Port[i];
 
             // 포트 텍스트 생성 or 가져오기
             GameObject port = Instantiate(portPrefab, transform);

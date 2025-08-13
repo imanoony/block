@@ -230,11 +230,14 @@ MonoBehaviour:
     - {x: 1, y: 0}
     - {x: 2, y: 0}
     Grid: []
-    Ports: []
+    Port: []
     Sprite: {fileID: 6093172502660832412, guid: 5bdd2b907e59a2a42a1a8627e1e62b2c, type: 3}
     IsFlipped: 0
     Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
+  references:
+    version: 2
+    RefIds: []
 --- !u!61 &217507953
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -396,16 +399,59 @@ MonoBehaviour:
     - {x: 1, y: 0}
     - {x: 2, y: 1}
     - {x: 2, y: 2}
-    Ports:
-    - Name: A
-    - Name: B
-    - Name: C
-    - Name: D
-    - Name: E
+    Port:
+    - rid: 5472697364492583153
+    - rid: 5472697364492583162
+    - rid: 5472697364492583154
+    - rid: 5472697364492583159
+    - rid: 5472697364492583161
     Sprite: {fileID: 135982579003634019, guid: 469d3a917c181b342b3ba42bc89fddea, type: 3}
     IsFlipped: 0
     Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5472697364492583153
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: A
+    - rid: 5472697364492583154
+      type: {class: NotExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Inner:
+          rid: 5472697364492583155
+    - rid: 5472697364492583155
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: A
+    - rid: 5472697364492583159
+      type: {class: NotExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Inner:
+          rid: 5472697364492583160
+    - rid: 5472697364492583160
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: B
+    - rid: 5472697364492583161
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: B
+    - rid: 5472697364492583162
+      type: {class: OrExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Operands:
+        - rid: 5472697364492583163
+        - rid: 5472697364492583164
+    - rid: 5472697364492583163
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: A
+    - rid: 5472697364492583164
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: B
 --- !u!61 &369208053
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -763,15 +809,44 @@ MonoBehaviour:
     - {x: 0, y: 2}
     - {x: 2, y: 0}
     - {x: 2, y: 2}
-    Ports:
-    - Name: A
-    - Name: B
-    - Name: C
-    - Name: D
+    Port:
+    - rid: 5472697364492583165
+    - rid: 5472697364492583166
+    - rid: 5472697364492583168
+    - rid: 5472697364492583169
     Sprite: {fileID: -4356277896208165297, guid: 14e4ba031ce9dbc4bbee9b684732b367, type: 3}
     IsFlipped: 0
     Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5472697364492583165
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: A
+    - rid: 5472697364492583166
+      type: {class: NotExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Inner:
+          rid: 5472697364492583167
+    - rid: 5472697364492583167
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: A
+    - rid: 5472697364492583168
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: A
+    - rid: 5472697364492583169
+      type: {class: NotExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Inner:
+          rid: 5472697364492583170
+    - rid: 5472697364492583170
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: A
 --- !u!61 &1307555142
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -949,17 +1024,64 @@ MonoBehaviour:
     - {x: 2, y: 0}
     - {x: 3, y: 0}
     - {x: 3, y: 2}
-    Ports:
-    - Name: a
-    - Name: ab
-    - Name: b
-    - Name: b
-    - Name: a
-    - Name: ab
+    Port:
+    - rid: 5472697364492583171
+    - rid: 5472697364492583172
+    - rid: 5472697364492583175
+    - rid: 5472697364492583176
+    - rid: 5472697364492583177
+    - rid: 5472697364492583178
     Sprite: {fileID: -8567008635747675834, guid: 852ffef727b4a09478d91902d4268a88, type: 3}
     IsFlipped: 0
     Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5472697364492583171
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: D
+    - rid: 5472697364492583172
+      type: {class: AndExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Operands:
+        - rid: 5472697364492583173
+        - rid: 5472697364492583174
+    - rid: 5472697364492583173
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: C
+    - rid: 5472697364492583174
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: D
+    - rid: 5472697364492583175
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: C
+    - rid: 5472697364492583176
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: B
+    - rid: 5472697364492583177
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: A
+    - rid: 5472697364492583178
+      type: {class: OrExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Operands:
+        - rid: 5472697364492583179
+        - rid: 5472697364492583180
+    - rid: 5472697364492583179
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: A
+    - rid: 5472697364492583180
+      type: {class: PortExpr, ns: , asm: Assembly-CSharp}
+      data:
+        Name: B
 --- !u!61 &1362661800
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1175,11 +1297,14 @@ MonoBehaviour:
     - {x: 1, y: 1}
     - {x: 2, y: 0}
     Grid: []
-    Ports: []
+    Port: []
     Sprite: {fileID: -2786479164405747103, guid: f778ed74a319c8d42953b7d18db1280b, type: 3}
     IsFlipped: 0
     Rotation: 0
   blockInstancePrefab: {fileID: 8266140993363392166, guid: bb4422288bcd298458572369a91b439a, type: 3}
+  references:
+    version: 2
+    RefIds: []
 --- !u!61 &1962319757
 BoxCollider2D:
   m_ObjectHideFlags: 0
