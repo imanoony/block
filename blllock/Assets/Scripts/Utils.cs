@@ -9,5 +9,6 @@ public static class Utils
     public const string RED = "#FE817D";
     public const string BLUE = "#7391FE";
     public const string BLACK = "#242424";
+    public const string GRAY = "#717171";
     public const float THRESHOLD = 5f;
 }

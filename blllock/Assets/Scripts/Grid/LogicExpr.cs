@@ -23,7 +23,7 @@ public class PortExpr : LogicExpr
     public string Name;
     public PortExpr() { }
     public PortExpr(string name) => Name = name;
-    public override string ToString() => $"{Name.ToLower()}";
+    public override string ToString() => $"<color=#717171>{Name.ToLower()}</color>";
     public override bool Equals(LogicExpr other)
     {
         return other is PortExpr p && Name == p.Name;
@@ -81,6 +81,8 @@ public class NotExpr : LogicExpr
     {
         if (Inner is VarExpr || Inner is ConstantExpr || Inner is PortExpr)
             return $"~{Inner}";
+        else if (Inner is NotExpr not)
+            return not.Inner.ToString();
         return $"~({Inner})";
     }
     public override bool Equals(LogicExpr other)

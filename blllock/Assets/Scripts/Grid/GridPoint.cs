@@ -49,7 +49,7 @@ public class GridPoint
         }
 
         // 타일 격자에 이미 논리식이 존재하는 경우
-        else if (Expr != null)
+        else if (Expr != null && Type != GridPointType.Output)
         {
             block.AddPortMapping(portIndex, Expr); // 블록에 논리식을 등록한다
         }
