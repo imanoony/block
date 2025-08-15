@@ -40,18 +40,36 @@ public class GridPoint
             BlockGrids[index] = blockGrid;
         }
 
-        // 타일 격자에 논리식이 존재하지 않는 경우
         int portIndex = block.GridToIndex(blockGrid);
-        if (Expr == null)
+        Debug.Log($"portIndex: {portIndex}, blockGrid: {blockGrid}");
+        LogicExpr port = block.IndexToPort(portIndex);
+
+        // 타일 격자에 논리식이 존재하지 않는 경우
+        if (Expr == null && block.CanRegisterPort(port, Expr))
         {
-            Expr = block.IndexToPort(portIndex); // 블록의 논리식을 등록한다
+            Debug.Log($"Registering port {port} at {Pos} for block {block.ID}");
+            Expr = port; // 블록의 논리식을 등록한다
             Synchronize(); // 다른 블록과 동기화한다
         }
 
         // 타일 격자에 이미 논리식이 존재하는 경우
         else if (Expr != null && Type != GridPointType.Output)
         {
-            block.AddPortMapping(portIndex, Expr); // 블록에 논리식을 등록한다
+            if (!port.Equals(Expr))
+            {
+                Debug.Log($"port: {port}, Expr: {Expr}");
+                if (block.AddPortMapping(portIndex, Expr)) return;
+                if (block.CanRegisterPort(port, Expr))
+                {
+                    Debug.Log($"Registering port {port} at {Pos} for block {block.ID}");
+                    Expr = port; // 블록의 논리식을 등록한다
+                    Synchronize(); // 다른 블록과 동기화한다
+                }
+                else
+                {
+                    Debug.LogError("INVALID BLOCK POSITION");
+                }
+            }
         }
     }
     public void SubBlockData(BlockData block)
@@ -63,12 +81,19 @@ public class GridPoint
             BlockGrids.RemoveAt(index);
         }
     }
-    private void Synchronize()
+    public void Synchronize()
     {
+        if (Expr == null) return;
         for (int i = 0; i < Blocks.Count; i++)
         {
             int portIndex = Blocks[i].GridToIndex(BlockGrids[i]);
-            Blocks[i].AddPortMapping(portIndex, Expr!);
+            if (!Blocks[i].AddPortMapping(portIndex, Expr))
+            {
+                Debug.LogWarning($"Failed to synchronize Expr {Expr} to Block {Blocks[i].ID} at Grid {BlockGrids[i]}");
+                return;
+            }
+            //Blocks[i].Instance.portPositioner.UpdateText(Blocks[i]); // Update port text
         }
     }
+
 }

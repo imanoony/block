@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -107,13 +108,20 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        blockData.SetBasePosition(basePos); // Set the base position for the block
+
         // Register block data to grid points
-        foreach (var offset in blockData.Grid)
+        SynchronizeGrid(blockData, basePos, blockData.Grid);
+        return true;
+    }
+
+    public static void SynchronizeGrid(BlockData blockData, Vector2Int basePos, List<Vector2Int> gridOffsets) 
+    {
+        foreach (var offset in gridOffsets)
         {
             Vector2Int pos = basePos + offset;
             BlockGridPoint(pos.x, pos.y, blockData, offset);
         }
-        return true;
     }
     #endregion
 

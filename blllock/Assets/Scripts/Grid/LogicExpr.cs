@@ -87,7 +87,9 @@ public class NotExpr : LogicExpr
     }
     public override bool Equals(LogicExpr other)
     {
-        return other is NotExpr n && Inner.Equals(n.Inner);
+        if (other is NotExpr n) return Inner.Equals(n.Inner);
+        if (Inner is NotExpr innerNot) return innerNot.Inner.Equals(other);
+        return false;
     }
     public override int GetHashCode() => Inner.GetHashCode() * 17;
 }

@@ -4,7 +4,7 @@ public class BlockInstance : MonoBehaviour
 {
     private BlockData property;
     private bool isDragging = false;
-    private PortPositioner portPositioner;
+    public PortPositioner portPositioner;
 
     public void Initialize(BlockData prop)
     {
@@ -14,6 +14,7 @@ public class BlockInstance : MonoBehaviour
             return;
         }
         property = prop;
+        property.instance = this; // 블록 인스턴스 정보 설정
         SetupVisuals();
     }
 
@@ -60,7 +61,7 @@ public class BlockInstance : MonoBehaviour
             Vector3 topLeftPos = GridManager.GridToWorld(snapPos.Value);
             transform.position = topLeftPos + new Vector3(blockWidth / 2f * unit, (-1) * blockHeight / 2f * unit, 0);
 
-            portPositioner.UpdateText(property); // 포트 텍스트 업데이트
+            //portPositioner.UpdateText(property); // 포트 텍스트 업데이트
         }
         else
         {
