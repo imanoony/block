@@ -13,9 +13,7 @@ public class GridPoint
 {
     public Vector2Int Pos { get; private set; }
     public GridPointType Type { get; set; }
-    public LogicExpr? Expr { get; set; }
-    public List<BlockData> Blocks { get; private set; }
-    public List<Vector2Int> BlockGrids { get; private set; }
+    public List<LogicExpr> 
 
     public GridPoint(Vector2Int position, GridPointType type, LogicExpr? expr = null)
     {
