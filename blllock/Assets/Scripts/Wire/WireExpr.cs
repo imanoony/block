@@ -36,6 +36,11 @@ public class WireNot : WireExpr
 {
     public WireExpr Inner { get; private set; }
     public WireNot(WireExpr inner) => Inner = inner;
+    public WireExpr Clean() // 이중 부정을 제거하기 위함
+    {
+        if (Inner is WireNot innerNot) return innerNot.Inner;
+        return this;
+    }
     public override string ToString() => Inner is Wire ? $"~{Inner}" : $"~({Inner})";
     public override bool Equals(object obj)
     {

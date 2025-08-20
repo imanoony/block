@@ -114,7 +114,8 @@ public static class DataParser
         {
             if (Match('~'))
             {
-                return new NotExpr(ParsePrimary());
+                NotExpr not = new NotExpr(ParsePrimary());
+                return not.Clean();
             }
             if (Match('('))
             {

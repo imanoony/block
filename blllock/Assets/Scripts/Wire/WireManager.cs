@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,6 +30,7 @@ public class WireManager : MonoBehaviour
         Wires[wire.ID] = wire;
         return true;
     }
+    
 
     // Wires에서 ID를 사용하여 Wire를 제거한다. 
     // Wire가 존재하지 않는다면 false를 반환한다.
@@ -73,7 +73,7 @@ public class WireManager : MonoBehaviour
             Wire curr = prop[0];
             prop.RemoveAt(0);
 
-            Eval(curr);
+            if (!curr.Updated) Eval(curr);
 
             if (curr.Depend == null) continue;
             foreach (Wire w in curr.Depend)
@@ -82,17 +82,56 @@ public class WireManager : MonoBehaviour
             }
         }
 
+        // 모두 새롭게 Evaluation 되었으면 패치한다.
+        ResetWires();
         return true;
     }
 
-    // WireDict나 WireLogic의 Wire가 갱신된 경우 Evaluation 한다.
-    // 갱신된 Wire와 연관된 다른 Wire들을 re-evaluation한다.
-    public bool Equivalent(WireExpr w1, WireExpr w2)
+    // w1==w2이 현재 환경에 적용될 수 있는지 계산한다.
+    // 계산 결과 적용될 수 있다면 true를, 적용될 수 없다면 false를 반환한다.
+    public bool Compatible(Wire w1, WireExpr w2)
     {
         return false;
     }
-    public bool Equivalent(WireExpr w, LogicExpr l)
+    public bool Compatible(WireExpr w1, WireExpr w2)
     {
+        return false;
+    }
+
+    // w==l이 현재 환경에 적용될 수 있는지 계산한다.
+    // 계산 결과 적용될 수 있다면 true를, 적용될 수 없다면 false를 반환한다.
+    public bool Compatible(Wire w, LogicExpr l, HashSet<WireExpr> visited = null)
+    {
+        if (WireLogic.ContainsKey(w.ID)) return WireLogic[w.ID].Equals(l);
+
+        HashSet<WireExpr> newvisited = WireDict[w.ID];
+        List<WireExpr> prop = newvisited.Where(expr => visited == null || !visited.Contains(expr)).ToList();
+        newvisited.Add(w);
+        if (visited != null) newvisited.UnionWith(visited);
+
+        for (int i = 0; i < prop.Count; i++)
+        {
+            // 모순을 발견했다면 적용될 수 없다고 보고 바로 종료한다.
+            if (!Compatible(prop[i], l, newvisited)) return false;
+        }
+
+        // 모순을 찾지 못했다면 적용될 수 있는 것으로 본다.
+        return true;
+    }
+    public bool Compatible(WireExpr w, LogicExpr l, HashSet<WireExpr> visited = null)
+    {
+        if (w is Wire wire) return Compatible(wire, l, visited);
+        else if (w is WireNot wn) return Compatible(wn.Inner, new NotExpr(l).Clean(), visited);
+        else if (w is WireAnd wa)
+        {
+            if (l is AndExpr a) return Compatible(wa.Left, a.Left, visited) && Compatible(wa.Right, a.Right, visited);
+            return false; // WireAnd와 호환 가능한 LogicExpr는 AndExpr뿐이다.
+        }
+        else if (w is WireOr wo)
+        {
+            if (l is OrExpr o) return Compatible(wo.Left, o.Left, visited) && Compatible(wo.Right, o.Right, visited);
+            return false; // WireOr과 호환 가능한 LogicExpr는 OrExpr뿐이다. 
+        }
         return false;
     }
 
@@ -108,8 +147,7 @@ public class WireManager : MonoBehaviour
         newvisited.Add(wire);
         if (visited != null) newvisited.UnionWith(visited);
 
-        // 맨 처음 원소는 wire이므로 제외하고 iteration한다.
-        for (int i = 1; i < prop.Count; i++)
+        for (int i = 0; i < prop.Count; i++)
         {
             LogicExpr curr = Eval(prop[i], newvisited);
             if (curr != null) { wire.SetCache(curr); return curr; }
@@ -117,7 +155,6 @@ public class WireManager : MonoBehaviour
 
         return null;
     }
-
     public LogicExpr Eval(int id)
     {
         if (!Wires.ContainsKey(id))
@@ -139,7 +176,7 @@ public class WireManager : MonoBehaviour
         if (wireExpr is WireNot n)
         {
             expr = Eval(n.Inner, visited);
-            if (expr != null) return new NotExpr(expr);
+            if (expr != null) return new NotExpr(expr).Clean();
             return null;
         }
         else if (wireExpr is WireAnd a)
@@ -163,5 +200,5 @@ public class WireManager : MonoBehaviour
     // 현재 존재하는 모든 Wire의 Updated 상태를 false로 바꾼다.
     // WireDict, WireLogic 변동에 따른 Evaluation들이
     // 모두 종료된 후 반드시 호출되어야 한다.
-    public void FetchWires() { foreach (Wire wire in Wires.Values) wire.SetUpdated(false); }
+    public void ResetWires() { foreach (Wire wire in Wires.Values) wire.SetUpdated(false); }
 }
