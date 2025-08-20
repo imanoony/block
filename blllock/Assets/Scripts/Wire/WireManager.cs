@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Rendering.Universal.ShaderGraph;
 using UnityEngine;
 
 public class WireManager : MonoBehaviour
@@ -31,7 +30,6 @@ public class WireManager : MonoBehaviour
         Wires[wire.ID] = wire;
         return true;
     }
-
 
     // Wires에서 ID를 사용하여 Wire를 제거한다. 
     // Wire가 존재하지 않는다면 false를 반환한다.
@@ -88,7 +86,12 @@ public class WireManager : MonoBehaviour
         return true;
     }
 
-    public void AddToDict() { }
+    // WireDict에 key-value pair를 등록한다.
+    // value는 HashSet의 새로운 원소로 등록된다.
+    public void AddToDict(int key, WireExpr value)
+    {
+        
+    }
     public void RemoveFromDict() { }
 
     // w1==w2이 현재 환경에 적용될 수 있는지 계산한다.
@@ -133,12 +136,35 @@ public class WireManager : MonoBehaviour
         {
             if (wn.Inner is Wire inw)
             {
+                // WireLogic과의 모순 확인
+                if (WireLogic.ContainsKey(inw.ID)) return Compatible(w1, new NotExpr(WireLogic[inw.ID]).Clean());
 
-            }
-            else // Dependency Check
-            {
+                // WireDict와의 모순 확인
+                HashSet<WireExpr> subst1 = WireDict.ContainsKey(w1.ID) ? WireDict[w1.ID] : new();
+                HashSet<WireExpr> subst2 = WireDict.ContainsKey(inw.ID) ? WireDict[inw.ID] : new();
+                subst1.Add(w1); subst2.Add(inw);
 
+                HashSet<(WireExpr, WireExpr)> newvisited = (
+                    from a in subst1
+                    from b in subst2
+                    let notB = new WireNot(b).Clean()   // b 변환
+                    where visited == null || !visited.Contains((a, notB)) && !visited.Contains((notB, a))
+                    select (a, notB)
+                ).ToHashSet();
+                List<(WireExpr, WireExpr)> prop = newvisited.ToList();
+                if (visited != null) newvisited.UnionWith(visited);
+
+                for (int i = 0; i < prop.Count; i++)
+                {
+                    // 모순을 발견했다면 적용할 수 없다고 보고 바로 종료한다.
+                    if (!Compatible(prop[i].Item1, prop[i].Item2, newvisited)) return false;
+                }
+
+                // 모순을 찾지 못했다면 적용될 수 있는 것으로 본다.
+                return true;
             }
+            // Dependency Check
+            else return !DependencyCheck(Decompose(wn), w1);
         }
         else if (w2 is WireAnd wa)
         {
@@ -213,6 +239,13 @@ public class WireManager : MonoBehaviour
     }
     public bool Compatible(WireExpr w1, WireExpr w2, HashSet<(WireExpr, WireExpr)> visited = null)
     {
+        if (w1 is Wire) return Compatible((Wire)w1, w2, visited);
+        if (w2 is Wire) return Compatible((Wire)w2, w1, visited);
+        if (w1 is WireNot wn1) return Compatible(wn1.Inner, new WireNot(w2).Clean());
+        if (w2 is WireNot wn2) return Compatible(wn2.Inner, new WireNot(w1).Clean());
+        if (w1 is WireAnd wa1 && w2 is WireAnd wa2) return Compatible(wa1.Left, wa2.Left) && Compatible(wa1.Right, wa2.Right);
+        if (w1 is WireOr wo1 && w2 is WireOr wo2) return Compatible(wo1.Left, wo2.Left) && Compatible(wo1.Right, wo2.Right);
+
         return false;
     }
 
