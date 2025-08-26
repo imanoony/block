@@ -23,7 +23,7 @@ public class Wire : WireExpr
     public bool Updated { get; private set; }
     public WireExpr? Signature;
     public LogicExpr? Cache { get; private set; }
-    public int Parent, LeftChild, RightChild; // 부모 Wire, 자식 Wire의 ID. 없으면 0.
+    public int Parent, LeftChild, RightChild; // 부모 Wire, 자식 Wire의 ID. 없으면 -1.
     public int P => Parent;
     public int L => LeftChild;
     public int R => RightChild;
