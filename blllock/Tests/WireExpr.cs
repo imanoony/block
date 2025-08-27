@@ -28,10 +28,10 @@ public class Wire : WireExpr
     public int L => LeftChild;
     public int R => RightChild;
 
-    public Wire(int id, string name = "", int parent = 0)
+    public Wire(int id, int parent = 0)
     {
         ID = id;
-        Name = name;
+        Name = "";
         Updated = false;
         Signature = null;
         Cache = null;

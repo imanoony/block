@@ -9,10 +9,13 @@ public class WireManager
     public Dictionary<int, HashSet<int>> WireDict { get; private set; } = new Dictionary<int, HashSet<int>>(); // Wire끼리의 관계
     public Dictionary<int, LogicExpr> WireLogic { get; private set; } = new Dictionary<int, LogicExpr>(); // Wire와 LogicExpr 매핑
 
+    private int nextID = 1;
+    public int GenerateID() => nextID++;
+
     // 우선 매번 동적으로 계산하되, 이후 복잡도 이슈 생기면 수정한다.
 
     #region Graph
-    
+
     // neg flag를 통해 id에 연결이 적은 음수나 양수가 들어와도 모든 Equivalents를 반환하도록 함
     public HashSet<int> GetEquivalents(int id, HashSet<int>? visited = null, bool neg = true)
     {
@@ -136,11 +139,50 @@ public class WireManager
     public bool AddToDict(int w1, int w2)
     {
         if (!Compatible(w1, w2)) return false;
+
         if (WireDict.ContainsKey(w1)) WireDict[w1].Add(w2);
         else WireDict[w1] = new() { w2 };
         if (WireDict.ContainsKey(w2)) WireDict[w2].Add(w1);
+        else WireDict[w2] = new() { w1 };
 
         return true;
+    }
+
+    public bool AddToDict(WireExpr w1, WireExpr w2)
+    {
+        // 한쪽이 Wire인 경우
+        if (w1 is Wire _ || w2 is Wire _)
+        {
+            Wire wire = w1 is Wire _ ? (Wire)w1 : (Wire)w2;
+            WireExpr expr = w1 is Wire ? w2 : w1;
+
+            if (expr is Wire w) return AddToDict(wire.ID, w.ID);
+            if (expr is WireNot n) return AddToDict(-wire.ID, n.Inner);
+
+            // expr is WireAnd or WireOr
+            if (wire.L != 0)
+            {
+                if (expr is WireAnd a) return AddToDict(Wires[wire.L], a.Left) && AddToDict(Wires[wire.R], a.Right);
+                if (expr is WireOr o) return AddToDict(Wires[wire.L], o.Left) && AddToDict(Wires[wire.R], o.Right);
+            }
+
+            // 새로운 자식 생성하고 시그니처 등록
+            Wire left = new Wire(GenerateID(), wire.ID), leftneg = new Wire(-left.ID);
+            Wire right = new Wire(GenerateID(), wire.ID), rightneg = new Wire(-right.ID);
+            AddWire(left, leftneg); AddWire(right, rightneg);
+
+            if (expr is WireAnd a) wire.Composite(new WireAnd(left, right), left.ID, right.ID);
+            if (expr is WireOr o) wire.Composite(new WireOr(left, right), left.ID, right.ID);
+            
+            if (expr is WireAnd a) return AddToDict(left, a.Left) && AddToDict(right, a.Right);
+            if (expr is WireOr o) return AddToDict(left, o.Left) && AddToDict(right, o.Right);
+        }
+
+        // 그렇지 않은 경우
+        if (w1 is WireNot n1 && w2 is WireNot n2) return AddToDict(n1.Inner, n2.Inner);
+        if (w1 is WireAnd a1 && w2 is WireAnd a2) return AddToDict(a1.Left, a2.Left) && AddToDict(a1.Right, a2.Right);
+        if (w1 is WireOr o1 && w2 is WireOr o2) return AddToDict(o1.Left, o2.Left) && AddToDict(o1.Right, o2.Right);
+        return false;
     }
 
     public LogicExpr? Eval(int id, HashSet<int>? equivalents = null)
