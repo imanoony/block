@@ -57,17 +57,6 @@ public class Wire : WireExpr
 public class WireNot : WireExpr
 {
     public WireExpr Inner { get; private set; }
-    public WireExpr? Signature
-    {
-        get
-        {
-            if (Inner is Wire wire && wire.Signature != null)
-            {
-                WireNot newsig = new WireNot(wire.Signature);
-                return newsig.Clean();
-            }
-        }
-    }
     public WireNot(WireExpr inner) => Inner = inner;
     public WireExpr Clean() // 이중 부정을 제거하기 위함
     {
