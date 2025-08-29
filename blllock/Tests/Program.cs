@@ -14,7 +14,8 @@ class Program
 
     static void Test_Eval1()
     {
-        Wire a = new Wire(wm.GenerateID()), b = new Wire(wm.GenerateID()), c = new Wire(wm.GenerateID());
+        Wire a = new Wire(wm.GenerateID()
+        ), b = new Wire(wm.GenerateID()), c = new Wire(wm.GenerateID());
         wm.AddWire(a); wm.AddWire(b); wm.AddWire(c);
 
         wm.AddToDict(a.ID, b.ID);
@@ -22,32 +23,32 @@ class Program
 
         Print_Wires();
 
-        wm.AddToLogic(c.ID, new VarExpr("X"), true);
+        wm.AddToLogic(c.ID, new VarExpr("X"));
 
-        Print_Wires();
-
-        Print_LogicExpr(wm.Eval(a));
+        Print_LogicExpr(wm.Eval(a.ID));
     }
-
+    
     static void Test_Eval2()
     {
-        Wire a = new Wire(1, "a"), b = new Wire(2, "b"), c = new Wire(3, "c");
-        Wire d = new Wire(4, "d"), e = new Wire(5, "e"), f = new Wire(6, "f");
+        Wire a = new Wire(wm.GenerateID()), b = new Wire(wm.GenerateID()), c = new Wire(wm.GenerateID());
+        Wire d = new Wire(wm.GenerateID()), e = new Wire(wm.GenerateID()), f = new Wire(wm.GenerateID());
         wm.AddWire(a); wm.AddWire(b); wm.AddWire(c);
         wm.AddWire(d); wm.AddWire(e); wm.AddWire(f);
 
-        wm.AddToDict(1, new WireOr(b, c));
-        wm.AddToDict(2, d);
-        wm.AddToLogic(4, new VarExpr("X"), true);
+        bool result;
+
+        result = wm.AddToDict(wm.Wires[-a.ID], new WireOr(b, c)); Console.WriteLine(result);
+        result = wm.AddToDict(b, d); Console.WriteLine(result);
+        result = wm.AddToLogic(-d.ID, new VarExpr("X")); Console.WriteLine(result);
         Print_Wires();
 
-        wm.AddToLogic(3, new VarExpr("Y"), true);
-        wm.AddToDict(1, new WireOr(e, f), true);
+        result = wm.AddToLogic(c.ID, new VarExpr("Y")); Console.WriteLine(result);
+        result = wm.AddToDict(a, new WireOr(e, f)); Console.WriteLine(result);
         Print_Wires();
 
         Print_LogicExpr(wm.Eval(new WireOr(e, f)));
     }
-
+    /*
     static void Test_Decompose()
     {
         Wire a = new Wire(1, "a"), b = new Wire(2, "b"), c = new Wire(3, "c");
@@ -64,6 +65,7 @@ class Program
         Print_HashSet(wm.Decompose(expr4));
         Print_HashSet(wm.Decompose(expr5));
     }
+    */
 
     static void Print_HashSet<T>(HashSet<T> set) => Console.WriteLine(string.Join(", ", set));
 
@@ -82,6 +84,7 @@ class Program
         foreach (var kvp in wm.Wires)
         {
             LogicExpr? expr = kvp.Value.Cache;
+            if (expr == null) expr = wm.Eval(kvp.Value.ID);
             string exprStr = expr == null ? "null" : expr.ToString();
             Console.WriteLine($"{kvp.Value} -> {exprStr}");
         }

@@ -57,7 +57,7 @@ public class Wire : WireExpr
 public class WireNot : WireExpr
 {
     public WireExpr Inner { get; private set; }
-    public WireNot(WireExpr inner) => Inner = inner;
+    public WireNot(WireExpr? inner) => Inner = inner;
     public WireExpr Clean() // 이중 부정을 제거하기 위함
     {
         if (Inner is WireNot innerNot) return innerNot.Inner;
@@ -78,7 +78,7 @@ public class WireAnd : WireExpr
 {
     public WireExpr Left { get; private set; }
     public WireExpr Right { get; private set; }
-    public WireAnd(WireExpr left, WireExpr right) { Left = left; Right = right; }
+    public WireAnd(WireExpr? left, WireExpr? right) { Left = left; Right = right; }
     public override string ToString()
     {
         string left = Left is Wire ? $"{Left}" : $"({Left})";
@@ -103,7 +103,7 @@ public class WireOr : WireExpr
 {
     public WireExpr Left { get; private set; }
     public WireExpr Right { get; private set; }
-    public WireOr(WireExpr left, WireExpr right) { Left = left; Right = right; }
+    public WireOr(WireExpr? left, WireExpr? right) { Left = left; Right = right; }
     public override string ToString()
     {
         string left = Left is Wire ? $"{Left}" : $"({Left})";

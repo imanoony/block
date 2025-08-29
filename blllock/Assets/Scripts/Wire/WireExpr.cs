@@ -23,15 +23,15 @@ public class Wire : WireExpr
     public bool Updated { get; private set; }
     public WireExpr? Signature;
     public LogicExpr? Cache { get; private set; }
-    public int Parent, LeftChild, RightChild; // 부모 Wire, 자식 Wire의 ID. 없으면 0.
+    public int Parent, LeftChild, RightChild; // 부모 Wire, 자식 Wire의 ID. 없으면 -1.
     public int P => Parent;
     public int L => LeftChild;
     public int R => RightChild;
 
-    public Wire(int id, string name = "", int parent = 0)
+    public Wire(int id, int parent = 0)
     {
         ID = id;
-        Name = name;
+        Name = "";
         Updated = false;
         Signature = null;
         Cache = null;
@@ -44,7 +44,7 @@ public class Wire : WireExpr
         LeftChild = l;
         RightChild = r;
     }
-    public override string ToString() => Name;
+    public override string ToString() => ID.ToString();
     public override bool Equals(object? obj) => ReferenceEquals(this, obj);
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
     public override bool Contains(Wire wire) => this == wire;
@@ -57,17 +57,6 @@ public class Wire : WireExpr
 public class WireNot : WireExpr
 {
     public WireExpr Inner { get; private set; }
-    public WireExpr? Signature
-    {
-        get
-        {
-            if (Inner is Wire wire && wire.Signature != null)
-            {
-                WireNot newsig = new WireNot(wire.Signature);
-                return newsig.Clean();
-            }
-        }
-    }
     public WireNot(WireExpr inner) => Inner = inner;
     public WireExpr Clean() // 이중 부정을 제거하기 위함
     {
