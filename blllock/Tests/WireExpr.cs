@@ -44,7 +44,7 @@ public class Wire : WireExpr
         LeftChild = l;
         RightChild = r;
     }
-    public override string ToString() => Name;
+    public override string ToString() => ID.ToString();
     public override bool Equals(object? obj) => ReferenceEquals(this, obj);
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
     public override bool Contains(Wire wire) => this == wire;

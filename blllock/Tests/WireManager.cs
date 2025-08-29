@@ -10,7 +10,18 @@ public class WireManager
     public Dictionary<int, LogicExpr> WireLogic { get; private set; } = new Dictionary<int, LogicExpr>(); // Wire와 LogicExpr 매핑
 
     private int nextID = 1;
-    public int GenerateID() => nextID++;
+    private readonly SortedSet<int> freeIDs = new(); // 삭제된 ID를 작은 순으로 관리
+    public int GenerateID()
+    {
+        if (nextID == int.MaxValue) throw new InvalidOperationException("Wire ID limit reached. Program will abort.");
+        if (freeIDs.Count > 0)
+        {
+            int id = freeIDs.Min;
+            freeIDs.Remove(id);
+            return id;
+        }
+        return nextID++;
+    }
 
     // 우선 매번 동적으로 계산하되, 이후 복잡도 이슈 생기면 수정한다.
 
@@ -113,7 +124,12 @@ public class WireManager
     #endregion
 
     #region Mapping
-    public void AddWire(Wire pos, Wire neg) { Wires[pos.ID] = pos; Wires[-pos.ID] = neg; }
+    public void AddWire(Wire pos, Wire neg = null)
+    {
+        Wires[pos.ID] = pos;
+        if (neg != null) Wires[-pos.ID] = neg;
+        else Wires[-pos.ID] = new Wire(-pos.ID);
+    }
     public void RemoveWire(int id, bool neg = true)
     {
         List<int> remove = new();
@@ -126,6 +142,7 @@ public class WireManager
             }
         }
         if (WireLogic.ContainsKey(id)) WireLogic.Remove(id);
+        freeIDs.Add(id);
 
         foreach (int removeID in remove)
         {

@@ -12,29 +12,17 @@ class Program
         Test_Eval2();
     }
 
-    static void Test_Dict()
-    {
-        Wire a = new Wire(1, "a"), b = new Wire(2, "b"), c = new Wire(3, "c");
-        wm.AddWire(a); wm.AddWire(b); wm.AddWire(c);
-        Print_WireDict();
-
-        wm.AddToDict(1, new WireAnd(b, c));
-        wm.AddToDict(2, c);
-
-        Print_WireDict();
-    }
-
     static void Test_Eval1()
     {
-        Wire a = new Wire(1, "a"), b = new Wire(2, "b"), c = new Wire(3, "c");
+        Wire a = new Wire(wm.GenerateID()), b = new Wire(wm.GenerateID()), c = new Wire(wm.GenerateID());
         wm.AddWire(a); wm.AddWire(b); wm.AddWire(c);
 
-        wm.AddToDict(1, b, true);
-        wm.AddToDict(2, c, true);
+        wm.AddToDict(a.ID, b.ID);
+        wm.AddToDict(b.ID, c.ID);
 
         Print_Wires();
 
-        wm.AddToLogic(3, new VarExpr("X"), true);
+        wm.AddToLogic(c.ID, new VarExpr("X"), true);
 
         Print_Wires();
 
