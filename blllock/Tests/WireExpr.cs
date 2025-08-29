@@ -20,9 +20,9 @@ public class Wire : WireExpr
 {
     public int ID;
     public string Name;
-    public bool Updated { get; private set; }
+    public bool Updated = false;
     public WireExpr? Signature;
-    public LogicExpr? Cache { get; private set; }
+    public LogicExpr? Cache;
     public int Parent, LeftChild, RightChild; // 부모 Wire, 자식 Wire의 ID. 없으면 -1.
     public int P => Parent;
     public int L => LeftChild;
@@ -49,9 +49,6 @@ public class Wire : WireExpr
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
     public override bool Contains(Wire wire) => this == wire;
     public override bool Contains(WireExpr wireExpr) => this == wireExpr;
-    public void SetCache(LogicExpr? expr) { Cache = expr; SetUpdated(true); }
-    public void SetUpdated(bool updated) => Updated = updated;
-    public void SetParent(int parent) => Parent = parent;
 }
 
 public class WireNot : WireExpr

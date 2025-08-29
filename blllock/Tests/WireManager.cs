@@ -134,19 +134,21 @@ public class WireManager
     }
     public void RemoveWire(int id, bool neg = true)
     {
-        List<int> remove = new();
+        List<int> sigRemove = new();
         if (WireDict.TryGetValue(id, out HashSet<int> eq))
         {
             foreach (int eqID in eq)
             {
                 WireDict[eqID].Remove(id);
-                if (WireDict[eqID].Count == 0 && Wires[eqID].P != 0) remove.Add(Wires[eqID].P);
+                if (WireDict[eqID].Count == 0 && Wires[eqID].P != 0) sigRemove.Add(Wires[eqID].P);
             }
         }
         if (WireLogic.ContainsKey(id)) WireLogic.Remove(id);
-        freeIDs.Add(id);
+        if (Wires[id].L != 0) { RemoveWire(Wires[id].L); RemoveWire(Wires[id].R); }
+        if (id > 0) freeIDs.Add(id);
+        Wires.Remove(id);
 
-        foreach (int removeID in remove) // 시그니처 삭제 관련 (보완 필요)
+        foreach (int removeID in sigRemove) // 시그니처 삭제 관련 (보완 필요)
         {
             if (WireLogic.ContainsKey(Wires[removeID].L)) continue;
             RemoveSignature(removeID);
@@ -256,32 +258,49 @@ public class WireManager
     {
         HashSet<int> eq = equivalents == null ? GetEquivalents(id) : new(equivalents);
 
+        LogicExpr result = null;
         foreach (int eqID in eq)
         {
-            if (WireLogic.ContainsKey(eqID)) return WireLogic[eqID];
+            if (WireLogic.ContainsKey(eqID))
+            {   
+                result = WireLogic[eqID];
+                if (AutoEval) EvalEquivalents(eq, result);
+                return result;
+            }
             if (Wires[eqID].L == 0) continue;
 
             WireExpr? sig = GetSignature(eqID); // 여기서부터 수정 필요
             bool not = false; WireExpr? newsig = sig;
             if (sig is WireNot signot) { not = true; newsig = signot.Inner; }
-            if (newsig is WireAnd a && a.Left is Wire al && a.Right is Wire ar)
+            if (newsig is WireAnd _ || newsig is WireOr _)
             {
-                LogicExpr? left = Eval(al.ID), right = Eval(ar.ID);
-                if (left != null && right != null) return not ? new NotExpr(new AndExpr(left, right)) : new AndExpr(left, right);
+                LogicExpr? left = Eval(Wires[eqID].L), right = Eval(Wires[eqID].R);
+                if (left != null && right != null)
+                {
+                    if (newsig is WireAnd _) result = not ? new NotExpr(new AndExpr(left, right)) : new AndExpr(left, right);
+                    else result = not ? new NotExpr(new OrExpr(left, right)) : new OrExpr(left, right);
+
+                    if (AutoEval) EvalEquivalents(eq, result);
+                    return result;
+                }
             }
-            if (newsig is WireOr o && o.Left is Wire ol && o.Right is Wire or)
-            {
-                LogicExpr? left = Eval(ol.ID), right = Eval(or.ID);
-                if (left != null && right != null) return not ? new NotExpr(new OrExpr(left, right)) : new OrExpr(left, right);
-            }
+
+            if (AutoEval) EvalEquivalents(eq, null);
             return null;
         }
 
         if (neg)
         {
             LogicExpr? negEval = Eval(-id, eq.Select(x => -x).ToHashSet(), false);
-            if (negEval != null) return new NotExpr(negEval).Clean();
+            if (negEval != null)
+            {
+                result = new NotExpr(negEval).Clean();
+                if (AutoEval) EvalEquivalents(eq, result);
+                return result;
+            } 
         }
+
+        if (AutoEval) EvalEquivalents(eq, null);
         return null;
     }
 
@@ -307,6 +326,28 @@ public class WireManager
             return null;
         }
         return null;
+    }
+
+    private void EvalEquivalents(HashSet<int> equivalents, LogicExpr? l)
+    {
+        foreach (int eqID in equivalents)
+        {
+            Wires[eqID].Cache = l;
+            Wires[-eqID].Cache = l != null ? new NotExpr(l).Clean() : null;
+            Wires[eqID].Updated = true;
+            Wires[-eqID].Updated = true;
+        }
+    }
+
+    public void ResetWires() { foreach (var kvp in Wires) kvp.Value.Updated = false; }
+
+    public void EvalAll()
+    {
+        foreach (var kvp in Wires)
+        {
+            if (kvp.Value.Updated) continue;
+            Eval(kvp.Value.ID);
+        }
     }
     #endregion
 
@@ -372,8 +413,8 @@ public class WireManager
     {
         Wire wire = Wires[id];
         wire.Signature = null;
-        Wires.Remove(wire.L); Wires.Remove(wire.R);
-        Wires.Remove(-wire.L); Wires.Remove(-wire.R);
+        Wires.Remove(wire.L); Wires.Remove(wire.R); freeIDs.Add(wire.L); freeIDs.Add(wire.R);
+        Wires.Remove(-wire.L); Wires.Remove(-wire.R); freeIDs.Add(-wire.L); freeIDs.Add(-wire.R);
         wire.LeftChild = wire.RightChild = 0;
     }
     #endregion
