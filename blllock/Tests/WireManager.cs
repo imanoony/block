@@ -121,6 +121,20 @@ public class WireManager
 
         return true;
     }
+
+    // wire와 logic expr의 호환 가능성을 반환
+    public bool Compatible(int w, LogicExpr l)
+    {
+        HashSet<int> eq = GetEquivalents(w);
+        WireExpr? s = GetSignature(w, eq);
+        if (s != null)
+        {
+            if (!CompareSig(s, LogicToSig(l))) return false;
+            LogicExpr? wl = Eval(w);
+            if (wl != null) return wl.Equals(l);
+        }
+        return true;
+    }
     #endregion
 
     #region Mapping
@@ -144,7 +158,7 @@ public class WireManager
         if (WireLogic.ContainsKey(id)) WireLogic.Remove(id);
         freeIDs.Add(id);
 
-        foreach (int removeID in remove)
+        foreach (int removeID in remove) // 시그니처 삭제 관련 (보완 필요)
         {
             if (WireLogic.ContainsKey(Wires[removeID].L)) continue;
             RemoveSignature(removeID);
@@ -152,6 +166,9 @@ public class WireManager
 
         if (neg) RemoveWire(-id, false);
     }
+
+    // NOTE: AddTo_ 계열의 함수들은 사용할 때, 결과가 false라면 rollback을 해줘야 한다.
+    // 내부에 rollback 기능이 없어서 외부에서 반드시 해줘야 함!!!
 
     public bool AddToDict(int w1, int w2)
     {
@@ -181,6 +198,7 @@ public class WireManager
             {
                 if (expr is WireAnd a) return AddToDict(Wires[wire.L], a.Left) && AddToDict(Wires[wire.R], a.Right);
                 if (expr is WireOr o) return AddToDict(Wires[wire.L], o.Left) && AddToDict(Wires[wire.R], o.Right);
+                return false;
             }
 
             // 새로운 자식 생성하고 시그니처 등록
@@ -190,15 +208,53 @@ public class WireManager
 
             if (expr is WireAnd a) wire.Composite(new WireAnd(left, right), left.ID, right.ID);
             if (expr is WireOr o) wire.Composite(new WireOr(left, right), left.ID, right.ID);
-            
+
             if (expr is WireAnd a) return AddToDict(left, a.Left) && AddToDict(right, a.Right);
             if (expr is WireOr o) return AddToDict(left, o.Left) && AddToDict(right, o.Right);
+            return false;
         }
 
         // 그렇지 않은 경우
         if (w1 is WireNot n1 && w2 is WireNot n2) return AddToDict(n1.Inner, n2.Inner);
         if (w1 is WireAnd a1 && w2 is WireAnd a2) return AddToDict(a1.Left, a2.Left) && AddToDict(a1.Right, a2.Right);
         if (w1 is WireOr o1 && w2 is WireOr o2) return AddToDict(o1.Left, o2.Left) && AddToDict(o1.Right, o2.Right);
+        return false;
+    }
+
+    public bool AddToLogic(int w, LogicExpr l)
+    {
+        if (!Compatible(w, l)) return false;
+
+        if (l is VarExpr _ || l is ConstantExpr _) { WireLogic[w] = l; return true; }
+        if (l is NotExpr n) return AddToLogic(-w, n.Inner);
+
+        // l is AndExpr or OrExpr
+        if (Wires[w].L != 0)
+        {
+            if (l is AndExpr a) return AddToLogic(Wires[wire.L], a.Left) && AddToLogic(Wires[wire.R], a.Right);
+            if (l is OrExpr o) return AddToLogic(Wires[wire.L], o.Left) && AddToLogic(Wires[wire.R], o.Right);
+            return false;
+        }
+
+        // 새로운 자식 생성하고 시그니처 등록
+        Wire left = new Wire(GenerateID(), wire.ID), leftneg = new Wire(-left.ID);
+        Wire right = new Wire(GenerateID(), wire.ID), rightneg = new Wire(-right.ID);
+        AddWire(left, leftneg); AddWire(right, rightneg);
+
+        if (l is AndExpr a) wire.Composite(new WireAnd(left, right), left.ID, right.ID);
+        if (l is OrExpr o) wire.Composite(new WireOr(left, right), left.ID, right.ID);
+
+        if (l is AndExpr a) return AddToDict(left, a.Left) && AddToDict(right, a.Right);
+        if (l is OrExpr o) return AddToDict(left, o.Left) && AddToDict(right, o.Right);
+        return false;
+    }
+
+    public bool AddToLogic(WireExpr w, LogicExpr l)
+    {
+        if (w is Wire _) return AddToLogic(((Wire)w).ID, l);
+        if (w is WireNot n) return AddToLogic(n.Inner, new NotExpr(l).Clean());
+        if (w is WireAnd aw && l is AndExpr al) return AddToLogic(aw.Left, al.Left) && AddToLogic(aw.Right, al.Right);
+        if (w is WireOr ow && l is OrExpr ol) return AddToLogic(ow.Left, ol.Left) && AddToLogic(ow.Right, ol.Right);
         return false;
     }
 
