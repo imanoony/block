@@ -66,18 +66,27 @@ public class WireManager
         return result;
     }
 
-    public WireExpr? GetSignature(int id, HashSet<int>? equivalents = null)
+    public WireExpr? GetSignature(int id, HashSet<int>? equivalents = null, bool neg = true)
     {
-        if (Wires[-id].Signature != null) return new WireNot(Wires[-id].Signature);
-
         HashSet<int> eq = equivalents == null ? GetEquivalents(id) : new(equivalents);
 
         foreach (int eqID in eq)
         {
             if (Wires[eqID].Signature == null) continue;
-            return Wires[eqID].Signature;
+            if (Wires[eqID].Signature is not WireAnd _ && Wires[eqID].Signature is not WireOr _) return null;
+
+            WireExpr left = GetSignature(Wires[eqID].Signature.Left) ?? Wires[eqID].Signature.Left;
+            WireExpr right = GetSignature(Wires[eqID].Signature.Right) ?? Wires[eqID].Signature.Right;
+            if (Wires[eqID].Signature is WireAnd _) return new WireAnd(left, right);
+            else return new WireOr(left, right);
         }
 
+        if (neg)
+        {
+            WireExpr? negSig = GetSignature(-id, eq.Select(x => -x).ToHashSet(), false);
+            if (negSig != null) return new WireNot(negSig);
+        }
+        
         return null;
     }
 
