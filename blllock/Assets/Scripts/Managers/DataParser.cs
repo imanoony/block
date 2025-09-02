@@ -40,9 +40,9 @@ public static class DataParser
             {
                 string header = headers[j].ToLower();
 
-                if (header == ID.ToLower()) block.ID = int.Parse(values[j]);
-                else if (header == Width.ToLower()) block.Width = int.Parse(values[j]);
-                else if (header == Height.ToLower()) block.Height = int.Parse(values[j]);
+                if (header == ID.ToLower()) block.SetID(int.Parse(values[j]));
+                else if (header == Width.ToLower()) block.SetWidth(int.Parse(values[j]));
+                else if (header == Height.ToLower()) block.SetHeight(int.Parse(values[j]));
                 else if (header == Sprite.ToLower()) { } // TODO
                 else if (header == Tiles.ToLower() || header == Grids.ToLower())
                 {
@@ -50,15 +50,15 @@ public static class DataParser
                     List<Vector2Int> vector = new();
                     for (int k = 0; k < items.Count; k++) vector.Add(ParsePos(items[k]));
 
-                    if (header == Tiles.ToLower()) block.Tiles = vector;
-                    else block.Grids = vector;
+                    if (header == Tiles.ToLower()) block.SetTiles(vector);
+                    else block.SetGrids(vector);
                 }
                 else if (header == Ports.ToLower())
                 {
                     List<string> items = values[j].Split(';').ToList<string>();
                     List<WireExpr> wires = new();
                     for (int k = 0; k < items.Count; k++) wires.Add(ParseExpr<WireExpr>(items[k]));
-                    block.Ports = wires;
+                    block.SetPorts(wires);
                 }
             }
 
