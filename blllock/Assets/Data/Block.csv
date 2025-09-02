@@ -1,1 +1,4 @@
-ID,Width,Height,Sprite,Tile,Grid,Ports
+ID,Width,Height,Sprite,Tiles,Grids,Ports
+0,2,2,,(0.0);(0.1);(1.0);(1.1),(0.0);(0.2);(2.0);(2.2),a;~a;~a;a
+1,2,2,,(0.0);(0.1);(1.1),(0.0);(0.2);(1.0);(2.1);(2.2),a;a+b;~a;~b;b
+2,,,,,,a

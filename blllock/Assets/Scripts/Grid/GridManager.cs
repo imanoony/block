@@ -17,7 +17,7 @@ public class GridManager : MonoBehaviour
 
     #region Grid Data
     public string csvFileName = "Data.csv";
-    public static Dictionary<int, DataParser.RowData> GridData { get; private set; } = new Dictionary<int, DataParser.RowData>();
+    public static Dictionary<int, DataParser.StageData> GridData { get; private set; } = new Dictionary<int, DataParser.StageData>();
     private void Awake()
     {
         LoadGridData();
@@ -25,7 +25,7 @@ public class GridManager : MonoBehaviour
     private void LoadGridData()
     {
         string filePath = Path.Combine(Application.dataPath, "Data", csvFileName);
-        List<DataParser.RowData> rows = DataParser.ParseCSV(filePath);
+        List<DataParser.StageData> rows = DataParser.ParseCSV(filePath);
 
         foreach (var row in rows)
         {
@@ -63,15 +63,6 @@ public class GridManager : MonoBehaviour
 
         return GridPoint[x, y];
     }
-
-    private static void BlockGridPoint(int x, int y, BlockData blockData, Vector2Int blockGrid)
-    {
-        Assert.IsNotNull(GridPoint, "GridPoint array is not initialized.");
-        Assert.IsTrue(x >= 0 && y >= 0, "GridPoint indices must be non-negative.");
-        Assert.IsTrue(x < GridPoint.GetLength(0) && y < GridPoint.GetLength(1), "GridPoint indices must be within bounds.");
-
-        GridPoint[x, y].AddBlockData(blockData, blockGrid);
-    }
     #endregion
 
     #region Tiles
@@ -107,21 +98,7 @@ public class GridManager : MonoBehaviour
                 return false;
             }
         }
-
-        blockData.SetBasePosition(basePos); // Set the base position for the block
-
-        // Register block data to grid points
-        SynchronizeGrid(blockData, basePos, blockData.Grid);
         return true;
-    }
-
-    public static void SynchronizeGrid(BlockData blockData, Vector2Int basePos, List<Vector2Int> gridOffsets) 
-    {
-        foreach (var offset in gridOffsets)
-        {
-            Vector2Int pos = basePos + offset;
-            BlockGridPoint(pos.x, pos.y, blockData, offset);
-        }
     }
     #endregion
 

@@ -69,30 +69,6 @@ public class WireManager
         return result;
     }
 
-    public WireExpr? GetSignature(int id, HashSet<int>? equivalents = null, bool neg = true)
-    {
-        HashSet<int> eq = equivalents == null ? GetEquivalents(id) : new(equivalents);
-
-        foreach (int eqID in eq)
-        {
-            if (Wires[eqID].Signature == null) continue;
-            if (Wires[eqID].Signature is not WireAnd _ && Wires[eqID].Signature is not WireOr _) return null;
-
-            WireExpr left = GetSignature(Wires[eqID].L) ?? Wires[Wires[eqID].L];
-            WireExpr right = GetSignature(Wires[eqID].R) ?? Wires[Wires[eqID].R];
-            if (Wires[eqID].Signature is WireAnd _) return new WireAnd(left, right);
-            else return new WireOr(left, right);
-        }
-
-        if (neg)
-        {
-            WireExpr? negSig = GetSignature(-id, eq.Select(x => -x).ToHashSet(), false);
-            if (negSig != null) return new WireNot(negSig);
-        }
-
-        return null;
-    }
-
     // 두 노드의 호환 가능성을 반환
     public bool Compatible(int w1, int w2)
     {
@@ -158,19 +134,23 @@ public class WireManager
     }
     public void RemoveWire(int id, bool neg = true)
     {
-        List<int> remove = new();
+        if (id < reservedCount && id > -reservedCount) return;
+
+        List<int> sigRemove = new();
         if (WireDict.TryGetValue(id, out HashSet<int> eq))
         {
             foreach (int eqID in eq)
             {
                 WireDict[eqID].Remove(id);
-                if (WireDict[eqID].Count == 0 && Wires[eqID].P != 0) remove.Add(Wires[eqID].P);
+                if (WireDict[eqID].Count == 0 && Wires[eqID].P != 0) sigRemove.Add(Wires[eqID].P);
             }
         }
         if (WireLogic.ContainsKey(id)) WireLogic.Remove(id);
-        freeIDs.Add(id);
+        if (Wires[id].L != 0) { RemoveWire(Wires[id].L); RemoveWire(Wires[id].R); }
+        if (id > 0) freeIDs.Add(id);
+        Wires.Remove(id);
 
-        foreach (int removeID in remove) // 시그니처 삭제 관련 (보완 필요)
+        foreach (int removeID in sigRemove) // 시그니처 삭제 관련 (보완 필요)
         {
             if (WireLogic.ContainsKey(Wires[removeID].L)) continue;
             RemoveSignature(removeID);
@@ -203,13 +183,17 @@ public class WireManager
             WireExpr expr = w1 is Wire ? w2 : w1;
 
             if (expr is Wire w) return AddToDict(wire.ID, w.ID);
-            if (expr is WireNot n) return AddToDict(Wires[-wire.ID], n.Inner);
+            if (expr is WireNot n) return AddToDict(Wires[-wire.ID], n.Inner!);
+
+            // 기존의 시그니처에 부합하는지 확인
+            WireExpr? wsig = GetSignature(wire.ID), esig = GetSignature(expr);
+            if (!CompareSig(wsig, esig)) return false;
 
             // expr is WireAnd or WireOr
             if (wire.L != 0)
             {
-                if (expr is WireAnd wa) return AddToDict(Wires[wire.L], wa.Left) && AddToDict(Wires[wire.R], wa.Right);
-                if (expr is WireOr wo) return AddToDict(Wires[wire.L], wo.Left) && AddToDict(Wires[wire.R], wo.Right);
+                if (expr is WireAnd wa) return AddToDict(Wires[wire.L], wa.Left!) && AddToDict(Wires[wire.R], wa.Right!);
+                if (expr is WireOr wo) return AddToDict(Wires[wire.L], wo.Left!) && AddToDict(Wires[wire.R], wo.Right!);
                 return false;
             }
 
@@ -221,15 +205,15 @@ public class WireManager
             if (expr is WireAnd _) wire.Composite(new WireAnd(left, right), left.ID, right.ID);
             if (expr is WireOr _) wire.Composite(new WireOr(left, right), left.ID, right.ID);
 
-            if (expr is WireAnd a) return AddToDict(left, a.Left) && AddToDict(right, a.Right);
-            if (expr is WireOr o) return AddToDict(left, o.Left) && AddToDict(right, o.Right);
+            if (expr is WireAnd a) return AddToDict(left, a.Left!) && AddToDict(right, a.Right!);
+            if (expr is WireOr o) return AddToDict(left, o.Left!) && AddToDict(right, o.Right!);
             return false;
         }
 
         // 그렇지 않은 경우
-        if (w1 is WireNot n1 && w2 is WireNot n2) return AddToDict(n1.Inner, n2.Inner);
-        if (w1 is WireAnd a1 && w2 is WireAnd a2) return AddToDict(a1.Left, a2.Left) && AddToDict(a1.Right, a2.Right);
-        if (w1 is WireOr o1 && w2 is WireOr o2) return AddToDict(o1.Left, o2.Left) && AddToDict(o1.Right, o2.Right);
+        if (w1 is WireNot n1 && w2 is WireNot n2) return AddToDict(n1.Inner!, n2.Inner!);
+        if (w1 is WireAnd a1 && w2 is WireAnd a2) return AddToDict(a1.Left!, a2.Left!) && AddToDict(a1.Right!, a2.Right!);
+        if (w1 is WireOr o1 && w2 is WireOr o2) return AddToDict(o1.Left!, o2.Left!) && AddToDict(o1.Right!, o2.Right!);
         return false;
     }
 
@@ -241,7 +225,7 @@ public class WireManager
         if (l is NotExpr n) return AddToLogic(-w, n.Inner);
 
         Wire wire = Wires[w];
-        
+
         // l is AndExpr or OrExpr
         if (Wires[w].L != 0)
         {
@@ -266,42 +250,150 @@ public class WireManager
     public bool AddToLogic(WireExpr w, LogicExpr l)
     {
         if (w is Wire _) return AddToLogic(((Wire)w).ID, l);
-        if (w is WireNot n) return AddToLogic(n.Inner, new NotExpr(l).Clean());
-        if (w is WireAnd aw && l is AndExpr al) return AddToLogic(aw.Left, al.Left) && AddToLogic(aw.Right, al.Right);
-        if (w is WireOr ow && l is OrExpr ol) return AddToLogic(ow.Left, ol.Left) && AddToLogic(ow.Right, ol.Right);
+        if (w is WireNot n) return AddToLogic(n.Inner!, new NotExpr(l).Clean());
+        if (w is WireAnd aw && l is AndExpr al) return AddToLogic(aw.Left!, al.Left) && AddToLogic(aw.Right!, al.Right);
+        if (w is WireOr ow && l is OrExpr ol) return AddToLogic(ow.Left!, ol.Left) && AddToLogic(ow.Right!, ol.Right);
         return false;
     }
 
-    public LogicExpr? Eval(int id, HashSet<int>? equivalents = null)
+    public LogicExpr? Eval(int id, HashSet<int>? equivalents = null, bool neg = true)
+    {
+        HashSet<int> eq = equivalents == null ? GetEquivalents(id) : new(equivalents);
+
+        LogicExpr? result = null;
+        foreach (int eqID in eq)
+        {
+            if (WireLogic.ContainsKey(eqID))
+            {
+                result = WireLogic[eqID];
+                if (AutoEval) EvalEquivalents(eq, result);
+                return result;
+            }
+            if (Wires[eqID].L == 0) continue;
+
+            WireExpr? sig = GetSignature(eqID); // 여기서부터 수정 필요
+            bool not = false; WireExpr? newsig = sig;
+            if (sig is WireNot signot) { not = true; newsig = signot.Inner; }
+            if (newsig is WireAnd _ || newsig is WireOr _)
+            {
+                LogicExpr? left = Eval(Wires[eqID].L), right = Eval(Wires[eqID].R);
+                if (left != null && right != null)
+                {
+                    if (newsig is WireAnd _) result = not ? new NotExpr(new AndExpr(left, right)) : new AndExpr(left, right);
+                    else result = not ? new NotExpr(new OrExpr(left, right)) : new OrExpr(left, right);
+
+                    if (AutoEval) EvalEquivalents(eq, result);
+                    return result;
+                }
+            }
+
+            if (AutoEval) EvalEquivalents(eq, null);
+            return null;
+        }
+
+        if (neg)
+        {
+            LogicExpr? negEval = Eval(-id, eq.Select(x => -x).ToHashSet(), false);
+            if (negEval != null)
+            {
+                result = new NotExpr(negEval).Clean();
+                if (AutoEval) EvalEquivalents(eq, result);
+                return result;
+            }
+        }
+
+        if (AutoEval) EvalEquivalents(eq, null);
+        return null;
+    }
+
+    public LogicExpr? Eval(WireExpr expr)
+    {
+        if (expr is Wire w) return Eval(w.ID);
+        if (expr is WireNot n)
+        {
+            LogicExpr? inner = Eval(n.Inner!);
+            if (inner == null) return null;
+            return new NotExpr(inner).Clean();
+        }
+        if (expr is WireAnd a)
+        {
+            LogicExpr? left = Eval(a.Left!), right = Eval(a.Right!);
+            if (left != null && right != null) return new AndExpr(left, right);
+            return null;
+        }
+        if (expr is WireOr o)
+        {
+            LogicExpr? left = Eval(o.Left!), right = Eval(o.Right!);
+            if (left != null && right != null) return new OrExpr(left, right);
+            return null;
+        }
+        return null;
+    }
+
+    private void EvalEquivalents(HashSet<int> equivalents, LogicExpr? l)
+    {
+        foreach (int eqID in equivalents)
+        {
+            Wires[eqID].Cache = l;
+            Wires[-eqID].Cache = l != null ? new NotExpr(l).Clean() : null;
+            Wires[eqID].Updated = true;
+            Wires[-eqID].Updated = true;
+        }
+    }
+
+    public void ResetWires() { foreach (var kvp in Wires) kvp.Value.Updated = false; }
+
+    public void EvalAll()
+    {
+        foreach (var kvp in Wires)
+        {
+            if (kvp.Value.Updated) continue;
+            Eval(kvp.Value.ID);
+        }
+    }
+    #endregion
+
+    #region Signature
+    public WireExpr? GetSignature(int id, HashSet<int>? equivalents = null, bool neg = true)
     {
         HashSet<int> eq = equivalents == null ? GetEquivalents(id) : new(equivalents);
 
         foreach (int eqID in eq)
         {
-            if (WireLogic.ContainsKey(eqID)) return WireLogic[eqID];
-            if (Wires[eqID].L == 0) continue;
+            if (Wires[eqID].Signature == null) continue;
+            if (Wires[eqID].Signature is not WireAnd _ && Wires[eqID].Signature is not WireOr _) return null;
 
-            WireExpr? sig = Wires[eqID].Signature; // 여기서부터 수정 필요
-            bool not = false; WireExpr? newsig = sig;
-            if (sig is WireNot signot) { not = true; newsig = signot.Inner; }
-            if (newsig is WireAnd a && a.Left is Wire al && a.Right is Wire ar)
-            {
-                LogicExpr? left = Eval(al.ID), right = Eval(ar.ID);
-                if (left != null && right != null) return not ? new NotExpr(new AndExpr(left, right)) : new AndExpr(left, right);
-            }
-            if (newsig is WireOr o && o.Left is Wire ol && o.Right is Wire or)
-            {
-                LogicExpr? left = Eval(ol.ID), right = Eval(or.ID);
-                if (left != null && right != null) return not ? new NotExpr(new OrExpr(left, right)) : new OrExpr(left, right);
-            }
-            return null;
+            WireExpr? left = GetSignature(Wires[eqID].L);
+            WireExpr? right = GetSignature(Wires[eqID].R);
+            if (Wires[eqID].Signature is WireAnd _) return new WireAnd(left, right);
+            else return new WireOr(left, right);
+        }
+
+        if (neg)
+        {
+            WireExpr? negSig = GetSignature(-id, eq.Select(x => -x).ToHashSet(), false);
+            if (negSig != null) return new WireNot(negSig);
         }
 
         return null;
     }
-    #endregion
 
-    #region Signature
+    public WireExpr? GetSignature(WireExpr expr)
+    {
+        if (expr is Wire w) return GetSignature(w.ID);
+        if (expr is WireNot n)
+        {
+            WireExpr? inner = GetSignature(n.Inner!);
+            if (inner == null) return new WireNot(null);
+            else return new WireNot(inner).Clean();
+        }
+
+        WireExpr? left, right;
+        if (expr is WireAnd a) { left = GetSignature(a.Left!); right = GetSignature(a.Right!); return new WireAnd(left, right); }
+        if (expr is WireOr o) { left = GetSignature(o.Left!); right = GetSignature(o.Right!); return new WireOr(left, right); }
+
+        return null;
+    }
     // LogicExpr -> Wire Signature
     private WireExpr LogicToSig(LogicExpr expr)
     {
@@ -310,8 +402,9 @@ public class WireManager
         else if (expr is OrExpr o) return new WireOr(LogicToSig(o.Left), LogicToSig(o.Right));
         else return new Wire(0);
     }
-    private bool CompareSig(WireExpr w1, WireExpr w2)
+    private bool CompareSig(WireExpr? w1, WireExpr? w2)
     {
+        if (w1 is null || w2 is null) return true;
         if (w1 is Wire && w2 is Wire) return true;
         if (w1 is WireNot n1 && w2 is WireNot n2) return CompareSig(n1.Inner, n2.Inner);
         if (w1 is WireAnd a1 && w2 is WireAnd a2) return CompareSig(a1.Left, a2.Left) && CompareSig(a1.Right, a2.Right);
@@ -322,9 +415,28 @@ public class WireManager
     {
         Wire wire = Wires[id];
         wire.Signature = null;
-        Wires.Remove(wire.L); Wires.Remove(wire.R);
-        Wires.Remove(-wire.L); Wires.Remove(-wire.R);
+        Wires.Remove(wire.L); Wires.Remove(wire.R); freeIDs.Add(wire.L); freeIDs.Add(wire.R);
+        Wires.Remove(-wire.L); Wires.Remove(-wire.R); freeIDs.Add(-wire.L); freeIDs.Add(-wire.R);
         wire.LeftChild = wire.RightChild = 0;
     }
+    #endregion
+
+    #region Reserved
+    // unique 포트 생성을 위한 template 와이어
+    // 게임 셋업 이후 블록 파싱 직전에 호출되어야 한다
+    private int reservedCount = -1;
+    public void ReserveWire(int count)
+    {
+        reservedCount = count;
+        for (int i = 0; i < count; i++) AddWire(new Wire(GenerateID()));
+    }
+    public Wire? GetReservedWire(int id)
+    {
+        if (reservedCount == -1) throw new Exception("와이어 템플릿이 예약되지 않음.");
+
+        if (id > reservedCount || id < -reservedCount) return null;
+        return Wires[id];
+    }
+    public int NameToReservedID(char name) => name - 'a' + 1;
     #endregion
 }
