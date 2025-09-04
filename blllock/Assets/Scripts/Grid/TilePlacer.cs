@@ -43,7 +43,7 @@ public class TilePlacer : MonoBehaviour
         this.height = height;
         for (int x = 0; x < height; x++)
             for (int y = 0; y < width; y++)
-                tilemap.SetTile(GridToCell(x, y), tileCenter);
+                tilemap.SetTile(TileToCell(x, y), tileCenter);
 
         PlaceBoundaries();
         PlaceCamera();
@@ -53,18 +53,18 @@ public class TilePlacer : MonoBehaviour
         if (tilemap == null || tileCenter == null) { Utils.PrintError("Invalid tilemap or tiles"); return; }
         for (int x = 0; x < height; x++)
         {
-            tilemap.SetTile(GridToCell(x, -1), tileLeft);
-            tilemap.SetTile(GridToCell(x, width), tileRight);
+            tilemap.SetTile(TileToCell(x, -1), tileLeft);
+            tilemap.SetTile(TileToCell(x, width), tileRight);
         }
         for (int y = 0; y < width; y++)
         {
-            tilemap.SetTile(GridToCell(-1, y), tileTop);
-            tilemap.SetTile(GridToCell(height, y), tileBottom);
+            tilemap.SetTile(TileToCell(-1, y), tileTop);
+            tilemap.SetTile(TileToCell(height, y), tileBottom);
         }
-        tilemap.SetTile(GridToCell(-1, -1), tileTopLeft);
-        tilemap.SetTile(GridToCell(-1, width), tileTopRight);
-        tilemap.SetTile(GridToCell(height, -1), tileBottomLeft);
-        tilemap.SetTile(GridToCell(height, width), tileBottomRight);
+        tilemap.SetTile(TileToCell(-1, -1), tileTopLeft);
+        tilemap.SetTile(TileToCell(-1, width), tileTopRight);
+        tilemap.SetTile(TileToCell(height, -1), tileBottomLeft);
+        tilemap.SetTile(TileToCell(height, width), tileBottomRight);
     }
 
     // Base Position, Offset, Scale 모두 포함해서 카메라 세팅
@@ -108,25 +108,20 @@ public class TilePlacer : MonoBehaviour
     }
     #endregion
 
-    #region Grid Position
-    private Vector3Int GridToCell(int x, int y) => new(y, height - 1 - x, 0);
+    #region Tile Position
+    private Vector3Int TileToCell(int x, int y) => new(y, height - 1 - x, 0);
 
-    public Vector3? GetGridCenterWorld(int x, int y)
+    public Vector3? GetTileCenterWorld(int x, int y)
     {
-        // TODO
-        return null;
+        if (x < 0 || x >= height || y < 0 || y >= width) return null;
+        return tilemap.GetCellCenterWorld(TileToCell(x, y));
     }
 
-    public Vector3? GetGridTopLeftWorld(int x, int y)
+    public Vector3? GetTileTopLeftWorld(int x, int y)
     {
-        // TODO
-        return null;
-    }
-
-    public Vector2Int? GetNearestGrid(Vector3 worldPos)
-    {
-        // TOOD
-        return null;
+        if (x < 0 || x >= height || y < 0 || y >= width) return null;
+        Vector3 center = tilemap.GetCellCenterWorld(TileToCell(x, y));
+        return center + new Vector3(-tilemap.cellSize.x / 2f, tilemap.cellSize.y / 2f, 0);
     }
     #endregion
 }

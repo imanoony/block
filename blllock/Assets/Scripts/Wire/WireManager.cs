@@ -14,6 +14,12 @@ public class WireManager
         // TODO
         initialized = true;
     }
+    public void RollBack(Dictionary<int, HashSet<int>> dict, Dictionary<int, LogicExpr> logic)
+    {
+        WireDict = dict;
+        WireLogic = logic;
+    }
+
     public Dictionary<int, Wire> Wires { get; private set; } = new Dictionary<int, Wire>(); // ID에 대한 Wire 매핑
     public Dictionary<int, HashSet<int>> WireDict { get; private set; } = new Dictionary<int, HashSet<int>>(); // Wire끼리의 관계
     public Dictionary<int, LogicExpr> WireLogic { get; private set; } = new Dictionary<int, LogicExpr>(); // Wire와 LogicExpr 매핑
@@ -39,7 +45,7 @@ public class WireManager
     #region Graph
 
     // neg flag를 통해 id에 연결이 적은 음수나 양수가 들어와도 모든 Equivalents를 반환하도록 함
-    public HashSet<int> GetEquivalents(int id, HashSet<int>? visited = null, bool neg = true)
+    private HashSet<int> GetEquivalents(int id, HashSet<int>? visited = null, bool neg = true)
     {
         HashSet<int> result = new();
         visited ??= new();
@@ -78,7 +84,7 @@ public class WireManager
     }
 
     // 두 노드의 호환 가능성을 반환
-    public bool Compatible(int w1, int w2)
+    private bool Compatible(int w1, int w2)
     {
         HashSet<int> eq1 = GetEquivalents(w1), eq2 = GetEquivalents(w2);
         WireExpr? s1 = GetSignature(w1, eq1), s2 = GetSignature(w2, eq2);
@@ -119,7 +125,7 @@ public class WireManager
     }
 
     // wire와 logic expr의 호환 가능성을 반환
-    public bool Compatible(int w, LogicExpr l)
+    private bool Compatible(int w, LogicExpr l)
     {
         HashSet<int> eq = GetEquivalents(w);
         WireExpr? s = GetSignature(w, eq);
@@ -140,6 +146,8 @@ public class WireManager
         if (neg != null) Wires[-pos.ID] = neg;
         else Wires[-pos.ID] = new Wire(-pos.ID);
     }
+
+    // 일단 Wires에서는 삭제하지 않고 WireDict, WireLogic에서만 삭제하는 상태.
     public void RemoveWire(int id, bool neg = true)
     {
         if (id < reservedCount && id > -reservedCount) return;
@@ -155,8 +163,8 @@ public class WireManager
         }
         if (WireLogic.ContainsKey(id)) WireLogic.Remove(id);
         if (Wires[id].L != 0) { RemoveWire(Wires[id].L); RemoveWire(Wires[id].R); }
-        if (id > 0) freeIDs.Add(id);
-        Wires.Remove(id);
+        // if (id > 0) freeIDs.Add(id);
+        // Wires.Remove(id);
 
         foreach (int removeID in sigRemove) // 시그니처 삭제 관련 (보완 필요)
         {

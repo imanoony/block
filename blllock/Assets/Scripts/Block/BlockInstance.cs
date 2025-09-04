@@ -1,9 +1,11 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BlockInstance : MonoBehaviour
 {
     private BlockData blockData;
     private bool isDragging = false;
+    private GridManager gm = GameManager.Instance.Grid;
 
     public void Initialize(BlockData blockData)
     {
@@ -15,7 +17,18 @@ public class BlockInstance : MonoBehaviour
     public void BeginDrag()
     {
         isDragging = true;
-        // 드래그 시작 시 다른 UI 이벤트 차단용 처리도 가능
+
+        if (isPlaced) Unplace(gm);
+    }
+
+    public void EndDrag()
+    {
+        isDragging = false;
+
+        Vector2Int? snapPos = gm.GetNearestTile(GetBaseTilePos());
+        if (snapPos == null) return; // 여기에 블록 슬라이딩 로직
+
+        if (!Place(gm, (Vector2Int)snapPos)) return; // 여기도 블록 슬라이딩 로직
     }
 
     private void Update()
@@ -28,40 +41,52 @@ public class BlockInstance : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0) && isDragging)
         {
-            //EndDrag();
+            EndDrag();
         }
     }
 
-    // 여기에 이제 회전이랑 반전 I/O도 추가한다
-    /*
-    private void EndDrag()
+    private bool isPlaced = false;
+    private Vector2Int baseTile = new(-1, -1);
+    public bool Valid = true;
+
+    // Invalid Position이면 아예 둘 수 없다.
+    // Invalid Ports면 둘 수는 있으나 Block Instance의 Valid가 false가 된다.
+    // Valid가 false인 block들은 타일에 변화가 있을 때마다 
+    private bool Place(GridManager gm, Vector2Int baseTile)
     {
-        isDragging = false;
+        if (isPlaced || !baseTile.Equals(new(-1, -1))) return false;
+        if (!gm.IsValidPos(blockData, baseTile)) return false;
 
-        int blockHeight = property.Size.x;
-        int blockWidth = property.Size.y;
-        float unit = Utils.TILE_SPACING / Utils.DENOMINATOR;
+        isPlaced = true;
+        this.baseTile = baseTile;
 
-        Vector2Int? snapPos = GridManager.GetNearestGridPosition(
-            transform.position - new Vector3(blockWidth / 2f * unit, (-1) * blockHeight / 2f * unit, 0));
-
-        if (snapPos != null && GridManager.PlaceBlock(property, (Vector2Int)snapPos, property.Tile))
+        if (!gm.PlaceBlock(blockData, baseTile))
         {
-            Vector3 topLeftPos = GridManager.GridToWorld(snapPos.Value);
-            transform.position = topLeftPos + new Vector3(blockWidth / 2f * unit, (-1) * blockHeight / 2f * unit, 0);
-
-            //portPositioner.UpdateText(property); // 포트 텍스트 업데이트
+            Valid = false;
+            gm.AddInvalid(this);
         }
-        else
-        {
-            Debug.LogWarning($"블록을 배치할 수 없습니다. 위치: {snapPos?.x}, {snapPos?.y}");
-            Destroy(gameObject);
-        }
+        return true;
     }
 
-    private void SlideBlock(Vector3 arrival)
+    private void Unplace(GridManager gm)
     {
-        
-    }*/
+        if (!isPlaced || baseTile.Equals(new(-1, -1))) return;
+        gm.RemoveBlock(blockData, baseTile, Valid);
+        isPlaced = false;
+        baseTile = new(-1, -1);
 
+        Valid = true;
+        gm.RemoveInvalid(this);
+    }
+
+    public void Check(GridManager gm)
+    {
+        if (!isPlaced || baseTile.Equals(new(-1, -1)) || Valid) return;
+        if (!gm.PlaceBlock(blockData, baseTile)) return;
+
+        Valid = true;
+        gm.RemoveInvalid(this);
+    }
+
+    private Vector3 GetBaseTilePos() => transform.position + new Vector3(-blockData.Width / 2f, blockData.Height / 2f, 0);
 }

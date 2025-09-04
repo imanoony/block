@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using Unity.Collections;
 using UnityEngine;
@@ -22,10 +23,18 @@ public class Grid
 {
     public Vector2Int Pos { get; private set; }
     public GridType Type { get; private set; }
-    public LogicExpr? Expr { get; private set; } = null;
+    public LogicExpr? Expr { get; private set; } = null; // input, output과 관련된 상수 LogicExpr
+    public List<WireExpr> Ports { get; private set; } = new(); // 인접한 Ports들 (최대 4개)
     public Grid(Vector2Int pos, GridType type = GridType.Null) { Pos = pos; Type = type; }
     public void SetType(GridType type) => Type = type;
     public void SetExpr(LogicExpr? expr) => Expr = expr;
+    public bool AddPort(WireExpr port)
+    {
+        if (Ports.Count >= Utils.MAX_PORT) return false;
+        Ports.Add(port);
+        return true;
+    }
+    public void RemovePort(WireExpr port) => Ports.Remove(port);
 }
 
 public class GridManager : MonoBehaviour
@@ -86,7 +95,7 @@ public class GridManager : MonoBehaviour
         TilePlacer.PlaceTiles(width, height); // TODO
     }
 
-    private bool IsTileEmpty(int x, int y)
+    private bool IsEmptyTile(int x, int y)
     {
         if (Tiles == null) return false;
         if (!IsInTileBounds(x, y)) return false;
@@ -99,91 +108,136 @@ public class GridManager : MonoBehaviour
     }
 
     #region Block Placement
-    // Base Tile은 블록이 놓이는 타일 중 우측 상단의 타일
-    public bool CanPlaceBlock(BlockData block, Vector2Int baseTile)
+    private List<BlockInstance> invalids = new();
+    public void AddInvalid(BlockInstance instance)
     {
-        // TODO
-        return false;
+        if (instance.Valid) return;
+        invalids.Add(instance);
+    }
+    public void RemoveInvalid(BlockInstance instance)
+    {
+        if (!instance.Valid) return;
+        if (invalids.Contains(instance)) invalids.Remove(instance);
+    }
+    private void CheckInvalids()
+    {
+        foreach (BlockInstance invalid in invalids) invalid.Check(this);
     }
 
-    public bool TryPlaceBlock(BlockData block, Vector2Int baseTile)
+    public bool PlaceBlock(BlockData block, Vector2Int baseTile)
     {
-        // TODO
-        return false;
-    }
+        // 점유된 타일을 Occupied 상태로 변경한다.
+        List<Vector2Int> tileOffsets = block.Tiles;
+        foreach (Vector2Int offset in tileOffsets)
+            Tiles![offset.x + baseTile.x, offset.y + baseTile.y].SetType(TileType.Occupied);
 
-    private bool IsValidPos(BlockData block, Vector2Int baseTile)
-    {
-        // TODO
-        return false;
-    }
+        if (!IsValidPort(block, baseTile, GameManager.Instance.Wire)) return false;
 
-    private bool IsValidPort(BlockData block, Vector2Int baseTile)
-    {
-        // TODO
-        return false;
-    }
-    #endregion
-
-    /*
-    // base position is the top-left corner of the block
-    public bool PlaceBlock(BlockData blockData, Vector2Int basePos, List<Vector2Int> tileOffsets)
-    {
-        TileType[,] backup = (TileType[,])Tiles.Clone(); // Backup current tile state
-
-        foreach (var offset in tileOffsets)
+        // 점유된 그리드에 Port를 추가한다.
+        List<Vector2Int> gridOffsets = block.Grids;
+        for (int i = 0; i < gridOffsets.Count; i++)
         {
-            Vector2Int pos = basePos + offset;
-            if (IsInTileBounds(pos) && IsTileEmpty(pos))
-                Tiles[pos.x, pos.y] = TileType.Occupied;
-            else
-            {
-                Debug.LogWarning($"PlaceBlock: tilePos {pos} out of bounds");
-                Tiles = backup; // Restore from backup if any tile is invalid
-                return false;
-            }
+            Vector2Int offset = gridOffsets[i];
+            WireExpr port = block.Ports[i];
+            Grids![offset.x + baseTile.x, offset.y + baseTile.y].AddPort(port);
         }
+
+        CheckInvalids();
         return true;
     }
 
-    #region Position Conversion & Helpers
-
-    // 타일 좌표 중 가장 가까운 위치 반환 (없으면 null)
-    public Vector2Int? GetNearestGridPosition(Vector3 worldPos)
+    public void RemoveBlock(BlockData block, Vector2Int baseTile, bool valid)
     {
-        Debug.Log($"GetNearestTilePosition called with worldPos: ({worldPos.x}, {worldPos.y})");
+        // 점유했던 타일을 Empty 상태로 변경한다.
+        List<Vector2Int> tileOffsets = block.Tiles;
+        foreach (Vector2Int offset in tileOffsets)
+            Tiles![offset.x + baseTile.x, offset.y + baseTile.y].SetType(TileType.Empty);
 
-        if (GridPoint == null) return null;
+        if (!valid) return;
 
-        float minDist = float.MaxValue;
-        Vector2Int? nearest = null;
-
-        int height = GridPoint.GetLength(0);
-        int width = GridPoint.GetLength(1);
-
-        Vector3 gridWorldPos = Vector3.zero;
-        for (int x = 0; x < height; x++)
+        // 점유했던 그리드에서 Port를 제거한다.
+        // Wire Manager의 WireDict, WireLogic을 수정한다.
+        List<Vector2Int> gridOffsets = block.Grids;
+        for (int i = 0; i < gridOffsets.Count; i++)
         {
-            for (int y = 0; y < width; y++)
+            Vector2Int offset = gridOffsets[i];
+            WireExpr port = block.Ports[i];
+            Grids![offset.x + baseTile.x, offset.y + baseTile.y].RemovePort(port);
+        }
+        foreach (int id in block.PortIds) GameManager.Instance.Wire.RemoveWire(id);
+
+        CheckInvalids();
+    }
+
+    public bool IsValidPos(BlockData block, Vector2Int baseTile)
+    {
+        List<Vector2Int> offsets = block.Tiles;
+        foreach (Vector2Int offset in offsets)
+        {
+            if (!IsInTileBounds(baseTile.x + offset.x, baseTile.y + offset.y)) return false;
+            if (!IsEmptyTile(baseTile.x + offset.x, baseTile.y + offset.y)) return false;
+        }
+
+        return true;
+    }
+
+    // 블록의 포트를 모두 Compatible -> AddToDict/AddToLogic 한다.
+    // 모순 발생 시 Rollback하고 false를 반환한다.
+    // 모순이 발생하지 않으면 포트를 모두 wire manager에 등록하고 true를 반환한다.
+    private bool IsValidPort(BlockData block, Vector2Int baseGrid, WireManager wire)
+    {
+        Dictionary<int, HashSet<int>> backupDict = wire.WireDict.ToDictionary(kvp => kvp.Key, kvp => new HashSet<int>(kvp.Value));
+        Dictionary<int, LogicExpr> backupLogic = new(wire.WireLogic);
+
+
+        List<Vector2Int> offsets = block.Grids;
+        for (int i = 0; i < offsets.Count; i++)
+        {
+            Grid grid = Grids![baseGrid.x + offsets[i].x, baseGrid.y + offsets[i].y];
+            for (int j = 0; j < grid.Ports.Count; j++)
             {
-                gridWorldPos = GridToWorld(new Vector2Int(x, y));
-                float dist = Vector3.Distance(worldPos, gridWorldPos);
-                if (dist < minDist)
+                if (!wire.AddToDict(block.Ports[i], grid.Ports[j]))
                 {
-                    minDist = dist;
-                    nearest = new Vector2Int(x, y);
+                    wire.RollBack(backupDict, backupLogic);
+                    return false;
+                }
+            }
+            if (grid.Expr != null && grid.Type == GridType.Input)
+            {
+                if (!wire.AddToLogic(block.Ports[i], grid.Expr))
+                {
+                    wire.RollBack(backupDict, backupLogic);
+                    return false;
                 }
             }
         }
 
-        Debug.Log($"min distance: {minDist}, nearest grid: {nearest}, gridWorldPos: ({gridWorldPos})");
+        return true;
+    }
+
+    public Vector2Int? GetNearestTile(Vector3 worldPos)
+    {
+        if (Tiles == null) return null;
+
+        float minDist = float.MaxValue;
+        Vector2Int? nearest = null;
+
+        int height = Tiles.GetLength(0), width = Tiles.GetLength(1);
+        Vector3? topLeft;
+
+        for (int x = 0; x < height; x++)
+        {
+            for (int y = 0; y < width; y++)
+            {
+                topLeft = TilePlacer.GetTileTopLeftWorld(x, y);
+                if (topLeft == null) continue;
+                float dist = Vector3.Distance(worldPos, (Vector3)topLeft);
+
+                if (dist < minDist) { minDist = dist; nearest = new Vector2Int(x, y); }
+            }
+        }
+
         return minDist <= Utils.THRESHOLD ? nearest : null;
     }
-
-    public Vector3 GridToWorld(int x, int y)
-    {
-        
-    }
-
-    #endregion*/
+    #endregion
 }

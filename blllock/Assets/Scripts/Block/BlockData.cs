@@ -61,6 +61,7 @@ public class BlockData
 
     public List<WireExpr> Ports { get; private set; }
     public void SetPorts(List<WireExpr> ports) => Ports = ports;
+    public List<int> PortIds { get; private set; }
     #endregion
 
     // 블록이 인스턴스화 될 때 각 Port를 Unique하게 만든다
@@ -68,6 +69,7 @@ public class BlockData
     {
         Tiles = _tiles;
         Grids = _grids;
+        PortIds = new();
 
         Dictionary<int, int> lookup = new();
         for (int i = 0; i < Ports.Count; i++) Ports[i] = Subst(Ports[i], lookup);
@@ -83,6 +85,7 @@ public class BlockData
             if (wire.ID > 0) { lookup[wire.ID] = pos.ID; lookup[-wire.ID] = -pos.ID; }
             else { lookup[wire.ID] = -pos.ID; lookup[-wire.ID] = pos.ID; }
             GameManager.Instance.Wire.AddWire(pos, neg);
+            PortIds.Add(pos.ID);
 
             return wire.ID > 0 ? pos : neg;
         }
