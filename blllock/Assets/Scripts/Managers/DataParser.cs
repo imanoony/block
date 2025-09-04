@@ -9,12 +9,12 @@ public class StageData
     public List<(Vector2Int pos, LogicExpr expr)> Inputs, Outputs;
 }
 
-public static class DataParser
+public class DataParser
 {
     private const string ID = "ID", Width = "Width", Height = "Height";
     private const string Sprite = "Sprite", Tiles = "Tiles", Grids = "Grids", Ports = "Ports";
     private const string Inputs = "Inputs", Outputs = "Outputs";
-    public static Dictionary<int, BlockData> ParseBlockData(string filepath)
+    public Dictionary<int, BlockData> ParseBlockData(string filepath)
     {
         Dictionary<int, BlockData> result = new();
 
@@ -66,7 +66,7 @@ public static class DataParser
         }
         return result;
     }
-    public static Dictionary<int, StageData> ParseStageData(string filepath)
+    public Dictionary<int, StageData> ParseStageData(string filepath)
     {
         Dictionary<int, StageData> result = new();
 
@@ -121,7 +121,7 @@ public static class DataParser
 
     // CSV(,) 고려 (x.y)의 형태로 input 받는다.
     // 예시: posString == (1.2), posString == (4.4)
-    private static Vector2Int ParsePos(string posString)
+    private Vector2Int ParsePos(string posString)
     {
         string trimmed = posString[1..^1]; // 괄호 제거
         string[] splitted = trimmed.Split('.');
@@ -131,7 +131,7 @@ public static class DataParser
     }
     private const char not = '~', and = '*', or = '+';
     private const string parens = "()";
-    private static T ParseExpr<T>(string exprString)
+    private T ParseExpr<T>(string exprString)
     {
         if (exprString == "") return default;
         int pos = -1;

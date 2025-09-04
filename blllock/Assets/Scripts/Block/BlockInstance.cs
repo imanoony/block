@@ -2,27 +2,14 @@ using UnityEngine;
 
 public class BlockInstance : MonoBehaviour
 {
-    private BlockData property;
+    private BlockData blockData;
     private bool isDragging = false;
-    public PortPositioner portPositioner;
 
-    public void Initialize(BlockData prop)
+    public void Initialize(BlockData blockData)
     {
-        if (prop == null)
-        {
-            Debug.LogError("BlockData cannot be null");
-            return;
-        }
-        property = prop;
-        property.instance = this; // 블록 인스턴스 정보 설정
-        SetupVisuals();
-    }
-
-    private void SetupVisuals()
-    {
-        GetComponent<SpriteRenderer>().sprite = property.Sprite;
-        portPositioner = GetComponent<PortPositioner>();
-        portPositioner.PositionPorts(property);
+        if (blockData == null) { Utils.PrintError("BlockData는 Null일 수 없음."); return; }
+        this.blockData = blockData;
+        GetComponent<SpriteRenderer>().sprite = this.blockData.BlockSprite;
     }
 
     public void BeginDrag()
@@ -41,10 +28,12 @@ public class BlockInstance : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0) && isDragging)
         {
-            EndDrag();
+            //EndDrag();
         }
     }
 
+    // 여기에 이제 회전이랑 반전 I/O도 추가한다
+    /*
     private void EndDrag()
     {
         isDragging = false;
@@ -70,5 +59,9 @@ public class BlockInstance : MonoBehaviour
         }
     }
 
+    private void SlideBlock(Vector3 arrival)
+    {
+        
+    }*/
 
 }

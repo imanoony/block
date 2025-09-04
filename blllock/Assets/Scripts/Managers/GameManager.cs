@@ -14,6 +14,7 @@ public static class Utils
     public const string BLACK = "#242424";
     public const string GRAY = "#717171";
     public const float THRESHOLD = 5f;
+    public const float TILE_FILL_PERCENT = 0.3f;
     public static void PrintWarning(string message)
     {
         Debug.LogWarning($"<color=orange>[{DateTime.Now:HH:mm:ss}] Warning:</color> {message}");
@@ -22,6 +23,9 @@ public static class Utils
     {
         Debug.LogError($"<color=red>[{DateTime.Now:HH:mm:ss}] Error:</color> {message}");
     }
+
+    public static RectInt Boundary { get; private set; }
+    public static void SetBoundary(RectInt boundary) => Boundary = boundary;
 }
 
 public class GameManager : MonoBehaviour
@@ -45,18 +49,21 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    private float startTime, clearTime;
+    #region Data
+    private DataParser dataParser = new();
+
+    #endregion
 
     // 스테이지를 시작한다
-    public void StartGame()
+    public void StartGame(StageData stage)
     {
-        startTime = Time.time;
+        Grid.InitStage(stage);
     }
 
     // 스테이지를 성공 처리한다
     public void SucceedGame()
     {
-        clearTime = Time.time;
+
     }
 
     // 스테이지를 초기화한다
@@ -77,12 +84,5 @@ public class GameManager : MonoBehaviour
     public int PrevStage()
     {
         return 0;
-    }
-
-    // 스테이지 클리어까지 걸린 경과 시간을 반환한다
-    public float GetElapsedTime(bool clear = false)
-    {
-        if (clear) return clearTime - startTime;
-        else return Time.time - startTime;
     }
 }

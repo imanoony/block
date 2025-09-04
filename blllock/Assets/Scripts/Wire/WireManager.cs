@@ -6,6 +6,14 @@ using System.Linq;
 
 public class WireManager
 {
+    // 게임 시작 시 최초 1회만 실행
+    private bool initialized = false;
+    public void Initialize()
+    {
+        if (initialized) return;
+        // TODO
+        initialized = true;
+    }
     public Dictionary<int, Wire> Wires { get; private set; } = new Dictionary<int, Wire>(); // ID에 대한 Wire 매핑
     public Dictionary<int, HashSet<int>> WireDict { get; private set; } = new Dictionary<int, HashSet<int>>(); // Wire끼리의 관계
     public Dictionary<int, LogicExpr> WireLogic { get; private set; } = new Dictionary<int, LogicExpr>(); // Wire와 LogicExpr 매핑

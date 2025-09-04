@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,84 +7,127 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public enum TileType {
-    Empty,
-    Occupied
+public enum TileType { Empty, Occupied }
+public enum GridType { Null, Input, Output }
+
+public class Tile
+{
+    public Vector2Int Pos { get; private set; }
+    public TileType Type { get; private set; }
+    public Tile(Vector2Int pos, TileType type = TileType.Empty) { Pos = pos; Type = type; }
+    public void SetType(TileType type) => Type = type;
+}
+
+public class Grid
+{
+    public Vector2Int Pos { get; private set; }
+    public GridType Type { get; private set; }
+    public LogicExpr? Expr { get; private set; } = null;
+    public Grid(Vector2Int pos, GridType type = GridType.Null) { Pos = pos; Type = type; }
+    public void SetType(GridType type) => Type = type;
+    public void SetExpr(LogicExpr? expr) => Expr = expr;
 }
 
 public class GridManager : MonoBehaviour
 {
-    // Contains stage grid data indexed by ID
-    // Control each grid point information for a current stage
-
-    #region Grid Data
-    public string csvFileName = "Data.csv";
-    public static Dictionary<int, DataParser.StageData> GridData { get; private set; } = new Dictionary<int, DataParser.StageData>();
-    private void Awake()
+    // 게임 시작 시 최초 1회만 실행
+    private bool initialized = false;
+    public void Initialize()
     {
-        LoadGridData();
+        if (initialized) return;
+        // TODO
+        initialized = true;
     }
-    private void LoadGridData()
+
+    public Grid[,]? Grids { get; private set; } = null;
+    public Tile[,]? Tiles { get; private set; } = null;
+    private TilePlacer? _tilePlacer;
+    public TilePlacer TilePlacer
     {
-        string filePath = Path.Combine(Application.dataPath, "Data", csvFileName);
-        List<DataParser.StageData> rows = DataParser.ParseCSV(filePath);
-
-        foreach (var row in rows)
+        get
         {
-            if (row.TryGetInt("ID", out int id))
+            if (_tilePlacer == null)
             {
-                GridData[id] = row;
+                _tilePlacer = GetComponent<TilePlacer>();
+                if (_tilePlacer == null)
+                    _tilePlacer = gameObject.AddComponent<TilePlacer>();
             }
-        }
-    }
-    #endregion
-
-    #region Grid Points
-    private static GridPoint[,] GridPoint; // 2D array container for grid point info
-
-    // Initializes gridPointInfos with (width+1)*(height+1) GridPointInfo objects
-    public static void InitGridPoint(int width, int height)
-    {
-        GridPoint = new GridPoint[height + 1, width + 1];
-        for (int x = 0; x <= height; x++)
-        {
-            for (int y = 0; y <= width; y++)
-            {
-                GridPoint[x, y] = new GridPoint(new Vector2Int(x, y), GridPointType.None);
-            }
+            return _tilePlacer;
         }
     }
 
-    // Returns the GridPointInfo at (x, y), or null if not initialized
-    // Changing the type and the expr of grid point (x, y) is done by accessing the GridPoint directly
-    public static GridPoint GetGridPoint(int x, int y)
+    public void InitStage(StageData stage)
     {
-        Assert.IsNotNull(GridPoint, "GridPoint array is not initialized.");
-        Assert.IsTrue(x >= 0 && y >= 0, "GridPoint indices must be non-negative.");
-        Assert.IsTrue(x < GridPoint.GetLength(0) && y < GridPoint.GetLength(1), "GridPoint indices must be within bounds.");
+        int width = stage.Width, height = stage.Height;
 
-        return GridPoint[x, y];
-    }
-    #endregion
+        Grids = new Grid[height + 1, width + 1];
+        for (int x = 0; x < height + 1; x++)
+            for (int y = 0; y < width + 1; y++)
+                Grids[x, y] = new Grid(new(x, y));
 
-    #region Tiles
-    private static TileType[,] Tiles; // 2D array to track tile occupancy
-    public static void InitTiles(int width, int height)
-    {
-        Tiles = new TileType[height, width];
+        foreach (var (pos, expr) in stage.Inputs)
+        {
+            Grids[pos.x, pos.y].SetType(GridType.Input);
+            Grids[pos.x, pos.y].SetExpr(expr);
+        }
+
+        foreach (var (pos, expr) in stage.Outputs)
+        {
+            Grids[pos.x, pos.y].SetType(GridType.Output);
+            Grids[pos.x, pos.y].SetExpr(expr);
+        }
+
+        Tiles = new Tile[height, width];
         for (int x = 0; x < height; x++)
             for (int y = 0; y < width; y++)
-                Tiles[x, y] = TileType.Empty;
+                Tiles[x, y] = new Tile(new(x, y));
+
+        // 타일 배치하는 GUI 로직
+        TilePlacer.PlaceTiles(width, height); // TODO
     }
 
-    public static bool IsTileEmpty(Vector2Int tilePos)
+    private bool IsTileEmpty(int x, int y)
     {
-        if (!IsInTileBounds(tilePos)) return false;
-        return Tiles[tilePos.x, tilePos.y] == TileType.Empty;
+        if (Tiles == null) return false;
+        if (!IsInTileBounds(x, y)) return false;
+        return Tiles[x, y].Type == TileType.Empty;
+    }
+    private bool IsInTileBounds(int x, int y)
+    {
+        if (Tiles == null) return false;
+        return x >= 0 && y >= 0 && x < Tiles.GetLength(0) && y < Tiles.GetLength(1);
     }
 
+    #region Block Placement
+    // Base Tile은 블록이 놓이는 타일 중 우측 상단의 타일
+    public bool CanPlaceBlock(BlockData block, Vector2Int baseTile)
+    {
+        // TODO
+        return false;
+    }
+
+    public bool TryPlaceBlock(BlockData block, Vector2Int baseTile)
+    {
+        // TODO
+        return false;
+    }
+
+    private bool IsValidPos(BlockData block, Vector2Int baseTile)
+    {
+        // TODO
+        return false;
+    }
+
+    private bool IsValidPort(BlockData block, Vector2Int baseTile)
+    {
+        // TODO
+        return false;
+    }
+    #endregion
+
+    /*
     // base position is the top-left corner of the block
-    public static bool PlaceBlock(BlockData blockData, Vector2Int basePos, List<Vector2Int> tileOffsets)
+    public bool PlaceBlock(BlockData blockData, Vector2Int basePos, List<Vector2Int> tileOffsets)
     {
         TileType[,] backup = (TileType[,])Tiles.Clone(); // Backup current tile state
 
@@ -100,12 +145,11 @@ public class GridManager : MonoBehaviour
         }
         return true;
     }
-    #endregion
 
     #region Position Conversion & Helpers
 
     // 타일 좌표 중 가장 가까운 위치 반환 (없으면 null)
-    public static Vector2Int? GetNearestGridPosition(Vector3 worldPos)
+    public Vector2Int? GetNearestGridPosition(Vector3 worldPos)
     {
         Debug.Log($"GetNearestTilePosition called with worldPos: ({worldPos.x}, {worldPos.y})");
 
@@ -136,27 +180,10 @@ public class GridManager : MonoBehaviour
         return minDist <= Utils.THRESHOLD ? nearest : null;
     }
 
-    public static Vector3 GridToWorld(Vector2Int tilePos)
+    public Vector3 GridToWorld(int x, int y)
     {
-        float unit = Utils.TILE_SPACING / (float)Utils.DENOMINATOR; // 1.0f 등
-
-        int width = GridPoint.GetLength(1);  // 가로 크기
-        int height = GridPoint.GetLength(0); // 세로 크기
-
-        float offsetX = width * unit / 2f;
-        float offsetY = height * unit / 2f;
-
-        // tilePos.x 가 세로 인덱스, tilePos.y 가 가로 인덱스라고 가정
-        float posX = tilePos.y * unit + unit / 2f - offsetX;
-        float posY = -(tilePos.x * unit + unit / 2f) + offsetY;
-
-        return new Vector3(posX, posY, 0);
+        
     }
 
-    private static bool IsInTileBounds(Vector2Int pos)
-    {
-        if (Tiles == null) return false;
-        return pos.x >= 0 && pos.y >= 0 && pos.x < Tiles.GetLength(0) && pos.y < Tiles.GetLength(1);
-    }
-    #endregion
+    #endregion*/
 }
