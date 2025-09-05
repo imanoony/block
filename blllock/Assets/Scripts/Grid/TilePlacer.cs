@@ -105,6 +105,9 @@ public class TilePlacer : MonoBehaviour
         // 가로/세로 중 더 큰 값을 사용해야 타일맵 전체가 화면 안에 들어옴
         cam.orthographic = true;
         cam.orthographicSize = Mathf.Max(cameraHalfHeight, cameraHalfWidth / aspect);
+
+        // 바운더리 수정
+        // TODO
     }
     #endregion
 

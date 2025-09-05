@@ -57,11 +57,25 @@ public class GridManager : MonoBehaviour
         {
             if (_tilePlacer == null)
             {
-                _tilePlacer = GetComponent<TilePlacer>();
+                _tilePlacer = gameObject.GetComponent<TilePlacer>();
                 if (_tilePlacer == null)
                     _tilePlacer = gameObject.AddComponent<TilePlacer>();
             }
             return _tilePlacer;
+        }
+    }
+    private BlockPlacer? _blockPlacer;
+    public BlockPlacer BlockPlacer
+    {
+        get
+        {
+            if (_blockPlacer == null)
+            {
+                _blockPlacer = gameObject.GetComponent<BlockPlacer>();
+                if (_blockPlacer == null)
+                    _blockPlacer = gameObject.AddComponent<BlockPlacer>();
+            }
+            return _blockPlacer;
         }
     }
 
@@ -91,8 +105,12 @@ public class GridManager : MonoBehaviour
             for (int y = 0; y < width; y++)
                 Tiles[x, y] = new Tile(new(x, y));
 
-        // 타일 배치하는 GUI 로직
-        TilePlacer.PlaceTiles(width, height); // TODO
+        // 스테이지에 해당하는 타일 배치
+        // 스테이지에 해당하는 블록 배치
+        TilePlacer.PlaceTiles(width, height);
+        BlockPlacer.PlaceBlocks(stage);
+
+        // TODO
     }
 
     private bool IsEmptyTile(int x, int y)

@@ -7,11 +7,17 @@ public class BlockInstance : MonoBehaviour
     private bool isDragging = false;
     private GridManager gm = GameManager.Instance.Grid;
 
-    public void Initialize(BlockData blockData)
+    public bool CanRotate { get; private set; } = false;
+    public bool CanFlip { get; private set; } = false;
+    public void Initialize(BlockData blockData, bool canRotate = false, bool canFlip = false)
     {
         if (blockData == null) { Utils.PrintError("BlockData는 Null일 수 없음."); return; }
         this.blockData = blockData;
+
+        this.blockData.Instantiate();
         GetComponent<SpriteRenderer>().sprite = this.blockData.BlockSprite;
+        CanRotate = canRotate;
+        CanFlip = canFlip;
     }
 
     public void BeginDrag()

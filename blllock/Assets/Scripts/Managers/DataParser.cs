@@ -7,16 +7,25 @@ public class StageData
 {
     public int ID, Width, Height;
     public List<(Vector2Int pos, LogicExpr expr)> Inputs, Outputs;
+
+    #region Blocks
+    public List<int> Blocks;
+    public List<int> RIndex = new(), FIndex = new(); // Rotate/Flip 가능한 Blocks 인덱스 리스트
+    #endregion
 }
 
 public class DataParser
 {
+    private const string DataFolder = "Assets/Data";
     private const string ID = "ID", Width = "Width", Height = "Height";
     private const string Sprite = "Sprite", Tiles = "Tiles", Grids = "Grids", Ports = "Ports";
     private const string Inputs = "Inputs", Outputs = "Outputs";
-    public Dictionary<int, BlockData> ParseBlockData(string filepath)
+    private const string Blocks = "Blocks", Rotate = "Rotate", Flip = "Flip";
+    
+    public Dictionary<int, BlockData> ParseBlockData(string filename)
     {
         Dictionary<int, BlockData> result = new();
+        string filepath = Path.Combine(DataFolder, filename);
 
         if (!File.Exists(filepath))
         {
@@ -66,9 +75,10 @@ public class DataParser
         }
         return result;
     }
-    public Dictionary<int, StageData> ParseStageData(string filepath)
+    public Dictionary<int, StageData> ParseStageData(string filename)
     {
         Dictionary<int, StageData> result = new();
+        string filepath = Path.Combine(DataFolder, filename);
 
         if (!File.Exists(filepath))
         {
@@ -90,6 +100,7 @@ public class DataParser
 
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
+                if (values[j].Length == 0) continue;
                 string header = headers[j].ToLower();
 
                 if (header == ID.ToLower()) stage.ID = int.Parse(values[j]);
@@ -111,6 +122,15 @@ public class DataParser
 
                     if (header == Inputs.ToLower()) stage.Inputs = sources;
                     else stage.Outputs = sources;
+                }
+                else if (header == Blocks.ToLower() || header == Rotate.ToLower() || header == Flip.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    List<int> parsed = items.Select(int.Parse).ToList();
+
+                    if (header == Blocks.ToLower()) stage.Blocks = parsed;
+                    else if (header == Rotate.ToLower()) stage.RIndex = parsed;
+                    else stage.FIndex = parsed;
                 }
             }
 

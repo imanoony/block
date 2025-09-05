@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Utils
@@ -24,6 +25,14 @@ public static class Utils
     {
         Debug.LogError($"<color=red>[{DateTime.Now:HH:mm:ss}] Error:</color> {message}");
     }
+    public static void Shuffle<T>(this List<T> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1); // [0, i] 범위
+            (list[i], list[randomIndex]) = (list[randomIndex], list[i]); // C# 7 튜플 스왑
+        }
+    }
 
     public static RectInt Boundary { get; private set; }
     public static void SetBoundary(RectInt boundary) => Boundary = boundary;
@@ -47,11 +56,17 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
+
+        BlockLibrary = dataParser.ParseBlockData(blockPath);
+        StageLibrary = dataParser.ParseStageData(stagePath);
     }
     #endregion
 
-    #region Data
+    #region Data Library
     private DataParser dataParser = new();
+    public Dictionary<int, BlockData> BlockLibrary { get; private set; }
+    public Dictionary<int, StageData> StageLibrary { get; private set; }
+    private const string blockPath = "Block.csv", stagePath = "Stage.csv";
 
     #endregion
 
