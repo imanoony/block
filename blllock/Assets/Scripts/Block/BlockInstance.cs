@@ -9,13 +9,13 @@ public class BlockInstance : MonoBehaviour
 
     public bool CanRotate { get; private set; } = false;
     public bool CanFlip { get; private set; } = false;
-    public void Initialize(BlockData blockData, bool canRotate = false, bool canFlip = false)
+    public void Initialize(BlockData blockData, Sprite sprite, bool canRotate = false, bool canFlip = false)
     {
         if (blockData == null) { Utils.PrintError("BlockData는 Null일 수 없음."); return; }
         this.blockData = blockData;
 
         this.blockData.Instantiate();
-        //GetComponent<SpriteRenderer>().sprite = this.blockData.BlockSprite;
+        gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
         CanRotate = canRotate;
         CanFlip = canFlip;
 

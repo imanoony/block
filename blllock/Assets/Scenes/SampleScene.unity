@@ -550,6 +550,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 9210422558639285230, guid: c134713f622c6b64592ce627c5ca7270, type: 3}
+  blockSprites:
+  - {fileID: 6877725063739192387, guid: 58f2e9c18e9fea14fbfc2ad88125b423, type: 3}
+  - {fileID: 8697228794979693286, guid: 7c0f63f0f2e7da04889c033464ecf091, type: 3}
+  - {fileID: 4681476298195807261, guid: 4ed1cda29dc772648b2354e6bbbc3745, type: 3}
+  - {fileID: 2232917937804649986, guid: ad6261c3548fb6747b74847fb988521d, type: 3}
 --- !u!114 &1895555907
 MonoBehaviour:
   m_ObjectHideFlags: 0

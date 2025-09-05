@@ -4,6 +4,7 @@ using UnityEngine;
 public class BlockPlacer : MonoBehaviour
 {
     [SerializeField] private GameObject blockPrefab;
+    [SerializeField] private Sprite[] blockSprites;
 
     public void PlaceBlocks(StageData stage)
     {
@@ -28,7 +29,7 @@ public class BlockPlacer : MonoBehaviour
     {
         BlockData blockData = GameManager.Instance.BlockLibrary[id];
         GameObject instance = Instantiate(blockPrefab, GetPlacedWorld(), Quaternion.identity);
-        instance.GetComponent<BlockInstance>().Initialize(blockData, canRotate, canFlip);
+        instance.GetComponent<BlockInstance>().Initialize(blockData, blockSprites[id], canRotate, canFlip);
     }
 
     private Vector3 GetPlacedWorld()

@@ -6,10 +6,10 @@ using UnityEngine;
 public class StageData
 {
     public int ID, Width, Height;
-    public List<(Vector2Int pos, LogicExpr expr)> Inputs, Outputs;
+    public List<(Vector2Int pos, LogicExpr expr)> Inputs = new(), Outputs = new();
 
     #region Blocks
-    public List<int> Blocks;
+    public List<int> Blocks = new();
     public List<int> RIndex = new(), FIndex = new(); // Rotate/Flip 가능한 Blocks 인덱스 리스트
     #endregion
 }
@@ -18,7 +18,7 @@ public class DataParser
 {
     private const string DataFolder = "Assets/Data";
     private const string ID = "ID", Width = "Width", Height = "Height";
-    private const string Sprite = "Sprite", Tiles = "Tiles", Grids = "Grids", Ports = "Ports";
+    private const string Tiles = "Tiles", Grids = "Grids", Ports = "Ports";
     private const string Inputs = "Inputs", Outputs = "Outputs";
     private const string Blocks = "Blocks", Rotate = "Rotate", Flip = "Flip";
     
@@ -53,7 +53,6 @@ public class DataParser
                 if (header == ID.ToLower()) block.SetID(int.Parse(values[j]));
                 else if (header == Width.ToLower()) block.SetWidth(int.Parse(values[j]));
                 else if (header == Height.ToLower()) block.SetHeight(int.Parse(values[j]));
-                else if (header == Sprite.ToLower()) { } // TODO
                 else if (header == Tiles.ToLower() || header == Grids.ToLower())
                 {
                     List<string> items = values[j].Split(';').ToList<string>();

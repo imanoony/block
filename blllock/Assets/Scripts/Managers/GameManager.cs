@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
     #region Test
     void Start()
     {
-        StartGame(3);
+        StartGame(99);
     }
     #endregion
 

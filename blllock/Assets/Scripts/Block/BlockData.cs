@@ -26,9 +26,7 @@ public class BlockData
         Rotate refRotate = rotate == Rotate.Null ? BlockRotate : rotate;
         return (refRotate == Rotate.None || refRotate == Rotate.Rotate180) ? _height : _width;
     }
-
-    public Sprite BlockSprite { get; private set; }
-    public void SetSprite(Sprite sprite) => BlockSprite = sprite;
+    
     public Rotate BlockRotate { get; private set; } = Rotate.None;
     public Rotate Rotation()
     {
