@@ -79,6 +79,8 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public void InitStage(int id) => InitStage(GameManager.Instance.StageLibrary[id]);
+
     public void InitStage(StageData stage)
     {
         int width = stage.Width, height = stage.Height;
@@ -255,7 +257,11 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        Debug.Log($"nearest: {nearest}, minDict: {minDist}");
+
         return minDist <= Utils.THRESHOLD ? nearest : null;
     }
+
+    public Vector3 GetBlockCenterOnTile(int x, int y, int height, int width) => TilePlacer.GetBlockCenterOnTile(x, y, height, width);
     #endregion
 }

@@ -22,12 +22,6 @@ public class TilePlacer : MonoBehaviour
     [SerializeField] private TileBase tileBottomLeft;
     [SerializeField] private TileBase tileBottomRight;
 
-    void Start()
-    {
-        // for test
-        PlaceTiles(5, 3);
-    }
-
     #region Tile Placement
     public void RemoveTiles()
     {
@@ -125,6 +119,13 @@ public class TilePlacer : MonoBehaviour
         if (x < 0 || x >= height || y < 0 || y >= width) return null;
         Vector3 center = tilemap.GetCellCenterWorld(TileToCell(x, y));
         return center + new Vector3(-tilemap.cellSize.x / 2f, tilemap.cellSize.y / 2f, 0);
+    }
+
+    public Vector3 GetBlockCenterOnTile(int x, int y, int height, int width)
+    {
+        Vector3 topLeft = (Vector3)GetTileTopLeftWorld(x, y);
+        topLeft += new Vector3(tilemap.cellSize.x * width / 2f, -tilemap.cellSize.y * height / 2f, 0);
+        return topLeft += new Vector3(tilemap.cellSize.x / 8f, -tilemap.cellSize.y / 8f, 0);
     }
     #endregion
 }

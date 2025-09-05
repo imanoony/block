@@ -11,7 +11,7 @@ public class WireManager
     public void Initialize()
     {
         if (initialized) return;
-        // TODO
+        ReserveWire(2);
         initialized = true;
     }
     public void RollBack(Dictionary<int, HashSet<int>> dict, Dictionary<int, LogicExpr> logic)

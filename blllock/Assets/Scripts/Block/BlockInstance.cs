@@ -5,7 +5,7 @@ public class BlockInstance : MonoBehaviour
 {
     private BlockData blockData;
     private bool isDragging = false;
-    private GridManager gm = GameManager.Instance.Grid;
+    private GridManager gm;
 
     public bool CanRotate { get; private set; } = false;
     public bool CanFlip { get; private set; } = false;
@@ -15,9 +15,11 @@ public class BlockInstance : MonoBehaviour
         this.blockData = blockData;
 
         this.blockData.Instantiate();
-        GetComponent<SpriteRenderer>().sprite = this.blockData.BlockSprite;
+        //GetComponent<SpriteRenderer>().sprite = this.blockData.BlockSprite;
         CanRotate = canRotate;
         CanFlip = canFlip;
+
+        gm = GameManager.Instance.Grid;
     }
 
     public void BeginDrag()
@@ -50,6 +52,11 @@ public class BlockInstance : MonoBehaviour
             EndDrag();
         }
     }
+    private void OnMouseDown()
+    {
+        BeginDrag();
+    }
+
 
     private bool isPlaced = false;
     private Vector2Int baseTile = new(-1, -1);
@@ -60,11 +67,17 @@ public class BlockInstance : MonoBehaviour
     // Valid가 false인 block들은 타일에 변화가 있을 때마다 
     private bool Place(GridManager gm, Vector2Int baseTile)
     {
-        if (isPlaced || !baseTile.Equals(new(-1, -1))) return false;
+        Debug.Log("Place 진입");
+        if (isPlaced || !this.baseTile.Equals(new(-1, -1))) return false;
         if (!gm.IsValidPos(blockData, baseTile)) return false;
 
         isPlaced = true;
         this.baseTile = baseTile;
+        Debug.Log("d");
+
+        // 블록의 위치를 snap position (좌표) 에 동기화
+        transform.position = gm.GetBlockCenterOnTile(baseTile.x, baseTile.y, blockData.Height, blockData.Width);
+        Debug.Log("좌표 동기화");
 
         if (!gm.PlaceBlock(blockData, baseTile))
         {
@@ -76,6 +89,7 @@ public class BlockInstance : MonoBehaviour
 
     private void Unplace(GridManager gm)
     {
+        Debug.Log("Unplace 진입");
         if (!isPlaced || baseTile.Equals(new(-1, -1))) return;
         gm.RemoveBlock(blockData, baseTile, Valid);
         isPlaced = false;

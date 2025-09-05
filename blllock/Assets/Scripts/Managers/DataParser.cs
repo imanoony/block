@@ -47,6 +47,7 @@ public class DataParser
 
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
+                if (values[j].Length == 0) continue;
                 string header = headers[j].ToLower();
 
                 if (header == ID.ToLower()) block.SetID(int.Parse(values[j]));

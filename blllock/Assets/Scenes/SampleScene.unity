@@ -490,6 +490,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1895555904}
   - component: {fileID: 1895555905}
+  - component: {fileID: 1895555906}
+  - component: {fileID: 1895555908}
+  - component: {fileID: 1895555907}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -534,6 +537,43 @@ MonoBehaviour:
   tileBottom: {fileID: 11400000, guid: 790f87f6b6f7c144baaf1fb1840503be, type: 2}
   tileBottomLeft: {fileID: 11400000, guid: 97d463478ea21ef4ca17ffb24d35c71b, type: 2}
   tileBottomRight: {fileID: 11400000, guid: 0af28f62c7c37254f8ef1ab3b269eef0, type: 2}
+--- !u!114 &1895555906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895555903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec3e461e8532a0a40b179e01f641ba31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockPrefab: {fileID: 9210422558639285230, guid: c134713f622c6b64592ce627c5ca7270, type: 3}
+--- !u!114 &1895555907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895555903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1efc3480be2ae92468bd89819867cd9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1895555908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895555903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c08400ec507944185bb9512c426d43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

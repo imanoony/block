@@ -14,7 +14,7 @@ public static class Utils
     public const string BLUE = "#7391FE";
     public const string BLACK = "#242424";
     public const string GRAY = "#717171";
-    public const float THRESHOLD = 5f;
+    public const float THRESHOLD = 0.6f;
     public const float TILE_FILL_PERCENT = 0.3f;
     public const int MAX_PORT = 4;
     public static void PrintWarning(string message)
@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
+        Wire = new WireManager();
+        Grid = gameObject.GetComponent<GridManager>();
+
+        Wire.Initialize();
+        Grid.Initialize();
 
         BlockLibrary = dataParser.ParseBlockData(blockPath);
         StageLibrary = dataParser.ParseStageData(stagePath);
@@ -70,11 +75,19 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    #region Test
+    void Start()
+    {
+        StartGame(3);
+    }
+    #endregion
+
     // 스테이지를 시작한다
     public void StartGame(StageData stage)
     {
         Grid.InitStage(stage);
     }
+    public void StartGame(int id) => StartGame(StageLibrary[id]);
 
     // 스테이지를 성공 처리한다
     public void SucceedGame()
