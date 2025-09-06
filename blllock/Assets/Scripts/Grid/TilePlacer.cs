@@ -3,6 +3,8 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.Assertions;
 using UnityEngine.Tilemaps;
+using Unity.VisualScripting;
+using UnityEngine.Rendering.Universal;
 
 
 // Tilemap-based
@@ -61,8 +63,10 @@ public class TilePlacer : MonoBehaviour
         tilemap.SetTile(TileToCell(height, width), tileBottomRight);
     }
 
+    [Header("Camera")]
     // Base Position, Offset, Scale 모두 포함해서 카메라 세팅
     // 카메라 세팅 이후 바운더리 수정
+    [SerializeField] private PixelPerfectCamera PPCamera;
     public void PlaceCamera()
     {
         if (tilemap == null) { Utils.PrintError("Tilemap not set"); return; }
@@ -99,7 +103,9 @@ public class TilePlacer : MonoBehaviour
         // 가로/세로 중 더 큰 값을 사용해야 타일맵 전체가 화면 안에 들어옴
         cam.orthographic = true;
         cam.orthographicSize = Mathf.Max(cameraHalfHeight, cameraHalfWidth / aspect);
-
+        
+        PPCamera.refResolutionY = Mathf.RoundToInt(cam.orthographicSize * 2f * Utils.PPU);
+        PPCamera.refResolutionX = Mathf.RoundToInt(PPCamera.refResolutionY * aspect);
         // 바운더리 수정
         // TODO
     }

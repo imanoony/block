@@ -55,9 +55,10 @@ public class WireManager
     #region Graph
 
     // neg flag를 통해 id에 연결이 적은 음수나 양수가 들어와도 모든 Equivalents를 반환하도록 함
-    private HashSet<int> GetEquivalents(int id, HashSet<int>? visited = null, bool neg = true)
+    private HashSet<int> GetEquivalents(int id, HashSet<int>? visited = null)
     {
         HashSet<int> result = new();
+        if (id == 0) return result;
         visited ??= new();
         Stack<int> stack = new();
         stack.Push(id);
@@ -68,14 +69,18 @@ public class WireManager
             if (!visited.Add(curr)) continue;
             result.Add(curr);
 
-            if (!WireDict.ContainsKey(curr)) continue;
-            foreach (int eqID in WireDict[curr])
+            HashSet<int> eqs = new();
+            if (WireDict.ContainsKey(curr)) eqs.UnionWith(WireDict[curr]);
+            if (WireDict.ContainsKey(-curr)) eqs.UnionWith(WireDict[-curr].Select(x => -x).ToHashSet());
+            if (eqs.Count == 0) continue;
+
+            foreach (int eqID in eqs)
             {
                 if (!visited.Contains(eqID)) stack.Push(eqID);
             }
 
             if (Wires[curr].P == 0) continue;
-            HashSet<int> parentEq = GetEquivalents(Wires[curr].P, visited, true);
+            HashSet<int> parentEq = GetEquivalents(Wires[curr].P, visited);
             foreach (int eqID in parentEq)
             {
                 if (Wires[eqID].L == 0) continue;
@@ -84,11 +89,11 @@ public class WireManager
             }
         }
 
-        if (neg)
+        /*if (neg)
         {
             HashSet<int> negEq = GetEquivalents(-id, null, false);
             result.UnionWith(negEq.Select(x => -x).ToHashSet());
-        }
+        }*/
 
         Debug.Log($"[GetEquivalents:{id}] {string.Join(", ", result)}");
         return result;
@@ -119,10 +124,12 @@ public class WireManager
             while (stack.Count > 0)
             {
                 int curr = stack.Pop();
-                if (Wires[curr].L == 0) continue;
+                if (Wires[curr].L == 0 && Wires[-curr].L == 0) continue;
 
                 HashSet<int> child = GetEquivalents(Wires[curr].L);
                 child.UnionWith(GetEquivalents(Wires[curr].R));
+                child.UnionWith(GetEquivalents(Wires[-curr].L));
+                child.UnionWith(GetEquivalents(Wires[-curr].R));
                 children.UnionWith(child);
 
                 stack = new(child);

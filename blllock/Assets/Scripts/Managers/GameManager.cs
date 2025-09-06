@@ -15,7 +15,8 @@ public static class Utils
     public const string BLACK = "#242424";
     public const string GRAY = "#717171";
     public const float THRESHOLD = 0.6f;
-    public const float TILE_FILL_PERCENT = 0.3f;
+    public const float TILE_FILL_PERCENT = 0.7f;
+    public const int PPU = 24;
     public const int MAX_PORT = 4;
     public static void PrintWarning(string message)
     {
