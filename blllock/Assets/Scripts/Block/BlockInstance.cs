@@ -20,6 +20,13 @@ public class BlockInstance : MonoBehaviour
         CanFlip = canFlip;
 
         gm = GameManager.Instance.Grid;
+
+        PrintBlock();
+    }
+
+    private void PrintBlock() // for debugging
+    {
+        Debug.Log($"[ID:{blockData.ID}] port ids:{string.Join(", ", blockData.PortIds)}");
     }
 
     public void BeginDrag()

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class WireManager
 {
@@ -18,6 +19,15 @@ public class WireManager
     {
         WireDict = dict;
         WireLogic = logic;
+    }
+    public string StringOfWireDict(Dictionary<int, HashSet<int>>? wireDict = null)
+    {
+        Dictionary<int, HashSet<int>> target = wireDict ?? WireDict;
+
+        if (target == null || target.Count == 0) return "{}";
+
+        // "키: {값1, 값2}" 형식으로 변환
+        return string.Join("|", target.Select(kv =>$"{kv.Key}: {string.Join(", ", kv.Value)}"));
     }
 
     public Dictionary<int, Wire> Wires { get; private set; } = new Dictionary<int, Wire>(); // ID에 대한 Wire 매핑
@@ -80,6 +90,7 @@ public class WireManager
             result.UnionWith(negEq.Select(x => -x).ToHashSet());
         }
 
+        Debug.Log($"[GetEquivalents:{id}] {string.Join(", ", result)}");
         return result;
     }
 
@@ -150,27 +161,27 @@ public class WireManager
     // 일단 Wires에서는 삭제하지 않고 WireDict, WireLogic에서만 삭제하는 상태.
     public void RemoveWire(int id, bool neg = true)
     {
+        Debug.Log($"[RemoveWire:{id}]");
         if (id < reservedCount && id > -reservedCount) return;
 
         List<int> sigRemove = new();
         if (WireDict.TryGetValue(id, out HashSet<int> eq))
         {
-            foreach (int eqID in eq)
+            foreach (int eqID in eq.ToList())
             {
                 WireDict[eqID].Remove(id);
-                if (WireDict[eqID].Count == 0 && Wires[eqID].P != 0) sigRemove.Add(Wires[eqID].P);
+                if (WireDict[eqID].Count == 0)
+                {
+                    if (Wires[eqID].P != 0) removeIDs.Add(Wires[eqID].P);
+                    else WireDict.Remove(eqID);
+                }
             }
+            WireDict.Remove(id);
         }
         if (WireLogic.ContainsKey(id)) WireLogic.Remove(id);
         if (Wires[id].L != 0) { RemoveWire(Wires[id].L); RemoveWire(Wires[id].R); }
         // if (id > 0) freeIDs.Add(id);
         // Wires.Remove(id);
-
-        foreach (int removeID in sigRemove) // 시그니처 삭제 관련 (보완 필요)
-        {
-            if (WireLogic.ContainsKey(Wires[removeID].L)) continue;
-            RemoveSignature(removeID);
-        }
 
         if (neg) RemoveWire(-id, false);
     }
@@ -427,12 +438,27 @@ public class WireManager
         if (w1 is WireOr o1 && w2 is WireOr o2) return CompareSig(o1.Left, o2.Left) && CompareSig(o1.Right, o2.Right);
         return false;
     }
+    private HashSet<int> removeIDs = new();
+    public void RemoveSignature()
+    {
+        foreach (int id in removeIDs) RemoveSignature(id);
+        removeIDs = new();
+    }
     private void RemoveSignature(int id)
     {
+        if (WireLogic.ContainsKey(Wires[id].L) || WireLogic.ContainsKey(Wires[id].R)) return;
+        if (WireLogic.ContainsKey(-Wires[id].L) || WireLogic.ContainsKey(-Wires[id].R)) return;
+
         Wire wire = Wires[id];
         wire.Signature = null;
         Wires.Remove(wire.L); Wires.Remove(wire.R); freeIDs.Add(wire.L); freeIDs.Add(wire.R);
-        Wires.Remove(-wire.L); Wires.Remove(-wire.R); freeIDs.Add(-wire.L); freeIDs.Add(-wire.R);
+        Wires.Remove(-wire.L); Wires.Remove(-wire.R); 
+
+        if (WireDict.ContainsKey(wire.L)) WireDict.Remove(wire.L);
+        if (WireDict.ContainsKey(-wire.L)) WireDict.Remove(-wire.L);
+        if (WireDict.ContainsKey(wire.R)) WireDict.Remove(wire.R);
+        if (WireDict.ContainsKey(-wire.R)) WireDict.Remove(-wire.R);
+
         wire.LeftChild = wire.RightChild = 0;
     }
     #endregion

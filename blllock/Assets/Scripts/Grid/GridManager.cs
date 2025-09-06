@@ -47,6 +47,13 @@ public class GridManager : MonoBehaviour
         // TODO
         initialized = true;
     }
+    void Update() // for debugging
+    {
+        if (Input.GetMouseButtonUp(1))
+        {
+            Debug.Log($"[현재 WireDict] {GameManager.Instance.Wire.StringOfWireDict()}");
+        }
+    }
 
     public Grid[,]? Grids { get; private set; } = null;
     public Tile[,]? Tiles { get; private set; } = null;
@@ -185,6 +192,7 @@ public class GridManager : MonoBehaviour
             Grids![offset.x + baseTile.x, offset.y + baseTile.y].RemovePort(port);
         }
         foreach (int id in block.PortIds) GameManager.Instance.Wire.RemoveWire(id);
+        GameManager.Instance.Wire.RemoveSignature();
 
         CheckInvalids();
     }
@@ -218,6 +226,8 @@ public class GridManager : MonoBehaviour
             {
                 if (!wire.AddToDict(block.Ports[i], grid.Ports[j]))
                 {
+                    Debug.Log($"[IsValidPort:--invalid--] try: {block.Ports[i]} -> {grid.Ports[j]} | dict: {wire.StringOfWireDict()} | backup: {wire.StringOfWireDict(backupDict)}");
+
                     wire.RollBack(backupDict, backupLogic);
                     return false;
                 }
