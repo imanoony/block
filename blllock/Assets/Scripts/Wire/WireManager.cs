@@ -9,10 +9,11 @@ public class WireManager
 {
     // 게임 시작 시 최초 1회만 실행
     private bool initialized = false;
-    public void Initialize()
+    public void Initialize(bool autoEval)
     {
         if (initialized) return;
         ReserveWire(2);
+        AutoEval = autoEval;
         initialized = true;
     }
     public void RollBack(Dictionary<int, Wire> wires, Dictionary<int, HashSet<int>> dict, Dictionary<int, LogicExpr> logic)
@@ -290,6 +291,33 @@ public class WireManager
         if (w is WireAnd aw && l is AndExpr al) return AddToLogic(aw.Left!, al.Left) && AddToLogic(aw.Right!, al.Right);
         if (w is WireOr ow && l is OrExpr ol) return AddToLogic(ow.Left!, ol.Left) && AddToLogic(ow.Right!, ol.Right);
         return false;
+    }
+
+    public LogicExpr? EvalCache(int id) => Wires[id].Cache;
+
+    public LogicExpr? EvalCache(WireExpr? expr)
+    {
+        if (expr == null) return null;
+        if (expr is Wire wire) return EvalCache(wire.ID);
+        if (expr is WireNot not)
+        {
+            LogicExpr? result = EvalCache(not.Inner);
+            if (result != null) return new NotExpr(result);
+            else return null;
+        }
+        if (expr is WireAnd and)
+        {
+            LogicExpr? left = EvalCache(and.Left), right = EvalCache(and.Right);
+            if (left != null && right != null) return new AndExpr(left, right);
+            else return null;
+        }
+        if (expr is WireOr or)
+        {
+            LogicExpr? left = EvalCache(or.Left), right = EvalCache(or.Right);
+            if (left != null && right != null) return new OrExpr(left, right);
+            else return null;
+        }
+        return null;
     }
 
     public LogicExpr? Eval(int id, HashSet<int>? equivalents = null, bool neg = true)

@@ -43,6 +43,7 @@ public class TilePlacer : MonoBehaviour
 
         PlaceBoundaries();
         PlaceCamera();
+        PlaceGrids();
     }
     private void PlaceBoundaries()
     {
@@ -108,6 +109,23 @@ public class TilePlacer : MonoBehaviour
         PPCamera.refResolutionX = Mathf.RoundToInt(PPCamera.refResolutionY * aspect);
         // 바운더리 수정
         // TODO
+    }
+
+    [Header("Grid")]
+    [SerializeField] private GameObject gridParent;
+    [SerializeField] private GameObject gridPrefab;
+    public void PlaceGrids()
+    {
+        for (int x = 0; x < height; x++)
+        {
+            for (int y = 0; y < width; y++)
+            {
+                GameObject grid = Instantiate(gridPrefab, gridParent.transform);
+                grid.name = $"Grid_{x}_{y}";
+                grid.transform.position = (Vector3)GetTileTopLeftWorld(x, y);
+                grid.GetComponent<GridInstance>().Initialize(x, y);
+            }
+        }
     }
     #endregion
 

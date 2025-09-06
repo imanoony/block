@@ -133,6 +133,22 @@ public class GridManager : MonoBehaviour
         if (Tiles == null) return false;
         return x >= 0 && y >= 0 && x < Tiles.GetLength(0) && y < Tiles.GetLength(1);
     }
+    public LogicExpr? GetGridExpr(int x, int y)
+    {
+        if (Grids == null) return null;
+        return Grids[x, y].Expr;
+    }
+    public LogicExpr? GetGridCacheExpr(int x, int y)
+    {
+        if (Grids == null) return null;
+        if (Grids[x, y].Ports.Count == 0) return null;
+        return GameManager.Instance.Wire.EvalCache(Grids[x, y].Ports[0]);
+    }
+    public GridType GetGridType(int x, int y)
+    {
+        if (Grids == null) return GridType.Null;
+        return Grids[x, y].Type;
+    }
 
     #region Block Placement
     private List<BlockInstance> invalids = new();
@@ -168,6 +184,10 @@ public class GridManager : MonoBehaviour
             WireExpr port = block.Ports[i];
             Grids![offset.x + baseTile.x, offset.y + baseTile.y].AddPort(port);
         }
+
+        // 블록의 portIDs를 Evaluate 한다.
+        for (int i = 0; i < block.PortIds.Count; i++)
+            GameManager.Instance.Wire.Eval(block.PortIds[i]);
 
         CheckInvalids();
         return true;

@@ -59,8 +59,9 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
         Wire = new WireManager();
         Grid = gameObject.GetComponent<GridManager>();
+        UI = gameObject.GetComponent<UIManager>();
 
-        Wire.Initialize();
+        Wire.Initialize(true);
         Grid.Initialize();
 
         BlockLibrary = dataParser.ParseBlockData(blockPath);
