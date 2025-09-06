@@ -40,6 +40,17 @@ public class Wire : WireExpr
         Parent = parent;
         LeftChild = RightChild = 0;
     }
+    public Wire(Wire wire)
+    {
+        ID = wire.ID;
+        Name = wire.Name;
+        Updated = wire.Updated;
+        Signature = wire.Signature;
+        Cache = wire.Cache;
+        Parent = wire.Parent;
+        LeftChild = wire.LeftChild;
+        RightChild = wire.RightChild;
+    }
     public void Composite(WireExpr source, int l, int r)
     {
         Signature = source;

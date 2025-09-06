@@ -51,7 +51,7 @@ public class GridManager : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(1))
         {
-            Debug.Log($"[현재 WireDict] {GameManager.Instance.Wire.StringOfWireDict()}");
+            Debug.Log($"[현재 WireDict] {GameManager.Instance.Wire.StringOfWireDict()}\n[현재 Wires] {GameManager.Instance.Wire.StringOfWires()}");
         }
     }
 
@@ -214,6 +214,7 @@ public class GridManager : MonoBehaviour
     // 모순이 발생하지 않으면 포트를 모두 wire manager에 등록하고 true를 반환한다.
     private bool IsValidPort(BlockData block, Vector2Int baseGrid, WireManager wire)
     {
+        Dictionary<int, Wire> backupWires = wire.Wires.ToDictionary(kvp => kvp.Key, kvp => new Wire(kvp.Value));
         Dictionary<int, HashSet<int>> backupDict = wire.WireDict.ToDictionary(kvp => kvp.Key, kvp => new HashSet<int>(kvp.Value));
         Dictionary<int, LogicExpr> backupLogic = new(wire.WireLogic);
 
@@ -228,7 +229,7 @@ public class GridManager : MonoBehaviour
                 {
                     Debug.Log($"[IsValidPort:--invalid--] try: {block.Ports[i]} -> {grid.Ports[j]} | dict: {wire.StringOfWireDict()} | backup: {wire.StringOfWireDict(backupDict)}");
 
-                    wire.RollBack(backupDict, backupLogic);
+                    wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;
                 }
             }
@@ -236,7 +237,7 @@ public class GridManager : MonoBehaviour
             {
                 if (!wire.AddToLogic(block.Ports[i], grid.Expr))
                 {
-                    wire.RollBack(backupDict, backupLogic);
+                    wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;
                 }
             }

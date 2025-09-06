@@ -15,11 +15,13 @@ public class WireManager
         ReserveWire(2);
         initialized = true;
     }
-    public void RollBack(Dictionary<int, HashSet<int>> dict, Dictionary<int, LogicExpr> logic)
+    public void RollBack(Dictionary<int, Wire> wires, Dictionary<int, HashSet<int>> dict, Dictionary<int, LogicExpr> logic)
     {
+        Wires = wires;
         WireDict = dict;
         WireLogic = logic;
     }
+    public string StringOfWires() => $"Wires --- {string.Join("|", Wires.Select(x => $"{x}"))}";
     public string StringOfWireDict(Dictionary<int, HashSet<int>>? wireDict = null)
     {
         Dictionary<int, HashSet<int>> target = wireDict ?? WireDict;
@@ -27,7 +29,7 @@ public class WireManager
         if (target == null || target.Count == 0) return "{}";
 
         // "키: {값1, 값2}" 형식으로 변환
-        return string.Join("|", target.Select(kv =>$"{kv.Key}: {string.Join(", ", kv.Value)}"));
+        return string.Join("|", target.Select(kv => $"{kv.Key}: {string.Join(", ", kv.Value)}"));
     }
 
     public Dictionary<int, Wire> Wires { get; private set; } = new Dictionary<int, Wire>(); // ID에 대한 Wire 매핑
@@ -198,7 +200,7 @@ public class WireManager
 
     public bool AddToDict(int w1, int w2)
     {
-        if (!Compatible(w1, w2)) return false;
+        if (!Compatible(w1, w2)) { Debug.Log($"[Compatible() failed] w1: {w1}, w2: {w2}"); return false; }
 
         if (WireDict.ContainsKey(w1)) WireDict[w1].Add(w2);
         else WireDict[w1] = new() { w2 };
@@ -221,7 +223,7 @@ public class WireManager
 
             // 기존의 시그니처에 부합하는지 확인
             WireExpr? wsig = GetSignature(wire.ID), esig = GetSignature(expr);
-            if (!CompareSig(wsig, esig)) return false;
+            if (!CompareSig(wsig, esig)) { Debug.Log($"[AddToDict() failed] CompareSig() is False"); return false; }
 
             // expr is WireAnd or WireOr
             if (wire.L != 0)
