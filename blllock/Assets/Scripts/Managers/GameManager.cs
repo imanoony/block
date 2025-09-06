@@ -35,8 +35,8 @@ public static class Utils
         }
     }
 
-    public static RectInt Boundary { get; private set; }
-    public static void SetBoundary(RectInt boundary) => Boundary = boundary;
+    public static Rect Boundary { get; private set; }
+    public static void SetBoundary(Rect boundary) => Boundary = boundary;
 }
 
 public class GameManager : MonoBehaviour

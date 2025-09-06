@@ -43,6 +43,8 @@ public class TilePlacer : MonoBehaviour
 
         PlaceBoundaries();
         PlaceCamera();
+        PlaceCameraBoundary();
+        PlaceTileCollider();
         PlaceGrids();
     }
     private void PlaceBoundaries()
@@ -62,6 +64,23 @@ public class TilePlacer : MonoBehaviour
         tilemap.SetTile(TileToCell(-1, width), tileTopRight);
         tilemap.SetTile(TileToCell(height, -1), tileBottomLeft);
         tilemap.SetTile(TileToCell(height, width), tileBottomRight);
+    }
+    private void PlaceTileCollider()
+    {
+        Vector2 size = new Vector2(tilemap.cellSize.x * (width + 2), tilemap.cellSize.y * (height + 2));
+        Vector2 pos = (Vector2)GetTileTopLeftWorld(0, 0);
+        pos = new Vector2(pos.x - tilemap.cellSize.x, pos.y + tilemap.cellSize.y);
+        pos = new Vector2(pos.x + size.x / 2f, pos.y - size.y / 2f);
+        size = new Vector2(size.x, Camera.main.orthographicSize * 3);
+
+        GameObject wall = new GameObject("TileWall");
+        wall.transform.position = pos;
+
+        var collider = wall.AddComponent<BoxCollider2D>();
+        collider.size = size;
+
+        var rb = wall.AddComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Static; // 움직이지 않는 벽
     }
 
     [Header("Camera")]
@@ -104,12 +123,53 @@ public class TilePlacer : MonoBehaviour
         // 가로/세로 중 더 큰 값을 사용해야 타일맵 전체가 화면 안에 들어옴
         cam.orthographic = true;
         cam.orthographicSize = Mathf.Max(cameraHalfHeight, cameraHalfWidth / aspect);
-        
+
         PPCamera.refResolutionY = Mathf.RoundToInt(cam.orthographicSize * 2f * Utils.PPU);
         PPCamera.refResolutionX = Mathf.RoundToInt(PPCamera.refResolutionY * aspect);
-        // 바운더리 수정
-        // TODO
+
+        // 카메라 월드 좌표 기준 최소/최대 좌표
+        Vector3 camPos = cam.transform.position;
+        float camHalfH = cam.orthographicSize;
+        float camHalfW = cam.orthographicSize * aspect;
+
+        Vector2 min = new Vector2(camPos.x - camHalfW, camPos.y - camHalfH);
+        Vector2 max = new Vector2(camPos.x + camHalfW, camPos.y + camHalfH);
+        Rect boundary = new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
+
+        // Utils에 바운더리 세팅
+        Utils.SetBoundary(boundary);
     }
+    private void PlaceCameraBoundary()
+    {
+        Camera cam = Camera.main;
+        float camHalfH = cam.orthographicSize;
+        float camHalfW = camHalfH * cam.aspect;
+        Vector3 camPos = cam.transform.position;
+
+        float thickness = 1f; // 벽 두께
+
+        // 상단 벽
+        CreateWall(new Vector2(camPos.x, camPos.y + camHalfH + thickness / 2), new Vector2(camHalfW * 2, thickness));
+        // 하단 벽
+        CreateWall(new Vector2(camPos.x, camPos.y - camHalfH - thickness / 2), new Vector2(camHalfW * 2, thickness));
+        // 왼쪽 벽
+        CreateWall(new Vector2(camPos.x - camHalfW - thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2));
+        // 오른쪽 벽
+        CreateWall(new Vector2(camPos.x + camHalfW + thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2));
+    }
+
+    private void CreateWall(Vector2 pos, Vector2 size)
+    {
+        GameObject wall = new GameObject("BoundaryWall");
+        wall.transform.position = pos;
+
+        var collider = wall.AddComponent<BoxCollider2D>();
+        collider.size = size;
+
+        var rb = wall.AddComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Static; // 움직이지 않는 벽
+    }
+
 
     [Header("Grid")]
     [SerializeField] private GameObject gridParent;
@@ -131,7 +191,7 @@ public class TilePlacer : MonoBehaviour
 
     #region Tile Position
     private Vector3Int TileToCell(int x, int y) => new(y, height - 1 - x, 0);
-
+    public Vector3 GetTileSize() => tilemap.cellSize;
     public Vector3? GetTileCenterWorld(int x, int y)
     {
         if (x < 0 || x >= height || y < 0 || y >= width) return null;

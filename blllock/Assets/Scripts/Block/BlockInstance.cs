@@ -54,7 +54,7 @@ public class BlockInstance : MonoBehaviour
         if (isDragging)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            transform.position = new Vector3(mousePos.x, mousePos.y, 0);
+            transform.position = GetClampedPos(new Vector3(mousePos.x, mousePos.y, 0));
         }
 
         if (Input.GetMouseButtonUp(0) && isDragging)
@@ -62,9 +62,22 @@ public class BlockInstance : MonoBehaviour
             EndDrag();
         }
     }
+
     private void OnMouseDown()
     {
         BeginDrag();
+    }
+
+    private Vector3 GetClampedPos(Vector3 pos)
+    {
+        Rect boundary = Utils.Boundary;
+        Vector3 tileSize = GameManager.Instance.Grid.GetTileSize();
+        Vector3 clamped = new();
+
+        clamped.x = Mathf.Clamp(pos.x, boundary.xMin + tileSize.x * blockData.Width / 2f, boundary.xMax - tileSize.x * blockData.Width / 2f);
+        clamped.y = Mathf.Clamp(pos.y, boundary.yMin + tileSize.y * blockData.Height / 2f, boundary.yMax - tileSize.y * blockData.Height / 2f);
+
+        return clamped;        
     }
 
 

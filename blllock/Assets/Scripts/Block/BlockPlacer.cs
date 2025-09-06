@@ -22,18 +22,30 @@ public class BlockPlacer : MonoBehaviour
         triples.Shuffle();
 
         for (int i = 0; i < triples.Count; i++)
-            PlaceBlock(triples[i].Item1, triples[i].Item2, triples[i].Item3);
+        {
+            if (i < triples.Count / 2) PlaceBlock(triples[i].Item1, true, triples[i].Item2, triples[i].Item3);
+            else PlaceBlock(triples[i].Item1, false, triples[i].Item2, triples[i].Item3);
+        }
     }
 
-    private void PlaceBlock(int id, bool canRotate, bool canFlip)
+    private void PlaceBlock(int id, bool isLeft, bool canRotate, bool canFlip)
     {
         BlockData blockData = GameManager.Instance.BlockLibrary[id];
-        GameObject instance = Instantiate(blockPrefab, GetPlacedWorld(), Quaternion.identity);
+        GameObject instance = Instantiate(blockPrefab, GetPlacedWorld(isLeft), Quaternion.identity);
         instance.GetComponent<BlockInstance>().Initialize(blockData, blockSprites[id], canRotate, canFlip);
     }
 
-    private Vector3 GetPlacedWorld()
+    private Vector3 GetPlacedWorld(bool isLeft)
     {
-        return new Vector3(0, 0);
+        Camera cam = Camera.main;
+        Vector3 center = cam.transform.position;
+        float halfW = cam.orthographicSize * cam.aspect;
+        float halfH = cam.orthographicSize;
+
+        float randX = Random.Range(1f, 2f);
+        float randY = Random.Range(-halfH, halfH);
+
+        if (isLeft) return new Vector3(center.x - halfW / 2f * randX, center.y + randY);
+        else return new Vector3(center.x + halfW / 2f * randX, center.y + randY);
     }
 }
