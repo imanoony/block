@@ -57,7 +57,12 @@ public class GridManager : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(1))
         {
-            Debug.Log($"[현재 WireDict] {GameManager.Instance.Wire.StringOfWireDict()}\n[현재 Wires] {GameManager.Instance.Wire.StringOfWires()}");
+            string debugText = $@"
+[현재 WireDict] {GameManager.Instance.Wire.StringOfWireDict()}
+[현재 Wires] {GameManager.Instance.Wire.StringOfWires()}
+[현재 WireLogic] {GameManager.Instance.Wire.StringOfWireLogic()}
+";
+            Debug.Log(debugText);
         }
     }
 
@@ -191,10 +196,11 @@ public class GridManager : MonoBehaviour
             Grids![offset.x + baseTile.x, offset.y + baseTile.y].AddPort(port);
         }
 
+        CheckInvalids();
         // 블록의 portIDs를 Evaluate 한다.
         GameManager.Instance.Wire.EvalAll();
+        Debug.Log($"[PlaceBlock():{block.ID}] EvalAll() Done -- {block.Ports[0]}:{block.Ports[0].Cache}");
 
-        CheckInvalids();
         return true;
     }
 
@@ -219,9 +225,8 @@ public class GridManager : MonoBehaviour
         foreach (int id in block.PortIds) GameManager.Instance.Wire.RemoveWire(id);
         GameManager.Instance.Wire.RemoveSignature();
 
-        GameManager.Instance.Wire.EvalAll();
-
         CheckInvalids();
+        GameManager.Instance.Wire.EvalAll();
     }
 
     public bool IsValidPos(BlockData block, Vector2Int baseTile)
@@ -264,6 +269,8 @@ public class GridManager : MonoBehaviour
             {
                 if (!wire.AddToLogic(block.Ports[i], grid.Expr))
                 {
+                    Debug.Log($"[IsValidPort:--invalid--] try: {block.Ports[i]} -> {grid.Expr} | dict: {wire.StringOfWireLogic()} | backup: {wire.StringOfWireLogic(backupLogic)}");
+
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;
                 }

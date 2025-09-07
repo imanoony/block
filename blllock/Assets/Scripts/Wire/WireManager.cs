@@ -18,7 +18,7 @@ public class WireManager
     }
     public void RollBack(Dictionary<int, Wire> wires, Dictionary<int, HashSet<int>> dict, Dictionary<int, LogicExpr> logic)
     {
-        Wires = wires;
+        foreach (var kvp in Wires) Wires[kvp.Key].Init(wires[kvp.Key]);
         WireDict = dict;
         WireLogic = logic;
     }
@@ -31,6 +31,11 @@ public class WireManager
 
         // "키: {값1, 값2}" 형식으로 변환
         return string.Join("|", target.Select(kv => $"{kv.Key}: {string.Join(", ", kv.Value)}"));
+    }
+    public string StringOfWireLogic(Dictionary<int, LogicExpr>? wireLogic = null)
+    {
+        Dictionary<int, LogicExpr> target = wireLogic ?? WireLogic;
+        return string.Join("|", target.Select(kv => $"{kv.Key}: {kv.Value}"));
     }
 
     public Dictionary<int, Wire> Wires { get; private set; } = new Dictionary<int, Wire>(); // ID에 대한 Wire 매핑
