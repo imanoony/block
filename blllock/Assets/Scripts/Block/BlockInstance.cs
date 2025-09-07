@@ -6,6 +6,7 @@ public class BlockInstance : MonoBehaviour
     private BlockData blockData;
     private bool isDragging = false;
     private GridManager gm;
+    private SpriteRenderer sr;
 
     public bool CanRotate { get; private set; } = false;
     public bool CanFlip { get; private set; } = false;
@@ -19,8 +20,7 @@ public class BlockInstance : MonoBehaviour
         CanFlip = canFlip;
 
         gm = GameManager.Instance.Grid;
-
-        SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+        sr = gameObject.GetComponent<SpriteRenderer>();
         sr.sprite = sprite;
         gameObject.GetComponent<BoxCollider2D>().size = sr.sprite.bounds.size;
 
@@ -103,6 +103,7 @@ public class BlockInstance : MonoBehaviour
         if (!gm.PlaceBlock(blockData, baseTile))
         {
             Valid = false;
+            sr.color = Utils.CodeToColor(Utils.RED);
             gm.AddInvalid(this);
         }
         return true;
@@ -117,6 +118,7 @@ public class BlockInstance : MonoBehaviour
         gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 
         Valid = true;
+        sr.color = Color.white;
         gm.RemoveInvalid(this);
     }
 
@@ -126,6 +128,7 @@ public class BlockInstance : MonoBehaviour
         if (!gm.PlaceBlock(blockData, baseTile)) return;
 
         Valid = true;
+        sr.color = Color.white;
         gm.RemoveInvalid(this);
     }
 

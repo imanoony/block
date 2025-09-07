@@ -396,6 +396,8 @@ public class WireManager
 
     private void EvalEquivalents(HashSet<int> equivalents, LogicExpr? l)
     {
+        Debug.Log($"[Eval Equivalents:{string.Join(",", equivalents!.Select(x => $"{x}"))}] -> {l}");
+
         foreach (int eqID in equivalents)
         {
             Wires[eqID].Cache = l;
@@ -414,6 +416,7 @@ public class WireManager
             if (kvp.Value.Updated) continue;
             Eval(kvp.Value.ID);
         }
+        ResetWires();
     }
     #endregion
 

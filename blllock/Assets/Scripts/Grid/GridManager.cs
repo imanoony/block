@@ -192,8 +192,7 @@ public class GridManager : MonoBehaviour
         }
 
         // 블록의 portIDs를 Evaluate 한다.
-        for (int i = 0; i < block.PortIds.Count; i++)
-            GameManager.Instance.Wire.Eval(block.PortIds[i]);
+        GameManager.Instance.Wire.EvalAll();
 
         CheckInvalids();
         return true;
@@ -219,6 +218,8 @@ public class GridManager : MonoBehaviour
         }
         foreach (int id in block.PortIds) GameManager.Instance.Wire.RemoveWire(id);
         GameManager.Instance.Wire.RemoveSignature();
+
+        GameManager.Instance.Wire.EvalAll();
 
         CheckInvalids();
     }
