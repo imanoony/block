@@ -46,9 +46,9 @@ public class GridInstance : MonoBehaviour
 
     private void UpdateColor()
     {
-        if (gridData.Type == GridType.Input) sr.color = Color.red;
-        else if (gridData.Type == GridType.Output) sr.color = Color.blue;
-        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) sr.color = Color.orange;
+        if (gridData.Type == GridType.Input) sr.color = Utils.CodeToColor(Utils.RED);
+        else if (gridData.Type == GridType.Output) sr.color = Utils.CodeToColor(Utils.BLUE);
+        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) sr.color = Utils.CodeToColor(Utils.GRAY);
         else sr.color = Color.clear;
     }
 

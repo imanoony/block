@@ -10,10 +10,10 @@ public static class Utils
     public const int GRID_TEXT_SPACING = 30;
     public const int PORT_OFFSET = 20;
     public const int PORT_SIZE = 10;
-    public const string RED = "#FE817D";
-    public const string BLUE = "#7391FE";
+    public const string RED = "#F25A7B";
+    public const string BLUE = "#54DCE3";
     public const string BLACK = "#242424";
-    public const string GRAY = "#717171";
+    public const string GRAY = "#B8B8B8";
     public const float THRESHOLD = 0.6f;
     public const float TILE_FILL_PERCENT = 0.7f;
     public const int PPU = 24;
@@ -37,6 +37,15 @@ public static class Utils
 
     public static Rect Boundary { get; private set; }
     public static void SetBoundary(Rect boundary) => Boundary = boundary;
+
+    public static Color CodeToColor(string colorCode)
+    {
+        if (string.IsNullOrWhiteSpace(colorCode)) return Color.white; // default fallback
+
+        Color color;
+        if (ColorUtility.TryParseHtmlString(colorCode, out color)) return color;
+        else { PrintError("[CodeToColor] cannot parse"); return Color.white; }
+    }
 }
 
 public class GameManager : MonoBehaviour
