@@ -72,6 +72,7 @@ public class GameManager : MonoBehaviour
 
         Wire.Initialize(true);
         Grid.Initialize();
+        UI.Initialize();
 
         BlockLibrary = dataParser.ParseBlockData(blockPath);
         StageLibrary = dataParser.ParseStageData(stagePath);

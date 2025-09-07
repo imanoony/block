@@ -7,6 +7,7 @@ public class GridInstance : MonoBehaviour
     public int y { get; private set; }
     private Grid gridData;
     private SpriteRenderer sr;
+    private GameManager gm;
 
     public void Initialize(int x, int y)
     {
@@ -14,13 +15,16 @@ public class GridInstance : MonoBehaviour
         gridData = GameManager.Instance.Grid.Grids[x, y];
         gridData.OnPortsChanged += OnPortsChanged;
         sr = gameObject.GetComponent<SpriteRenderer>();
+        gm = GameManager.Instance;
 
         SubscribePort();
         UpdateColor();
     }
+
     void OnMouseDown()
     {
-        GameManager.Instance.UI.EnableGridHover(x, y);
+        if (gm.UI.ChatEnablePos.ContainsKey(new(x, y))) gm.UI.DisableGridHover(x, y);
+        else gm.UI.EnableGridHover(x, y);
     }
 
     private void SubscribePort()
@@ -52,7 +56,7 @@ public class GridInstance : MonoBehaviour
         else sr.color = Color.clear;
     }
 
-    private void Oestroy()
+    private void OnDestroy()
     {
         gridData.OnPortsChanged -= OnPortsChanged;
         UnsubscribePort();
