@@ -298,7 +298,7 @@ public class WireManager
     public LogicExpr? EvalCache(WireExpr? expr)
     {
         if (expr == null) return null;
-        if (expr is Wire wire) return EvalCache(wire.ID);
+        if (expr is Wire wire) return EvalCache(wire.ID); 
         if (expr is WireNot not)
         {
             LogicExpr? result = EvalCache(not.Inner);

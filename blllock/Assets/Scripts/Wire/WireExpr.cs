@@ -1,10 +1,23 @@
 #nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 public abstract class WireExpr
 {
+    private LogicExpr? _cache;
+    public LogicExpr? Cache
+    {
+        get => _cache;
+        protected set
+        {
+            if (_cache == value) return;
+            _cache = value;
+            OnCacheChanged?.Invoke(this);
+        }
+    }
+    public event Action<WireExpr>? OnCacheChanged;
     public abstract override string ToString();
     public abstract override bool Equals(object? obj);
     public abstract override int GetHashCode();
@@ -24,7 +37,11 @@ public class Wire : WireExpr
     public string Name;
     public bool Updated = false;
     public WireExpr? Signature;
-    public LogicExpr? Cache;
+    public new LogicExpr? Cache
+    {
+        get => base.Cache;
+        set => base.Cache = value;
+    }
     public int Parent, LeftChild, RightChild; // 부모 Wire, 자식 Wire의 ID. 없으면 -1.
     public int P => Parent;
     public int L => LeftChild;
@@ -66,8 +83,21 @@ public class Wire : WireExpr
 
 public class WireNot : WireExpr
 {
-    public WireExpr? Inner { get; private set; }
+    private WireExpr? _inner;
+    public WireExpr? Inner
+    {
+        get => _inner;
+        private set
+        {
+            if (_inner != null) _inner.OnCacheChanged -= InnerCacheChanged;
+            _inner = value;
+            if (_inner != null) _inner.OnCacheChanged += InnerCacheChanged;
+            UpdateCache();
+        }
+    }
     public WireNot(WireExpr? inner) => Inner = inner;
+    private void InnerCacheChanged(WireExpr _) => UpdateCache();
+    private void UpdateCache() => Cache = Inner?.Cache != null ? new NotExpr(Inner.Cache).Clean() : null;
     public WireExpr? Clean() // 이중 부정을 제거하기 위함
     {
         if (Inner is WireNot innerNot) return innerNot.Inner;
@@ -87,9 +117,38 @@ public class WireNot : WireExpr
 
 public class WireAnd : WireExpr
 {
-    public WireExpr? Left { get; private set; }
-    public WireExpr? Right { get; private set; }
+    private WireExpr? _left, _right;
+    public WireExpr? Left
+    {
+        get => _left;
+        private set
+        {
+            if (_left != null) _left.OnCacheChanged -= ChildCacheChanged;
+            _left = value;
+            if (_left != null) _left.OnCacheChanged += ChildCacheChanged;
+            UpdateCache();
+        }
+    }
+    public WireExpr? Right
+    {
+        get => _right;
+        private set
+        {
+            if (_right != null) _right.OnCacheChanged -= ChildCacheChanged;
+            _right = value;
+            if (_right != null) _right.OnCacheChanged += ChildCacheChanged;
+            UpdateCache();
+        }
+    }
     public WireAnd(WireExpr? left, WireExpr? right) { Left = left; Right = right; }
+
+    private void ChildCacheChanged(WireExpr _) => UpdateCache();
+    private void UpdateCache()
+    {
+        if (Left?.Cache != null && Right?.Cache != null)
+            Cache = new AndExpr(Left.Cache, Right.Cache);
+        else Cache = null;
+    }
     public override string ToString()
     {
         string left = Left is Wire ? $"{Left}" : $"({Left})";
@@ -112,9 +171,39 @@ public class WireAnd : WireExpr
 
 public class WireOr : WireExpr
 {
-    public WireExpr? Left { get; private set; }
-    public WireExpr? Right { get; private set; }
+        private WireExpr? _left, _right;
+    public WireExpr? Left
+    {
+        get => _left;
+        private set
+        {
+            if (_left != null) _left.OnCacheChanged -= ChildCacheChanged;
+            _left = value;
+            if (_left != null) _left.OnCacheChanged += ChildCacheChanged;
+            UpdateCache();
+        }
+    }
+    public WireExpr? Right
+    {
+        get => _right;
+        private set
+        {
+            if (_right != null) _right.OnCacheChanged -= ChildCacheChanged;
+            _right = value;
+            if (_right != null) _right.OnCacheChanged += ChildCacheChanged;
+            UpdateCache();
+        }
+    }
     public WireOr(WireExpr? left, WireExpr? right) { Left = left; Right = right; }
+
+    private void ChildCacheChanged(WireExpr _) => UpdateCache();
+    private void UpdateCache()
+    {
+        if (Left?.Cache != null && Right?.Cache != null)
+            Cache = new AndExpr(Left.Cache, Right.Cache);
+        else Cache = null;
+    }
+    
     public override string ToString()
     {
         string left = Left is Wire ? $"{Left}" : $"({Left})";

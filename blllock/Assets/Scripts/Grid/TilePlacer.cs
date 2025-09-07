@@ -182,7 +182,7 @@ public class TilePlacer : MonoBehaviour
             {
                 GameObject grid = Instantiate(gridPrefab, gridParent.transform);
                 grid.name = $"Grid_{x}_{y}";
-                grid.transform.position = (Vector3)GetTileTopLeftWorld(x, y);
+                grid.transform.position = (Vector3)GetTileCenterWorld(x, y);
                 grid.GetComponent<GridInstance>().Initialize(x, y);
             }
         }
