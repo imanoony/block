@@ -103,6 +103,7 @@ public class TilePlacer : MonoBehaviour
 
         // 타일맵 성질에 따른 offset 추가한다
         centerWorld += new Vector3(tilemap.cellSize.x / 8f, 0f, 0f);
+        centerWorld += new Vector3(0f, -tilemap.cellSize.y, 0f);
 
         cam.transform.position = new Vector3(centerWorld.x, centerWorld.y, cam.transform.position.z);
 

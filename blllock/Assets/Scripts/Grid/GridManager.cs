@@ -309,6 +309,6 @@ public class GridManager : MonoBehaviour
 
     public Vector3 GetBlockCenterOnTile(int x, int y, int height, int width) => TilePlacer.GetBlockCenterOnTile(x, y, height, width);
     public Vector3 GetTileSize() => TilePlacer.GetTileSize();
-    public Vector3? GetTileTopLeftWorld(int x, int y) => TilePlacer.GetTileCenterWorld(x, y);
+    public Vector3? GetTileTopLeftWorld(int x, int y) => TilePlacer.GetTileTopLeftWorld(x, y);
     #endregion
 }

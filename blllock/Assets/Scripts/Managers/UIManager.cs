@@ -91,6 +91,8 @@ public class UIManager : MonoBehaviour
         chatEnable.Remove(index);
         chatDisable.Add(index);
     }
+
+    private Vector2 chatOffset = new(9, 40);
     private Vector2 GetChatPosUI(int x, int y, Canvas canvas)
     {
         // 1. 타일 월드 좌표
@@ -105,7 +107,7 @@ public class UIManager : MonoBehaviour
         uiPos.x = screenPos.x - canvasRect.sizeDelta.x / 2f;
         uiPos.y = screenPos.y - canvasRect.sizeDelta.y / 2f;
 
-        return uiPos; // RectTransform.anchoredPosition에 바로 적용 가능
+        return uiPos + chatOffset; // RectTransform.anchoredPosition에 바로 적용 가능
     }
 
 }

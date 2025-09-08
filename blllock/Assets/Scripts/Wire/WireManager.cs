@@ -154,7 +154,7 @@ public class WireManager
     private bool Compatible(int w, LogicExpr l)
     {   
         LogicExpr? wl1 = Eval(w);
-        if (wl1 != null) return wl1.Equals(l);
+        if (wl1 != null) { Debug.Log($"[Compatible()] wl1:{wl1}, l:{l}"); return wl1.Equals(l); }
 
         HashSet<int> eq = GetEquivalents(w);
         WireExpr? s = GetSignature(w, eq);
@@ -419,6 +419,7 @@ public class WireManager
 
     public void EvalAll()
     {
+        ResetWires();
         foreach (var kvp in Wires)
         {
             if (kvp.Value.Updated) continue;

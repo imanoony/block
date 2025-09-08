@@ -17,7 +17,7 @@ public static class Utils
     public const string GREEN = "#CAFFCA";
     public const string ORANGE = "#FFE4C0";
     public const float THRESHOLD = 0.6f;
-    public const float TILE_FILL_PERCENT = 0.7f;
+    public const float TILE_FILL_PERCENT = 0.67f;
     public const int PPU = 24;
     public const int MAX_PORT = 4;
     public static void PrintWarning(string message)
