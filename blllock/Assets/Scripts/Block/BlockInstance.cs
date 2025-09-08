@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BlockInstance : MonoBehaviour
@@ -7,6 +6,7 @@ public class BlockInstance : MonoBehaviour
     private bool isDragging = false;
     private GridManager gm;
     private SpriteRenderer sr;
+    private Color color;
 
     public bool CanRotate { get; private set; } = false;
     public bool CanFlip { get; private set; } = false;
@@ -18,18 +18,15 @@ public class BlockInstance : MonoBehaviour
         this.blockData.Instantiate();
         CanRotate = canRotate;
         CanFlip = canFlip;
+        if (CanRotate) color = Utils.CodeToColor(Utils.GREEN);
+        else if (CanFlip) color = Utils.CodeToColor(Utils.ORANGE);
+        else color = Color.white;
 
         gm = GameManager.Instance.Grid;
         sr = gameObject.GetComponent<SpriteRenderer>();
         sr.sprite = sprite;
+        sr.color = color;
         gameObject.GetComponent<BoxCollider2D>().size = sr.sprite.bounds.size;
-
-        PrintBlock();
-    }
-
-    private void PrintBlock() // for debugging
-    {
-        Debug.Log($"[ID:{blockData.ID}] port ids:{string.Join(", ", blockData.PortIds)}");
     }
 
     public void BeginDrag()
@@ -61,12 +58,22 @@ public class BlockInstance : MonoBehaviour
         {
             EndDrag();
         }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = new Vector2(mouseWorld.x, mouseWorld.y);
+
+            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+            if (hit.collider != null && hit.collider.gameObject == gameObject)
+            {
+                if (CanRotate) Rotate(isPlaced);
+                else if (CanFlip) Flip();
+            }
+        }
     }
 
-    private void OnMouseDown()
-    {
-        BeginDrag();
-    }
+    private void OnMouseDown() => BeginDrag();
 
     private Vector3 GetClampedPos(Vector3 pos)
     {
@@ -77,7 +84,7 @@ public class BlockInstance : MonoBehaviour
         clamped.x = Mathf.Clamp(pos.x, boundary.xMin + tileSize.x * blockData.Width / 2f, boundary.xMax - tileSize.x * blockData.Width / 2f);
         clamped.y = Mathf.Clamp(pos.y, boundary.yMin + tileSize.y * blockData.Height / 2f, boundary.yMax - tileSize.y * blockData.Height / 2f);
 
-        return clamped;        
+        return clamped;
     }
 
 
@@ -91,7 +98,7 @@ public class BlockInstance : MonoBehaviour
     private bool Place(GridManager gm, Vector2Int baseTile)
     {
         if (isPlaced || !this.baseTile.Equals(new(-1, -1))) return false;
-        if (!gm.IsValidPos(blockData, baseTile)) return false;
+        if (!gm.IsValidPos(blockData, baseTile)) { Debug.Log("Invalid Pos"); return false; }
 
         isPlaced = true;
         this.baseTile = baseTile;
@@ -118,7 +125,7 @@ public class BlockInstance : MonoBehaviour
         gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 
         Valid = true;
-        sr.color = Color.white;
+        sr.color = color;
         gm.RemoveInvalid(this);
     }
 
@@ -128,9 +135,38 @@ public class BlockInstance : MonoBehaviour
         if (!gm.PlaceBlock(blockData, baseTile)) return;
 
         Valid = true;
-        sr.color = Color.white;
+        sr.color = color;
         gm.RemoveInvalid(this);
     }
 
     private Vector3 GetBaseTilePos() => transform.position + new Vector3(-blockData.Width / 2f, blockData.Height / 2f, 0);
+
+    #region Rotate & Flip
+    private void Rotate(bool isPlaced)
+    {
+        if (!CanRotate) return;
+
+        Vector2Int baseTile = this.baseTile;
+        if (isPlaced) Unplace(gm);
+
+        blockData.Rotation();
+        Vector3 euler = transform.rotation.eulerAngles;
+        euler.z = -(int)blockData.BlockRotate;  // 원하는 Z축 회전
+        transform.rotation = Quaternion.Euler(euler);
+
+        if (isPlaced) Place(gm, baseTile);
+    }
+    private void Flip()
+    {
+        if (!CanFlip) return;
+
+        Vector2Int baseTile = this.baseTile;
+        if (isPlaced) Unplace(gm);
+
+        blockData.FlipX();
+        sr.flipX = blockData.BlockFlipX;
+
+        if (isPlaced) Place(gm, baseTile);
+    }
+    #endregion
 }

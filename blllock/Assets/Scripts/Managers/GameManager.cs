@@ -14,6 +14,8 @@ public static class Utils
     public const string BLUE = "#54DCE3";
     public const string BLACK = "#242424";
     public const string GRAY = "#B8B8B8";
+    public const string GREEN = "#CAFFCA";
+    public const string ORANGE = "#FFE4C0";
     public const float THRESHOLD = 0.6f;
     public const float TILE_FILL_PERCENT = 0.7f;
     public const int PPU = 24;

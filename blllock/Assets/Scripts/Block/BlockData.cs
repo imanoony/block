@@ -37,14 +37,14 @@ public class BlockData
         else BlockRotate += (int)Rotate.Rotate90;
         return BlockRotate;
     }
-    public bool BlockFlipY { get; private set; } = false;
-    public bool FlipY()
+    public bool BlockFlipX { get; private set; } = false;
+    public bool FlipX()
     {
         for (int i = 0; i < Tiles.Count; i++) Tiles[i] = new(Tiles[i].x, GetWidth() - 1 - Tiles[i].y);
         for (int i = 0; i < Grids.Count; i++) Grids[i] = new(Grids[i].x, GetWidth() - Grids[i].y);
 
-        BlockFlipY = !BlockFlipY;
-        return BlockFlipY;
+        BlockFlipX = !BlockFlipX;
+        return BlockFlipX;
     }
     #endregion
 
