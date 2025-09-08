@@ -152,7 +152,10 @@ public class WireManager
 
     // wire와 logic expr의 호환 가능성을 반환
     private bool Compatible(int w, LogicExpr l)
-    {
+    {   
+        LogicExpr? wl1 = Eval(w);
+        if (wl1 != null) return wl1.Equals(l);
+
         HashSet<int> eq = GetEquivalents(w);
         WireExpr? s = GetSignature(w, eq);
         if (s != null)

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class BlockInstance : MonoBehaviour
@@ -31,6 +32,8 @@ public class BlockInstance : MonoBehaviour
 
     public void BeginDrag()
     {
+        if (currentCoroutine != null) return;
+
         isDragging = true;
 
         if (isPlaced) Unplace(gm);
@@ -61,14 +64,16 @@ public class BlockInstance : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
+            if (currentCoroutine != null) return;
+
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mouseWorld.x, mouseWorld.y);
 
             RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
-                if (CanRotate) Rotate(isPlaced);
-                else if (CanFlip) Flip();
+                if (CanRotate) currentCoroutine = StartCoroutine(Rotate(isPlaced));
+                else if (CanFlip) currentCoroutine = StartCoroutine(Flip(isPlaced));
             }
         }
     }
@@ -142,23 +147,62 @@ public class BlockInstance : MonoBehaviour
     private Vector3 GetBaseTilePos() => transform.position + new Vector3(-blockData.Width / 2f, blockData.Height / 2f, 0);
 
     #region Rotate & Flip
-    private void Rotate(bool isPlaced)
+    private Coroutine currentCoroutine = null;
+    private float time = 0.2f;
+    private IEnumerator Rotate(bool isPlaced)
     {
-        if (!CanRotate) return;
+        if (!CanRotate) yield break;
 
         Vector2Int baseTile = this.baseTile;
         if (isPlaced) Unplace(gm);
 
         blockData.Rotation();
-        Vector3 euler = transform.rotation.eulerAngles;
-        euler.z = -(int)blockData.BlockRotate;  // 원하는 Z축 회전
-        transform.rotation = Quaternion.Euler(euler);
+        gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
+        float startZ = transform.rotation.eulerAngles.z;
+        float targetZ = -(int)blockData.BlockRotate;
+
+        // 0~360 정규화
+        startZ %= 360f; if (startZ < 0f) startZ += 360f;
+        targetZ %= 360f; if (targetZ < 0f) targetZ += 360f;
+
+        float deltaZ = targetZ - startZ;
+        if (deltaZ > 0f) deltaZ -= 360f; // 항상 시계 방향
+
+        float elapsed = 0f;
+
+        while (elapsed < time)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / time);
+
+            // SmoothStep를 사용해서 휙 바뀌는 느낌
+            t = Mathf.Pow(t, 0.3f); // 초반 빠르게 → 끝에 살짝 느리게
+
+            float newZ = startZ + deltaZ * t;
+
+            Vector3 euler = transform.rotation.eulerAngles;
+            euler.z = newZ;
+            transform.rotation = Quaternion.Euler(euler);
+
+            yield return null;
+        }
+
+        // 마지막 보정
+        Vector3 finalEuler = transform.rotation.eulerAngles;
+        finalEuler.z = targetZ;
+        transform.rotation = Quaternion.Euler(finalEuler);
+
+        gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
         if (isPlaced) Place(gm, baseTile);
+
+        currentCoroutine = null;
     }
-    private void Flip()
+
+
+    private IEnumerator Flip(bool isPlaced)
     {
-        if (!CanFlip) return;
+        if (!CanFlip) yield break;
 
         Vector2Int baseTile = this.baseTile;
         if (isPlaced) Unplace(gm);
