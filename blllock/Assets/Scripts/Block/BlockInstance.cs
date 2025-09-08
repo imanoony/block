@@ -20,7 +20,7 @@ public class BlockInstance : MonoBehaviour
         CanRotate = canRotate;
         CanFlip = canFlip;
         if (CanRotate) color = Utils.CodeToColor(Utils.GREEN);
-        else if (CanFlip) color = Utils.CodeToColor(Utils.ORANGE);
+        else if (CanFlip) color = Utils.CodeToColor(Utils.YELLOW);
         else color = Color.white;
 
         gm = GameManager.Instance.Grid;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -33,7 +33,8 @@ public class UIManager : MonoBehaviour
 
     public void EnableGridHover(int x, int y)
     {
-        if (GameManager.Instance.Grid.Grids[x, y].Type != GridType.Null)
+        GridType type;
+        if ((type = GameManager.Instance.Grid.Grids[x, y].Type) != GridType.Null)
         {
             Debug.Log(GameManager.Instance.Grid.GetGridExpr(x, y));
 
@@ -44,6 +45,9 @@ public class UIManager : MonoBehaviour
 
             chat.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = expr;
             chat.GetComponent<RectTransform>().anchoredPosition = GetChatPosUI(x, y, canvas);
+
+            if (type == GridType.Input) SetChatColor(chat, Utils.CodeToColor(Utils.CHAT_RED));
+            else SetChatColor(chat, Utils.CodeToColor(Utils.CHAT_BLUE));
         }
         else
         {
@@ -59,6 +63,8 @@ public class UIManager : MonoBehaviour
 
             chat.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = expr;
             chat.GetComponent<RectTransform>().anchoredPosition = GetChatPosUI(x, y, canvas);
+
+            SetChatColor(chat, Color.white);
         }
     }
     public void DisableGridHover(int x, int y) => DisableChat(x, y);
@@ -90,6 +96,17 @@ public class UIManager : MonoBehaviour
 
         chatEnable.Remove(index);
         chatDisable.Add(index);
+    }
+
+    private void SetChatColor(GameObject chat, Color color)
+    {
+        Image body = chat.transform.GetChild(0).GetComponent<Image>();
+        Image tail = chat.transform.GetChild(1).GetComponent<Image>();
+
+        body.color = color;
+        tail.color = color;
+        body.color = new Color(color.r, color.g, color.b, Utils.CLEAR_ALPHA);
+        tail.color = new Color(color.r, color.g, color.b, Utils.CLEAR_ALPHA);
     }
 
     private Vector2 chatOffset = new(9, 40);

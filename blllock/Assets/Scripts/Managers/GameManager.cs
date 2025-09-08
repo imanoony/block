@@ -11,11 +11,14 @@ public static class Utils
     public const int PORT_OFFSET = 20;
     public const int PORT_SIZE = 10;
     public const string RED = "#F25A7B";
+    public const string CHAT_RED = "#FFD0D0";
     public const string BLUE = "#54DCE3";
+    public const string CHAT_BLUE = "#D0F6FF";
     public const string BLACK = "#242424";
     public const string GRAY = "#B8B8B8";
     public const string GREEN = "#CAFFCA";
-    public const string ORANGE = "#FFE4C0";
+    public const string YELLOW = "#FEFCCD";
+    public const float CLEAR_ALPHA = 0.4f;
     public const float THRESHOLD = 0.6f;
     public const float TILE_FILL_PERCENT = 0.67f;
     public const int PPU = 24;

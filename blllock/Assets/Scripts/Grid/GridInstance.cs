@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridInstance : MonoBehaviour
@@ -53,7 +52,11 @@ public class GridInstance : MonoBehaviour
         if (gridData.Type == GridType.Input) sr.color = Utils.CodeToColor(Utils.RED);
         else if (gridData.Type == GridType.Output) sr.color = Utils.CodeToColor(Utils.BLUE);
         else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) sr.color = Utils.CodeToColor(Utils.GRAY);
-        else sr.color = Color.clear;
+        else
+        {
+            sr.color = Color.clear;
+            if (gm.UI.ChatEnablePos.ContainsKey(new(x, y))) gm.UI.DisableGridHover(x, y);
+        }
     }
 
     private void OnDestroy()
