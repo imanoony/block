@@ -29,6 +29,10 @@ public class TilePlacer : MonoBehaviour
     {
         tilemap.ClearAllTiles();
         width = -1; height = -1;
+
+        RemoveTileCollider();
+        RemoveCameraBoundary();
+        RemoveGrids();
     }
     private int width = -1, height = -1;
     public void PlaceTiles(int width, int height)
@@ -65,6 +69,16 @@ public class TilePlacer : MonoBehaviour
         tilemap.SetTile(TileToCell(height, -1), tileBottomLeft);
         tilemap.SetTile(TileToCell(height, width), tileBottomRight);
     }
+
+    private GameObject tileWall = null;
+    private void RemoveTileCollider()
+    {
+        if (tileWall != null)
+        {
+            Destroy(tileWall);
+            tileWall = null;
+        }
+    }
     private void PlaceTileCollider()
     {
         Vector2 size = new Vector2(tilemap.cellSize.x * (width + 2), tilemap.cellSize.y * (height + 2));
@@ -73,13 +87,13 @@ public class TilePlacer : MonoBehaviour
         pos = new Vector2(pos.x + size.x / 2f, pos.y - size.y / 2f);
         size = new Vector2(size.x, Camera.main.orthographicSize * 3);
 
-        GameObject wall = new GameObject("TileWall");
-        wall.transform.position = pos;
+        tileWall = new GameObject("TileWall");
+        tileWall.transform.position = pos;
 
-        var collider = wall.AddComponent<BoxCollider2D>();
+        var collider = tileWall.AddComponent<BoxCollider2D>();
         collider.size = size;
 
-        var rb = wall.AddComponent<Rigidbody2D>();
+        var rb = tileWall.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Static; // 움직이지 않는 벽
     }
 
@@ -135,8 +149,20 @@ public class TilePlacer : MonoBehaviour
         // Utils에 바운더리 세팅
         Utils.SetBoundary(boundary);
     }
+
+    private List<GameObject> boundaryWalls = null;
+    private void RemoveCameraBoundary()
+    {
+        if (boundaryWalls != null)
+        {
+            foreach (var wall in boundaryWalls)
+                if (wall != null) Destroy(wall);
+        }
+        boundaryWalls = null;
+    }
     private void PlaceCameraBoundary()
     {
+        boundaryWalls = new List<GameObject>();
         Camera cam = Camera.main;
         float camHalfH = cam.orthographicSize;
         float camHalfW = camHalfH * cam.aspect;
@@ -145,16 +171,15 @@ public class TilePlacer : MonoBehaviour
         float thickness = 1f; // 벽 두께
 
         // 상단 벽
-        CreateWall(new Vector2(camPos.x, camPos.y + camHalfH + thickness / 2), new Vector2(camHalfW * 2, thickness));
+        boundaryWalls.Add(CreateWall(new Vector2(camPos.x, camPos.y + camHalfH + thickness / 2), new Vector2(camHalfW * 2, thickness)));
         // 하단 벽
-        CreateWall(new Vector2(camPos.x, camPos.y - camHalfH - thickness / 2), new Vector2(camHalfW * 2, thickness));
+        boundaryWalls.Add(CreateWall(new Vector2(camPos.x, camPos.y - camHalfH - thickness / 2), new Vector2(camHalfW * 2, thickness)));
         // 왼쪽 벽
-        CreateWall(new Vector2(camPos.x - camHalfW - thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2));
+        boundaryWalls.Add(CreateWall(new Vector2(camPos.x - camHalfW - thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2)));
         // 오른쪽 벽
-        CreateWall(new Vector2(camPos.x + camHalfW + thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2));
+        boundaryWalls.Add(CreateWall(new Vector2(camPos.x + camHalfW + thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2)));
     }
-
-    private void CreateWall(Vector2 pos, Vector2 size)
+    private GameObject CreateWall(Vector2 pos, Vector2 size)
     {
         GameObject wall = new GameObject("BoundaryWall");
         wall.transform.position = pos;
@@ -164,14 +189,30 @@ public class TilePlacer : MonoBehaviour
 
         var rb = wall.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Static; // 움직이지 않는 벽
+
+        return wall;
     }
 
 
     [Header("Grid")]
     [SerializeField] private GameObject gridParent;
     [SerializeField] private GameObject gridPrefab;
+    private List<GameObject> grids = null;
+    public void RemoveGrids()
+    {
+        if (grids != null)
+        {
+            foreach (var grid in grids)
+            {
+                Destroy(grid.GetComponent<GridInstance>());
+                Destroy(grid);
+            }
+        }
+        grids = null;
+    }
     public void PlaceGrids()
     {
+        grids = new List<GameObject>();
         for (int x = 0; x < height + 1; x++)
         {
             for (int y = 0; y < width + 1; y++)
@@ -181,6 +222,8 @@ public class TilePlacer : MonoBehaviour
                 Vector3 center = (Vector3)GetTileCenterWorld(x, y);
                 grid.transform.position = new(center.x, center.y, grid.transform.position.z);
                 grid.GetComponent<GridInstance>().Initialize(x, y);
+
+                grids.Add(grid);
             }
         }
     }

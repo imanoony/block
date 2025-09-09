@@ -6,8 +6,23 @@ public class BlockPlacer : MonoBehaviour
     [SerializeField] private GameObject blockPrefab;
     [SerializeField] private Sprite[] blockSprites;
 
+    private List<GameObject> blockInstances = null;
+    public void RemoveBlocks()
+    {
+        if (blockInstances != null)
+        {
+            foreach (var block in blockInstances)
+                Destroy(block);
+            blockInstances.Clear();
+        }
+
+        blockInstances = null;
+    }
+
     public void PlaceBlocks(StageData stage)
     {
+        blockInstances = new List<GameObject>();
+
         // 사용할 세 리스트 미리 정리하기
         List<int> blocks = stage.Blocks;
         List<int> rotate = stage.RIndex, flip = stage.FIndex;
@@ -23,16 +38,18 @@ public class BlockPlacer : MonoBehaviour
 
         for (int i = 0; i < triples.Count; i++)
         {
-            if (i < triples.Count / 2) PlaceBlock(triples[i].Item1, true, triples[i].Item2, triples[i].Item3);
-            else PlaceBlock(triples[i].Item1, false, triples[i].Item2, triples[i].Item3);
+            if (i < triples.Count / 2) blockInstances.Add(PlaceBlock(triples[i].Item1, true, triples[i].Item2, triples[i].Item3));
+            else blockInstances.Add(PlaceBlock(triples[i].Item1, false, triples[i].Item2, triples[i].Item3));
         }
     }
 
-    private void PlaceBlock(int id, bool isLeft, bool canRotate, bool canFlip)
+    private GameObject PlaceBlock(int id, bool isLeft, bool canRotate, bool canFlip)
     {
         BlockData blockData = GameManager.Instance.BlockLibrary[id];
         GameObject instance = Instantiate(blockPrefab, GetPlacedWorld(isLeft), Quaternion.identity);
         instance.GetComponent<BlockInstance>().Initialize(blockData, blockSprites[id], canRotate, canFlip);
+
+        return instance;
     }
 
     private Vector3 GetPlacedWorld(bool isLeft)

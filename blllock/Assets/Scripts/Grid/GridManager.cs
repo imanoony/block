@@ -133,6 +133,15 @@ public class GridManager : MonoBehaviour
         // TODO
     }
 
+    public void RemoveCurrentStage()
+    {
+        if (Tiles != null) Tiles = null;
+        if (Grids != null) Grids = null;
+
+        TilePlacer.RemoveTiles();
+        BlockPlacer.RemoveBlocks();
+    }
+
     private bool IsEmptyTile(int x, int y)
     {
         if (Tiles == null) return false;

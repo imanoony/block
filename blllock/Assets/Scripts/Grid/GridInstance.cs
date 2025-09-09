@@ -50,7 +50,15 @@ public class GridInstance : MonoBehaviour
     private void UpdateColor()
     {
         if (gridData.Type == GridType.Input) sr.color = Utils.CodeToColor(Utils.GRAY);
-        else if (gridData.Type == GridType.Output) sr.color = Utils.CodeToColor(Utils.BLUE);
+        else if (gridData.Type == GridType.Output)
+        {
+            sr.color = Utils.CodeToColor(Utils.BLUE);
+
+            if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null)
+            {
+                if (gridData.Ports[0].Cache.Equals(gridData.Expr)) GameManager.Instance.SucceedGame();
+            }
+        }
         else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) sr.color = Utils.CodeToColor(Utils.GRAY);
         else
         {

@@ -55,6 +55,8 @@ public static class Utils
     }
 }
 
+public enum GameState { InGame, Paused }
+
 public class GameManager : MonoBehaviour
 {
     #region Singleton
@@ -97,21 +99,35 @@ public class GameManager : MonoBehaviour
     #region Test
     void Start()
     {
-        StartGame(5);
+        StartGame(6);
+    }
+    void Update()
+    {
+        if (State == GameState.Paused && Input.GetMouseButtonDown(0)) StartGame(5);
     }
     #endregion
+
+    public GameState State { get; private set; } = GameState.Paused;
 
     // 스테이지를 시작한다
     public void StartGame(StageData stage)
     {
+        if (State != GameState.Paused) { Utils.PrintError("게임이 이미 진행 중입니다."); return; }
+
+        Grid.RemoveCurrentStage();
+
+        Debug.Log("Stage Start");
         Grid.InitStage(stage);
+
+        State = GameState.InGame;
     }
     public void StartGame(int id) => StartGame(StageLibrary[id]);
 
     // 스테이지를 성공 처리한다
     public void SucceedGame()
     {
-
+        Debug.Log("Stage Clear");
+        State = GameState.Paused;
     }
 
     // 스테이지를 초기화한다

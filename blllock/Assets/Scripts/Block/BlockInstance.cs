@@ -33,6 +33,7 @@ public class BlockInstance : MonoBehaviour
     public void BeginDrag()
     {
         if (currentCoroutine != null) return;
+        if (GameManager.Instance.State != GameState.InGame) return;
 
         isDragging = true;
 
@@ -51,6 +52,8 @@ public class BlockInstance : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.State != GameState.InGame) return;
+
         if (isDragging)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
