@@ -153,9 +153,6 @@ public class WireManager
     // wire와 logic expr의 호환 가능성을 반환
     private bool Compatible(int w, LogicExpr l)
     {   
-        LogicExpr? wl1 = Eval(w);
-        if (wl1 != null) { Debug.Log($"[Compatible()] wl1:{wl1}, l:{l}"); return wl1.Equals(l); }
-
         HashSet<int> eq = GetEquivalents(w);
         WireExpr? s = GetSignature(w, eq);
         if (s != null)
@@ -436,6 +433,7 @@ public class WireManager
 
         foreach (int eqID in eq)
         {
+            if (WireLogic.ContainsKey(eqID)) return LogicToSig(WireLogic[eqID]);
             if (Wires[eqID].Signature == null) continue;
             if (Wires[eqID].Signature is not WireAnd _ && Wires[eqID].Signature is not WireOr _) return null;
 

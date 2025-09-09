@@ -103,8 +103,6 @@ public class TilePlacer : MonoBehaviour
 
         // 타일맵 성질에 따른 offset 추가한다
         centerWorld += new Vector3(tilemap.cellSize.x / 8f, 0f, 0f);
-        centerWorld += new Vector3(0f, -tilemap.cellSize.y, 0f);
-
         cam.transform.position = new Vector3(centerWorld.x, centerWorld.y, cam.transform.position.z);
 
         // 타일맵 크기 (월드 단위)
@@ -113,13 +111,10 @@ public class TilePlacer : MonoBehaviour
         float worldHeight = height * cellSize.y;
 
         // 화면 비율에 맞게 카메라 크기 계산
+        float percent = (width >= Utils.FILL_THRESHOLD || height >= Utils.FILL_THRESHOLD) ? Utils.TILE_FILL_PERCENT2 : Utils.TILE_FILL_PERCENT1;
         float aspect = Screen.width / (float)Screen.height;
-
-        // 세로 기준 크기
-        float cameraHalfHeight = worldHeight / Utils.TILE_FILL_PERCENT / 2f;
-
-        // 가로 기준 크기 (aspect 보정)
-        float cameraHalfWidth = worldWidth / Utils.TILE_FILL_PERCENT / 2f;
+        float cameraHalfHeight = worldHeight / percent / 2f;
+        float cameraHalfWidth = worldWidth / percent / 2f;
 
         // 가로/세로 중 더 큰 값을 사용해야 타일맵 전체가 화면 안에 들어옴
         cam.orthographic = true;
@@ -177,9 +172,9 @@ public class TilePlacer : MonoBehaviour
     [SerializeField] private GameObject gridPrefab;
     public void PlaceGrids()
     {
-        for (int x = 0; x < height; x++)
+        for (int x = 0; x < height + 1; x++)
         {
-            for (int y = 0; y < width; y++)
+            for (int y = 0; y < width + 1; y++)
             {
                 GameObject grid = Instantiate(gridPrefab, gridParent.transform);
                 grid.name = $"Grid_{x}_{y}";
@@ -196,13 +191,15 @@ public class TilePlacer : MonoBehaviour
     public Vector3 GetTileSize() => tilemap.cellSize;
     public Vector3? GetTileCenterWorld(int x, int y)
     {
-        if (x < 0 || x >= height || y < 0 || y >= width) return null;
+        // Grid 고려 height + 1, width + 1까지는 타일로 처리함
+        if (x < 0 || x >= height + 1 || y < 0 || y >= width + 1) return null;
         return tilemap.GetCellCenterWorld(TileToCell(x, y));
     }
 
     public Vector3? GetTileTopLeftWorld(int x, int y)
     {
-        if (x < 0 || x >= height || y < 0 || y >= width) return null;
+        // Grid 고려 height + 1, width + 1까지는 타일로 처리함
+        if (x < 0 || x >= height + 1 || y < 0 || y >= width + 1) return null;
         Vector3 center = tilemap.GetCellCenterWorld(TileToCell(x, y));
         return center + new Vector3(-tilemap.cellSize.x / 2f, tilemap.cellSize.y / 2f, 0);
     }

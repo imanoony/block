@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
         initialized = true;
     }
 
+    #region Chat 
     [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject chatPrefab;
     [SerializeField] private GameObject chatParent;
@@ -46,7 +47,7 @@ public class UIManager : MonoBehaviour
             chat.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = expr;
             chat.GetComponent<RectTransform>().anchoredPosition = GetChatPosUI(x, y, canvas);
 
-            if (type == GridType.Input) SetChatColor(chat, Utils.CodeToColor(Utils.CHAT_RED));
+            if (type == GridType.Input) SetChatColor(chat, Color.white);
             else SetChatColor(chat, Utils.CodeToColor(Utils.CHAT_BLUE));
         }
         else
@@ -96,6 +97,12 @@ public class UIManager : MonoBehaviour
 
         chatEnable.Remove(index);
         chatDisable.Add(index);
+
+        if (ChatEnablePos.Count == 0) return;
+        foreach (var kvp in ChatEnablePos)
+        {
+            if (kvp.Value == index) { ChatEnablePos.Remove(kvp.Key); return; }
+        }
     }
 
     private void SetChatColor(GameObject chat, Color color)
@@ -126,5 +133,9 @@ public class UIManager : MonoBehaviour
 
         return uiPos + chatOffset; // RectTransform.anchoredPosition에 바로 적용 가능
     }
+    #endregion
 
+    #region Tile Shadow
+    // Tile Shadow는 UI가 아니라 GameObject지만 UIManager에서 관리
+    #endregion
 }
