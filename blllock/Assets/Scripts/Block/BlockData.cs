@@ -13,7 +13,7 @@ public class BlockData
         _height = blockData._height;
         _tiles = new(blockData._tiles);
         _grids = new(blockData._grids);
-        Ports = blockData.Ports;
+        Ports = new(blockData.Ports);
         BlockRotate = Rotate.None;
         BlockFlipX = false;
     }
