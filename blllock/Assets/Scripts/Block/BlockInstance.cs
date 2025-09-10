@@ -8,6 +8,7 @@ public class BlockInstance : MonoBehaviour
     private GridManager gm;
     private SpriteRenderer sr;
     private Color color;
+    private GameObject shadow;
 
     public bool CanRotate { get; private set; } = false;
     public bool CanFlip { get; private set; } = false;
@@ -24,12 +25,19 @@ public class BlockInstance : MonoBehaviour
         else color = Color.white;
 
         gm = GameManager.Instance.Grid;
+
         sr = gameObject.GetComponent<SpriteRenderer>();
         sr.sprite = sprite;
         sr.color = color;
         gameObject.GetComponent<BoxCollider2D>().size = sr.sprite.bounds.size;
+
+        // Shadow Sprite 설정
+        shadow = transform.GetChild(0).gameObject;
+        SpriteRenderer shadowSr = shadow.GetComponent<SpriteRenderer>();
+        shadowSr.sprite = sprite;
     }
 
+    #region Interaction
     public void BeginDrag()
     {
         if (currentCoroutine != null) return;
@@ -95,7 +103,32 @@ public class BlockInstance : MonoBehaviour
         return clamped;
     }
 
+    // Block Instance Hover
+    private bool isHovering = false;
+    private void OnMouseEnter()
+    {
+        if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
+        Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
+        gameObject.transform.position += Utils.HOVER;
+        shadow.transform.localPosition -= offset;
+        isHovering = true;
+    }
+    private void OnMouseExit()
+    {
+        if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
+        Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
+        gameObject.transform.position -= Utils.HOVER;
+        shadow.transform.localPosition += offset;
+        isHovering = false;
+    }
+    private void OnMouseUp()
+    {
+        if (isHovering) OnMouseExit();
+    }
 
+    #endregion
+
+    #region Placement
     private bool isPlaced = false;
     private Vector2Int baseTile = new(-1, -1);
     public bool Valid = true;
@@ -121,6 +154,8 @@ public class BlockInstance : MonoBehaviour
             sr.color = Utils.CodeToColor(Utils.RED);
             gm.AddInvalid(this);
         }
+
+        shadow.SetActive(false);
         return true;
     }
 
@@ -135,6 +170,8 @@ public class BlockInstance : MonoBehaviour
         Valid = true;
         sr.color = color;
         gm.RemoveInvalid(this);
+
+        shadow.SetActive(true);
     }
 
     public void Check(GridManager gm)
@@ -148,6 +185,7 @@ public class BlockInstance : MonoBehaviour
     }
 
     private Vector3 GetBaseTilePos() => transform.position + new Vector3(-blockData.Width / 2f, blockData.Height / 2f, 0);
+    #endregion
 
     #region Rotate & Flip
     private Coroutine currentCoroutine = null;
@@ -155,9 +193,12 @@ public class BlockInstance : MonoBehaviour
     private IEnumerator Rotate(bool isPlaced)
     {
         if (!CanRotate) yield break;
+        isHovering = true;
 
         Vector2Int baseTile = this.baseTile;
         if (isPlaced) Unplace(gm);
+
+        yield return StartCoroutine(ShadowDisappear());
 
         blockData.Rotation();
         gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
@@ -196,16 +237,22 @@ public class BlockInstance : MonoBehaviour
         finalEuler.z = targetZ;
         transform.rotation = Quaternion.Euler(finalEuler);
 
+        shadow.transform.localPosition = -Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
+
+        yield return StartCoroutine(ShadowAppear());
+
         gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
         if (isPlaced) Place(gm, baseTile);
 
         currentCoroutine = null;
+        isHovering = false;
     }
 
 
     private IEnumerator Flip(bool isPlaced)
     {
         if (!CanFlip) yield break;
+        isHovering = true;
 
         Vector2Int baseTile = this.baseTile;
         if (isPlaced) Unplace(gm);
@@ -213,7 +260,68 @@ public class BlockInstance : MonoBehaviour
         blockData.FlipX();
         sr.flipX = blockData.BlockFlipX;
 
+        shadow.transform.localPosition = -Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
+        shadow.GetComponent<SpriteRenderer>().flipX = blockData.BlockFlipX;
+
         if (isPlaced) Place(gm, baseTile);
+
+        isHovering = false;
+    }
+
+    private float shadowTime = 0.1f;
+    private IEnumerator ShadowAppear()
+    {
+        float elapsed = 0f;
+
+        // 시작 알파(0 = 투명), 목표 알파(1 = 불투명)
+        float startAlpha = 0f;
+        float targetAlpha = Utils.SHADOW_ALPHA; // 약간 투명하게
+
+        Color color = shadow.GetComponent<SpriteRenderer>().color;
+
+        while (elapsed < shadowTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / shadowTime;
+
+            // 알파 보간
+            color.a = Mathf.Lerp(startAlpha, targetAlpha, t);
+            shadow.GetComponent<SpriteRenderer>().color = color;
+
+            yield return null;
+        }
+
+        // 루프가 끝난 뒤 최종 알파 보정
+        color.a = targetAlpha;
+        shadow.GetComponent<SpriteRenderer>().color = color;
+    }
+    private IEnumerator ShadowDisappear()
+    {
+        float elapsed = 0f;
+
+        // 시작 알파(0 = 투명), 목표 알파(1 = 불투명)
+        float startAlpha = Utils.SHADOW_ALPHA;
+        float targetAlpha = 0f; // 약간 투명하게
+
+        Color color = shadow.GetComponent<SpriteRenderer>().color;
+
+        while (elapsed < shadowTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / shadowTime;
+
+            // 알파 보간
+            color.a = Mathf.Lerp(startAlpha, targetAlpha, t);
+            shadow.GetComponent<SpriteRenderer>().color = color;
+
+            yield return null;
+        }
+
+        // 루프가 끝난 뒤 최종 알파 보정
+        color.a = targetAlpha;
+        shadow.GetComponent<SpriteRenderer>().color = color;
     }
     #endregion
+
+
 }

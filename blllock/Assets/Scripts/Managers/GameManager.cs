@@ -25,6 +25,8 @@ public static class Utils
     public const float FILL_THRESHOLD = 9;
     public const int PPU = 24;
     public const int MAX_PORT = 4;
+    public static readonly Vector3 HOVER = new Vector3(0.1f, 0.1f, 0);
+    public const float SHADOW_ALPHA = 100 / 255f;
     public static void PrintWarning(string message)
     {
         Debug.LogWarning($"<color=orange>[{DateTime.Now:HH:mm:ss}] Warning:</color> {message}");
@@ -52,6 +54,17 @@ public static class Utils
         Color color;
         if (ColorUtility.TryParseHtmlString(colorCode, out color)) return color;
         else { PrintError("[CodeToColor] cannot parse"); return Color.white; }
+    }
+
+    public static Vector3 GetHoverOffset(Rotate rotate, bool flip)
+    {
+        Vector3 offset = HOVER;
+        if (rotate == Rotate.Rotate90) offset = new Vector3(-offset.y, offset.x, 0);
+        else if (rotate == Rotate.Rotate180) offset = -offset;
+        else if (rotate == Rotate.Rotate270) offset = new Vector3(offset.y, -offset.x, 0);
+
+        //if (flip) offset.x = -offset.x;
+        return offset;
     }
 }
 
@@ -99,7 +112,7 @@ public class GameManager : MonoBehaviour
     #region Test
     void Start()
     {
-        StartGame(6);
+        StartGame(99);
     }
     void Update()
     {

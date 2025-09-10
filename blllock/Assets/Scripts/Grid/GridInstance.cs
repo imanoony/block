@@ -49,6 +49,12 @@ public class GridInstance : MonoBehaviour
 
     private void UpdateColor()
     {
+        if (this == null || sr == null)
+        {
+            Utils.PrintWarning("GridInstance가 파괴되었거나 SpriteRenderer가 없음.");
+            return;
+        }
+
         if (gridData.Type == GridType.Input) sr.color = Utils.CodeToColor(Utils.GRAY);
         else if (gridData.Type == GridType.Output)
         {
@@ -72,4 +78,14 @@ public class GridInstance : MonoBehaviour
         gridData.OnPortsChanged -= OnPortsChanged;
         UnsubscribePort();
     }
+
+    private void OnDisable()
+    {
+        if (gridData == null) return;
+
+        // 모든 이벤트 해제
+        gridData.OnPortsChanged -= OnPortsChanged;
+        UnsubscribePort();
+    }
+
 }
