@@ -19,7 +19,13 @@ public class WireManager
     }
     public void RollBack(Dictionary<int, Wire> wires, Dictionary<int, HashSet<int>> dict, Dictionary<int, LogicExpr> logic)
     {
-        foreach (var kvp in Wires) Wires[kvp.Key].Init(wires[kvp.Key]);
+        List<int> removeKeys = new();
+        foreach (var kvp in Wires)
+        {
+            if (wires.ContainsKey(kvp.Key)) Wires[kvp.Key].Init(wires[kvp.Key]);
+            else removeKeys.Add(kvp.Key);
+        }
+        foreach (int key in removeKeys) Wires.Remove(key);
         WireDict = dict;
         WireLogic = logic;
     }

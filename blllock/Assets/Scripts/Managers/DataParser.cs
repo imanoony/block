@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,15 +27,17 @@ public class DataParser
     public Dictionary<int, BlockData> ParseBlockData(string filename)
     {
         Dictionary<int, BlockData> result = new();
-        string filepath = Path.Combine(DataFolder, filename);
 
-        if (!File.Exists(filepath))
+        // Resources/Data 폴더 기준 경로, 확장자 제외
+        TextAsset csvAsset = Resources.Load<TextAsset>($"Data/{filename}");
+        if (csvAsset == null)
         {
-            Utils.PrintError($"CSV 파일을 찾을 수 없음: {filepath}");
+            Utils.PrintError($"CSV 파일을 찾을 수 없음: Data/{filename}");
             return result;
         }
 
-        string[] lines = File.ReadAllLines(filepath);
+        // 기존 File.ReadAllLines 대신
+        string[] lines = csvAsset.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         if (lines.Length < 2) return result;
 
         string[] headers = lines[0].Split(',');
@@ -79,15 +82,17 @@ public class DataParser
     public Dictionary<int, StageData> ParseStageData(string filename)
     {
         Dictionary<int, StageData> result = new();
-        string filepath = Path.Combine(DataFolder, filename);
 
-        if (!File.Exists(filepath))
+        // Resources/Data 폴더 기준 경로, 확장자 제외
+        TextAsset csvAsset = Resources.Load<TextAsset>($"Data/{filename}");
+        if (csvAsset == null)
         {
-            Utils.PrintError($"CSV 파일을 찾을 수 없음: {filepath}");
+            Utils.PrintError($"CSV 파일을 찾을 수 없음: Data/{filename}");
             return result;
         }
 
-        string[] lines = File.ReadAllLines(filepath);
+        // 기존 File.ReadAllLines 대신
+        string[] lines = csvAsset.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         if (lines.Length < 2) return result;
 
         string[] headers = lines[0].Split(',');

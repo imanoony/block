@@ -211,7 +211,7 @@ public class WireOr : WireExpr
     private void UpdateCache()
     {
         if (Left?.Cache != null && Right?.Cache != null)
-            Cache = new AndExpr(Left.Cache, Right.Cache);
+            Cache = new OrExpr(Left.Cache, Right.Cache);
         else Cache = null;
     }
     

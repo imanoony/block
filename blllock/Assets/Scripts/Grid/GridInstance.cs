@@ -55,18 +55,26 @@ public class GridInstance : MonoBehaviour
             return;
         }
 
-        if (gridData.Type == GridType.Input) sr.color = Utils.CodeToColor(Utils.GRAY);
+        if (gridData.Type == GridType.Input) sr.color = Utils.CodeToColor(Utils.BLUE);
         else if (gridData.Type == GridType.Output)
         {
-            sr.color = Utils.CodeToColor(Utils.BLUE);
+            sr.color = Utils.CodeToColor(Utils.GRAY);
 
             if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null)
             {
-                if (gridData.Ports[0].Cache.Equals(gridData.Expr)) GameManager.Instance.OutputCheck(new(x, y), true);
-                else GameManager.Instance.OutputCheck(new(x, y), false);
+                if (gridData.Ports[0].Cache.Equals(gridData.Expr))
+                {
+                    GameManager.Instance.OutputCheck(new(x, y), true);
+                    sr.color = Utils.CodeToColor(Utils.BLUE);
+                }
+                else
+                {
+                    Utils.PrintWarning($"Output 불일치: [{gridData.Ports[0]}] {gridData.Ports[0].Cache} != {gridData.Expr}");
+                    GameManager.Instance.OutputCheck(new(x, y), false);
+                }
             }
         }
-        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) sr.color = Utils.CodeToColor(Utils.GRAY);
+        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) sr.color = Utils.CodeToColor(Utils.BLUE);
         else
         {
             sr.color = Color.clear;

@@ -105,14 +105,14 @@ public class GameManager : MonoBehaviour
     private DataParser dataParser = new();
     public Dictionary<int, BlockData> BlockLibrary { get; private set; }
     public Dictionary<int, StageData> StageLibrary { get; private set; }
-    private const string blockPath = "Block.csv", stagePath = "Stage.csv";
+    private const string blockPath = "Block", stagePath = "Stage";
 
     #endregion
 
     #region Test
     void Start()
     {
-        StartGame(0);
+        StartGame(5);
     }
     #endregion
 
@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
         Grid.InitStage(stage);
 
         CurrentStage = stage;
-        for (int i = 0; i < CurrentStage.Outputs.Count; i++)
+        for (int i = 0; i < CurrentStage.Outputs.Count; i++) 
             outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
         State = GameState.InGame;
     }

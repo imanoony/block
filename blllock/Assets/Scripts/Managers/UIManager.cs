@@ -48,8 +48,8 @@ public class UIManager : MonoBehaviour
             chat.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = expr;
             chat.GetComponent<RectTransform>().anchoredPosition = GetChatPosUI(x, y, canvas);
 
-            if (type == GridType.Input) SetChatColor(chat, Color.white);
-            else SetChatColor(chat, Utils.CodeToColor(Utils.CHAT_BLUE));
+            if (type == GridType.Input) SetChatColor(chat, Utils.CodeToColor(Utils.CHAT_BLUE));
+            else SetChatColor(chat, Color.white);
         }
         else
         {
@@ -66,7 +66,7 @@ public class UIManager : MonoBehaviour
             chat.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = expr;
             chat.GetComponent<RectTransform>().anchoredPosition = GetChatPosUI(x, y, canvas);
 
-            SetChatColor(chat, Color.white);
+            SetChatColor(chat, Utils.CodeToColor(Utils.CHAT_BLUE));
         }
     }
     public void DisableGridHover(int x, int y) => DisableChat(x, y);
@@ -131,13 +131,17 @@ public class UIManager : MonoBehaviour
         // 2. 월드 -> 스크린 좌표
         Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
 
-        // 3. Canvas 기준으로 보정
+        // 3. Canvas RectTransform 기준 로컬 좌표 계산
         RectTransform canvasRect = canvas.transform as RectTransform;
-        Vector2 uiPos;
-        uiPos.x = screenPos.x - canvasRect.sizeDelta.x / 2f;
-        uiPos.y = screenPos.y - canvasRect.sizeDelta.y / 2f;
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPos,
+            canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+            out localPoint
+        );
 
-        return uiPos + chatOffset; // RectTransform.anchoredPosition에 바로 적용 가능
+        return localPoint + chatOffset; // RectTransform.anchoredPosition에 바로 적용 가능
     }
     #endregion
 
@@ -219,21 +223,30 @@ public class UIManager : MonoBehaviour
     public void BlockTooltipAppear(bool canRotate, bool canFlip, Vector3 worldPos)
     {
         if (blockTooltip.activeSelf) return;
-
         if (!canRotate && !canFlip) return;
+
+        // 툴팁 텍스트 설정
         if (canRotate) blockTooltipText.text = "Rotate";
         else if (canFlip) blockTooltipText.text = "Flip";
 
+        // 월드 좌표 -> 스크린 좌표
         Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
 
+        // Canvas 기준 로컬 좌표 계산
         RectTransform canvasRect = canvas.transform as RectTransform;
-        Vector2 uiPos;
-        uiPos.x = screenPos.x - canvasRect.sizeDelta.x / 2f;
-        uiPos.y = screenPos.y - canvasRect.sizeDelta.y / 2f;
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPos,
+            canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+            out localPoint
+        );
 
-        blockTooltip.GetComponent<RectTransform>().anchoredPosition = uiPos;
+        // offset 적용 후 툴팁 위치 설정
+        blockTooltip.GetComponent<RectTransform>().anchoredPosition = localPoint + chatOffset;
         blockTooltip.SetActive(true);
     }
+
     public void BlockTooltipDisappear() => blockTooltip.SetActive(false);
     #endregion
 }
