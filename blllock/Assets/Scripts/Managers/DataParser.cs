@@ -7,6 +7,7 @@ public class StageData
 {
     public int ID, Width, Height;
     public List<(Vector2Int pos, LogicExpr expr)> Inputs = new(), Outputs = new();
+    public string Desc;
 
     #region Blocks
     public List<int> Blocks = new();
@@ -17,7 +18,7 @@ public class StageData
 public class DataParser
 {
     private const string DataFolder = "Assets/Data";
-    private const string ID = "ID", Width = "Width", Height = "Height";
+    private const string ID = "ID", Width = "Width", Height = "Height", Desc = "Desc";
     private const string Tiles = "Tiles", Grids = "Grids", Ports = "Ports";
     private const string Inputs = "Inputs", Outputs = "Outputs";
     private const string Blocks = "Blocks", Rotate = "Rotate", Flip = "Flip";
@@ -106,6 +107,7 @@ public class DataParser
                 if (header == ID.ToLower()) stage.ID = int.Parse(values[j]);
                 else if (header == Width.ToLower()) stage.Width = int.Parse(values[j]);
                 else if (header == Height.ToLower()) stage.Height = int.Parse(values[j]);
+                else if (header == Desc.ToLower()) stage.Desc = values[j];
                 else if (header == Inputs.ToLower() || header == Outputs.ToLower())
                 {
                     List<string> items = values[j].Split(';').ToList<string>();

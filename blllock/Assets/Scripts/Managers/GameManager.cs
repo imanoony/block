@@ -112,15 +112,12 @@ public class GameManager : MonoBehaviour
     #region Test
     void Start()
     {
-        StartGame(99);
-    }
-    void Update()
-    {
-        if (State == GameState.Paused && Input.GetMouseButtonDown(0)) StartGame(5);
+        StartGame(0);
     }
     #endregion
 
     public GameState State { get; private set; } = GameState.Paused;
+    public StageData CurrentStage { get; private set; } = null;
 
     // 스테이지를 시작한다
     public void StartGame(StageData stage)
@@ -132,6 +129,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Stage Start");
         Grid.InitStage(stage);
 
+        CurrentStage = stage;
         State = GameState.InGame;
     }
     public void StartGame(int id) => StartGame(StageLibrary[id]);
@@ -141,19 +139,26 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Stage Clear");
         State = GameState.Paused;
+
+        UI.NextAppear();
+        UI.ResetDisappear();
     }
 
     // 스테이지를 초기화한다
     public void ResetGame()
     {
-
+        State = GameState.Paused;
+        Grid.RemoveCurrentStage();
+        Grid.InitStage(CurrentStage);
+        State = GameState.InGame; 
     }
 
-    // 다음 스테이지로 이동한다
-    // 다음 스테이지의 ID를 반환한다
-    public int NextStage()
+    public void NextStage()
     {
-        return 0;
+        if (CurrentStage == null) { Utils.PrintError("현재 스테이지가 없습니다."); return; }
+        if (StageLibrary.Count == 0) { Utils.PrintError("스테이지 라이브러리가 비어있습니다."); return; }
+        if (StageLibrary.ContainsKey(CurrentStage.ID + 1)) StartGame(CurrentStage.ID + 1);
+        else Utils.PrintError("다음 스테이지가 없습니다.");
     }
 
     // 이전 스테이지로 이동한다

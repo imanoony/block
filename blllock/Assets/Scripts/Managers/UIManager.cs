@@ -25,6 +25,7 @@ public class UIManager : MonoBehaviour
 
     #region Chat 
     [SerializeField] private Canvas canvas;
+    [Header("Chat")]
     [SerializeField] private GameObject chatPrefab;
     [SerializeField] private GameObject chatParent;
     private List<GameObject> chatPool = new();
@@ -104,6 +105,11 @@ public class UIManager : MonoBehaviour
             if (kvp.Value == index) { ChatEnablePos.Remove(kvp.Key); return; }
         }
     }
+    private void DisableAllChat()
+    {
+        foreach (var index in chatEnable.ToArray())
+            DisableChat(index);
+    }
 
     private void SetChatColor(GameObject chat, Color color)
     {
@@ -138,4 +144,70 @@ public class UIManager : MonoBehaviour
     #region Tile Shadow
     // Tile Shadow는 UI가 아니라 GameObject지만 UIManager에서 관리
     #endregion
-}
+
+    #region Menu
+    [Header("Menu")]
+    [SerializeField] private GameObject menu;
+    [SerializeField] private TextMeshProUGUI stageText;
+    [SerializeField] private Button menuButton;
+    [SerializeField] private Button resetButton;
+    [SerializeField] private Button closeButton;
+    [SerializeField] private Button nextButton;
+
+    public void MenuAppear()
+    {
+        if (menu.activeSelf) return;
+
+        menu.SetActive(true);
+        menuButton.interactable = false;
+        menuButton.gameObject.SetActive(false);
+    }
+
+    public void MenuDisappear()
+    {
+        if (!menu.activeSelf) return;
+
+        menu.SetActive(false);
+        menuButton.interactable = true;
+        menuButton.gameObject.SetActive(true);
+    }
+
+    public void NextAppear()
+    {
+        nextButton.interactable = true;
+        nextButton.gameObject.SetActive(true);
+    }
+
+    public void NextDisappear()
+    {
+        nextButton.interactable = false;
+        nextButton.gameObject.SetActive(false);
+    }
+
+    public void ResetAppear()
+    {
+        resetButton.interactable = true;
+        resetButton.gameObject.SetActive(true);
+    }
+
+    public void ResetDisappear()
+    {
+        resetButton.interactable = false;
+        resetButton.gameObject.SetActive(false);
+    }   
+
+    public void MenuButton() => MenuAppear();
+    public void ResetButton() => GameManager.Instance.ResetGame();
+    public void CloseButton() => MenuDisappear();
+    public void NextButton()
+    {
+        DisableAllChat();
+        GameManager.Instance.NextStage();
+
+        MenuAppear();
+        stageText.text = GameManager.Instance.CurrentStage.Desc;
+        NextDisappear();
+        ResetAppear();
+    }
+    #endregion
+    }
