@@ -1,10 +1,24 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public enum Rotate { Null = -1, None = 0, Rotate90 = 90, Rotate180 = 180, Rotate270 = 270 }
 
 public class BlockData
 {
+    public BlockData() { }
+    public BlockData(BlockData blockData)
+    {
+        ID = blockData.ID;
+        _width = blockData._width;
+        _height = blockData._height;
+        _tiles = new(blockData._tiles);
+        _grids = new(blockData._grids);
+        Ports = blockData.Ports;
+        BlockRotate = Rotate.None;
+        BlockFlipX = false;
+    }
+
     #region ID & Shape
     public int ID { get; private set; }
     public void SetID(int id) => ID = id;

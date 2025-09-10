@@ -7,14 +7,15 @@ using UnityEngine;
 
 public class WireManager
 {
-    // 게임 시작 시 최초 1회만 실행
-    private bool initialized = false;
-    public void Initialize(bool autoEval)
+    public void Initialize(bool autoEval = true)
     {
-        if (initialized) return;
+        Wires = new();
+        WireDict = new();
+        WireLogic = new();
+        nextID = 1;
+        freeIDs.Clear();
         ReserveWire(2);
         AutoEval = autoEval;
-        initialized = true;
     }
     public void RollBack(Dictionary<int, Wire> wires, Dictionary<int, HashSet<int>> dict, Dictionary<int, LogicExpr> logic)
     {

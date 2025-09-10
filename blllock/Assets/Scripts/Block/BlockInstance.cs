@@ -43,6 +43,8 @@ public class BlockInstance : MonoBehaviour
         if (currentCoroutine != null) return;
         if (GameManager.Instance.State != GameState.InGame) return;
 
+        GameManager.Instance.UI.BlockTooltipDisappear();
+
         isDragging = true;
 
         if (isPlaced) Unplace(gm);
@@ -108,6 +110,10 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseEnter()
     {
         if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
+
+        Vector3 tooltipPos = transform.position + new Vector3(0, (blockData.Height + 1.4f) / 2f * GameManager.Instance.Grid.GetTileSize().y, 0);
+        GameManager.Instance.UI.BlockTooltipAppear(CanRotate, CanFlip, tooltipPos);
+
         Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
         gameObject.transform.position += Utils.HOVER;
         shadow.transform.localPosition -= offset;
@@ -115,6 +121,8 @@ public class BlockInstance : MonoBehaviour
     }
     private void OnMouseExit()
     {
+        GameManager.Instance.UI.BlockTooltipDisappear();
+
         if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
         Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
         gameObject.transform.position -= Utils.HOVER;
@@ -139,7 +147,14 @@ public class BlockInstance : MonoBehaviour
     private bool Place(GridManager gm, Vector2Int baseTile)
     {
         if (isPlaced || !this.baseTile.Equals(new(-1, -1))) return false;
-        if (!gm.IsValidPos(blockData, baseTile)) { Debug.Log("Invalid Pos"); return false; }
+        if (!gm.IsValidPos(blockData, baseTile))
+        {
+            Debug.Log("Invalid Pos");
+            Debug.Log($"Block Size: {blockData.Height} x {blockData.Width}");
+            Debug.Log($"Base Tile: {baseTile.x}, {baseTile.y}");
+            Debug.Log($"Block Tiles: {string.Join(", ", blockData.Tiles)}");
+            return false;
+        }
 
         isPlaced = true;
         this.baseTile = baseTile;

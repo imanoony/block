@@ -62,7 +62,8 @@ public class GridInstance : MonoBehaviour
 
             if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null)
             {
-                if (gridData.Ports[0].Cache.Equals(gridData.Expr)) GameManager.Instance.SucceedGame();
+                if (gridData.Ports[0].Cache.Equals(gridData.Expr)) GameManager.Instance.OutputCheck(new(x, y), true);
+                else GameManager.Instance.OutputCheck(new(x, y), false);
             }
         }
         else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) sr.color = Utils.CodeToColor(Utils.GRAY);

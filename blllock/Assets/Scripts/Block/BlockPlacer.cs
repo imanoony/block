@@ -45,7 +45,7 @@ public class BlockPlacer : MonoBehaviour
 
     private GameObject PlaceBlock(int id, bool isLeft, bool canRotate, bool canFlip)
     {
-        BlockData blockData = GameManager.Instance.BlockLibrary[id];
+        BlockData blockData = new BlockData(GameManager.Instance.BlockLibrary[id]);
         GameObject instance = Instantiate(blockPrefab, GetPlacedWorld(isLeft), Quaternion.identity);
         instance.GetComponent<BlockInstance>().Initialize(blockData, blockSprites[id], canRotate, canFlip);
 

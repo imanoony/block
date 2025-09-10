@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour
 
     public GameState State { get; private set; } = GameState.Paused;
     public StageData CurrentStage { get; private set; } = null;
+    private Dictionary<Vector2Int, bool> outputCheck = new();
 
     // 스테이지를 시작한다
     public void StartGame(StageData stage)
@@ -125,11 +126,14 @@ public class GameManager : MonoBehaviour
         if (State != GameState.Paused) { Utils.PrintError("게임이 이미 진행 중입니다."); return; }
 
         Grid.RemoveCurrentStage();
+        Wire.Initialize();
 
         Debug.Log("Stage Start");
         Grid.InitStage(stage);
 
         CurrentStage = stage;
+        for (int i = 0; i < CurrentStage.Outputs.Count; i++)
+            outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
         State = GameState.InGame;
     }
     public void StartGame(int id) => StartGame(StageLibrary[id]);
@@ -143,6 +147,17 @@ public class GameManager : MonoBehaviour
         UI.NextAppear();
         UI.ResetDisappear();
     }
+    
+    public void OutputCheck(Vector2Int pos, bool state)
+    {
+        if (!outputCheck.ContainsKey(pos)) { Utils.PrintError($"OutputCheck: 해당 위치에 Output이 없습니다. {pos}"); return; }
+        outputCheck[pos] = state;
+
+        foreach (var check in outputCheck)
+            if (!check.Value) return;
+
+        SucceedGame();
+    }
 
     // 스테이지를 초기화한다
     public void ResetGame()
@@ -150,7 +165,7 @@ public class GameManager : MonoBehaviour
         State = GameState.Paused;
         Grid.RemoveCurrentStage();
         Grid.InitStage(CurrentStage);
-        State = GameState.InGame; 
+        State = GameState.InGame;
     }
 
     public void NextStage()

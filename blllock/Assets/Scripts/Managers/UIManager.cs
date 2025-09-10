@@ -194,7 +194,7 @@ public class UIManager : MonoBehaviour
     {
         resetButton.interactable = false;
         resetButton.gameObject.SetActive(false);
-    }   
+    }
 
     public void MenuButton() => MenuAppear();
     public void ResetButton() => GameManager.Instance.ResetGame();
@@ -210,4 +210,30 @@ public class UIManager : MonoBehaviour
         ResetAppear();
     }
     #endregion
+
+    #region Block Tooltip
+    [Header("Block Tooltip")]
+    [SerializeField] private GameObject blockTooltip;
+    [SerializeField] private TextMeshProUGUI blockTooltipText;
+
+    public void BlockTooltipAppear(bool canRotate, bool canFlip, Vector3 worldPos)
+    {
+        if (blockTooltip.activeSelf) return;
+
+        if (!canRotate && !canFlip) return;
+        if (canRotate) blockTooltipText.text = "Rotate";
+        else if (canFlip) blockTooltipText.text = "Flip";
+
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+
+        RectTransform canvasRect = canvas.transform as RectTransform;
+        Vector2 uiPos;
+        uiPos.x = screenPos.x - canvasRect.sizeDelta.x / 2f;
+        uiPos.y = screenPos.y - canvasRect.sizeDelta.y / 2f;
+
+        blockTooltip.GetComponent<RectTransform>().anchoredPosition = uiPos;
+        blockTooltip.SetActive(true);
     }
+    public void BlockTooltipDisappear() => blockTooltip.SetActive(false);
+    #endregion
+}
