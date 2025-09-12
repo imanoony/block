@@ -164,7 +164,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button prevButton;
     [SerializeField] private Button backButton;
     
-
+    
     public void MenuAppear()
     {
         if (menu.activeSelf) return;
@@ -198,20 +198,31 @@ public class UIManager : MonoBehaviour
     public void PrevAppear() { prevButton.interactable = true; prevButton.gameObject.SetActive(true); }
     public void PrevDisappear() { prevButton.interactable = false; prevButton.gameObject.SetActive(false); }
 
-    public void BackAppear() { backButton.interactable = true; backButton.gameObject.SetActive(true); }
-    public void BackDisappear() { backButton.interactable = false; backButton.gameObject.SetActive(false);} 
-
     public void ResetAppear() { resetButton.interactable = true; resetButton.gameObject.SetActive(true);}
     public void ResetDisappear() { resetButton.interactable = false; resetButton.gameObject.SetActive(false); }
 
     public void ResetButton() => GameManager.Instance.ResetGame();
     public void MenuButton() => MenuAppear();
     public void CloseButton() => MenuDisappear();
+
+    private bool isQuit = false;
     public void BackButton()
     {
         if (moduleAppearCoroutine != null) return;
-        GameManager.Instance.BackGame();
+        if (isQuit) GameManager.Instance.QuitGame();
+        else GameManager.Instance.BackGame();
     }
+    public void BackToQuit()
+    {
+        backButton.gameObject.GetComponent<TextMeshProUGUI>().text = "QUIT";
+        isQuit = true;
+    }
+    public void QuitToBack()
+    {
+        backButton.gameObject.GetComponent<TextMeshProUGUI>().text = "BACK";
+        isQuit = false;
+    }
+
     public void NextButton()
     {
         if (moduleAppearCoroutine != null) return;

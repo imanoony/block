@@ -120,7 +120,6 @@ public class GameManager : MonoBehaviour
     #region Test
     void Start()
     {
-        dataParser.ResetData();
         State = GameState.ModuleSelect;
         StartModule(0);
     }
@@ -149,7 +148,7 @@ public class GameManager : MonoBehaviour
         else UI.PrevDisappear();
 
         UI.ResetAppear();
-        UI.BackAppear();
+        UI.QuitToBack();
         UI.SetStageText(stage.Desc);
 
         for (int i = 0; i < CurrentStage.Outputs.Count; i++)
@@ -199,7 +198,7 @@ public class GameManager : MonoBehaviour
 
         UI.NextDisappear();
         UI.PrevDisappear();
-        UI.BackDisappear();
+        UI.BackToQuit();
         UI.ResetDisappear();
 
         UI.SetStageText(CurrentModule.Desc);
@@ -212,7 +211,11 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         dataParser.SaveData(ModuleLibrary);
-        Application.Quit();
+    #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; // 에디터에서는 Play 모드 종료
+    #else
+        Application.Quit(); // 빌드된 게임에서는 종료
+    #endif
     }
 
     public void NextStage()
