@@ -62,7 +62,7 @@ public class BlockPlacer : MonoBehaviour
         float randX = Random.Range(1f, 2f);
         float randY = Random.Range(-halfH, halfH);
 
-        if (isLeft) return new Vector3(center.x - halfW / 2f * randX, center.y + randY);
-        else return new Vector3(center.x + halfW / 2f * randX, center.y + randY);
+        if (isLeft) return new Vector3(center.x - halfW / 2f * randX, center.y + randY, Utils.BLOCK_Z);
+        else return new Vector3(center.x + halfW / 2f * randX, center.y + randY, Utils.BLOCK_Z);
     }
 }

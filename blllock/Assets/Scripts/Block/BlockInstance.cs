@@ -67,7 +67,7 @@ public class BlockInstance : MonoBehaviour
         if (isDragging)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            transform.position = GetClampedPos(new Vector3(mousePos.x, mousePos.y, 0));
+            transform.position = GetClampedPos(new Vector3(mousePos.x, mousePos.y, Utils.BLOCK_Z));
         }
 
         if (Input.GetMouseButtonUp(0) && isDragging)
@@ -101,6 +101,7 @@ public class BlockInstance : MonoBehaviour
 
         clamped.x = Mathf.Clamp(pos.x, boundary.xMin + tileSize.x * blockData.Width / 2f, boundary.xMax - tileSize.x * blockData.Width / 2f);
         clamped.y = Mathf.Clamp(pos.y, boundary.yMin + tileSize.y * blockData.Height / 2f, boundary.yMax - tileSize.y * blockData.Height / 2f);
+        clamped.z = Utils.BLOCK_Z;
 
         return clamped;
     }
@@ -161,6 +162,7 @@ public class BlockInstance : MonoBehaviour
 
         // 블록의 위치를 snap position (좌표) 에 동기화
         transform.position = gm.GetBlockCenterOnTile(baseTile.x, baseTile.y, blockData.Height, blockData.Width);
+        transform.position = new(transform.position.x, transform.position.y, Utils.BLOCK_Z);
         gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
         if (!gm.PlaceBlock(blockData, baseTile))

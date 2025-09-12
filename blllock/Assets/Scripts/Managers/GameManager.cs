@@ -5,6 +5,7 @@ using UnityEngine;
 
 public static class Utils
 {
+    public const float BLOCK_Z = -2f;
     public const int SCALE_FACTOR = 625;
     public const int DENOMINATOR = 100;
     public const int TILE_SPACING = 100;

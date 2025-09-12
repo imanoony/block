@@ -305,7 +305,7 @@ public class GridManager : MonoBehaviour
             {
                 topLeft = TilePlacer.GetTileTopLeftWorld(x, y);
                 if (topLeft == null) continue;
-                float dist = Vector3.Distance(worldPos, (Vector3)topLeft);
+                float dist = Vector2.Distance((Vector2)worldPos, (Vector2)topLeft);
 
                 if (dist < minDist) { minDist = dist; nearest = new Vector2Int(x, y); }
             }
