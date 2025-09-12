@@ -275,7 +275,15 @@ public class UIManager : MonoBehaviour
     #region Module UI
     [Header("Module")]
     [SerializeField] private GameObject moduleParent;
+    [SerializeField] private Sprite[] moduleSprites;
+    private Sprite TryToGetSprite(int moduleID)
+    {
+        if (moduleSprites.Length > moduleID + 1 && moduleID >= 0) return moduleSprites[moduleID + 1];
+        else return moduleSprites[0];
+    }
+
     private List<GameObject> modulePool = new();
+    private List<Image> moduleImages = new();
     private List<Vector3> modulePositions = new();
     private int moduleFocus = 2; // 현재 선택된 모듈 ID, -1은 null과 동일
     private const int moduleCenter = 2;
@@ -285,6 +293,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < moduleParent.transform.childCount; i++)
         {
             modulePool.Add(moduleParent.transform.GetChild(i).gameObject);
+            moduleImages.Add(modulePool[i].GetComponent<Image>());
             modulePositions.Add(modulePool[i].transform.localPosition);
         }
 
@@ -300,9 +309,15 @@ public class UIManager : MonoBehaviour
     private IEnumerator ModuleAppearTrans()
     {
         moduleParent.SetActive(true);
+
+        // Set Module Sprites
+        moduleImages[moduleCenter].sprite = TryToGetSprite(moduleFocus);
+        moduleImages[moduleCenter - 1].sprite = TryToGetSprite(moduleFocus - 1);
+        moduleImages[moduleCenter + 1].sprite = TryToGetSprite(moduleFocus + 1);
         if (moduleFocus == Utils.MODULE_MIN) modulePool[moduleCenter - 1].SetActive(false);
         else if (moduleFocus == Utils.MODULE_MAX) modulePool[moduleCenter + 1].SetActive(false);
 
+        // Transition
         RectTransform rt = moduleParent.GetComponent<RectTransform>();
 
         Vector2 currentMin = rt.offsetMin, currentMax = rt.offsetMax;
@@ -323,6 +338,7 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
 
+        // Final Modification
         rt.offsetMin = Vector2.zero;
         rt.offsetMax = Vector2.zero;
 
@@ -391,6 +407,7 @@ public class UIManager : MonoBehaviour
         if (moduleFocus == Utils.MODULE_MIN) yield break;
 
         moduleFocus--;
+        moduleImages[moduleCenter - 2].sprite = TryToGetSprite(moduleFocus - 1);
         if (moduleFocus == Utils.MODULE_MIN)
             modulePool[moduleCenter - 2].SetActive(false);
 
@@ -419,7 +436,7 @@ public class UIManager : MonoBehaviour
         List<Vector3> startScales = new List<Vector3>();
         List<Color> startColors = new List<Color>();
         List<RectTransform> moduleRects = new();
-        List<Image> moduleImages = new();
+        List<Image> moduleLocalImages = new();
         for (int i = 0; i < modulePool.Count - 1; i++)
         {
             RectTransform rt = modulePool[i].GetComponent<RectTransform>();
@@ -428,7 +445,7 @@ public class UIManager : MonoBehaviour
             startScales.Add(rt.localScale);
 
             Image img = modulePool[i].GetComponent<Image>();
-            moduleImages.Add(img);
+            moduleLocalImages.Add(img);
             startColors.Add(img.color);
         }
 
@@ -442,7 +459,7 @@ public class UIManager : MonoBehaviour
             {
                 moduleRects[i].anchoredPosition = Vector2.Lerp(startPositions[i], targetPositions[i], t);
                 moduleRects[i].localScale = Vector3.Lerp(startScales[i], targetScales[i], t);
-                moduleImages[i].color = Color.Lerp(startColors[i], targetColors[i], t);
+                moduleLocalImages[i].color = Color.Lerp(startColors[i], targetColors[i], t);
             }
 
             elapsed += Time.smoothDeltaTime;
@@ -454,16 +471,20 @@ public class UIManager : MonoBehaviour
         {
             moduleRects[i].anchoredPosition = targetPositions[i];
             moduleRects[i].localScale = targetScales[i];
-            moduleImages[i].color = targetColors[i];
+            moduleLocalImages[i].color = targetColors[i];
         }
 
-        // 맨 앞 요소를 뒤로 보내기
+        // 맨 뒤 요소를 앞으로 보내기
         GameObject maxModule = modulePool[^1];
         modulePool.RemoveAt(modulePool.Count - 1);
         modulePool.Insert(0, maxModule);
         modulePool[0].GetComponent<RectTransform>().anchoredPosition = modulePositions[0];
         modulePool[0].GetComponent<RectTransform>().localScale = Vector3.one;
         modulePool[0].GetComponent<Image>().color = Utils.CodeToColor(Utils.GRAY);
+
+        Image maxImage = moduleImages[^1];
+        moduleImages.RemoveAt(moduleImages.Count - 1);
+        moduleImages.Insert(0, maxImage);
 
         modulePool[0].SetActive(true);
         modulePool[^1].SetActive(true);
@@ -478,6 +499,7 @@ public class UIManager : MonoBehaviour
         if (moduleFocus == Utils.MODULE_MAX) yield break;
 
         moduleFocus++;
+        moduleImages[moduleCenter + 2].sprite = TryToGetSprite(moduleFocus + 1);
         if (moduleFocus == Utils.MODULE_MAX)
             modulePool[moduleCenter + 2].SetActive(false);
 
@@ -506,7 +528,7 @@ public class UIManager : MonoBehaviour
         List<Vector3> startScales = new List<Vector3>();
         List<Color> startColors = new List<Color>();
         List<RectTransform> moduleRects = new();
-        List<Image> moduleImages = new();
+        List<Image> moduleLocalImages = new();
         for (int i = 1; i < modulePool.Count; i++)
         {
             RectTransform rt = modulePool[i].GetComponent<RectTransform>();
@@ -515,7 +537,7 @@ public class UIManager : MonoBehaviour
             startScales.Add(rt.localScale);
 
             Image img = modulePool[i].GetComponent<Image>();
-            moduleImages.Add(img);
+            moduleLocalImages.Add(img);
             startColors.Add(img.color);
         }
 
@@ -529,7 +551,7 @@ public class UIManager : MonoBehaviour
             {
                 moduleRects[i - 1].anchoredPosition = Vector2.Lerp(startPositions[i - 1], targetPositions[i - 1], t);
                 moduleRects[i - 1].localScale = Vector3.Lerp(startScales[i - 1], targetScales[i - 1], t);
-                moduleImages[i - 1].color = Color.Lerp(startColors[i - 1], targetColors[i - 1], t);
+                moduleLocalImages[i - 1].color = Color.Lerp(startColors[i - 1], targetColors[i - 1], t);
             }
 
             elapsed += Time.smoothDeltaTime;
@@ -541,7 +563,7 @@ public class UIManager : MonoBehaviour
         {
             moduleRects[i - 1].anchoredPosition = targetPositions[i - 1];
             moduleRects[i - 1].localScale = targetScales[i - 1];
-            moduleImages[i - 1].color = targetColors[i - 1];
+            moduleLocalImages[i - 1].color = targetColors[i - 1];
         }
 
         // 맨 앞 요소를 뒤로 보내기
@@ -551,6 +573,10 @@ public class UIManager : MonoBehaviour
         modulePool[^1].GetComponent<RectTransform>().anchoredPosition = modulePositions[^1];
         modulePool[^1].GetComponent<RectTransform>().localScale = Vector3.one;
         modulePool[^1].GetComponent<Image>().color = Utils.CodeToColor(Utils.GRAY);
+
+        Image minImage = moduleImages[0];
+        moduleImages.RemoveAt(0);
+        moduleImages.Add(minImage);
 
         modulePool[0].SetActive(true);
         modulePool[^1].SetActive(true);

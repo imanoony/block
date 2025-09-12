@@ -2575,6 +2575,11 @@ MonoBehaviour:
   blockTooltip: {fileID: 1375485193}
   blockTooltipText: {fileID: 978072954}
   moduleParent: {fileID: 154120910}
+  moduleSprites:
+  - {fileID: 354746989381832442, guid: 45bee47a5a67360408a394654dda9f67, type: 3}
+  - {fileID: -3901791821692843076, guid: a2cbd1e5b4f94c649a6d2b1846c22fc0, type: 3}
+  - {fileID: 2687057441370610899, guid: 895f0f9201415a2478f6b76fbcb129e1, type: 3}
+  - {fileID: 5471114978251189754, guid: 8870c1b9a40e0914897dc4a30ba61135, type: 3}
 --- !u!1 &1909185730
 GameObject:
   m_ObjectHideFlags: 0
