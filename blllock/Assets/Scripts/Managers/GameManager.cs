@@ -27,6 +27,9 @@ public static class Utils
     public const int MAX_PORT = 4;
     public static readonly Vector3 HOVER = new Vector3(0.1f, 0.1f, 0);
     public const float SHADOW_ALPHA = 100 / 255f;
+    public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
+    public const int MODULE_MIN = 0;
+    public const int MODULE_MAX = 4;
     public static void PrintWarning(string message)
     {
         Debug.LogWarning($"<color=orange>[{DateTime.Now:HH:mm:ss}] Warning:</color> {message}");
@@ -68,7 +71,7 @@ public static class Utils
     }
 }
 
-public enum GameState { InGame, Paused }
+public enum GameState { InGame, Paused, ModuleSelect }
 
 public class GameManager : MonoBehaviour
 {
@@ -112,7 +115,7 @@ public class GameManager : MonoBehaviour
     #region Test
     void Start()
     {
-        StartGame(10);
+        //StartGame(0);
     }
     #endregion
 
