@@ -191,14 +191,14 @@ public class BlockInstance : MonoBehaviour
         shadow.SetActive(true);
     }
 
-    public void Check(GridManager gm)
+    public bool Check(GridManager gm)
     {
-        if (!isPlaced || baseTile.Equals(new(-1, -1)) || Valid) return;
-        if (!gm.PlaceBlock(blockData, baseTile)) return;
+        if (!isPlaced || baseTile.Equals(new(-1, -1)) || Valid) return false;
+        if (!gm.PlaceBlock(blockData, baseTile)) return false;
 
         Valid = true;
         sr.color = color;
-        gm.RemoveInvalid(this);
+        return true;
     }
 
     private Vector3 GetBaseTilePos() => transform.position + new Vector3(-blockData.Width / 2f, blockData.Height / 2f, 0);

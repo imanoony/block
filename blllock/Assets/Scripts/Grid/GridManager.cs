@@ -184,7 +184,13 @@ public class GridManager : MonoBehaviour
     }
     private void CheckInvalids()
     {
-        foreach (BlockInstance invalid in invalids) invalid.Check(this);
+        List<BlockInstance> valids = new();
+        for (int i = 0; i < invalids.Count; i++)
+        {
+            bool result = invalids[i].Check(this);
+            if (result) valids.Add(invalids[i]);
+        }
+        for (int i = 0; i < valids.Count; i++) invalids.Remove(valids[i]);
     }
 
     public bool PlaceBlock(BlockData block, Vector2Int baseTile)
@@ -205,7 +211,7 @@ public class GridManager : MonoBehaviour
             Grids![offset.x + baseTile.x, offset.y + baseTile.y].AddPort(port);
         }
 
-        CheckInvalids();
+        //CheckInvalids();
         // 블록의 portIDs를 Evaluate 한다.
         GameManager.Instance.Wire.EvalAll();
         Debug.Log($"[PlaceBlock():{block.ID}] EvalAll() Done -- {block.Ports[0]}:{block.Ports[0].Cache}");
