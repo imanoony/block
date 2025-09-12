@@ -110,7 +110,7 @@ public class WireManager
             result.UnionWith(negEq.Select(x => -x).ToHashSet());
         }*/
 
-        Debug.Log($"[GetEquivalents:{id}] {string.Join(", ", result)}");
+        //Debug.Log($"[GetEquivalents:{id}] {string.Join(", ", result)}");
         return result;
     }
 
@@ -183,7 +183,7 @@ public class WireManager
     // 일단 Wires에서는 삭제하지 않고 WireDict, WireLogic에서만 삭제하는 상태.
     public void RemoveWire(int id, bool neg = true)
     {
-        Debug.Log($"[RemoveWire:{id}]");
+        //Debug.Log($"[RemoveWire:{id}]");
         if (id < reservedCount && id > -reservedCount) return;
 
         List<int> sigRemove = new();
@@ -213,7 +213,7 @@ public class WireManager
 
     public bool AddToDict(int w1, int w2)
     {
-        if (!Compatible(w1, w2)) { Debug.Log($"[Compatible() failed] w1: {w1}, w2: {w2}"); return false; }
+        if (!Compatible(w1, w2)) return false;
 
         if (WireDict.ContainsKey(w1)) WireDict[w1].Add(w2);
         else WireDict[w1] = new() { w2 };
@@ -236,7 +236,7 @@ public class WireManager
 
             // 기존의 시그니처에 부합하는지 확인
             WireExpr? wsig = GetSignature(wire.ID), esig = GetSignature(expr);
-            if (!CompareSig(wsig, esig)) { Debug.Log($"[AddToDict() failed] CompareSig() is False"); return false; }
+            if (!CompareSig(wsig, esig)) return false;
 
             // expr is WireAnd or WireOr
             if (wire.L != 0)
@@ -408,8 +408,6 @@ public class WireManager
 
     private void EvalEquivalents(HashSet<int> equivalents, LogicExpr? l)
     {
-        Debug.Log($"[Eval Equivalents:{string.Join(",", equivalents!.Select(x => $"{x}"))}] -> {l}");
-
         foreach (int eqID in equivalents)
         {
             Wires[eqID].Cache = l;

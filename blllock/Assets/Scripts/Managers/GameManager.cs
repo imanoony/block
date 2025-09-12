@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -100,26 +101,34 @@ public class GameManager : MonoBehaviour
         UI.Initialize();
 
         BlockLibrary = dataParser.ParseBlockData(blockPath);
+        ModuleLibrary = dataParser.ParseModuleData(modulePath);
         StageLibrary = dataParser.ParseStageData(stagePath);
+
+        dataParser.LoadData(ModuleLibrary, StageLibrary);
     }
     #endregion
 
     #region Data Library
     private DataParser dataParser = new();
     public Dictionary<int, BlockData> BlockLibrary { get; private set; }
+    public Dictionary<int, ModuleData> ModuleLibrary { get; private set; }
     public Dictionary<int, StageData> StageLibrary { get; private set; }
-    private const string blockPath = "Block", stagePath = "Stage";
+    private const string blockPath = "Block", modulePath = "Module", stagePath = "Stage";
 
     #endregion
 
     #region Test
     void Start()
     {
-        //StartGame(0);
+        dataParser.ResetData();
+        State = GameState.ModuleSelect;
+        StartModule(0);
     }
     #endregion
 
     public GameState State { get; private set; } = GameState.Paused;
+    public ModuleData CurrentModule { get; private set; } = null;
+    public int LastStageID { get; private set; } = -1;
     public StageData CurrentStage { get; private set; } = null;
     private Dictionary<Vector2Int, bool> outputCheck = new();
 
@@ -128,15 +137,24 @@ public class GameManager : MonoBehaviour
     {
         if (State != GameState.Paused) { Utils.PrintError("게임이 이미 진행 중입니다."); return; }
 
+        outputCheck = new();
         Grid.RemoveCurrentStage();
         Wire.Initialize();
-
-        Debug.Log("Stage Start");
         Grid.InitStage(stage);
-
         CurrentStage = stage;
-        for (int i = 0; i < CurrentStage.Outputs.Count; i++) 
+
+        if (stage.IsCleared) UI.NextAppear(stage.ID, LastStageID);
+        else UI.NextDisappear();
+        if (CurrentModule.Stages[0] != stage.ID) UI.PrevAppear();
+        else UI.PrevDisappear();
+
+        UI.ResetAppear();
+        UI.BackAppear();
+        UI.SetStageText(stage.Desc);
+
+        for (int i = 0; i < CurrentStage.Outputs.Count; i++)
             outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
+
         State = GameState.InGame;
     }
     public void StartGame(int id) => StartGame(StageLibrary[id]);
@@ -144,13 +162,15 @@ public class GameManager : MonoBehaviour
     // 스테이지를 성공 처리한다
     public void SucceedGame()
     {
-        Debug.Log("Stage Clear");
         State = GameState.Paused;
 
-        UI.NextAppear();
+        if (CurrentStage.ID == CurrentModule.StageIndex) CurrentModule.UpStageIndex();
+        CurrentStage.SetCleared(true);
+
+        UI.NextAppear(CurrentStage.ID, LastStageID);
         UI.ResetDisappear();
     }
-    
+
     public void OutputCheck(Vector2Int pos, bool state)
     {
         if (!outputCheck.ContainsKey(pos)) { Utils.PrintError($"OutputCheck: 해당 위치에 Output이 없습니다. {pos}"); return; }
@@ -171,18 +191,62 @@ public class GameManager : MonoBehaviour
         State = GameState.InGame;
     }
 
-    public void NextStage()
+    public void BackGame()
     {
-        if (CurrentStage == null) { Utils.PrintError("현재 스테이지가 없습니다."); return; }
-        if (StageLibrary.Count == 0) { Utils.PrintError("스테이지 라이브러리가 비어있습니다."); return; }
-        if (StageLibrary.ContainsKey(CurrentStage.ID + 1)) StartGame(CurrentStage.ID + 1);
-        else Utils.PrintError("다음 스테이지가 없습니다.");
+        State = GameState.ModuleSelect;
+
+        Grid.RemoveCurrentStage();
+
+        UI.NextDisappear();
+        UI.PrevDisappear();
+        UI.BackDisappear();
+        UI.ResetDisappear();
+
+        UI.SetStageText(CurrentModule.Desc);
+        UI.ModuleAppear();
+
+        CurrentStage = null;
+        CurrentModule = null;
     }
 
-    // 이전 스테이지로 이동한다
-    // 이전 스테이지의 ID를 반환한다
-    public int PrevStage()
+    public void QuitGame()
     {
-        return 0;
+        dataParser.SaveData(ModuleLibrary);
+        Application.Quit();
     }
+
+    public void NextStage()
+    {
+        if (CurrentStage == null) return;
+        if (StageLibrary.Count == 0) return;
+
+        State = GameState.Paused;
+        int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
+        if (CurrentModule.Stages.Count > index + 1) StartGame(CurrentModule.Stages[index + 1]);
+        else BackGame();
+    }
+
+    public void PrevStage()
+    {
+        if (CurrentStage == null) return;
+        if (StageLibrary.Count == 0) return;
+
+        State = GameState.Paused;
+        int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
+        StartGame(CurrentModule.Stages[index - 1]);
+    }
+
+    public void StartModule(ModuleData module)
+    {
+        if (State != GameState.ModuleSelect) { Utils.PrintError("모듈 선택 상태가 아닙니다."); return; }
+        if (module == null) { Utils.PrintError("모듈이 없습니다."); return; }
+
+        CurrentModule = module;
+        LastStageID = module.Stages[^1];
+        UI.ModuleDisappear();
+
+        State = GameState.Paused;
+        StartGame(StageLibrary[module.Stages[module.StageIndex]]);
+    }
+    public void StartModule(int id) => StartModule(ModuleLibrary[id]);
 }

@@ -3,12 +3,39 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+
+public class ModuleData
+{
+    public int ID { get; private set; }
+    public void SetID(int id) => ID = id;
+    public string Desc;
+    public List<int> Stages { get; private set; } = new(); // Stage ID list
+
+    // 클리어 하지 못한 최소 스테이지 인덱스
+    // 모든 스테이지를 클리어 했을 경우 0으로 설정
+    public int StageIndex { get; private set; } = 0;
+
+    public void SetStages(List<int> stages) { Stages = stages; StageIndex = 0; }
+    public void SetStageIndex(int index)
+    {
+        if (index < 0 || index >= Stages.Count) StageIndex = 0;
+        else StageIndex = index;
+    }
+    public void UpStageIndex()
+    {
+        if (StageIndex < Stages.Count - 1) StageIndex++;
+        else StageIndex = 0;
+    }
+}
 
 public class StageData
 {
     public int ID, Width, Height;
     public List<(Vector2Int pos, LogicExpr expr)> Inputs = new(), Outputs = new();
     public string Desc;
+    public bool IsCleared { get; private set; } = false;
+    public void SetCleared(bool cleared) => IsCleared = cleared;
 
     #region Blocks
     public List<int> Blocks = new();
@@ -16,14 +43,17 @@ public class StageData
     #endregion
 }
 
+
 public class DataParser
 {
+    #region Constant Data
     private const string DataFolder = "Assets/Data";
     private const string ID = "ID", Width = "Width", Height = "Height", Desc = "Desc";
     private const string Tiles = "Tiles", Grids = "Grids", Ports = "Ports";
     private const string Inputs = "Inputs", Outputs = "Outputs";
     private const string Blocks = "Blocks", Rotate = "Rotate", Flip = "Flip";
-    
+    private const string Stages = "Stages";
+
     public Dictionary<int, BlockData> ParseBlockData(string filename)
     {
         Dictionary<int, BlockData> result = new();
@@ -79,6 +109,51 @@ public class DataParser
         }
         return result;
     }
+
+    public Dictionary<int, ModuleData> ParseModuleData(string filename)
+    {
+        Dictionary<int, ModuleData> result = new();
+
+        TextAsset csvAsset = Resources.Load<TextAsset>($"Data/{filename}");
+        if (csvAsset == null)
+        {
+            Utils.PrintError($"CSV 파일을 찾을 수 없음: Data/{filename}");
+            return result;
+        }
+
+        string[] lines = csvAsset.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        if (lines.Length < 2) return result;
+
+        string[] headers = lines[0].Split(',');
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim();
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            string[] values = line.Split(',');
+            ModuleData module = new();
+
+            for (int j = 0; j < headers.Length && j < values.Length; j++)
+            {
+                if (values[j].Length == 0) continue;
+                string header = headers[j].ToLower();
+
+                if (header == ID.ToLower()) module.SetID(int.Parse(values[j]));
+                else if (header == Desc.ToLower()) module.Desc = values[j];
+                else if (header == Stages.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    List<int> parsed = items.Select(int.Parse).ToList();
+                    module.SetStages(parsed);
+                }
+            }
+
+            result[module.ID] = module;
+        }
+
+        return result;
+    }
+
     public Dictionary<int, StageData> ParseStageData(string filename)
     {
         Dictionary<int, StageData> result = new();
@@ -238,5 +313,37 @@ public class DataParser
 
         else throw new InvalidDataException("[ParseExpr()] 잘못된 타입");
     }
+    #endregion
+
+    #region Player Data
+
+    // ModuleData의 StageIndex 불러오기
+    // StageData의 IsCleared 불러오기
+    public void LoadData(Dictionary<int, ModuleData> modules, Dictionary<int, StageData> stages)
+    {
+        for (int i = 0; i < modules.Count; i++)
+        {
+            modules[i].SetStageIndex(PlayerPrefs.GetInt(modules[i].ID.ToString(), 0));
+            for (int j = 0; j < modules[i].StageIndex; j++)
+            {
+                int stageID = modules[i].Stages[j];
+                if (stages.ContainsKey(stageID)) stages[stageID].SetCleared(true);
+            }
+        }
+    }
+
+    // ModuleData의 StageIndex 저장하기
+    public void SaveData(Dictionary<int, ModuleData> modules)
+    {
+        for (int i = 0; i < modules.Count; i++) PlayerPrefs.SetInt(modules[i].ID.ToString(), modules[i].StageIndex);
+        PlayerPrefs.Save();
+    }
+
+    public void ResetData()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+    }
+    #endregion
 }
 

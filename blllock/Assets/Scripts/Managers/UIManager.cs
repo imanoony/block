@@ -161,6 +161,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button resetButton;
     [SerializeField] private Button closeButton;
     [SerializeField] private Button nextButton;
+    [SerializeField] private Button prevButton;
+    [SerializeField] private Button backButton;
+    
 
     public void MenuAppear()
     {
@@ -180,42 +183,46 @@ public class UIManager : MonoBehaviour
         menuButton.gameObject.SetActive(true);
     }
 
-    public void NextAppear()
+    public void SetStageText(string text) => stageText.text = text;
+
+    public void NextAppear(int stageID, int lastStageID)
     {
         nextButton.interactable = true;
         nextButton.gameObject.SetActive(true);
-    }
 
-    public void NextDisappear()
-    {
-        nextButton.interactable = false;
-        nextButton.gameObject.SetActive(false);
+        if (stageID == lastStageID) nextButton.gameObject.GetComponent<TextMeshProUGUI>().text = "COMPLETE";
+        else nextButton.gameObject.GetComponent<TextMeshProUGUI>().text = "NEXT";
     }
+    public void NextDisappear() { nextButton.interactable = false; nextButton.gameObject.SetActive(false); }
+    
+    public void PrevAppear() { prevButton.interactable = true; prevButton.gameObject.SetActive(true); }
+    public void PrevDisappear() { prevButton.interactable = false; prevButton.gameObject.SetActive(false); }
 
-    public void ResetAppear()
-    {
-        resetButton.interactable = true;
-        resetButton.gameObject.SetActive(true);
-    }
+    public void BackAppear() { backButton.interactable = true; backButton.gameObject.SetActive(true); }
+    public void BackDisappear() { backButton.interactable = false; backButton.gameObject.SetActive(false);} 
 
-    public void ResetDisappear()
-    {
-        resetButton.interactable = false;
-        resetButton.gameObject.SetActive(false);
-    }
+    public void ResetAppear() { resetButton.interactable = true; resetButton.gameObject.SetActive(true);}
+    public void ResetDisappear() { resetButton.interactable = false; resetButton.gameObject.SetActive(false); }
 
-    public void MenuButton() => MenuAppear();
     public void ResetButton() => GameManager.Instance.ResetGame();
+    public void MenuButton() => MenuAppear();
     public void CloseButton() => MenuDisappear();
+    public void BackButton()
+    {
+        if (moduleAppearCoroutine != null) return;
+        GameManager.Instance.BackGame();
+    }
     public void NextButton()
     {
+        if (moduleAppearCoroutine != null) return;
         DisableAllChat();
         GameManager.Instance.NextStage();
-
-        MenuAppear();
-        stageText.text = GameManager.Instance.CurrentStage.Desc;
-        NextDisappear();
-        ResetAppear();
+    }
+    public void PrevButton()
+    {
+        if (moduleAppearCoroutine != null) return;
+        DisableAllChat();
+        GameManager.Instance.PrevStage();
     }
     #endregion
 
@@ -259,7 +266,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject moduleParent;
     private List<GameObject> modulePool = new();
     private List<Vector3> modulePositions = new();
-    private int moduleFocus = 2; // 현재 선택된 모듈 인덱스, -1은 null과 동일
+    private int moduleFocus = 2; // 현재 선택된 모듈 ID, -1은 null과 동일
     private const int moduleCenter = 2;
 
     private void InitModule()
@@ -269,7 +276,87 @@ public class UIManager : MonoBehaviour
             modulePool.Add(moduleParent.transform.GetChild(i).gameObject);
             modulePositions.Add(modulePool[i].transform.localPosition);
         }
+
+        RectTransform rt = moduleParent.GetComponent<RectTransform>();
+        rt.offsetMax = new(0, -Screen.height);
+        rt.offsetMin = new(0, -Screen.height);
     }
+
+    private float moduleAppearTime = 0.4f;
+    private Coroutine moduleAppearCoroutine = null;
+    public void ModuleAppear() => moduleAppearCoroutine = StartCoroutine(ModuleAppearTrans());
+    public void ModuleDisappear() => moduleAppearCoroutine = StartCoroutine(ModuleDisappearTrans());
+    private IEnumerator ModuleAppearTrans()
+    {
+        moduleParent.SetActive(true);
+        if (moduleFocus == Utils.MODULE_MIN) modulePool[moduleCenter - 1].SetActive(false);
+        else if (moduleFocus == Utils.MODULE_MAX) modulePool[moduleCenter + 1].SetActive(false);
+
+        RectTransform rt = moduleParent.GetComponent<RectTransform>();
+
+        Vector2 currentMin = rt.offsetMin, currentMax = rt.offsetMax;
+        Vector2 targetMin = Vector2.zero, targetMax = Vector2.zero;
+
+        Vector2 velocityMin = Vector2.zero;
+        Vector2 velocityMax = Vector2.zero;
+
+        while ((currentMin - targetMin).sqrMagnitude > 0.01f || (currentMax - targetMax).sqrMagnitude > 0.01f)
+        {
+            // SmoothDamp
+            currentMin = Vector2.SmoothDamp(currentMin, targetMin, ref velocityMin, moduleAppearTime);
+            currentMax = Vector2.SmoothDamp(currentMax, targetMax, ref velocityMax, moduleAppearTime);
+
+            rt.offsetMin = currentMin;
+            rt.offsetMax = currentMax;
+
+            yield return null;
+        }
+
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+
+        EnableModuleClick();
+        moduleAppearCoroutine = null;
+        yield break;
+    }
+
+    public IEnumerator ModuleDisappearTrans()
+    {
+        DisableModuleClick();
+
+        RectTransform rt = moduleParent.GetComponent<RectTransform>();
+
+        Vector2 currentMin = rt.offsetMin, currentMax = rt.offsetMax;
+        Vector2 targetMin = new(0, -Screen.height), targetMax = new(0, -Screen.height);
+
+        Vector2 velocityMin = Vector2.zero;
+        Vector2 velocityMax = Vector2.zero;
+        
+        while ((currentMin - targetMin).sqrMagnitude > 0.01f || (currentMax - targetMax).sqrMagnitude > 0.01f)
+        {
+            // SmoothDamp
+            currentMin = Vector2.SmoothDamp(currentMin, targetMin, ref velocityMin, moduleAppearTime);
+            currentMax = Vector2.SmoothDamp(currentMax, targetMax, ref velocityMax, moduleAppearTime);
+
+            rt.offsetMin = currentMin;
+            rt.offsetMax = currentMax;
+
+            yield return null;
+        }
+
+        rt.offsetMin = new(0, -Screen.height);
+        rt.offsetMax = new(0, -Screen.height);
+
+        moduleFocus = GameManager.Instance.CurrentModule.ID;
+        moduleParent.SetActive(false);
+
+        moduleAppearCoroutine = null;
+        yield break;
+    }
+
+    private void EnableModuleClick() { for (int i = 0; i < modulePool.Count; i++) modulePool[i].GetComponent<Button>().interactable = true; }
+
+    private void DisableModuleClick() { for (int i = 0; i < modulePool.Count; i++) modulePool[i].GetComponent<Button>().interactable = false; }
 
     public void ScrollModule(GameObject module)
     {
@@ -277,10 +364,11 @@ public class UIManager : MonoBehaviour
         if (index == -1) return; // module이 modulePool에 없는 경우
         if (scrollCoroutine != null) return; // 이미 스크롤 중인 경우
 
-        Debug.Log($"ScrollModule: index {index}, focus {moduleFocus}");
-
         if (index < moduleCenter) scrollCoroutine = StartCoroutine(LeftScrollModule());
         else if (index > moduleCenter) scrollCoroutine = StartCoroutine(RightScrollModule());
+
+        // index == moduleCenter
+        else GameManager.Instance.StartModule(moduleFocus);
     }
 
     private Coroutine scrollCoroutine = null;
@@ -294,6 +382,8 @@ public class UIManager : MonoBehaviour
         moduleFocus--;
         if (moduleFocus == Utils.MODULE_MIN)
             modulePool[moduleCenter - 2].SetActive(false);
+
+        SetStageText(GameManager.Instance.ModuleLibrary[moduleFocus].Desc);
 
         List<Vector2> targetPositions = new List<Vector2>();
         List<Vector3> targetScales = new List<Vector3>();
@@ -379,6 +469,8 @@ public class UIManager : MonoBehaviour
         moduleFocus++;
         if (moduleFocus == Utils.MODULE_MAX)
             modulePool[moduleCenter + 2].SetActive(false);
+
+        SetStageText(GameManager.Instance.ModuleLibrary[moduleFocus].Desc);
 
         List<Vector2> targetPositions = new List<Vector2>();
         List<Vector3> targetScales = new List<Vector3>();
