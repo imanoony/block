@@ -137,6 +137,9 @@ public class GridManager : MonoBehaviour
     {
         if (Tiles != null) Tiles = null;
         if (Grids != null) Grids = null;
+        
+        placeCount = 0;
+        GameManager.Instance.Audio.ResetBGM();
 
         TilePlacer.RemoveTiles();
         BlockPlacer.RemoveBlocks();
@@ -193,6 +196,7 @@ public class GridManager : MonoBehaviour
         for (int i = 0; i < valids.Count; i++) invalids.Remove(valids[i]);
     }
 
+    private int placeCount = 0;
     public bool PlaceBlock(BlockData block, Vector2Int baseTile)
     {
         // 점유된 타일을 Occupied 상태로 변경한다.
@@ -211,11 +215,13 @@ public class GridManager : MonoBehaviour
             Grids![offset.x + baseTile.x, offset.y + baseTile.y].AddPort(port);
         }
 
-        //CheckInvalids();
         // 블록의 portIDs를 Evaluate 한다.
         GameManager.Instance.Wire.EvalAll();
-        Debug.Log($"[PlaceBlock():{block.ID}] EvalAll() Done -- {block.Ports[0]}:{block.Ports[0].Cache}");
 
+        placeCount++;
+        if (placeCount == Utils.AUDIO_THRESHOLD0) GameManager.Instance.Audio.PlayBGM(1);
+        if (placeCount == Utils.AUDIO_THRESHOLD1) GameManager.Instance.Audio.PlayBGM(2);
+        if (placeCount == Utils.AUDIO_THRESHOLD2) GameManager.Instance.Audio.PlayBGM(3);
         return true;
     }
 
@@ -242,6 +248,11 @@ public class GridManager : MonoBehaviour
 
         CheckInvalids();
         GameManager.Instance.Wire.EvalAll();
+
+        placeCount--;
+        if (placeCount == Utils.AUDIO_THRESHOLD0 - 1) GameManager.Instance.Audio.StopBGM(1);
+        if (placeCount == Utils.AUDIO_THRESHOLD1 - 1) GameManager.Instance.Audio.StopBGM(2);
+        if (placeCount == Utils.AUDIO_THRESHOLD2 - 1) GameManager.Instance.Audio.StopBGM(3);
     }
 
     public bool IsValidPos(BlockData block, Vector2Int baseTile)

@@ -33,6 +33,9 @@ public static class Utils
     public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
     public const int MODULE_MIN = 0;
     public const int MODULE_MAX = 4;
+    public const int AUDIO_THRESHOLD0 = 2;
+    public const int AUDIO_THRESHOLD1 = 4;
+    public const int AUDIO_THRESHOLD2 = 6;
     public static void PrintWarning(string message)
     {
         Debug.LogWarning($"<color=orange>[{DateTime.Now:HH:mm:ss}] Warning:</color> {message}");
@@ -127,16 +130,6 @@ public class GameManager : MonoBehaviour
         State = GameState.ModuleSelect;
         StartModule(0);
     }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A)) Audio.PlayBGM(1);
-        if (Input.GetKeyDown(KeyCode.B)) Audio.PlayBGM(2);
-        if (Input.GetKeyDown(KeyCode.C)) Audio.PlayBGM(3);
-        if (Input.GetKeyDown(KeyCode.D)) Audio.StopBGM(1);
-        if (Input.GetKeyDown(KeyCode.E)) Audio.StopBGM(2);
-        if (Input.GetKeyDown(KeyCode.F)) Audio.StopBGM(3);
-    }
     #endregion
 
     public GameState State { get; private set; } = GameState.Paused;
@@ -164,6 +157,8 @@ public class GameManager : MonoBehaviour
         UI.ResetAppear();
         UI.QuitToBack();
         UI.SetStageText(stage.Desc);
+
+        Audio.ResetBGM();
 
         for (int i = 0; i < CurrentStage.Outputs.Count; i++)
             outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
@@ -218,6 +213,8 @@ public class GameManager : MonoBehaviour
         UI.SetStageText(CurrentModule.Desc);
         UI.ModuleAppear();
 
+        Audio.SoftMute();
+
         CurrentStage = null;
         CurrentModule = null;
     }
@@ -261,6 +258,8 @@ public class GameManager : MonoBehaviour
         CurrentModule = module;
         LastStageID = module.Stages[^1];
         UI.ModuleDisappear();
+
+        Audio.SoftUnmute();
 
         State = GameState.Paused;
         StartGame(StageLibrary[module.Stages[module.StageIndex]]);

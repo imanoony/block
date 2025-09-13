@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -50,6 +51,20 @@ public class AudioManager : MonoBehaviour
         if (volumnCoroutines[number] != null) StopCoroutine(volumnCoroutines[number]);
         volumnCoroutines[number] = StartCoroutine(VolumnFadeBGM(number, 0f));
         bgmPlayed[number] = false;
+    }
+
+    public void ResetBGM() { for (int i = 1; i < bgmSources.Length; i++) StopBGM(i); }
+
+    public void SoftMute() // 기본 BGM 낮추기
+    {
+        if (volumnCoroutines[0] != null) StopCoroutine(volumnCoroutines[0]);
+        volumnCoroutines[0] = StartCoroutine(VolumnFadeBGM(0, bgmVolumes[0] / 2f));
+    }
+
+    public void SoftUnmute() // 기본 BGM 다시 복구
+    {
+        if (volumnCoroutines[0] != null) StopCoroutine(volumnCoroutines[0]);
+        volumnCoroutines[0] = StartCoroutine(VolumnFadeBGM(0, bgmVolumes[0]));
     }
 
     private float volumnTime = 0.5f;

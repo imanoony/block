@@ -3158,8 +3158,8 @@ MonoBehaviour:
   bgmVolumes:
   - 1
   - 1
-  - 1
-  - 0.755
+  - 0.75
+  - 0.75
   sfxVolume: 1
 --- !u!1 &1909185730
 GameObject:
