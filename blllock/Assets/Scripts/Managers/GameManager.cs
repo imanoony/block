@@ -262,7 +262,8 @@ public class GameManager : MonoBehaviour
         Audio.SoftUnmute();
 
         State = GameState.Paused;
-        StartGame(StageLibrary[module.Stages[module.StageIndex]]);
+        int index = module.StageIndex == module.Stages.Count ? 0 : module.StageIndex;
+        StartGame(StageLibrary[module.Stages[index]]);
     }
     public void StartModule(int id) => StartModule(ModuleLibrary[id]);
 }

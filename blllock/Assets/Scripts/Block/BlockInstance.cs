@@ -30,8 +30,8 @@ public class BlockInstance : MonoBehaviour
         sr = gameObject.GetComponent<SpriteRenderer>();
         sr.sprite = sprite;
         sr.color = color;
+
         PolygonCollider2D poly = gameObject.GetComponent<PolygonCollider2D>();
-        
         poly.pathCount = sprite.GetPhysicsShapeCount();
         for (int i = 0; i < poly.pathCount; i++)
         {
@@ -47,6 +47,7 @@ public class BlockInstance : MonoBehaviour
     }
 
     #region Interaction
+    private Vector2 dragOffset;
     public void BeginDrag()
     {
         if (currentCoroutine != null) return;
@@ -55,6 +56,7 @@ public class BlockInstance : MonoBehaviour
         GameManager.Instance.UI.BlockTooltipDisappear();
 
         isDragging = true;
+        dragOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (isPlaced) Unplace(gm);
     }
@@ -75,8 +77,9 @@ public class BlockInstance : MonoBehaviour
 
         if (isDragging)
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            transform.position = GetClampedPos(new Vector3(mousePos.x, mousePos.y, Utils.BLOCK_Z));
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 newPos = mousePos + dragOffset;
+            transform.position = GetClampedPos(new Vector3(newPos.x, newPos.y, Utils.BLOCK_Z));
         }
 
         if (Input.GetMouseButtonUp(0) && isDragging)

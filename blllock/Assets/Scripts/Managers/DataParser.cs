@@ -13,18 +13,18 @@ public class ModuleData
     public List<int> Stages { get; private set; } = new(); // Stage ID list
 
     // 클리어 하지 못한 최소 스테이지 인덱스
-    // 모든 스테이지를 클리어 했을 경우 0으로 설정
+    // 모든 스테이지를 클리어 했을 경우 Stages.Count로 설정
     public int StageIndex { get; private set; } = 0;
 
     public void SetStages(List<int> stages) { Stages = stages; StageIndex = 0; }
     public void SetStageIndex(int index)
     {
-        if (index < 0 || index >= Stages.Count) StageIndex = 0;
+        if (index < 0 || index > Stages.Count) StageIndex = 0;
         else StageIndex = index;
     }
     public void UpStageIndex()
     {
-        if (StageIndex < Stages.Count - 1) StageIndex++;
+        if (StageIndex < Stages.Count) StageIndex++;
         else StageIndex = 0;
     }
 }
@@ -326,6 +326,7 @@ public class DataParser
             modules[i].SetStageIndex(PlayerPrefs.GetInt(modules[i].ID.ToString(), 0));
             for (int j = 0; j < modules[i].StageIndex; j++)
             {
+                if (j == modules[i].Stages.Count) break;
                 int stageID = modules[i].Stages[j];
                 if (stages.ContainsKey(stageID)) stages[stageID].SetCleared(true);
             }
