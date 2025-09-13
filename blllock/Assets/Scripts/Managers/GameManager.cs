@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public static class Utils
 {
@@ -96,10 +97,12 @@ public class GameManager : MonoBehaviour
         Wire = new WireManager();
         Grid = gameObject.GetComponent<GridManager>();
         UI = gameObject.GetComponent<UIManager>();
+        Audio = gameObject.GetComponent<AudioManager>();
 
         Wire.Initialize(true);
         Grid.Initialize();
         UI.Initialize();
+        Audio.Initialize();
 
         BlockLibrary = dataParser.ParseBlockData(blockPath);
         ModuleLibrary = dataParser.ParseModuleData(modulePath);
@@ -123,6 +126,16 @@ public class GameManager : MonoBehaviour
     {
         State = GameState.ModuleSelect;
         StartModule(0);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A)) Audio.PlayBGM(1);
+        if (Input.GetKeyDown(KeyCode.B)) Audio.PlayBGM(2);
+        if (Input.GetKeyDown(KeyCode.C)) Audio.PlayBGM(3);
+        if (Input.GetKeyDown(KeyCode.D)) Audio.StopBGM(1);
+        if (Input.GetKeyDown(KeyCode.E)) Audio.StopBGM(2);
+        if (Input.GetKeyDown(KeyCode.F)) Audio.StopBGM(3);
     }
     #endregion
 
