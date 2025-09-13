@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockInstance : MonoBehaviour
@@ -29,7 +30,15 @@ public class BlockInstance : MonoBehaviour
         sr = gameObject.GetComponent<SpriteRenderer>();
         sr.sprite = sprite;
         sr.color = color;
-        gameObject.GetComponent<BoxCollider2D>().size = sr.sprite.bounds.size;
+        PolygonCollider2D poly = gameObject.GetComponent<PolygonCollider2D>();
+        
+        poly.pathCount = sprite.GetPhysicsShapeCount();
+        for (int i = 0; i < poly.pathCount; i++)
+        {
+            List<Vector2> shape = new();
+            sprite.GetPhysicsShape(i, shape);
+            poly.SetPath(i, shape.ToArray());
+        }
 
         // Shadow Sprite 설정
         shadow = transform.GetChild(0).gameObject;
