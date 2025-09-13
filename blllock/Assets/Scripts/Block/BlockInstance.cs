@@ -77,7 +77,7 @@ public class BlockInstance : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (currentCoroutine != null) return;
+            if (isPlaced || currentCoroutine != null) return;
 
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mouseWorld.x, mouseWorld.y);
@@ -110,6 +110,7 @@ public class BlockInstance : MonoBehaviour
     private bool isHovering = false;
     private void OnMouseEnter()
     {
+        if (GameManager.Instance.State != GameState.InGame) return;
         if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
 
         Vector3 tooltipPos = transform.position + new Vector3(0, (blockData.Height + 1.4f) / 2f * GameManager.Instance.Grid.GetTileSize().y, 0);
@@ -124,6 +125,7 @@ public class BlockInstance : MonoBehaviour
     {
         GameManager.Instance.UI.BlockTooltipDisappear();
 
+        if (GameManager.Instance.State != GameState.InGame) return;
         if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
         Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
         gameObject.transform.position -= Utils.HOVER;
@@ -172,6 +174,7 @@ public class BlockInstance : MonoBehaviour
             gm.AddInvalid(this);
         }
 
+        gameObject.GetComponent<SpriteRenderer>().sortingOrder -= 2;
         shadow.SetActive(false);
         return true;
     }
@@ -188,6 +191,7 @@ public class BlockInstance : MonoBehaviour
         sr.color = color;
         gm.RemoveInvalid(this);
 
+        gameObject.GetComponent<SpriteRenderer>().sortingOrder += 2;
         shadow.SetActive(true);
     }
 
@@ -211,6 +215,7 @@ public class BlockInstance : MonoBehaviour
     {
         if (!CanRotate) yield break;
         isHovering = true;
+        GameManager.Instance.UI.BlockTooltipDisappear();
 
         Vector2Int baseTile = this.baseTile;
         if (isPlaced) Unplace(gm);

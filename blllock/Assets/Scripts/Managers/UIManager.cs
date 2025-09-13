@@ -399,7 +399,7 @@ public class UIManager : MonoBehaviour
     }
 
     private Coroutine scrollCoroutine = null;
-    private float scrollTime = 0.2f; // 스크롤 애니메이션 시간
+    private float scrollTime = 0.35f; // 스크롤 애니메이션 시간
 
     private IEnumerator LeftScrollModule() // 더 낮은 모듈로
     {
