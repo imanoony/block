@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GridInstance : MonoBehaviour
@@ -7,6 +8,9 @@ public class GridInstance : MonoBehaviour
     private Grid gridData;
     private SpriteRenderer sr;
     private GameManager gm;
+    private GameObject anim;
+    private Animator animator;
+    private string animStr = "GridAnim";
 
     public void Initialize(int x, int y)
     {
@@ -15,9 +19,16 @@ public class GridInstance : MonoBehaviour
         gridData.OnPortsChanged += OnPortsChanged;
         sr = gameObject.GetComponent<SpriteRenderer>();
         gm = GameManager.Instance;
+        anim = gameObject.transform.GetChild(0).gameObject;
+        animator = anim.GetComponent<Animator>();
 
         SubscribePort();
-        UpdateColor();
+        //UpdateColor();
+
+        sr.color = Color.clear;
+        anim.SetActive(false);
+        if (gridData.Type == GridType.Input) SetColor(Utils.CodeToColor(Utils.BLUE));
+        else if (gridData.Type == GridType.Output) SetColor(Utils.CodeToColor(Utils.GRAY));
     }
 
     void OnMouseDown()
@@ -55,31 +66,57 @@ public class GridInstance : MonoBehaviour
             return;
         }
 
-        if (gridData.Type == GridType.Input) sr.color = Utils.CodeToColor(Utils.BLUE);
+        if (gridData.Type == GridType.Input) return;
         else if (gridData.Type == GridType.Output)
         {
-            sr.color = Utils.CodeToColor(Utils.GRAY);
-
             if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null)
             {
                 if (gridData.Ports[0].Cache.Equals(gridData.Expr))
                 {
                     GameManager.Instance.OutputCheck(new(x, y), true);
-                    sr.color = Utils.CodeToColor(Utils.BLUE);
+                    SetColor(Utils.CodeToColor(Utils.BLUE));
                 }
                 else
                 {
-                    Utils.PrintWarning($"Output 불일치: [{gridData.Ports[0]}] {gridData.Ports[0].Cache} != {gridData.Expr}");
                     GameManager.Instance.OutputCheck(new(x, y), false);
+                    SetColor(Utils.CodeToColor(Utils.RED));
                 }
             }
+            else SetColor(Utils.CodeToColor(Utils.GRAY));
         }
-        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) sr.color = Utils.CodeToColor(Utils.BLUE);
+        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) SetColor(Utils.CodeToColor(Utils.BLUE));
         else
         {
-            sr.color = Color.clear;
+            SetColor(Color.clear);
             if (gm.UI.ChatEnablePos.ContainsKey(new(x, y))) gm.UI.DisableGridHover(x, y);
         }
+    }
+
+    private Coroutine colorCoroutine = null;
+    private void SetColor(Color color)
+    {
+        if (sr.color == color && !anim.activeSelf) return;
+        if (colorCoroutine != null) StopCoroutine(colorCoroutine);
+
+        if (color != Color.clear) colorCoroutine = StartCoroutine(SetColorCoroutine(color));
+        else { sr.color = Color.clear; anim.SetActive(false); }
+    }
+
+    private IEnumerator SetColorCoroutine(Color color)
+    {
+        Debug.Log($"Color Coroutine | color = {color}");
+
+        anim.SetActive(false);
+
+        anim.SetActive(true);
+        anim.GetComponent<SpriteRenderer>().color = color;
+        animator.Play(animStr);
+
+        float clipLength = animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(clipLength);
+
+        sr.color = color;
+        anim.SetActive(false);
     }
 
     private void OnDestroy()

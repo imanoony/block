@@ -21,6 +21,7 @@ public static class Utils
     public const string GRAY = "#B8B8B8";
     public const string GREEN = "#CAFFCA";
     public const string YELLOW = "#FEFCCD";
+    public const string CLEAR = "#F0F0F0";
     public const float CLEAR_ALPHA = 0.4f;
     public const float THRESHOLD = 0.6f;
     public const float TILE_FILL_PERCENT1 = 0.5f;
