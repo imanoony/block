@@ -3155,7 +3155,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2276f2bf527cade4a9d39cb489775e61, type: 3}
   - {fileID: 8300000, guid: 7aa72fbe06456804eb748d44e8c2f95d, type: 3}
   - {fileID: 8300000, guid: 1fb84769a0a1cd34f8ca9b605fd8e745, type: 3}
-  bgmVolume: 1
+  bgmVolumes:
+  - 1
+  - 1
+  - 1
+  - 0.755
   sfxVolume: 1
 --- !u!1 &1909185730
 GameObject:

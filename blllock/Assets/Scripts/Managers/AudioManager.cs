@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -12,11 +13,9 @@ public class AudioManager : MonoBehaviour
 
     [Header("Volume Settings")]
     [Range(0f, 1f)]
-    public float bgmVolume = 1f;
+    public float[] bgmVolumes = new float[4] { 1f, 1f, 1f, 1f };
     [Range(0f, 1f)]
     public float sfxVolume = 1f;
-
-    private double dspStartTime;
 
     public void Initialize()
     {
@@ -37,7 +36,8 @@ public class AudioManager : MonoBehaviour
         if (number < 0 || number >= bgmSources.Length) return;
         if (bgmPlayed[number]) return;
 
-        bgmSources[number].volume = 1f;
+        if (volumnCoroutines[number] != null) StopCoroutine(volumnCoroutines[number]);
+        volumnCoroutines[number] = StartCoroutine(VolumnFadeBGM(number, bgmVolumes[number]));
         bgmPlayed[number] = true;
     }
 
@@ -47,8 +47,30 @@ public class AudioManager : MonoBehaviour
         if (number < 0 || number >= bgmSources.Length) return;
         if (!bgmPlayed[number]) return;
 
-        bgmSources[number].volume = 0f;
+        if (volumnCoroutines[number] != null) StopCoroutine(volumnCoroutines[number]);
+        volumnCoroutines[number] = StartCoroutine(VolumnFadeBGM(number, 0f));
         bgmPlayed[number] = false;
+    }
+
+    private float volumnTime = 0.5f;
+    private Coroutine[] volumnCoroutines = new Coroutine[4] { null, null, null, null };
+    private IEnumerator VolumnFadeBGM(int number, float target)
+    {
+        float start = bgmSources[number].volume;
+
+        float elapsed = 0f;
+        while (elapsed < volumnTime)
+        {
+            float t = elapsed / volumnTime;
+            bgmSources[number].volume = Mathf.Lerp(start, target, t);
+
+            elapsed += Time.smoothDeltaTime;
+            yield return null;
+        }
+
+        bgmSources[number].volume = target;
+        volumnCoroutines[number] = null;
+        yield break;
     }
 
     // SFX 재생
