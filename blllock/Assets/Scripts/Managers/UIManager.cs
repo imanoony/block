@@ -44,6 +44,8 @@ public class UIManager : MonoBehaviour
         GridType type;
         if ((type = GameManager.Instance.Grid.Grids[x, y].Type) != GridType.Null)
         {
+            GameManager.Instance.ResetGridIdleTile();
+
             string expr = GameManager.Instance.Grid.GetGridExpr(x, y).ToString();
             Color color = type == GridType.Input ? Utils.CodeToColor(Utils.CHAT_BLUE) : Color.white;
 
@@ -54,6 +56,8 @@ public class UIManager : MonoBehaviour
             LogicExpr logic = GameManager.Instance.Grid.GetGridCacheExpr(x, y);
             if (logic == null) return;
 
+            GameManager.Instance.ResetGridIdleTile();
+            
             string expr = logic.ToString();
             Color color = Utils.CodeToColor(Utils.CHAT_BLUE);
 
@@ -230,10 +234,6 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
-    #region Tile Shadow
-    // Tile Shadow는 UI가 아니라 GameObject지만 UIManager에서 관리
-    #endregion
-
     #region Menu
     [Header("Menu")]
     [SerializeField] private GameObject menu;
@@ -353,6 +353,20 @@ public class UIManager : MonoBehaviour
     }
 
     public void BlockTooltipDisappear() => blockTooltip.SetActive(false);
+    #endregion
+
+    #region Grid Tooltip
+    [Header("Grid Tooltip")]
+    [SerializeField] private RectTransform gridTooltip;
+
+    public void GridTooltipAppear(Vector2Int gridPos)
+    {
+        Vector3 pos = GetChatPosUI(gridPos.x, gridPos.y, canvas);
+        gridTooltip.anchoredPosition = pos;
+        gridTooltip.gameObject.SetActive(true);
+    }
+
+    public void GridTooltipDisappear() => gridTooltip.gameObject.SetActive(false);
     #endregion
 
     #region Module UI

@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public static class Utils
 {
+    public const float GRID_IDLE = 5f;
     public const float BLOCK_Z = -2f;
     public const int SCALE_FACTOR = 625;
     public const int DENOMINATOR = 100;
@@ -138,6 +139,8 @@ public class GameManager : MonoBehaviour
     public int LastStageID { get; private set; } = -1;
     public StageData CurrentStage { get; private set; } = null;
     private Dictionary<Vector2Int, bool> outputCheck = new();
+    private GridTooltip gt;
+    public void ResetGridIdleTile() { if (gt != null) gt.ResetGridIdleTime(); }
 
     // 스테이지를 시작한다
     public void StartGame(StageData stage)
@@ -161,6 +164,8 @@ public class GameManager : MonoBehaviour
 
         Audio.ResetBGM();
 
+        if (CurrentModule.ID == 0) gt.Initialize(stage.Inputs[0].pos);
+
         for (int i = 0; i < CurrentStage.Outputs.Count; i++)
             outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
 
@@ -174,13 +179,17 @@ public class GameManager : MonoBehaviour
     {
         yield return null;
 
+        if (CurrentStage == null) yield break;
         for (int i = 0; i < CurrentStage.Inputs.Count; i++) UI.EnableGridHover(CurrentStage.Inputs[i].pos);
         for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.EnableGridHover(CurrentStage.Outputs[i].pos);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(5f);
 
+        if (CurrentStage == null) yield break;
         for (int i = 0; i < CurrentStage.Inputs.Count; i++) UI.DisableGridHover(CurrentStage.Inputs[i].pos);
         for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.DisableGridHover(CurrentStage.Outputs[i].pos);
+
+        if (gt != null) gt.StartCheck();
     }
 
     // 스테이지를 성공 처리한다
@@ -193,6 +202,8 @@ public class GameManager : MonoBehaviour
 
         UI.NextAppear(CurrentStage.ID, LastStageID);
         UI.ResetDisappear();
+
+        if (gt != null) gt.StopCheck();
     }
 
     public void OutputCheck(Vector2Int pos, bool state)
@@ -213,6 +224,8 @@ public class GameManager : MonoBehaviour
         Grid.RemoveCurrentStage();
         Grid.InitStage(CurrentStage);
         State = GameState.InGame;
+
+        if (gt != null) gt.ResetGridIdleTime();
     }
 
     public void BackGame()
@@ -276,6 +289,15 @@ public class GameManager : MonoBehaviour
         UI.ModuleDisappear();
 
         Audio.SoftUnmute();
+
+        if (CurrentModule.ID == 0)
+        {
+            if (gt == null) gt = gameObject.AddComponent<GridTooltip>();
+        }
+        else
+        {
+            if (gt != null) { Destroy(gt); gt = null; }
+        }
 
         State = GameState.Paused;
         int index = module.StageIndex == module.Stages.Count ? 0 : module.StageIndex;
