@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public static class Utils
 {
-    public const float GRID_IDLE = 5f;
+    public const float GRID_IDLE = 10f;
     public const float BLOCK_Z = -2f;
     public const int SCALE_FACTOR = 625;
     public const int DENOMINATOR = 100;

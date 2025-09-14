@@ -289,7 +289,6 @@ public class UIManager : MonoBehaviour
     private bool isQuit = false;
     public void BackButton()
     {
-        if (moduleAppearCoroutine != null) return;
         DisableAllChat();
 
         if (isQuit) GameManager.Instance.QuitGame();
@@ -308,13 +307,11 @@ public class UIManager : MonoBehaviour
 
     public void NextButton()
     {
-        if (moduleAppearCoroutine != null) return;
         DisableAllChat();
         GameManager.Instance.NextStage();
     }
     public void PrevButton()
     {
-        if (moduleAppearCoroutine != null) return;
         DisableAllChat();
         GameManager.Instance.PrevStage();
     }
@@ -401,8 +398,16 @@ public class UIManager : MonoBehaviour
 
     private float moduleAppearTime = 0.4f;
     private Coroutine moduleAppearCoroutine = null;
-    public void ModuleAppear() => moduleAppearCoroutine = StartCoroutine(ModuleAppearTrans());
-    public void ModuleDisappear() => moduleAppearCoroutine = StartCoroutine(ModuleDisappearTrans());
+    public void ModuleAppear()
+    {
+        if (moduleAppearCoroutine != null) StopCoroutine(moduleAppearCoroutine);
+        moduleAppearCoroutine = StartCoroutine(ModuleAppearTrans());
+    }
+    public void ModuleDisappear()
+    {
+        if (moduleAppearCoroutine != null) StopCoroutine(moduleAppearCoroutine);
+        moduleAppearCoroutine = StartCoroutine(ModuleDisappearTrans());
+    }
     private IEnumerator ModuleAppearTrans()
     {
         moduleParent.SetActive(true);

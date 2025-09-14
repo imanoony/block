@@ -168,16 +168,16 @@ public class TilePlacer : MonoBehaviour
         float camHalfW = camHalfH * cam.aspect;
         Vector3 camPos = cam.transform.position;
 
-        float thickness = 1f; // 벽 두께
+        float thickness = 5f; // 벽 두께
 
         // 상단 벽
-        boundaryWalls.Add(CreateWall(new Vector2(camPos.x, camPos.y + camHalfH + thickness / 2), new Vector2(camHalfW * 2, thickness)));
+        boundaryWalls.Add(CreateWall(new Vector2(camPos.x, camPos.y + camHalfH + thickness / 2), new Vector2(camHalfW * 2.5f, thickness)));
         // 하단 벽
-        boundaryWalls.Add(CreateWall(new Vector2(camPos.x, camPos.y - camHalfH - thickness / 2), new Vector2(camHalfW * 2, thickness)));
+        boundaryWalls.Add(CreateWall(new Vector2(camPos.x, camPos.y - camHalfH - thickness / 2), new Vector2(camHalfW * 2.5f, thickness)));
         // 왼쪽 벽
-        boundaryWalls.Add(CreateWall(new Vector2(camPos.x - camHalfW - thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2)));
+        boundaryWalls.Add(CreateWall(new Vector2(camPos.x - camHalfW - thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2.5f)));
         // 오른쪽 벽
-        boundaryWalls.Add(CreateWall(new Vector2(camPos.x + camHalfW + thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2)));
+        boundaryWalls.Add(CreateWall(new Vector2(camPos.x + camHalfW + thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2.5f)));
     }
     private GameObject CreateWall(Vector2 pos, Vector2 size)
     {
