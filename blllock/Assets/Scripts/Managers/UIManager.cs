@@ -65,8 +65,8 @@ public class UIManager : MonoBehaviour
         }
     }
     public void EnableGridHover(Vector2Int pos) => EnableGridHover(pos.x, pos.y);
-    public void DisableGridHover(int x, int y) => DisableChat(new Vector2Int(x, y));
-    public void DisableGridHover(Vector2Int pos) => DisableChat(pos);
+    public void DisableGridHover(int x, int y) { GameManager.Instance.ResetGridIdleTile(); DisableChat(new Vector2Int(x, y)); }
+    public void DisableGridHover(Vector2Int pos) { GameManager.Instance.ResetGridIdleTile(); DisableChat(pos); }
 
     private void EnableChat(Vector2Int pos, string expr, Color color)
     {
@@ -78,6 +78,9 @@ public class UIManager : MonoBehaviour
         if (ChatEnablePos.ContainsKey(pos))
         {
             index = ChatEnablePos[pos];
+            if (chatDisable.Contains(index)) chatDisable.Remove(index);
+            if (!chatEnable.Contains(index)) chatEnable.Add(index);
+
             if (chatCoroutines[index] != null)
             {
                 StopCoroutine(chatCoroutines[index]);
@@ -87,13 +90,19 @@ public class UIManager : MonoBehaviour
             else return;
         }
 
-        if (chatDisable.Count == 1) DisableChat(chatEnable[0]);
+        if (chatDisable.Count == 1)
+        {
+            Debug.Log("chatDisable이 하나밖에 없어서 Enable한 거 하나 없앰");
+            DisableChat(chatEnable[0]);
+        }
 
         // 미사용 chat을 chatPool에서 빼내 쓰는 상황
         // Expr, Position, Color 미리 설정하고 트랜지션만 코루틴 처리
         index = chatDisable[0];
+        Debug.Log($"인덱스는 {index}");
+
         chatDisable.RemoveAt(0);
-        chatEnable.Add(index);
+        if (!chatEnable.Contains(index)) chatEnable.Add(index);
         ChatEnablePos.Add(pos, index);
 
         GameObject chat = chatPool[index];
@@ -117,7 +126,7 @@ public class UIManager : MonoBehaviour
             chatCoroutines[index] = StartCoroutine(ChatCoroutine(index, false));
 
             chatEnable.Remove(index);
-            chatDisable.Add(index);
+            if (!chatDisable.Contains(index)) chatDisable.Add(index);
         }
     }
     private void DisableChat(int index)
@@ -128,7 +137,7 @@ public class UIManager : MonoBehaviour
             chatCoroutines[index] = StartCoroutine(ChatCoroutine(index, false));
 
             chatEnable.Remove(index);
-            chatDisable.Add(index);
+            if (!chatDisable.Contains(index)) chatDisable.Add(index);
         }
     }
 
@@ -185,17 +194,16 @@ public class UIManager : MonoBehaviour
         chatExpr.color = targetExpr;
         chatRect.anchoredPosition = targetPos;
 
-        chatCoroutines[index] = null;
-
         if (!isAppear)
         {
-            
             foreach (var kvp in ChatEnablePos)
             {
                 if (kvp.Value == index) { ChatEnablePos.Remove(kvp.Key); break; }
             }
             chat.SetActive(false);
         }
+
+        chatCoroutines[index] = null;
         yield break;
     }
 

@@ -36,8 +36,8 @@ public static class Utils
     public const int MODULE_MIN = 0;
     public const int MODULE_MAX = 4;
     public const int AUDIO_THRESHOLD0 = 2;
-    public const int AUDIO_THRESHOLD1 = 4;
-    public const int AUDIO_THRESHOLD2 = 6;
+    public const int AUDIO_THRESHOLD1 = 3;
+    public const int AUDIO_THRESHOLD2 = 4;
     public static void PrintWarning(string message)
     {
         Debug.LogWarning($"<color=orange>[{DateTime.Now:HH:mm:ss}] Warning:</color> {message}");
