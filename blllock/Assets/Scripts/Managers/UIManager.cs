@@ -13,13 +13,14 @@ public class UIManager : MonoBehaviour
     {
         if (initialized) return;
 
-        for (int i = 0; i < chatCount; i++)
+        for (int i = 0; i < chatCount + 1; i++) // 여유분 1개의 chat이 항상 존재
         {
             GameObject chat = Instantiate(chatPrefab, chatParent.transform);
             chat.SetActive(false);
 
             chatPool.Add(chat);
             chatDisable.Add(i);
+            chatCoroutines.Add(null);
         }
 
         InitModule();
@@ -35,6 +36,7 @@ public class UIManager : MonoBehaviour
     private List<GameObject> chatPool = new();
     private int chatCount = 5;
     private List<int> chatEnable = new(), chatDisable = new();
+    private List<Coroutine> chatCoroutines = new();
     public Dictionary<Vector2Int, int> ChatEnablePos { get; private set; } = new();
 
     public void EnableGridHover(int x, int y)
@@ -42,77 +44,155 @@ public class UIManager : MonoBehaviour
         GridType type;
         if ((type = GameManager.Instance.Grid.Grids[x, y].Type) != GridType.Null)
         {
-            Debug.Log(GameManager.Instance.Grid.GetGridExpr(x, y));
-
             string expr = GameManager.Instance.Grid.GetGridExpr(x, y).ToString();
-            int chatIndex = EnableChat();
-            ChatEnablePos.Add(new(x, y), chatIndex);
-            GameObject chat = chatPool[chatIndex];
+            Color color = type == GridType.Input ? Utils.CodeToColor(Utils.CHAT_BLUE) : Color.white;
 
-            chat.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = expr;
-            chat.GetComponent<RectTransform>().anchoredPosition = GetChatPosUI(x, y, canvas);
-
-            if (type == GridType.Input) SetChatColor(chat, Utils.CodeToColor(Utils.CHAT_BLUE));
-            else SetChatColor(chat, Color.white);
+            EnableChat(new(x, y), expr, color);
         }
         else
         {
-            Debug.Log(GameManager.Instance.Grid.GetGridCacheExpr(x, y));
-
             LogicExpr logic = GameManager.Instance.Grid.GetGridCacheExpr(x, y);
             if (logic == null) return;
 
             string expr = logic.ToString();
-            int chatIndex = EnableChat();
-            ChatEnablePos.Add(new(x, y), chatIndex);
-            GameObject chat = chatPool[chatIndex];
+            Color color = Utils.CodeToColor(Utils.CHAT_BLUE);
 
-            chat.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = expr;
-            chat.GetComponent<RectTransform>().anchoredPosition = GetChatPosUI(x, y, canvas);
-
-            SetChatColor(chat, Utils.CodeToColor(Utils.CHAT_BLUE));
+            EnableChat(new(x, y), expr, color);
         }
     }
-    public void DisableGridHover(int x, int y) => DisableChat(x, y);
+    public void EnableGridHover(Vector2Int pos) => EnableGridHover(pos.x, pos.y);
+    public void DisableGridHover(int x, int y) => DisableChat(new Vector2Int(x, y));
+    public void DisableGridHover(Vector2Int pos) => DisableChat(pos);
 
-    private int EnableChat()
+    private void EnableChat(Vector2Int pos, string expr, Color color)
     {
-        if (chatDisable.Count == 0) DisableChat(chatEnable[0]);
+        int index;
 
-        int index = chatDisable[0];
-        chatDisable.RemoveAt(0);
-        chatEnable.Add(index);
-
-        chatPool[index].SetActive(true);
-        return index;
-    }
-
-    private void DisableChat(int x, int y)
-    {
-        Vector2Int pos = new(x, y);
+        // Disable Coroutine 도중에 Enable 요청 들어옴
+        // 또는 Enable Coroutine 도중에 Enable 요청 들어옴
+        // 또는 이미 Enabled 상태
         if (ChatEnablePos.ContainsKey(pos))
         {
-            DisableChat(ChatEnablePos[pos]);
-            ChatEnablePos.Remove(pos);
+            index = ChatEnablePos[pos];
+            if (chatCoroutines[index] != null)
+            {
+                StopCoroutine(chatCoroutines[index]);
+                chatCoroutines[index] = StartCoroutine(ChatCoroutine(index, true));
+                return;
+            }
+            else return;
+        }
+
+        if (chatDisable.Count == 1) DisableChat(chatEnable[0]);
+
+        // 미사용 chat을 chatPool에서 빼내 쓰는 상황
+        // Expr, Position, Color 미리 설정하고 트랜지션만 코루틴 처리
+        index = chatDisable[0];
+        chatDisable.RemoveAt(0);
+        chatEnable.Add(index);
+        ChatEnablePos.Add(pos, index);
+
+        GameObject chat = chatPool[index];
+        chat.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = expr;
+        Vector2 chatPos = GetChatPosUI(pos.x, pos.y, canvas);
+        chat.GetComponent<RectTransform>().anchoredPosition = new(chatPos.x, chatPos.y - transitionY);
+        SetChatColor(chat, color);
+
+        chatCoroutines[index] = StartCoroutine(ChatCoroutine(index, true));
+    }
+
+    private void DisableChat(Vector2Int pos)
+    {
+        // Enable Coroutine 도중에 Disable 요청 들어옴
+        // 또는 Disable Coroutine 도중에 Disable 요청 들어옴
+        // 또는 아직 Enabled 상태
+        if (ChatEnablePos.ContainsKey(pos))
+        {
+            int index = ChatEnablePos[pos];
+            if (chatCoroutines[index] != null) StopCoroutine(chatCoroutines[index]);
+            chatCoroutines[index] = StartCoroutine(ChatCoroutine(index, false));
+
+            chatEnable.Remove(index);
+            chatDisable.Add(index);
         }
     }
     private void DisableChat(int index)
     {
-        chatPool[index].SetActive(false);
-
-        chatEnable.Remove(index);
-        chatDisable.Add(index);
-
-        if (ChatEnablePos.Count == 0) return;
-        foreach (var kvp in ChatEnablePos)
+        if (chatEnable.Contains(index))
         {
-            if (kvp.Value == index) { ChatEnablePos.Remove(kvp.Key); return; }
+            if (chatCoroutines[index] != null) StopCoroutine(chatCoroutines[index]);
+            chatCoroutines[index] = StartCoroutine(ChatCoroutine(index, false));
+
+            chatEnable.Remove(index);
+            chatDisable.Add(index);
         }
     }
+
     private void DisableAllChat()
     {
         foreach (var index in chatEnable.ToArray())
-            DisableChat(index);
+        {
+            chatDisable.Add(index);
+            chatPool[index].SetActive(false);
+        }
+        chatEnable.Clear();
+        ChatEnablePos.Clear();
+    }
+
+    private float chatTime = 0.3f;
+    private float transitionY = 5f;
+    private IEnumerator ChatCoroutine(int index, bool isAppear)
+    {
+        GameObject chat = chatPool[index];
+        Image chatBody = chat.transform.GetChild(0).gameObject.GetComponent<Image>();
+        Image chatTail = chat.transform.GetChild(1).gameObject.GetComponent<Image>();
+        TextMeshProUGUI chatExpr = chatBody.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+        RectTransform chatRect = chat.GetComponent<RectTransform>();
+
+        chat.SetActive(true);
+
+        float targetA, targetY, targetAExpr;
+        if (isAppear) { targetA = Utils.CLEAR_ALPHA; targetY = transitionY; targetAExpr = 1f; } // 반투명
+        else { targetA = 0f; targetY = -transitionY; targetAExpr = 0f; } // 투명
+
+        Color start = chatBody.color, startExpr = chatExpr.color;
+        Color target = new(start.r, start.g, start.b, targetA);
+        Color targetExpr = new(startExpr.r, startExpr.g, startExpr.b, targetAExpr);
+
+        Vector2 startPos = chatRect.anchoredPosition;
+        Vector2 targetPos = new(startPos.x, startPos.y + targetY);
+
+        float elapsed = 0f;
+        while (elapsed < chatTime)
+        {
+            float t = elapsed / chatTime;
+
+            chatBody.color = Color.Lerp(start, target, t);
+            chatTail.color = chatBody.color;
+            chatExpr.color = Color.Lerp(startExpr, targetExpr, t);
+            chatRect.anchoredPosition = Vector2.Lerp(startPos, targetPos, t);
+
+            elapsed += Time.smoothDeltaTime;
+            yield return null;
+        }
+
+        chatBody.color = target;
+        chatTail.color = chatBody.color;
+        chatExpr.color = targetExpr;
+        chatRect.anchoredPosition = targetPos;
+
+        chatCoroutines[index] = null;
+
+        if (!isAppear)
+        {
+            
+            foreach (var kvp in ChatEnablePos)
+            {
+                if (kvp.Value == index) { ChatEnablePos.Remove(kvp.Key); break; }
+            }
+            chat.SetActive(false);
+        }
+        yield break;
     }
 
     private void SetChatColor(GameObject chat, Color color)
@@ -120,17 +200,18 @@ public class UIManager : MonoBehaviour
         Image body = chat.transform.GetChild(0).GetComponent<Image>();
         Image tail = chat.transform.GetChild(1).GetComponent<Image>();
 
+        float alpha = body.color.a;
         body.color = color;
         tail.color = color;
-        body.color = new Color(color.r, color.g, color.b, Utils.CLEAR_ALPHA);
-        tail.color = new Color(color.r, color.g, color.b, Utils.CLEAR_ALPHA);
+        body.color = new Color(color.r, color.g, color.b, alpha);
+        tail.color = new Color(color.r, color.g, color.b, alpha);
     }
 
-    private Vector2 chatOffset = new(9, 40);
+    private Vector2 chatOffset = new(15, 40);
     private Vector2 GetChatPosUI(int x, int y, Canvas canvas)
     {
         // 1. 타일 월드 좌표
-        Vector3 worldPos = (Vector3)GameManager.Instance.Grid.GetTileTopLeftWorld(x, y);
+        Vector3 worldPos = (Vector3)GameManager.Instance.Grid.GetTileTopLeftForChat(x, y);
 
         // 2. 월드 -> 스크린 좌표
         Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
@@ -145,7 +226,7 @@ public class UIManager : MonoBehaviour
             out localPoint
         );
 
-        return localPoint + chatOffset; // RectTransform.anchoredPosition에 바로 적용 가능
+        return localPoint; // RectTransform.anchoredPosition에 바로 적용 가능
     }
     #endregion
 
@@ -209,6 +290,8 @@ public class UIManager : MonoBehaviour
     public void BackButton()
     {
         if (moduleAppearCoroutine != null) return;
+        DisableAllChat();
+
         if (isQuit) GameManager.Instance.QuitGame();
         else GameManager.Instance.BackGame();
     }

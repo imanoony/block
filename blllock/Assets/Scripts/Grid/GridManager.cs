@@ -129,8 +129,6 @@ public class GridManager : MonoBehaviour
         // 스테이지에 해당하는 블록 배치
         TilePlacer.PlaceTiles(width, height);
         BlockPlacer.PlaceBlocks(stage);
-
-        // TODO
     }
 
     public void RemoveCurrentStage()
@@ -335,6 +333,11 @@ public class GridManager : MonoBehaviour
 
     public Vector3 GetBlockCenterOnTile(int x, int y, int height, int width) => TilePlacer.GetBlockCenterOnTile(x, y, height, width);
     public Vector3 GetTileSize() => TilePlacer.GetTileSize();
-    public Vector3? GetTileTopLeftWorld(int x, int y) => TilePlacer.GetTileTopLeftWorld(x, y);
+    public Vector3 GetTileTopLeftForChat(int x, int y)
+    {
+        Vector3 pos = (Vector3)TilePlacer.GetTileTopLeftWorld(x, y)!;
+        pos = new(pos.x + GetTileSize().x / 8f, pos.y + GetTileSize().y / 12f, pos.z);
+        return pos;
+    }
     #endregion
 }

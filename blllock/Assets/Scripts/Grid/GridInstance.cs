@@ -25,7 +25,7 @@ public class GridInstance : MonoBehaviour
         SubscribePort();
         //UpdateColor();
 
-        sr.color = Color.clear;
+        sr.color = Utils.CodeToColor(Utils.CLEAR);
         anim.SetActive(false);
         if (gridData.Type == GridType.Input) SetColor(Utils.CodeToColor(Utils.BLUE));
         else if (gridData.Type == GridType.Output) SetColor(Utils.CodeToColor(Utils.GRAY));
@@ -87,7 +87,7 @@ public class GridInstance : MonoBehaviour
         else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) SetColor(Utils.CodeToColor(Utils.BLUE));
         else
         {
-            SetColor(Color.clear);
+            SetColor(Utils.CodeToColor(Utils.CLEAR));
             if (gm.UI.ChatEnablePos.ContainsKey(new(x, y))) gm.UI.DisableGridHover(x, y);
         }
     }
@@ -97,9 +97,7 @@ public class GridInstance : MonoBehaviour
     {
         if (sr.color == color && !anim.activeSelf) return;
         if (colorCoroutine != null) StopCoroutine(colorCoroutine);
-
-        if (color != Color.clear) colorCoroutine = StartCoroutine(SetColorCoroutine(color));
-        else { sr.color = Color.clear; anim.SetActive(false); }
+        colorCoroutine = StartCoroutine(SetColorCoroutine(color));
     }
 
     private IEnumerator SetColorCoroutine(Color color)

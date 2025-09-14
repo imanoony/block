@@ -21,7 +21,7 @@ public static class Utils
     public const string GRAY = "#B8B8B8";
     public const string GREEN = "#CAFFCA";
     public const string YELLOW = "#FEFCCD";
-    public const string CLEAR = "#F0F0F0";
+    public const string CLEAR = "#F0F0F0FF";
     public const float CLEAR_ALPHA = 0.4f;
     public const float THRESHOLD = 0.6f;
     public const float TILE_FILL_PERCENT1 = 0.5f;
@@ -165,8 +165,23 @@ public class GameManager : MonoBehaviour
             outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
 
         State = GameState.InGame;
+
+        StartCoroutine(DelayChatStart());
     }
     public void StartGame(int id) => StartGame(StageLibrary[id]);
+
+    private IEnumerator DelayChatStart()
+    {
+        yield return null;
+
+        for (int i = 0; i < CurrentStage.Inputs.Count; i++) UI.EnableGridHover(CurrentStage.Inputs[i].pos);
+        for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.EnableGridHover(CurrentStage.Outputs[i].pos);
+
+        yield return new WaitForSeconds(2f);
+
+        for (int i = 0; i < CurrentStage.Inputs.Count; i++) UI.DisableGridHover(CurrentStage.Inputs[i].pos);
+        for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.DisableGridHover(CurrentStage.Outputs[i].pos);
+    }
 
     // 스테이지를 성공 처리한다
     public void SucceedGame()
