@@ -513,7 +513,10 @@ public class UIManager : MonoBehaviour
         if (moduleFocus == Utils.MODULE_MIN)
             modulePool[moduleCenter - 2].SetActive(false);
 
-        SetStageText(GameManager.Instance.ModuleLibrary[moduleFocus].Desc);
+        ModuleData module = GameManager.Instance.ModuleLibrary[moduleFocus];
+        int achievement = (int)(100 * (float)module.StageIndex / module.Stages.Count);
+        string text = $"{module.Desc} ({achievement}%)";
+        SetStageText(text);
 
         List<Vector2> targetPositions = new List<Vector2>();
         List<Vector3> targetScales = new List<Vector3>();
@@ -605,7 +608,10 @@ public class UIManager : MonoBehaviour
         if (moduleFocus == Utils.MODULE_MAX)
             modulePool[moduleCenter + 2].SetActive(false);
 
-        SetStageText(GameManager.Instance.ModuleLibrary[moduleFocus].Desc);
+        ModuleData module = GameManager.Instance.ModuleLibrary[moduleFocus];
+        int achievement = (int)(100 * (float)module.StageIndex / module.Stages.Count);
+        string text = $"{module.Desc} ({achievement}%)";
+        SetStageText(text);
 
         List<Vector2> targetPositions = new List<Vector2>();
         List<Vector3> targetScales = new List<Vector3>();

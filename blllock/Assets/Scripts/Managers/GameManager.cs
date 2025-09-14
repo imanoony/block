@@ -147,6 +147,8 @@ public class GameManager : MonoBehaviour
     {
         if (State != GameState.Paused) { Utils.PrintError("게임이 이미 진행 중입니다."); return; }
 
+        if (delay != null) { StopCoroutine(delay); delay = null; }
+
         outputCheck = new();
         Grid.RemoveCurrentStage();
         Wire.Initialize();
@@ -171,10 +173,11 @@ public class GameManager : MonoBehaviour
 
         State = GameState.InGame;
 
-        StartCoroutine(DelayChatStart());
+        delay = StartCoroutine(DelayChatStart());
     }
     public void StartGame(int id) => StartGame(StageLibrary[id]);
 
+    private Coroutine delay = null;
     private IEnumerator DelayChatStart()
     {
         yield return null;
@@ -190,6 +193,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.DisableGridHover(CurrentStage.Outputs[i].pos);
 
         if (gt != null) gt.StartCheck();
+
+        delay = null;
     }
 
     // 스테이지를 성공 처리한다
@@ -197,7 +202,7 @@ public class GameManager : MonoBehaviour
     {
         State = GameState.Paused;
 
-        if (CurrentStage.ID == CurrentModule.StageIndex) CurrentModule.UpStageIndex();
+        if (CurrentModule.Stages.IndexOf(CurrentStage.ID) == CurrentModule.StageIndex) CurrentModule.UpStageIndex();
         CurrentStage.SetCleared(true);
 
         UI.NextAppear(CurrentStage.ID, LastStageID);
@@ -239,13 +244,17 @@ public class GameManager : MonoBehaviour
         UI.BackToQuit();
         UI.ResetDisappear();
 
-        UI.SetStageText(CurrentModule.Desc);
+        int achievement = (int)(100 * (float)CurrentModule.StageIndex / CurrentModule.Stages.Count);
+        string text = $"{CurrentModule.Desc} ({achievement}%)";
+        UI.SetStageText(text);
         UI.ModuleAppear();
 
         Audio.SoftMute();
 
         CurrentStage = null;
         CurrentModule = null;
+
+        if (gt != null) gt.ResetGridIdleTime();
     }
 
     public void QuitGame()
