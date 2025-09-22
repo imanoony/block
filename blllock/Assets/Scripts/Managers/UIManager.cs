@@ -522,7 +522,7 @@ public class UIManager : MonoBehaviour
             modulePool[moduleCenter - 2].SetActive(false);
 
         ModuleData module = GameManager.Instance.ModuleLibrary[moduleFocus];
-        int achievement = (int)(100 * (float)module.StageIndex / module.Stages.Count);
+        int achievement = module.Stages.Count != 0 ? (int)(100 * (float)module.StageIndex / module.Stages.Count) : 0;
         string text = $"{module.Desc} ({achievement}%)";
         SetStageText(text);
 
@@ -617,7 +617,7 @@ public class UIManager : MonoBehaviour
             modulePool[moduleCenter + 2].SetActive(false);
 
         ModuleData module = GameManager.Instance.ModuleLibrary[moduleFocus];
-        int achievement = (int)(100 * (float)module.StageIndex / module.Stages.Count);
+        int achievement = module.Stages.Count != 0 ? (int)(100 * (float)module.StageIndex / module.Stages.Count) : 0;
         string text = $"{module.Desc} ({achievement}%)";
         SetStageText(text);
 

@@ -82,7 +82,11 @@ public class GridInstance : MonoBehaviour
                     SetColor(Utils.CodeToColor(Utils.RED));
                 }
             }
-            else SetColor(Utils.CodeToColor(Utils.GRAY));
+            else
+            {
+                GameManager.Instance.OutputCheck(new(x, y), false);
+                SetColor(Utils.CodeToColor(Utils.GRAY));
+            }
         }
         else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) SetColor(Utils.CodeToColor(Utils.BLUE));
         else

@@ -297,6 +297,15 @@ public class BlockInstance : MonoBehaviour
         shadow.transform.localPosition = -Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
         shadow.GetComponent<SpriteRenderer>().flipX = blockData.BlockFlipX;
 
+        PolygonCollider2D poly = gameObject.GetComponent<PolygonCollider2D>();
+        Vector2[] points = poly.points;
+        for (int i = 0; i < points.Length; i++)
+        {
+            points[i].x *= -1; // X 좌표 반전
+        }
+        poly.points = points;
+
+
         if (isPlaced) Place(gm, baseTile);
 
         isHovering = false;

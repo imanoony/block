@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
         ModuleLibrary = dataParser.ParseModuleData(modulePath);
         StageLibrary = dataParser.ParseStageData(stagePath);
 
-        dataParser.LoadData(ModuleLibrary, StageLibrary);
+        //dataParser.LoadData(ModuleLibrary, StageLibrary);
     }
     #endregion
 
@@ -292,6 +292,7 @@ public class GameManager : MonoBehaviour
     {
         if (State != GameState.ModuleSelect) { Utils.PrintError("모듈 선택 상태가 아닙니다."); return; }
         if (module == null) { Utils.PrintError("모듈이 없습니다."); return; }
+        if (module.Stages.Count == 0) return;
 
         CurrentModule = module;
         LastStageID = module.Stages[^1];

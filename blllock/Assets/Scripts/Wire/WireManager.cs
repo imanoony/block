@@ -201,7 +201,7 @@ public class WireManager
             WireDict.Remove(id);
         }
         if (WireLogic.ContainsKey(id)) WireLogic.Remove(id);
-        if (Wires[id].L != 0) { RemoveWire(Wires[id].L); RemoveWire(Wires[id].R); }
+        if (Wires[id].L != 0) { RemoveWire(Wires[id].L); RemoveWire(Wires[id].R); removeIDs.Add(id); }
         // if (id > 0) freeIDs.Add(id);
         // Wires.Remove(id);
 

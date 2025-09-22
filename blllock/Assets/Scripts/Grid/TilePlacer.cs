@@ -85,7 +85,7 @@ public class TilePlacer : MonoBehaviour
         Vector2 pos = (Vector2)GetTileTopLeftWorld(0, 0);
         pos = new Vector2(pos.x - tilemap.cellSize.x, pos.y + tilemap.cellSize.y);
         pos = new Vector2(pos.x + size.x / 2f, pos.y - size.y / 2f);
-        size = new Vector2(size.x, Camera.main.orthographicSize * 3);
+        size = new Vector2(size.x, Camera.main.orthographicSize * 5);
 
         tileWall = new GameObject("TileWall");
         tileWall.transform.position = pos;
