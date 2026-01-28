@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: adb3be7f618bf5740b74c028e8a6c6b7
+guid: a78c22a8c8fd328419878c57808889d9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3920334668651330139
-    second: HCableTile2_0
+      213: 4858852840018375608
+    second: Barrier4_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HCableTile2_0
+      name: Barrier4_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5a58362c36c2899c0800000000000000
-      internalID: -3920334668651330139
+      spriteID: 8b371392aec1e6340800000000000000
+      internalID: 4858852840018375608
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 2f2b00bb21907e1499d119e5b13f2b1f
+    spriteID: 96a2044f7eebbea408050bf506f58b47
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      HCableTile2_0: -3920334668651330139
+      Barrier4_0: 4858852840018375608
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
