@@ -51,13 +51,19 @@ public class StageData
 
     // JSON 파일로부터 1차 파싱을 위한 보조 클래스들
     [Serializable]
+    public class RawStages
+    {
+        public List<Raw> Stages = new();
+    }
+    [Serializable]
     public class Raw
     {
         public int ID, Width, Height;
-        public List<RawIO> Inputs, Outputs;
-        public List<int> Blocks;
-        public List<int> RIndex, FIndex;
-        public List<RawPos> HBarriers, VBarriers;
+        public List<RawIO> Inputs = new(), Outputs = new();
+        public string Desc;
+        public List<int> Blocks = new();
+        public List<int> RIndex = new(), FIndex = new();
+        public List<RawPos> HBarriers = new(), VBarriers = new();
     }
     [Serializable]
     public class RawIO
@@ -251,6 +257,62 @@ public class DataParser
             result[stage.ID] = stage;
         }
         return result;
+    }
+
+    public Dictionary<int, StageData> ParseStageDataJSON(string filename)
+    {
+        int i;
+        StageData.RawStages rawStages;
+        StageData.Raw raw;
+        StageData stage;
+        TextAsset jsonAsset;
+        Dictionary<int, StageData> result = new();
+
+        // Resources/Data 폴더 기준 경로, 확장자 제외
+        jsonAsset = Resources.Load<TextAsset>($"Data/{filename}");
+        if (jsonAsset == null)
+        {
+            Utils.PrintError($"JSON 파일을 찾을 수 없음: Data/{filename}");
+            return result;
+        }
+
+        rawStages = JsonUtility.FromJson<StageData.RawStages>(jsonAsset.text);
+        for (i = 0; i < rawStages.Stages.Count; i++)
+        {
+            raw = rawStages.Stages[i];
+            stage = new()
+            {
+                ID = raw.ID,
+                Width = raw.Width,
+                Height = raw.Height,
+                Desc = raw.Desc,
+                Inputs = raw.Inputs.Select(
+                    io => (
+                        io.pos.ToVector2Int(),
+                        LogicExpr.Parse(io.expr)
+                    )
+                ).ToList(),
+                Outputs = raw.Outputs.Select(
+                    io => (
+                        io.pos.ToVector2Int(),
+                        LogicExpr.Parse(io.expr)
+                    )
+                ).ToList(),
+                Blocks = raw.Blocks,
+                RIndex = raw.RIndex,
+                FIndex = raw.FIndex,
+                HBarriers = raw.HBarriers.Select(pos => pos.ToVector2Int()).ToList(),
+                VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList()
+            };
+            result[stage.ID] = stage;
+        }
+        
+        return result;
+    }
+
+    public void SaveStageData(string filename)
+    {
+        
     }
 
     // CSV(,) 고려 (x.y)의 형태로 input 받는다.
