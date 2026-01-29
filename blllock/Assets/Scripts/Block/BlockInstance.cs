@@ -186,7 +186,7 @@ public class BlockInstance : MonoBehaviour
             gm.AddInvalid(this);
         }
 
-        gameObject.GetComponent<SpriteRenderer>().sortingOrder -= 2;
+        gameObject.GetComponent<SpriteRenderer>().sortingOrder -= 3;
         shadow.SetActive(false);
         return true;
     }
@@ -203,7 +203,7 @@ public class BlockInstance : MonoBehaviour
         sr.color = color;
         gm.RemoveInvalid(this);
 
-        gameObject.GetComponent<SpriteRenderer>().sortingOrder += 2;
+        gameObject.GetComponent<SpriteRenderer>().sortingOrder += 3;
         shadow.SetActive(true);
     }
 

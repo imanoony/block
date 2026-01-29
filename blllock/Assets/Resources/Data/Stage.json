@@ -28,8 +28,22 @@
             ],
             "RIndex": [],
             "FIndex": [],
-            "HBarriers": [],
-            "VBarriers": []
+            "HBarriers": [
+                {
+                    "x": 1,
+                    "y": 3
+                }
+            ],
+            "VBarriers": [
+                {
+                    "x": 1,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 3
+                }
+            ]
         },
         {
             "ID": 1,

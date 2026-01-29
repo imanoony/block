@@ -10,10 +10,9 @@ using UnityEngine.Rendering.Universal;
 // Tilemap-based
 public class TilePlacer : MonoBehaviour
 {
-
-    [SerializeField] private Tilemap tilemap;
-
     [Header("Tiles")]
+    
+    [SerializeField] private Tilemap tileTilemap;
     [SerializeField] private TileBase tileCenter;
     [SerializeField] private TileBase tileLeft;
     [SerializeField] private TileBase tileRight;
@@ -27,7 +26,7 @@ public class TilePlacer : MonoBehaviour
     #region Tile Placement
     public void RemoveTiles()
     {
-        tilemap.ClearAllTiles();
+        tileTilemap.ClearAllTiles();
         width = -1; height = -1;
 
         RemoveTileCollider();
@@ -37,13 +36,13 @@ public class TilePlacer : MonoBehaviour
     private int width = -1, height = -1;
     public void PlaceTiles(int width, int height)
     {
-        if (tilemap == null || tileCenter == null) { Utils.PrintError("Invalid tilemap or tiles"); return; }
+        if (tileTilemap == null || tileCenter == null) { Utils.PrintError("Invalid tilemap or tiles"); return; }
 
         this.width = width;
         this.height = height;
         for (int x = 0; x < height; x++)
             for (int y = 0; y < width; y++)
-                tilemap.SetTile(TileToCell(x, y), tileCenter);
+                tileTilemap.SetTile(TileToCell(x, y), tileCenter);
 
         PlaceBoundaries();
         PlaceCamera();
@@ -53,21 +52,21 @@ public class TilePlacer : MonoBehaviour
     }
     private void PlaceBoundaries()
     {
-        if (tilemap == null || tileCenter == null) { Utils.PrintError("Invalid tilemap or tiles"); return; }
+        if (tileTilemap == null || tileCenter == null) { Utils.PrintError("Invalid tilemap or tiles"); return; }
         for (int x = 0; x < height; x++)
         {
-            tilemap.SetTile(TileToCell(x, -1), tileLeft);
-            tilemap.SetTile(TileToCell(x, width), tileRight);
+            tileTilemap.SetTile(TileToCell(x, -1), tileLeft);
+            tileTilemap.SetTile(TileToCell(x, width), tileRight);
         }
         for (int y = 0; y < width; y++)
         {
-            tilemap.SetTile(TileToCell(-1, y), tileTop);
-            tilemap.SetTile(TileToCell(height, y), tileBottom);
+            tileTilemap.SetTile(TileToCell(-1, y), tileTop);
+            tileTilemap.SetTile(TileToCell(height, y), tileBottom);
         }
-        tilemap.SetTile(TileToCell(-1, -1), tileTopLeft);
-        tilemap.SetTile(TileToCell(-1, width), tileTopRight);
-        tilemap.SetTile(TileToCell(height, -1), tileBottomLeft);
-        tilemap.SetTile(TileToCell(height, width), tileBottomRight);
+        tileTilemap.SetTile(TileToCell(-1, -1), tileTopLeft);
+        tileTilemap.SetTile(TileToCell(-1, width), tileTopRight);
+        tileTilemap.SetTile(TileToCell(height, -1), tileBottomLeft);
+        tileTilemap.SetTile(TileToCell(height, width), tileBottomRight);
     }
 
     private GameObject tileWall = null;
@@ -81,9 +80,9 @@ public class TilePlacer : MonoBehaviour
     }
     private void PlaceTileCollider()
     {
-        Vector2 size = new Vector2(tilemap.cellSize.x * (width + 2), tilemap.cellSize.y * (height + 2));
+        Vector2 size = new Vector2(tileTilemap.cellSize.x * (width + 2), tileTilemap.cellSize.y * (height + 2));
         Vector2 pos = (Vector2)GetTileTopLeftWorld(0, 0);
-        pos = new Vector2(pos.x - tilemap.cellSize.x, pos.y + tilemap.cellSize.y);
+        pos = new Vector2(pos.x - tileTilemap.cellSize.x, pos.y + tileTilemap.cellSize.y);
         pos = new Vector2(pos.x + size.x / 2f, pos.y - size.y / 2f);
         size = new Vector2(size.x, Camera.main.orthographicSize * 5);
 
@@ -103,24 +102,24 @@ public class TilePlacer : MonoBehaviour
     [SerializeField] private PixelPerfectCamera PPCamera;
     public void PlaceCamera()
     {
-        if (tilemap == null) { Utils.PrintError("Tilemap not set"); return; }
+        if (tileTilemap == null) { Utils.PrintError("Tilemap not set"); return; }
 
         Camera cam = Camera.main;
         if (cam == null) { Utils.PrintError("Main Camera not found"); return; }
 
         int cellX = width / 2, cellY = height / 2;
-        Vector3 centerWorld = tilemap.GetCellCenterWorld(new(cellX, cellY));
+        Vector3 centerWorld = tileTilemap.GetCellCenterWorld(new(cellX, cellY));
 
         // height, width가 짝수라면 offset 추가한다
-        if (height % 2 == 0) centerWorld -= new Vector3(0, tilemap.cellSize.y / 2f, 0);
-        if (width % 2 == 0) centerWorld -= new Vector3(tilemap.cellSize.x / 2f, 0, 0);
+        if (height % 2 == 0) centerWorld -= new Vector3(0, tileTilemap.cellSize.y / 2f, 0);
+        if (width % 2 == 0) centerWorld -= new Vector3(tileTilemap.cellSize.x / 2f, 0, 0);
 
         // 타일맵 성질에 따른 offset 추가한다
-        centerWorld += new Vector3(tilemap.cellSize.x / 8f, 0f, 0f);
+        centerWorld += new Vector3(tileTilemap.cellSize.x / 8f, 0f, 0f);
         cam.transform.position = new Vector3(centerWorld.x, centerWorld.y, cam.transform.position.z);
 
         // 타일맵 크기 (월드 단위)
-        Vector3 cellSize = tilemap.cellSize;
+        Vector3 cellSize = tileTilemap.cellSize;
         float worldWidth = width * cellSize.x;
         float worldHeight = height * cellSize.y;
 
@@ -231,27 +230,55 @@ public class TilePlacer : MonoBehaviour
 
     #region Tile Position
     private Vector3Int TileToCell(int x, int y) => new(y, height - 1 - x, 0);
-    public Vector3 GetTileSize() => tilemap.cellSize;
+    public Vector3 GetTileSize() => tileTilemap.cellSize;
     public Vector3? GetTileCenterWorld(int x, int y)
     {
         // Grid 고려 height + 1, width + 1까지는 타일로 처리함
         if (x < 0 || x >= height + 1 || y < 0 || y >= width + 1) return null;
-        return tilemap.GetCellCenterWorld(TileToCell(x, y));
+        return tileTilemap.GetCellCenterWorld(TileToCell(x, y));
     }
 
     public Vector3? GetTileTopLeftWorld(int x, int y)
     {
         // Grid 고려 height + 1, width + 1까지는 타일로 처리함
         if (x < 0 || x >= height + 1 || y < 0 || y >= width + 1) return null;
-        Vector3 center = tilemap.GetCellCenterWorld(TileToCell(x, y));
-        return center + new Vector3(-tilemap.cellSize.x / 2f, tilemap.cellSize.y / 2f, 0);
+        Vector3 center = tileTilemap.GetCellCenterWorld(TileToCell(x, y));
+        return center + new Vector3(-tileTilemap.cellSize.x / 2f, tileTilemap.cellSize.y / 2f, 0);
     }
 
     public Vector3 GetBlockCenterOnTile(int x, int y, int height, int width)
     {
         Vector3 topLeft = (Vector3)GetTileTopLeftWorld(x, y);
-        topLeft += new Vector3(tilemap.cellSize.x * width / 2f, -tilemap.cellSize.y * height / 2f, 0);
-        return topLeft += new Vector3(tilemap.cellSize.x / 8f, -tilemap.cellSize.y / 8f, 0);
+        topLeft += new Vector3(tileTilemap.cellSize.x * width / 2f, -tileTilemap.cellSize.y * height / 2f, 0);
+        return topLeft += new Vector3(tileTilemap.cellSize.x / 8f, -tileTilemap.cellSize.y / 8f, 0);
+    }
+    #endregion
+
+    #region Barrier Placement
+    [Header("Barriers")]
+    [SerializeField] private Tilemap HBarrierTilemap;
+    [SerializeField] private Tilemap VBarrierTilemap;
+    [SerializeField] private TileBase HB;
+    [SerializeField] private TileBase VBstart;
+    [SerializeField] private TileBase VBmiddle;
+    [SerializeField] private TileBase VBend;
+    public void PlaceHBarriers(HashSet<Vector2Int> HBarriers)
+    {
+        foreach (Vector2Int pos in HBarriers)
+        {
+            HBarrierTilemap.SetTile(TileToCell(pos.x, pos.y), HB);
+        }
+    }
+    public void PlaceVBarriers(HashSet<Vector2Int> VBarriers)
+    {
+        foreach (Vector2Int pos in VBarriers)
+        {
+            VBarrierTilemap.SetTile(TileToCell(pos.x, pos.y), VBstart);
+            if (VBarriers.Contains(new(pos.x - 1, pos.y)))
+                VBarrierTilemap.SetTile(TileToCell(pos.x, pos.y), VBmiddle);
+            if (!VBarriers.Contains(new(pos.x + 1, pos.y)))
+                VBarrierTilemap.SetTile(TileToCell(pos.x + 1, pos.y), VBend);
+        }
     }
     #endregion
 }
