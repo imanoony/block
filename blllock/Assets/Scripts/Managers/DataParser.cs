@@ -132,7 +132,7 @@ public class DataParser
                 {
                     List<string> items = values[j].Split(';').ToList<string>();
                     List<WireExpr> wires = new();
-                    for (int k = 0; k < items.Count; k++) wires.Add(ParseExpr<WireExpr>(items[k]));
+                    for (int k = 0; k < items.Count; k++) wires.Add(WireExpr.Parse(items[k]));
                     block.SetPorts(wires);
                 }
             }
@@ -229,7 +229,7 @@ public class DataParser
                     {
                         string[] splitted = item.Split(':');
                         Vector2Int pos = ParsePos(splitted[0]);
-                        LogicExpr expr = ParseExpr<LogicExpr>(splitted[^1]);
+                        LogicExpr expr = LogicExpr.Parse(splitted[^1]);
 
                         sources.Add((pos, expr));
                     }
@@ -263,112 +263,6 @@ public class DataParser
 
         return new(int.Parse(splitted[0]), int.Parse(splitted[^1]));
     }
-    private const char not = '~', and = '*', or = '+';
-    private const string parens = "()";
-
-    private T ParseExpr<T>(string exprString)
-    {
-        if (string.IsNullOrEmpty(exprString)) return default;
-
-        // 바깥 레벨 괄호인지 확인
-        bool IsWrappedByParentheses(string s)
-        {
-            if (s.Length < 2 || s[0] != '(' || s[^1] != ')') return false;
-
-            int depth = 0;
-            for (int i = 0; i < s.Length; i++)
-            {
-                if (s[i] == '(') depth++;
-                else if (s[i] == ')') depth--;
-
-                // 마지막 문자 제외하고 depth가 0이면 바깥 괄호 아님
-                if (i < s.Length - 1 && depth == 0) return false;
-            }
-            return depth == 0;
-        }
-
-        // WireExpr 처리
-        if (typeof(T) == typeof(WireExpr))
-        {
-            // 단항 NOT
-            if (exprString[0] == not)
-            {
-                string inner = exprString[1..];
-                if (IsWrappedByParentheses(inner)) inner = inner[1..^1];
-                return (T)(object)new WireNot(ParseExpr<WireExpr>(inner)).Clean();
-            }
-
-            // 바깥 괄호 제거
-            if (IsWrappedByParentheses(exprString))
-                return (T)(object)ParseExpr<WireExpr>(exprString[1..^1]);
-
-            // 이항 연산자 처리 (*, +)
-            int depth = 0;
-            for (int i = 0; i < exprString.Length; i++)
-            {
-                char c = exprString[i];
-                if (c == '(') depth++;
-                else if (c == ')') depth--;
-                else if (depth == 0 && (c == and || c == or))
-                {
-                    WireExpr left = ParseExpr<WireExpr>(exprString[0..i]);
-                    WireExpr right = ParseExpr<WireExpr>(exprString[(i + 1)..]);
-                    return (T)(object)(c == and ? new WireAnd(left, right) : new WireOr(left, right));
-                }
-            }
-
-            // 단일 문자
-            if (exprString.Length == 1)
-            {
-                int reservedID = GameManager.Instance.Wire.NameToReservedID(exprString[0]);
-                return (T)(object)GameManager.Instance.Wire.GetReservedWire(reservedID);
-            }
-
-            return default;
-        }
-        // LogicExpr 처리
-        else if (typeof(T) == typeof(LogicExpr))
-        {
-            // 단항 NOT
-            if (exprString[0] == not)
-            {
-                string inner = exprString[1..];
-                if (IsWrappedByParentheses(inner)) inner = inner[1..^1];
-                return (T)(object)new NotExpr(ParseExpr<LogicExpr>(inner)).Clean();
-            }
-
-            // 바깥 괄호 제거
-            if (IsWrappedByParentheses(exprString))
-                return (T)(object)ParseExpr<LogicExpr>(exprString[1..^1]);
-
-            // 이항 연산자 처리 (*, +)
-            int depth = 0;
-            for (int i = 0; i < exprString.Length; i++)
-            {
-                char c = exprString[i];
-                if (c == '(') depth++;
-                else if (c == ')') depth--;
-                else if (depth == 0 && (c == and || c == or))
-                {
-                    LogicExpr left = ParseExpr<LogicExpr>(exprString[0..i]);
-                    LogicExpr right = ParseExpr<LogicExpr>(exprString[(i + 1)..]);
-                    return (T)(object)(c == and ? new AndExpr(left, right) : new OrExpr(left, right));
-                }
-            }
-
-            // 단일 문자/숫자
-            if (exprString.Length == 1)
-            {
-                if (char.IsDigit(exprString[0])) return (T)(object)new ConstantExpr(int.Parse(exprString));
-                else return (T)(object)new VarExpr(exprString);
-            }
-
-            return default;
-        }
-
-        else throw new InvalidDataException("[ParseExpr()] 잘못된 타입");
-    }
-
     #endregion
 
     #region Player Data

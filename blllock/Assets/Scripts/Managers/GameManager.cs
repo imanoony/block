@@ -38,6 +38,21 @@ public static class Utils
     public const int AUDIO_THRESHOLD0 = 2;
     public const int AUDIO_THRESHOLD1 = 3;
     public const int AUDIO_THRESHOLD2 = 4;
+    public const char NOT = '~', AND = '*', OR = '+';
+    public const string PARENS = "()";
+    public static bool IsWrappedByParentheses(string s)
+    {
+        if (s.Length < 2 || s[0] != PARENS[0] || s[^1] != PARENS[1]) return false;
+        int depth = 0;
+        for (int i = 0; i < s.Length; i++)
+        {
+            if (s[i] == PARENS[0]) depth++;
+            else if (s[i] == PARENS[1]) depth--;
+
+            if (i < s.Length - 1 && depth == 0) return false;
+        }
+        return depth == 0;
+    }
     public static void PrintWarning(string message)
     {
         Debug.LogWarning($"<color=orange>[{DateTime.Now:HH:mm:ss}] Warning:</color> {message}");

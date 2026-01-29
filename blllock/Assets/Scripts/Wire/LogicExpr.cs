@@ -1,12 +1,51 @@
 #nullable enable
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 public abstract class LogicExpr
 {
     public abstract override string ToString();
     public abstract override bool Equals(object? obj);
     public abstract override int GetHashCode();
+    public static LogicExpr Parse(string exprString)
+    {
+        if (string.IsNullOrEmpty(exprString)) 
+            throw new FormatException("LogicExpr.Parse()");
+
+        if (exprString[0] == Utils.NOT)
+        {
+            string inner = exprString[1..];
+            if (Utils.IsWrappedByParentheses(inner)) inner = inner[1..^1];
+            return new NotExpr(Parse(inner)).Clean();
+        }
+
+        if (Utils.IsWrappedByParentheses(exprString))
+            return Parse(exprString[1..^1]);
+
+        int depth = 0;
+        for (int i = 0; i < exprString.Length; i++)
+        {
+            char c = exprString[i];
+            if (c == Utils.PARENS[0]) depth++;
+            else if (c == Utils.PARENS[1]) depth--;
+            else if (depth == 0 && (c == Utils.AND || c == Utils.OR))
+            {
+                LogicExpr left = Parse(exprString[0..i]);
+                LogicExpr right = Parse(exprString[(i + 1)..]);
+                return c == Utils.AND ? new AndExpr(left, right) : new OrExpr(left, right);
+            }
+        }
+
+        if (exprString.Length == 1)
+        {
+            if (char.IsDigit(exprString[0])) return new ConstantExpr(int.Parse(exprString));
+            else return new VarExpr(exprString);
+        }
+
+        throw new InvalidDataException("LogicExpr.Parse()");
+    }
 }
 
 public class ConstantExpr : LogicExpr

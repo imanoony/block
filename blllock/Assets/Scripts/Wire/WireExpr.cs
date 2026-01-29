@@ -28,6 +28,43 @@ public abstract class WireExpr
     // WireExpr 내부에 wireExpr가 포함되어 있는지 검사한다.
     // WireExpr 내부를 재귀적으로 탐색한다.
     public abstract bool Contains(WireExpr wireExpr);
+
+    public static WireExpr? Parse(string exprString)
+    {
+        if (string.IsNullOrEmpty(exprString)) return null;
+
+        if (exprString[0] == Utils.NOT) // 단항 not
+        {
+            string inner = exprString[1..];
+            if (Utils.IsWrappedByParentheses(inner)) inner = inner[1..^1];
+            return new WireNot(Parse(inner)).Clean();
+        }
+
+        if (Utils.IsWrappedByParentheses(exprString))
+            return Parse(exprString[1..^1]);
+        
+        int depth = 0;
+        for (int i = 0; i < exprString.Length; i++)
+        {
+            char c = exprString[i];
+            if (c == Utils.PARENS[0]) depth++;
+            else if (c == Utils.PARENS[1]) depth--;
+            else if (depth == 0 && (c == Utils.AND || c == Utils.OR))
+            {
+                WireExpr? left = Parse(exprString[0..i]);
+                WireExpr? right = Parse(exprString[(i + 1)..]);
+                return c == Utils.AND ? new WireAnd(left, right) : new WireOr(left, right);
+            }
+        }
+
+        if (exprString.Length == 1)
+        {
+            int reservedID = GameManager.Instance.Wire.NameToReservedID(exprString[0]);
+            return GameManager.Instance.Wire.GetReservedWire(reservedID);
+        }
+
+        return null;
+    }
 }
 
 public class Wire : WireExpr
