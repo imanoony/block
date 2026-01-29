@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
 
         BlockLibrary = dataParser.ParseBlockData(blockPath);
         ModuleLibrary = dataParser.ParseModuleData(modulePath);
-        StageLibrary = dataParser.ParseStageData(stagePath);
+        StageLibrary = dataParser.LoadStageData(stagePath);
 
         //dataParser.LoadData(ModuleLibrary, StageLibrary);
     }
@@ -146,6 +146,19 @@ public class GameManager : MonoBehaviour
     {
         State = GameState.ModuleSelect;
         StartModule(0);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            List<StageData> stages = new();
+            foreach (var kvp in StageLibrary)
+            {
+                stages.Add(kvp.Value);
+            }
+            dataParser.SaveStageData(stages, stagePath);
+        }
     }
     #endregion
 

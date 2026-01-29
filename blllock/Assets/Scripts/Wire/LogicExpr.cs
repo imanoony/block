@@ -7,6 +7,7 @@ using System.IO;
 public abstract class LogicExpr
 {
     public abstract override string ToString();
+    public abstract string ToDataString();
     public abstract override bool Equals(object? obj);
     public abstract override int GetHashCode();
     public static LogicExpr Parse(string exprString)
@@ -44,7 +45,7 @@ public abstract class LogicExpr
             else return new VarExpr(exprString);
         }
 
-        throw new InvalidDataException("LogicExpr.Parse()");
+        throw new InvalidDataException($"LogicExpr.Parse(): {exprString}");
     }
 }
 
@@ -54,6 +55,7 @@ public class ConstantExpr : LogicExpr
     public ConstantExpr(bool value = false) => Value = value;
     public ConstantExpr(int value) => Value = value != 0;
     public override string ToString() => Value ? "1" : "0";
+    public override string ToDataString() => ToString();
     public override bool Equals(object? obj) => obj is ConstantExpr c && Value == c.Value;
     public override int GetHashCode() => Value.GetHashCode();
 }
@@ -63,6 +65,7 @@ public class VarExpr : LogicExpr
     public string Name;
     public VarExpr(string name) => Name = name;
     public override string ToString() => Name;
+    public override string ToDataString() => ToString();
     public override bool Equals(object? obj) => obj is VarExpr v && Name == v.Name;
     public override int GetHashCode() => Name.GetHashCode();
 }
@@ -84,6 +87,7 @@ public class NotExpr : LogicExpr
             return not.Inner.ToString();
         return $"~({Inner})";
     }
+    public override string ToDataString() => ToString();
     public override bool Equals(object? obj)
     {
         if (obj is not NotExpr n) return false;
@@ -119,6 +123,7 @@ public class AndExpr : LogicExpr
         else if (Operands[1] is VarExpr || Operands[1] is ConstantExpr) return $"({Operands[0]}){Operands[1]}";
         else return $"({Operands[0]})({Operands[1]})";
     }
+    public override string ToDataString() => $"({Operands[0].ToDataString()})*({Operands[1].ToDataString()})";
     public override bool Equals(object? obj)
     {
         if (obj is not AndExpr a) return false;
@@ -154,6 +159,7 @@ public class OrExpr : LogicExpr
         else if (Operands[1] is VarExpr || Operands[1] is ConstantExpr) return $"({Operands[0]})+{Operands[1]}";
         else return $"({Operands[0]})+({Operands[1]})";
     }
+    public override string ToDataString() => ToString();
     public override bool Equals(object? obj)
     {
         if (obj is not OrExpr o) return false;

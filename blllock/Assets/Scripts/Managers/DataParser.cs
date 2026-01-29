@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -48,6 +50,68 @@ public class StageData
     #endregion
 
     #region for JSON
+    public static StageData FromRaw(Raw raw)
+    {
+        StageData stage = new()
+        {
+            ID = raw.ID,
+            Width = raw.Width,
+            Height = raw.Height,
+            Desc = raw.Desc,
+            Inputs = raw.Inputs.Select(
+                io => (
+                    io.pos.ToVector2Int(),
+                    LogicExpr.Parse(io.expr)
+                )
+            ).ToList(),
+            Outputs = raw.Outputs.Select(
+                io => (
+                    io.pos.ToVector2Int(),
+                    LogicExpr.Parse(io.expr)
+                )
+            ).ToList(),
+            Blocks = raw.Blocks,
+            RIndex = raw.RIndex,
+            FIndex = raw.FIndex,
+            HBarriers = raw.HBarriers.Select(pos => pos.ToVector2Int()).ToList(),
+            VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList()
+        };
+        return stage;
+    }
+    public static Raw ToRaw(StageData stage)
+    {
+        Raw raw = new()
+        {
+            ID = stage.ID,
+            Width = stage.Width,
+            Height = stage.Height,
+            Inputs = stage.Inputs.Select(
+                io => new RawIO
+                {
+                    pos = new RawPos { x = io.pos.x, y = io.pos.y },
+                    expr = io.expr.ToDataString()
+                }
+            ).ToList(),
+            Outputs = stage.Outputs.Select(
+                io => new RawIO
+                {
+                    pos = new RawPos { x = io.pos.x, y = io.pos.y },
+                    expr = io.expr.ToDataString()
+                }
+            ).ToList(),
+            Desc = stage.Desc,
+            Blocks = stage.Blocks,
+            RIndex = stage.RIndex,
+            FIndex = stage.FIndex,
+            HBarriers = stage.HBarriers.Select(
+                pos => new RawPos { x = pos.x, y = pos.y }
+            ).ToList(),
+            VBarriers = stage.VBarriers.Select(
+                pos => new RawPos { x = pos.x, y = pos.y }
+            ).ToList()
+        };
+        return raw;
+    }
 
     // JSON 파일로부터 1차 파싱을 위한 보조 클래스들
     [Serializable]
@@ -192,74 +256,7 @@ public class DataParser
         return result;
     }
 
-    public Dictionary<int, StageData> ParseStageData(string filename)
-    {
-        Dictionary<int, StageData> result = new();
-
-        // Resources/Data 폴더 기준 경로, 확장자 제외
-        TextAsset csvAsset = Resources.Load<TextAsset>($"Data/{filename}");
-        if (csvAsset == null)
-        {
-            Utils.PrintError($"CSV 파일을 찾을 수 없음: Data/{filename}");
-            return result;
-        }
-
-        // 기존 File.ReadAllLines 대신
-        string[] lines = csvAsset.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-        if (lines.Length < 2) return result;
-
-        string[] headers = lines[0].Split(',');
-        for (int i = 1; i < lines.Length; i++)
-        {
-            string line = lines[i].Trim();
-            if (string.IsNullOrWhiteSpace(line)) continue;
-
-            string[] values = line.Split(',');
-            StageData stage = new();
-
-            for (int j = 0; j < headers.Length && j < values.Length; j++)
-            {
-                if (values[j].Length == 0) continue;
-                string header = headers[j].ToLower();
-
-                if (header == ID.ToLower()) stage.ID = int.Parse(values[j]);
-                else if (header == Width.ToLower()) stage.Width = int.Parse(values[j]);
-                else if (header == Height.ToLower()) stage.Height = int.Parse(values[j]);
-                else if (header == Desc.ToLower()) stage.Desc = values[j];
-                else if (header == Inputs.ToLower() || header == Outputs.ToLower())
-                {
-                    List<string> items = values[j].Split(';').ToList<string>();
-                    List<(Vector2Int, LogicExpr)> sources = new();
-
-                    foreach (string item in items)
-                    {
-                        string[] splitted = item.Split(':');
-                        Vector2Int pos = ParsePos(splitted[0]);
-                        LogicExpr expr = LogicExpr.Parse(splitted[^1]);
-
-                        sources.Add((pos, expr));
-                    }
-
-                    if (header == Inputs.ToLower()) stage.Inputs = sources;
-                    else stage.Outputs = sources;
-                }
-                else if (header == Blocks.ToLower() || header == Rotate.ToLower() || header == Flip.ToLower())
-                {
-                    List<string> items = values[j].Split(';').ToList<string>();
-                    List<int> parsed = items.Select(int.Parse).ToList();
-
-                    if (header == Blocks.ToLower()) stage.Blocks = parsed;
-                    else if (header == Rotate.ToLower()) stage.RIndex = parsed;
-                    else stage.FIndex = parsed;
-                }
-            }
-
-            result[stage.ID] = stage;
-        }
-        return result;
-    }
-
-    public Dictionary<int, StageData> ParseStageDataJSON(string filename)
+    public Dictionary<int, StageData> LoadStageData(string filename)
     {
         int i;
         StageData.RawStages rawStages;
@@ -280,39 +277,36 @@ public class DataParser
         for (i = 0; i < rawStages.Stages.Count; i++)
         {
             raw = rawStages.Stages[i];
-            stage = new()
-            {
-                ID = raw.ID,
-                Width = raw.Width,
-                Height = raw.Height,
-                Desc = raw.Desc,
-                Inputs = raw.Inputs.Select(
-                    io => (
-                        io.pos.ToVector2Int(),
-                        LogicExpr.Parse(io.expr)
-                    )
-                ).ToList(),
-                Outputs = raw.Outputs.Select(
-                    io => (
-                        io.pos.ToVector2Int(),
-                        LogicExpr.Parse(io.expr)
-                    )
-                ).ToList(),
-                Blocks = raw.Blocks,
-                RIndex = raw.RIndex,
-                FIndex = raw.FIndex,
-                HBarriers = raw.HBarriers.Select(pos => pos.ToVector2Int()).ToList(),
-                VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList()
-            };
+            stage = StageData.FromRaw(raw);
             result[stage.ID] = stage;
         }
         
         return result;
     }
 
-    public void SaveStageData(string filename)
+    public void SaveStageData(List<StageData> stages, string filename)
     {
-        
+#if UNITY_EDITOR
+        int i;
+        StageData.RawStages rawStages = new();
+        List<StageData.Raw> rawList = new();
+        StageData.Raw raw;
+        StageData stage;
+        string path, json;
+
+        for (i = 0; i < stages.Count; i++)
+        {
+            stage = stages[i];
+            raw = StageData.ToRaw(stage);
+            rawList.Add(raw);
+        }
+        rawStages.Stages = rawList;
+
+        json = JsonUtility.ToJson(rawStages, true);
+        path = Path.Combine(Application.dataPath, $"Resources/Data/{filename}.json");
+        File.WriteAllText(path, json);
+        AssetDatabase.Refresh();
+#endif
     }
 
     // CSV(,) 고려 (x.y)의 형태로 input 받는다.
