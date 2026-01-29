@@ -41,6 +41,38 @@ public class StageData
     public List<int> Blocks = new();
     public List<int> RIndex = new(), FIndex = new(); // Rotate/Flip 가능한 Blocks 인덱스 리스트
     #endregion
+
+    #region Barriers
+    public List<Vector2Int> HBarriers = new(); // (Grid 좌표계, Tile 좌표계)를 사용한다.
+    public List<Vector2Int> VBarriers = new(); // (Tile 좌표계, Grid 좌표계)를 사용한다.
+    #endregion
+
+    #region for JSON
+
+    // JSON 파일로부터 1차 파싱을 위한 보조 클래스들
+    [Serializable]
+    public class Raw
+    {
+        public int ID, Width, Height;
+        public List<RawIO> Inputs, Outputs;
+        public List<int> Blocks;
+        public List<int> RIndex, FIndex;
+        public List<RawPos> HBarriers, VBarriers;
+    }
+    [Serializable]
+    public class RawIO
+    {
+        public RawPos pos;
+        public string expr;
+    }
+    [Serializable]
+    public class RawPos
+    {
+        public int x;
+        public int y;
+        public Vector2Int ToVector2Int() => new(x, y);
+    }
+    #endregion
 }
 
 
