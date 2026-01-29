@@ -97,6 +97,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public HashSet<Vector2Int> HBarriers { get; private set; } = new();
+    public HashSet<Vector2Int> VBarriers { get; private set; } = new();
+
     public void InitStage(int id) => InitStage(GameManager.Instance.StageLibrary[id]);
 
     public void InitStage(StageData stage)
@@ -125,10 +128,17 @@ public class GridManager : MonoBehaviour
             for (int y = 0; y < width; y++)
                 Tiles[x, y] = new Tile(new(x, y));
 
+        HBarriers = stage.HBarriers.ToHashSet();
+        VBarriers = stage.VBarriers.ToHashSet();
+
         // 스테이지에 해당하는 타일 배치
         // 스테이지에 해당하는 블록 배치
         TilePlacer.PlaceTiles(width, height);
         BlockPlacer.PlaceBlocks(stage);
+
+        // TODO:
+        // 스테이지에 해당하는 가로 배리어 배치
+        // 스테이지에 해당하는 세로 배리어 배치
     }
 
     public void RemoveCurrentStage()
@@ -141,18 +151,6 @@ public class GridManager : MonoBehaviour
 
         TilePlacer.RemoveTiles();
         BlockPlacer.RemoveBlocks();
-    }
-
-    private bool IsEmptyTile(int x, int y)
-    {
-        if (Tiles == null) return false;
-        if (!IsInTileBounds(x, y)) return false;
-        return Tiles[x, y].Type == TileType.Empty;
-    }
-    private bool IsInTileBounds(int x, int y)
-    {
-        if (Tiles == null) return false;
-        return x >= 0 && y >= 0 && x < Tiles.GetLength(0) && y < Tiles.GetLength(1);
     }
     public LogicExpr? GetGridExpr(int x, int y)
     {
@@ -255,14 +253,50 @@ public class GridManager : MonoBehaviour
 
     public bool IsValidPos(BlockData block, Vector2Int baseTile)
     {
-        List<Vector2Int> offsets = block.Tiles;
+        HashSet<Vector2Int> offsets = block.Tiles.ToHashSet();
         foreach (Vector2Int offset in offsets)
         {
             if (!IsInTileBounds(baseTile.x + offset.x, baseTile.y + offset.y)) return false;
             if (!IsEmptyTile(baseTile.x + offset.x, baseTile.y + offset.y)) return false;
+
+            // barrier checking
+            if (offsets.Contains(new(offset.x, offset.y + 1)))
+                if (IsHBarriered(offset.x, offset.y, offset.y + 1)) return false;
+            if (offsets.Contains(new(offset.x + 1, offset.y)))
+                if (IsVBarriered(offset.y, offset.x, offset.x + 1)) return false;
         }
 
         return true;
+    }
+    
+    private bool IsEmptyTile(int x, int y)
+    {
+        if (Tiles == null) return false;
+        if (!IsInTileBounds(x, y)) return false;
+        return Tiles[x, y].Type == TileType.Empty;
+    }
+    private bool IsInTileBounds(int x, int y)
+    {
+        if (Tiles == null) return false;
+        return x >= 0 && y >= 0 && x < Tiles.GetLength(0) && y < Tiles.GetLength(1);
+    }
+
+    // is horizontally barriered?
+    // barrier가 가로로 긴 상태, 즉 세로로 이어진 두 칸이 
+    // 막혀있다면 false, 그렇지 않다면 true.
+    private bool IsHBarriered(int x, int y1, int y2)
+    {
+        int y = y1 < y2 ? y1 : y2;
+        return HBarriers.Contains(new(x, y));
+    }
+
+    // is vertically barriered?
+    // barrier가 세로로 긴 상태, 즉 가로로 이어진 두 칸이
+    // 막혀있다면 false, 그렇지 않다면 true.
+    private bool IsVBarriered(int y, int x1, int x2)
+    {
+        int x = x1 < x2 ? x1 : x2;
+        return VBarriers.Contains(new(x, y));
     }
 
     // 블록의 포트를 모두 Compatible -> AddToDict/AddToLogic 한다.
