@@ -10,8 +10,8 @@ using UnityEngine.Rendering.Universal;
 // Tilemap-based
 public class TilePlacer : MonoBehaviour
 {
-
     [Header("Tiles")]
+    
     [SerializeField] private Tilemap tileTilemap;
     [SerializeField] private TileBase tileCenter;
     [SerializeField] private TileBase tileLeft;
@@ -95,13 +95,7 @@ public class TilePlacer : MonoBehaviour
         var rb = tileWall.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Static; // 움직이지 않는 벽
     }
-    #endregion
 
-    #region Barrier Placement
-
-    #endregion
-
-    #region Camera Setting
     [Header("Camera")]
     // Base Position, Offset, Scale 모두 포함해서 카메라 세팅
     // 카메라 세팅 이후 바운더리 수정
@@ -197,9 +191,8 @@ public class TilePlacer : MonoBehaviour
 
         return wall;
     }
-    #endregion
 
-    #region Grid Placement
+
     [Header("Grid")]
     [SerializeField] private GameObject gridParent;
     [SerializeField] private GameObject gridPrefab;
@@ -258,6 +251,34 @@ public class TilePlacer : MonoBehaviour
         Vector3 topLeft = (Vector3)GetTileTopLeftWorld(x, y);
         topLeft += new Vector3(tileTilemap.cellSize.x * width / 2f, -tileTilemap.cellSize.y * height / 2f, 0);
         return topLeft += new Vector3(tileTilemap.cellSize.x / 8f, -tileTilemap.cellSize.y / 8f, 0);
+    }
+    #endregion
+
+    #region Barrier Placement
+    [Header("Barriers")]
+    [SerializeField] private Tilemap HBarrierTilemap;
+    [SerializeField] private Tilemap VBarrierTilemap;
+    [SerializeField] private TileBase HB;
+    [SerializeField] private TileBase VBstart;
+    [SerializeField] private TileBase VBmiddle;
+    [SerializeField] private TileBase VBend;
+    public void PlaceHBarriers(HashSet<Vector2Int> HBarriers)
+    {
+        foreach (Vector2Int pos in HBarriers)
+        {
+            HBarrierTilemap.SetTile(TileToCell(pos.x, pos.y), HB);
+        }
+    }
+    public void PlaceVBarriers(HashSet<Vector2Int> VBarriers)
+    {
+        foreach (Vector2Int pos in VBarriers)
+        {
+            VBarrierTilemap.SetTile(TileToCell(pos.x, pos.y), VBstart);
+            if (VBarriers.Contains(new(pos.x - 1, pos.y)))
+                VBarrierTilemap.SetTile(TileToCell(pos.x, pos.y), VBmiddle);
+            if (!VBarriers.Contains(new(pos.x + 1, pos.y)))
+                VBarrierTilemap.SetTile(TileToCell(pos.x + 1, pos.y), VBend);
+        }
     }
     #endregion
 }

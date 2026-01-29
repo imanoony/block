@@ -136,9 +136,10 @@ public class GridManager : MonoBehaviour
         TilePlacer.PlaceTiles(width, height);
         BlockPlacer.PlaceBlocks(stage);
 
-        // TODO:
         // 스테이지에 해당하는 가로 배리어 배치
         // 스테이지에 해당하는 세로 배리어 배치
+        TilePlacer.PlaceHBarriers(HBarriers);
+        TilePlacer.PlaceVBarriers(VBarriers);
     }
 
     public void RemoveCurrentStage()
@@ -260,10 +261,22 @@ public class GridManager : MonoBehaviour
             if (!IsEmptyTile(baseTile.x + offset.x, baseTile.y + offset.y)) return false;
 
             // barrier checking
-            if (offsets.Contains(new(offset.x, offset.y + 1)))
-                if (IsHBarriered(offset.x, offset.y, offset.y + 1)) return false;
-            if (offsets.Contains(new(offset.x + 1, offset.y)))
-                if (IsVBarriered(offset.y, offset.x, offset.x + 1)) return false;
+            if (offsets.Contains(new(offset.x - 1, offset.y)))
+                if (
+                    IsHBarriered(
+                        baseTile.y + offset.y, 
+                        baseTile.x + offset.x, 
+                        baseTile.x + offset.x - 1
+                    )
+                ) return false;
+            if (offsets.Contains(new(offset.x, offset.y - 1)))
+                if (
+                    IsVBarriered(
+                        baseTile.x + offset.x,
+                        baseTile.y + offset.y,
+                        baseTile.y + offset.y - 1
+                    )
+                ) return false;
         }
 
         return true;
@@ -284,18 +297,18 @@ public class GridManager : MonoBehaviour
     // is horizontally barriered?
     // barrier가 가로로 긴 상태, 즉 세로로 이어진 두 칸이 
     // 막혀있다면 false, 그렇지 않다면 true.
-    private bool IsHBarriered(int x, int y1, int y2)
+    private bool IsHBarriered(int y, int x1, int x2)
     {
-        int y = y1 < y2 ? y1 : y2;
+        int x = x1 > x2 ? x1 : x2;
         return HBarriers.Contains(new(x, y));
     }
 
     // is vertically barriered?
     // barrier가 세로로 긴 상태, 즉 가로로 이어진 두 칸이
     // 막혀있다면 false, 그렇지 않다면 true.
-    private bool IsVBarriered(int y, int x1, int x2)
+    private bool IsVBarriered(int x, int y1, int y2)
     {
-        int x = x1 < x2 ? x1 : x2;
+        int y = y1 > y2 ? y1 : y2;
         return VBarriers.Contains(new(x, y));
     }
 
