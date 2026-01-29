@@ -1,12 +1,52 @@
 #nullable enable
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 public abstract class LogicExpr
 {
     public abstract override string ToString();
+    public abstract string ToDataString();
     public abstract override bool Equals(object? obj);
     public abstract override int GetHashCode();
+    public static LogicExpr Parse(string exprString)
+    {
+        if (string.IsNullOrEmpty(exprString)) 
+            throw new FormatException("LogicExpr.Parse()");
+
+        if (exprString[0] == Utils.NOT)
+        {
+            string inner = exprString[1..];
+            if (Utils.IsWrappedByParentheses(inner)) inner = inner[1..^1];
+            return new NotExpr(Parse(inner)).Clean();
+        }
+
+        if (Utils.IsWrappedByParentheses(exprString))
+            return Parse(exprString[1..^1]);
+
+        int depth = 0;
+        for (int i = 0; i < exprString.Length; i++)
+        {
+            char c = exprString[i];
+            if (c == Utils.PARENS[0]) depth++;
+            else if (c == Utils.PARENS[1]) depth--;
+            else if (depth == 0 && (c == Utils.AND || c == Utils.OR))
+            {
+                LogicExpr left = Parse(exprString[0..i]);
+                LogicExpr right = Parse(exprString[(i + 1)..]);
+                return c == Utils.AND ? new AndExpr(left, right) : new OrExpr(left, right);
+            }
+        }
+
+        if (exprString.Length == 1)
+        {
+            if (char.IsDigit(exprString[0])) return new ConstantExpr(int.Parse(exprString));
+            else return new VarExpr(exprString);
+        }
+
+        throw new InvalidDataException($"LogicExpr.Parse(): {exprString}");
+    }
 }
 
 public class ConstantExpr : LogicExpr
@@ -15,6 +55,7 @@ public class ConstantExpr : LogicExpr
     public ConstantExpr(bool value = false) => Value = value;
     public ConstantExpr(int value) => Value = value != 0;
     public override string ToString() => Value ? "1" : "0";
+    public override string ToDataString() => ToString();
     public override bool Equals(object? obj) => obj is ConstantExpr c && Value == c.Value;
     public override int GetHashCode() => Value.GetHashCode();
 }
@@ -24,6 +65,7 @@ public class VarExpr : LogicExpr
     public string Name;
     public VarExpr(string name) => Name = name;
     public override string ToString() => Name;
+    public override string ToDataString() => ToString();
     public override bool Equals(object? obj) => obj is VarExpr v && Name == v.Name;
     public override int GetHashCode() => Name.GetHashCode();
 }
@@ -45,6 +87,7 @@ public class NotExpr : LogicExpr
             return not.Inner.ToString();
         return $"~({Inner})";
     }
+    public override string ToDataString() => ToString();
     public override bool Equals(object? obj)
     {
         if (obj is not NotExpr n) return false;
@@ -80,6 +123,7 @@ public class AndExpr : LogicExpr
         else if (Operands[1] is VarExpr || Operands[1] is ConstantExpr) return $"({Operands[0]}){Operands[1]}";
         else return $"({Operands[0]})({Operands[1]})";
     }
+    public override string ToDataString() => $"({Operands[0].ToDataString()})*({Operands[1].ToDataString()})";
     public override bool Equals(object? obj)
     {
         if (obj is not AndExpr a) return false;
@@ -115,6 +159,7 @@ public class OrExpr : LogicExpr
         else if (Operands[1] is VarExpr || Operands[1] is ConstantExpr) return $"({Operands[0]})+{Operands[1]}";
         else return $"({Operands[0]})+({Operands[1]})";
     }
+    public override string ToDataString() => ToString();
     public override bool Equals(object? obj)
     {
         if (obj is not OrExpr o) return false;
