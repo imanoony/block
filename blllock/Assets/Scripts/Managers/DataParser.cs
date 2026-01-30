@@ -42,6 +42,7 @@ public class StageData
     #region Blocks
     public List<int> Blocks = new();
     public List<int> RIndex = new(), FIndex = new(); // Rotate/Flip 가능한 Blocks 인덱스 리스트
+    public List<int> SIndex = new(); // Spike Blocks 인덱스 리스트
     #endregion
 
     #region Barriers
@@ -73,6 +74,7 @@ public class StageData
             Blocks = raw.Blocks,
             RIndex = raw.RIndex,
             FIndex = raw.FIndex,
+            SIndex = raw.SIndex,
             HBarriers = raw.HBarriers.Select(pos => pos.ToVector2Int()).ToList(),
             VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList()
         };
@@ -103,6 +105,7 @@ public class StageData
             Blocks = stage.Blocks,
             RIndex = stage.RIndex,
             FIndex = stage.FIndex,
+            SIndex = stage.SIndex,
             HBarriers = stage.HBarriers.Select(
                 pos => new RawPos { x = pos.x, y = pos.y }
             ).ToList(),
@@ -127,6 +130,7 @@ public class StageData
         public string Desc;
         public List<int> Blocks = new();
         public List<int> RIndex = new(), FIndex = new();
+        public List<int> SIndex = new();
         public List<RawPos> HBarriers = new(), VBarriers = new();
     }
     [Serializable]

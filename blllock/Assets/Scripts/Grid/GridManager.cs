@@ -200,6 +200,12 @@ public class GridManager : MonoBehaviour
         List<Vector2Int> tileOffsets = block.Tiles;
         foreach (Vector2Int offset in tileOffsets)
             Tiles![offset.x + baseTile.x, offset.y + baseTile.y].SetType(TileType.Occupied);
+        List<Vector2Int> spikeOffsets = block.HasSpike ? block.SpikeTiles : new();
+        foreach (Vector2Int spike in spikeOffsets)
+        {
+            if (!IsInTileBounds(baseTile.x + spike.x, baseTile.y + spike.y)) continue;
+            Tiles![spike.x + baseTile.x, spike.y + baseTile.y].SetType(TileType.Occupied);
+        }
 
         if (!IsValidPort(block, baseTile, GameManager.Instance.Wire)) return false;
 
@@ -228,6 +234,12 @@ public class GridManager : MonoBehaviour
         List<Vector2Int> tileOffsets = block.Tiles;
         foreach (Vector2Int offset in tileOffsets)
             Tiles![offset.x + baseTile.x, offset.y + baseTile.y].SetType(TileType.Empty);
+        List<Vector2Int> spikeOffsets = block.HasSpike ? block.SpikeTiles : new();
+        foreach (Vector2Int spike in spikeOffsets)
+        {
+            if (!IsInTileBounds(baseTile.x + spike.x, baseTile.y + spike.y)) continue;
+            Tiles![spike.x + baseTile.x, spike.y + baseTile.y].SetType(TileType.Empty);
+        }
 
         if (!valid) return;
 
@@ -259,7 +271,18 @@ public class GridManager : MonoBehaviour
         {
             if (!IsInTileBounds(baseTile.x + offset.x, baseTile.y + offset.y)) return false;
             if (!IsEmptyTile(baseTile.x + offset.x, baseTile.y + offset.y)) return false;
+        }
 
+        HashSet<Vector2Int> spikes = block.HasSpike ? block.SpikeTiles.ToHashSet() : new();
+        foreach (Vector2Int spike in spikes)
+        {
+            if (!IsInTileBounds(baseTile.x + spike.x, baseTile.y + spike.y)) continue;
+            if (!IsEmptyTile(baseTile.x + spike.x, baseTile.y + spike.y)) return false;
+        }
+
+        offsets.UnionWith(spikes);
+        foreach (Vector2Int offset in offsets)
+        {
             // barrier checking
             if (offsets.Contains(new(offset.x - 1, offset.y)))
                 if (

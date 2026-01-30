@@ -13,7 +13,14 @@ public class BlockInstance : MonoBehaviour
 
     public bool CanRotate { get; private set; } = false;
     public bool CanFlip { get; private set; } = false;
-    public void Initialize(BlockData blockData, Sprite sprite, bool canRotate = false, bool canFlip = false)
+    public bool HasSpike { get; private set; } = false;
+    public void Initialize(
+        BlockData blockData, 
+        Sprite sprite, 
+        bool canRotate = false, 
+        bool canFlip = false,
+        bool hasSpike = false
+    )
     {
         if (blockData == null) { Utils.PrintError("BlockData는 Null일 수 없음."); return; }
         this.blockData = blockData;
@@ -24,6 +31,9 @@ public class BlockInstance : MonoBehaviour
         if (CanRotate) color = Utils.CodeToColor(Utils.GREEN);
         else if (CanFlip) color = Utils.CodeToColor(Utils.YELLOW);
         else color = Color.white;
+        
+        HasSpike = hasSpike;
+        if (HasSpike) this.blockData.SetSpike();
 
         gm = GameManager.Instance.Grid;
 
