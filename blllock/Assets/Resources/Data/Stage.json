@@ -28,6 +28,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [
                 {
                     "x": 1,
@@ -74,6 +75,9 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [
+                0
+            ],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -106,6 +110,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -140,6 +145,7 @@
                 0
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -187,6 +193,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -216,7 +223,7 @@
                         "x": 1,
                         "y": 5
                     },
-                    "expr": "~(Y+X)"
+                    "expr": "~((Y)+(X))"
                 }
             ],
             "Desc": "DEMO - CIRCUIT #6",
@@ -229,6 +236,7 @@
                 1
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -258,7 +266,7 @@
                         "x": 2,
                         "y": 5
                     },
-                    "expr": "(~X)+Y"
+                    "expr": "(~X)+(Y)"
                 }
             ],
             "Desc": "DEMO - CIRCUIT #7",
@@ -272,6 +280,7 @@
                 1
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -315,6 +324,7 @@
             "FIndex": [
                 2
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -344,7 +354,7 @@
                         "x": 1,
                         "y": 5
                     },
-                    "expr": "X+Y"
+                    "expr": "(X)+(Y)"
                 }
             ],
             "Desc": "DEMO - CIRCUIT #9",
@@ -358,6 +368,7 @@
                 1
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -410,6 +421,7 @@
             "FIndex": [
                 1
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -446,7 +458,7 @@
                         "x": 4,
                         "y": 1
                     },
-                    "expr": "X+Y"
+                    "expr": "(X)+(Y)"
                 }
             ],
             "Desc": "DEMO - FINAL CIRCUIT",
@@ -467,6 +479,7 @@
             "FIndex": [
                 5
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -526,6 +539,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -557,6 +571,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -589,6 +604,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -621,6 +637,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -655,6 +672,7 @@
                 0
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -702,6 +720,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -731,7 +750,7 @@
                         "x": 3,
                         "y": 2
                     },
-                    "expr": "X+Y"
+                    "expr": "(X)+(Y)"
                 }
             ],
             "Desc": "CIRCUIT 0-#06",
@@ -741,6 +760,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -770,7 +790,7 @@
                         "x": 1,
                         "y": 5
                     },
-                    "expr": "X+Y"
+                    "expr": "(X)+(Y)"
                 }
             ],
             "Desc": "CIRCUIT 0-#07",
@@ -784,6 +804,7 @@
                 1
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -827,6 +848,7 @@
             "FIndex": [
                 2
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -859,6 +881,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -911,6 +934,7 @@
             "FIndex": [
                 1
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -940,7 +964,7 @@
                         "x": 3,
                         "y": 5
                     },
-                    "expr": "(~X)+Y"
+                    "expr": "(~X)+(Y)"
                 }
             ],
             "Desc": "CIRCUIT 1-#01",
@@ -951,6 +975,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -985,6 +1010,7 @@
                 0
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1014,7 +1040,7 @@
                         "x": 1,
                         "y": 5
                     },
-                    "expr": "~(Y+X)"
+                    "expr": "~((Y)+(X))"
                 }
             ],
             "Desc": "CIRCUIT 1-#03",
@@ -1027,6 +1053,7 @@
                 1
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1056,7 +1083,7 @@
                         "x": 2,
                         "y": 5
                     },
-                    "expr": "(~X)+Y"
+                    "expr": "(~X)+(Y)"
                 }
             ],
             "Desc": "CIRCUIT 1-#04",
@@ -1070,6 +1097,7 @@
                 1
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1106,6 +1134,7 @@
                 2
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1146,6 +1175,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1194,6 +1224,7 @@
             ],
             "RIndex": [],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1223,14 +1254,14 @@
                         "x": 1,
                         "y": 4
                     },
-                    "expr": "~(X*Y)"
+                    "expr": "~((X)*(Y))"
                 },
                 {
                     "pos": {
                         "x": 1,
                         "y": 6
                     },
-                    "expr": "X*Y"
+                    "expr": "(X)*(Y)"
                 }
             ],
             "Desc": "CIRCUIT 1-#08",
@@ -1244,6 +1275,7 @@
                 2
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1257,7 +1289,7 @@
                         "x": 1,
                         "y": 1
                     },
-                    "expr": "X+Y"
+                    "expr": "(X)+(Y)"
                 }
             ],
             "Outputs": [
@@ -1266,7 +1298,7 @@
                         "x": 6,
                         "y": 1
                     },
-                    "expr": "X+(~Y)"
+                    "expr": "(X)+(~Y)"
                 },
                 {
                     "pos": {
@@ -1296,6 +1328,7 @@
                 4
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1331,6 +1364,7 @@
             "FIndex": [
                 2
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1344,7 +1378,7 @@
                         "x": 1,
                         "y": 2
                     },
-                    "expr": "X+Y"
+                    "expr": "(X)+(Y)"
                 }
             ],
             "Outputs": [
@@ -1368,6 +1402,7 @@
             "FIndex": [
                 0
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1410,6 +1445,7 @@
             "FIndex": [
                 2
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1461,6 +1497,7 @@
             "FIndex": [
                 2
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1474,7 +1511,7 @@
                         "x": 1,
                         "y": 7
                     },
-                    "expr": "X*Y"
+                    "expr": "(X)*(Y)"
                 }
             ],
             "Outputs": [
@@ -1504,6 +1541,7 @@
             "FIndex": [
                 1
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1558,6 +1596,7 @@
             "FIndex": [
                 3
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1597,6 +1636,7 @@
             "FIndex": [
                 3
             ],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         },
@@ -1626,7 +1666,7 @@
                         "x": 5,
                         "y": 0
                     },
-                    "expr": "Y+X"
+                    "expr": "(Y)+(X)"
                 }
             ],
             "Desc": "CIRCUIT 2-FINAL",
@@ -1641,6 +1681,7 @@
                 4
             ],
             "FIndex": [],
+            "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
         }

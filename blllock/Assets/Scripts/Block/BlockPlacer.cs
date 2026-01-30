@@ -5,6 +5,7 @@ public class BlockPlacer : MonoBehaviour
 {
     [SerializeField] private GameObject blockPrefab;
     [SerializeField] private Sprite[] blockSprites;
+    [SerializeField] private Sprite[] sblockSprites;
 
     private List<GameObject> blockInstances = null;
     public void RemoveBlocks()
@@ -26,28 +27,31 @@ public class BlockPlacer : MonoBehaviour
         // 사용할 세 리스트 미리 정리하기
         List<int> blocks = stage.Blocks;
         List<int> rotate = stage.RIndex, flip = stage.FIndex;
+        List<int> spike = stage.SIndex;
 
-        List<(int, bool, bool)> triples = new();
+        List<(int, bool, bool, bool)> quad = new();
         for (int i = 0; i < blocks.Count; i++)
         {
             bool r = rotate.Contains(i);
             bool f = flip.Contains(i);
-            triples.Add((blocks[i], r, f));
+            bool s = spike.Contains(i);
+            quad.Add((blocks[i], r, f, s));
         }
-        triples.Shuffle();
+        quad.Shuffle();
 
-        for (int i = 0; i < triples.Count; i++)
+        for (int i = 0; i < quad.Count; i++)
         {
-            if (i < triples.Count / 2) blockInstances.Add(PlaceBlock(triples[i].Item1, true, triples[i].Item2, triples[i].Item3));
-            else blockInstances.Add(PlaceBlock(triples[i].Item1, false, triples[i].Item2, triples[i].Item3));
+            if (i < quad.Count / 2) blockInstances.Add(PlaceBlock(quad[i].Item1, true, quad[i].Item2, quad[i].Item3, quad[i].Item4));
+            else blockInstances.Add(PlaceBlock(quad[i].Item1, false, quad[i].Item2, quad[i].Item3, quad[i].Item4));
         }
     }
 
-    private GameObject PlaceBlock(int id, bool isLeft, bool canRotate, bool canFlip)
+    private GameObject PlaceBlock(int id, bool isLeft, bool canRotate, bool canFlip, bool hasSpike)
     {
         BlockData blockData = new BlockData(GameManager.Instance.BlockLibrary[id]);
         GameObject instance = Instantiate(blockPrefab, GetPlacedWorld(isLeft), Quaternion.identity);
-        instance.GetComponent<BlockInstance>().Initialize(blockData, blockSprites[id], canRotate, canFlip);
+        Sprite sprite = hasSpike ? sblockSprites[id] : blockSprites[id];
+        instance.GetComponent<BlockInstance>().Initialize(blockData, sprite, canRotate, canFlip, hasSpike);
 
         return instance;
     }

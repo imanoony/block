@@ -87,7 +87,14 @@ public class NotExpr : LogicExpr
             return not.Inner.ToString();
         return $"~({Inner})";
     }
-    public override string ToDataString() => ToString();
+    public override string ToDataString()
+    {
+        if (Inner is VarExpr || Inner is ConstantExpr)
+            return $"~{Inner}";
+        else if (Inner is NotExpr not)
+            return not.Inner.ToDataString();
+        return $"~({Inner.ToDataString()})";
+    }
     public override bool Equals(object? obj)
     {
         if (obj is not NotExpr n) return false;
@@ -159,7 +166,7 @@ public class OrExpr : LogicExpr
         else if (Operands[1] is VarExpr || Operands[1] is ConstantExpr) return $"({Operands[0]})+{Operands[1]}";
         else return $"({Operands[0]})+({Operands[1]})";
     }
-    public override string ToDataString() => ToString();
+    public override string ToDataString() => $"({Operands[0].ToDataString()})+({Operands[1].ToDataString()})";
     public override bool Equals(object? obj)
     {
         if (obj is not OrExpr o) return false;
