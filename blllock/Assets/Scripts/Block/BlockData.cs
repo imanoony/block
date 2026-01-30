@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum Rotate { Null = -1, None = 0, Rotate90 = 90, Rotate180 = 180, Rotate270 = 270 }
@@ -16,6 +17,7 @@ public class BlockData
         Ports = new(blockData.Ports);
         BlockRotate = Rotate.None;
         BlockFlipX = false;
+        HasSpike = false;
     }
 
     #region ID & Shape
@@ -43,8 +45,15 @@ public class BlockData
     public Rotate BlockRotate { get; private set; } = Rotate.None;
     public Rotate Rotation()
     {
-        for (int i = 0; i < Tiles.Count; i++) Tiles[i] = new(Tiles[i].y, GetHeight() - 1 - Tiles[i].x);
-        for (int i = 0; i < Grids.Count; i++) Grids[i] = new(Grids[i].y, GetHeight() - Grids[i].x);
+        int i;
+        for (i = 0; i < Tiles.Count; i++) Tiles[i] = new(Tiles[i].y, GetHeight() - 1 - Tiles[i].x);
+        for (i = 0; i < Grids.Count; i++) Grids[i] = new(Grids[i].y, GetHeight() - Grids[i].x);
+
+        if (HasSpike)
+        {
+            for (i = 0; i < SpikeTiles.Count; i++)
+                SpikeTiles[i] = new(SpikeTiles[i].y, GetHeight() - 1 - SpikeTiles[i].x);
+        }
 
         if (BlockRotate == Rotate.Rotate270) BlockRotate = Rotate.None;
         else BlockRotate += (int)Rotate.Rotate90;
@@ -53,11 +62,43 @@ public class BlockData
     public bool BlockFlipX { get; private set; } = false;
     public bool FlipX()
     {
-        for (int i = 0; i < Tiles.Count; i++) Tiles[i] = new(Tiles[i].x, GetWidth() - 1 - Tiles[i].y);
-        for (int i = 0; i < Grids.Count; i++) Grids[i] = new(Grids[i].x, GetWidth() - Grids[i].y);
+        int i;
+        for (i = 0; i < Tiles.Count; i++) Tiles[i] = new(Tiles[i].x, GetWidth() - 1 - Tiles[i].y);
+        for (i = 0; i < Grids.Count; i++) Grids[i] = new(Grids[i].x, GetWidth() - Grids[i].y);
+
+        if (HasSpike)
+        {
+            for (i = 0; i < SpikeTiles.Count; i++)
+                SpikeTiles[i] = new(SpikeTiles[i].x, GetWidth() - 1 - SpikeTiles[i].y);
+        }
 
         BlockFlipX = !BlockFlipX;
         return BlockFlipX;
+    }
+
+    public bool HasSpike { get; private set; } = false;
+    private List<Vector2Int> _spikeTiles;
+    public List<Vector2Int> SpikeTiles;
+    public void SetSpike()
+    {
+        HashSet<Vector2Int> tileset = _tiles.ToHashSet();
+        HashSet<Vector2Int> spikeset = new();
+
+        foreach (Vector2Int pos in tileset)
+        {
+            if (!tileset.Contains(new(pos.x - 1, pos.y)))
+                spikeset.Add(new(pos.x - 1, pos.y));
+            if (!tileset.Contains(new(pos.x + 1, pos.y)))
+                spikeset.Add(new(pos.x + 1, pos.y));
+            if (!tileset.Contains(new(pos.x, pos.y - 1)))
+                spikeset.Add(new(pos.x, pos.y - 1));
+            if (!tileset.Contains(new(pos.x, pos.y + 1)))
+                spikeset.Add(new(pos.x, pos.y + 1));
+        }
+
+        _spikeTiles = spikeset.ToList();
+        SpikeTiles = _spikeTiles;
+        HasSpike = true;
     }
     #endregion
 
