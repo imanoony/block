@@ -1,15 +1,67 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
-using UnityEngine.Assertions;
 using UnityEngine.Tilemaps;
-using Unity.VisualScripting;
 using UnityEngine.Rendering.Universal;
 
 
 // Tilemap-based
 public class TilePlacer : MonoBehaviour
-{
+{   
+    // 이 영역은 일단 임시, 나중에 다른 곳으로 이관될 가능성 높음.
+    [Header("Background")]
+    [SerializeField] private Tilemap backgroundTilemap;
+    [SerializeField] private List<TileBase> backgroundTiles;
+    [SerializeField] private int backgroundTileWidth, backgroundTileHeight;
+    [ContextMenu("Place Background")]
+    public void PlaceBackground()
+    {
+        if (backgroundTiles == null || backgroundTiles.Count < 2)
+        {
+            Debug.LogWarning("backgroundTiles에 최소 2개의 타일이 필요합니다.");
+            return;
+        }
+
+        backgroundTilemap.ClearAllTiles();
+
+        // 짝수 / 홀수 인덱스 타일 분리
+        List<TileBase> evenTiles = new();
+        List<TileBase> oddTiles = new();
+
+        for (int i = 0; i < backgroundTiles.Count; i++)
+        {
+            if (i % 2 == 0)
+                evenTiles.Add(backgroundTiles[i]);
+            else
+                oddTiles.Add(backgroundTiles[i]);
+        }
+
+        int startX = -backgroundTileWidth / 2;
+        int startY = -backgroundTileHeight / 2;
+
+        for (int y = 0; y < backgroundTileHeight; y++)
+        {
+            for (int x = 0; x < backgroundTileWidth; x++)
+            {
+                bool useEven = (x + y) % 2 == 0;
+
+                List<TileBase> pool = useEven ? evenTiles : oddTiles;
+
+                if (pool.Count == 0)
+                    continue;
+
+                TileBase tile = pool[Random.Range(0, pool.Count)];
+
+                Vector3Int pos = new(
+                    startX + x,
+                    startY + y,
+                    0
+                );
+
+                backgroundTilemap.SetTile(pos, tile);
+            }
+        }
+    }
+
     [Header("Tiles")]
     
     [SerializeField] private Tilemap tileTilemap;
