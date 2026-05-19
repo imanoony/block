@@ -2,8 +2,14 @@
     "Stages": [
         {
             "ID": 0,
-            "Width": 5,
-            "Height": 4,
+            "BgWidth": 10,
+            "BgHeight": 10,
+            "TileWidth": 5,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -26,6 +32,7 @@
             "Blocks": [
                 0
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -48,8 +55,14 @@
         },
         {
             "ID": 1,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -73,6 +86,7 @@
                 0,
                 3
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [
@@ -83,8 +97,14 @@
         },
         {
             "ID": 2,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -108,6 +128,7 @@
                 0,
                 4
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -116,8 +137,14 @@
         },
         {
             "ID": 3,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -141,6 +168,7 @@
                 3,
                 0
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0
             ],
@@ -151,8 +179,14 @@
         },
         {
             "ID": 4,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -191,6 +225,7 @@
                 3,
                 1
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -199,8 +234,14 @@
         },
         {
             "ID": 5,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -232,6 +273,7 @@
                 1,
                 4
             ],
+            "BlockPositions": [],
             "RIndex": [
                 1
             ],
@@ -242,8 +284,14 @@
         },
         {
             "ID": 6,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -275,6 +323,7 @@
                 7,
                 4
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0,
                 1
@@ -286,8 +335,14 @@
         },
         {
             "ID": 7,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -320,6 +375,7 @@
                 5,
                 2
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [
                 2
@@ -330,8 +386,14 @@
         },
         {
             "ID": 8,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -363,6 +425,7 @@
                 2,
                 1
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0,
                 1
@@ -374,8 +437,14 @@
         },
         {
             "ID": 9,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -415,6 +484,7 @@
                 6,
                 0
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0
             ],
@@ -427,8 +497,14 @@
         },
         {
             "ID": 10,
-            "Width": 8,
-            "Height": 6,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 8,
+            "TileHeight": 6,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -472,6 +548,7 @@
                 5,
                 3
             ],
+            "BlockPositions": [],
             "RIndex": [
                 3,
                 7
@@ -485,8 +562,14 @@
         },
         {
             "ID": 99,
-            "Width": 10,
-            "Height": 10,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 10,
+            "TileHeight": 10,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -537,6 +620,7 @@
             "Blocks": [
                 1
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -545,8 +629,14 @@
         },
         {
             "ID": 100,
-            "Width": 5,
-            "Height": 4,
+            "BgWidth": 10,
+            "BgHeight": 10,
+            "TileWidth": 5,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -569,6 +659,7 @@
             "Blocks": [
                 0
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -577,8 +668,14 @@
         },
         {
             "ID": 101,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -602,6 +699,7 @@
                 0,
                 3
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -610,8 +708,14 @@
         },
         {
             "ID": 102,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -635,6 +739,7 @@
                 0,
                 4
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -643,8 +748,14 @@
         },
         {
             "ID": 103,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -668,6 +779,7 @@
                 3,
                 0
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0
             ],
@@ -678,8 +790,14 @@
         },
         {
             "ID": 104,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -718,6 +836,7 @@
                 3,
                 1
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -726,8 +845,14 @@
         },
         {
             "ID": 105,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -758,6 +883,7 @@
                 1,
                 3
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -766,8 +892,14 @@
         },
         {
             "ID": 106,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -799,6 +931,7 @@
                 2,
                 1
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0,
                 1
@@ -810,8 +943,14 @@
         },
         {
             "ID": 107,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -844,6 +983,7 @@
                 5,
                 2
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [
                 2
@@ -854,8 +994,14 @@
         },
         {
             "ID": 108,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -879,6 +1025,7 @@
                 5,
                 6
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -887,8 +1034,14 @@
         },
         {
             "ID": 109,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -928,6 +1081,7 @@
                 6,
                 0
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0
             ],
@@ -940,8 +1094,14 @@
         },
         {
             "ID": 110,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -973,6 +1133,7 @@
                 1,
                 3
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -981,8 +1142,14 @@
         },
         {
             "ID": 111,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1006,6 +1173,7 @@
                 5,
                 0
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0
             ],
@@ -1016,8 +1184,14 @@
         },
         {
             "ID": 112,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1049,6 +1223,7 @@
                 1,
                 4
             ],
+            "BlockPositions": [],
             "RIndex": [
                 1
             ],
@@ -1059,8 +1234,14 @@
         },
         {
             "ID": 113,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1092,6 +1273,7 @@
                 7,
                 4
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0,
                 1
@@ -1103,8 +1285,14 @@
         },
         {
             "ID": 114,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1129,6 +1317,7 @@
                 6,
                 3
             ],
+            "BlockPositions": [],
             "RIndex": [
                 1,
                 2
@@ -1140,8 +1329,14 @@
         },
         {
             "ID": 115,
-            "Width": 7,
-            "Height": 5,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 7,
+            "TileHeight": 5,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1173,6 +1368,7 @@
                 2,
                 4
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -1181,8 +1377,14 @@
         },
         {
             "ID": 116,
-            "Width": 7,
-            "Height": 5,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 7,
+            "TileHeight": 5,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1222,6 +1424,7 @@
                 3,
                 7
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],
@@ -1230,8 +1433,14 @@
         },
         {
             "ID": 117,
-            "Width": 7,
-            "Height": 6,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 7,
+            "TileHeight": 6,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1271,6 +1480,7 @@
                 3,
                 5
             ],
+            "BlockPositions": [],
             "RIndex": [
                 2
             ],
@@ -1281,8 +1491,14 @@
         },
         {
             "ID": 118,
-            "Width": 7,
-            "Height": 6,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 7,
+            "TileHeight": 6,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1323,6 +1539,7 @@
                 4,
                 6
             ],
+            "BlockPositions": [],
             "RIndex": [
                 0,
                 4
@@ -1334,8 +1551,14 @@
         },
         {
             "ID": 120,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1360,6 +1583,7 @@
                 1,
                 5
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [
                 2
@@ -1370,8 +1594,14 @@
         },
         {
             "ID": 121,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1396,6 +1626,7 @@
                 2,
                 3
             ],
+            "BlockPositions": [],
             "RIndex": [
                 2
             ],
@@ -1408,8 +1639,14 @@
         },
         {
             "ID": 122,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1441,6 +1678,7 @@
                 0,
                 4
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [
                 2
@@ -1451,8 +1689,14 @@
         },
         {
             "ID": 123,
-            "Width": 6,
-            "Height": 4,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 6,
+            "TileHeight": 4,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1491,6 +1735,7 @@
                 5,
                 6
             ],
+            "BlockPositions": [],
             "RIndex": [
                 1
             ],
@@ -1503,8 +1748,14 @@
         },
         {
             "ID": 124,
-            "Width": 7,
-            "Height": 5,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 7,
+            "TileHeight": 5,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1537,6 +1788,7 @@
                 6,
                 7
             ],
+            "BlockPositions": [],
             "RIndex": [],
             "FIndex": [
                 1
@@ -1547,8 +1799,14 @@
         },
         {
             "ID": 125,
-            "Width": 7,
-            "Height": 5,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 7,
+            "TileHeight": 5,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1589,6 +1847,7 @@
                 5,
                 6
             ],
+            "BlockPositions": [],
             "RIndex": [
                 2,
                 4
@@ -1602,8 +1861,14 @@
         },
         {
             "ID": 126,
-            "Width": 7,
-            "Height": 5,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 7,
+            "TileHeight": 5,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1629,6 +1894,7 @@
                 3,
                 4
             ],
+            "BlockPositions": [],
             "RIndex": [
                 1,
                 2
@@ -1642,8 +1908,14 @@
         },
         {
             "ID": 127,
-            "Width": 7,
-            "Height": 6,
+            "BgWidth": 0,
+            "BgHeight": 0,
+            "TileWidth": 7,
+            "TileHeight": 6,
+            "TilePosition": {
+                "x": 0,
+                "y": 0
+            },
             "Inputs": [
                 {
                     "pos": {
@@ -1677,9 +1949,49 @@
                 3,
                 5
             ],
+            "BlockPositions": [],
             "RIndex": [
                 4
             ],
+            "FIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": []
+        },
+        {
+            "ID": 100011,
+            "BgWidth": 10,
+            "BgHeight": 7,
+            "TileWidth": 4,
+            "TileHeight": 3,
+            "TilePosition": {
+                "x": 2,
+                "y": 3
+            },
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 1,
+                        "y": 2
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 3
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "100011",
+            "Blocks": [
+                8
+            ],
+            "BlockPositions": [],
+            "RIndex": [],
             "FIndex": [],
             "SIndex": [],
             "HBarriers": [],

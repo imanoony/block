@@ -7,59 +7,55 @@ using UnityEngine.Rendering.Universal;
 // Tilemap-based
 public class TilePlacer : MonoBehaviour
 {   
-    // 이 영역은 일단 임시, 나중에 다른 곳으로 이관될 가능성 높음.
     [Header("Background")]
-    [SerializeField] private Tilemap backgroundTilemap;
-    [SerializeField] private List<TileBase> backgroundTiles;
-    [SerializeField] private int backgroundTileWidth, backgroundTileHeight;
-    [ContextMenu("Place Background")]
-    public void PlaceBackground()
+    [SerializeField] private Tilemap bgTilemap;
+    [SerializeField] private List<TileBase> bgTiles;
+    private int bgWidth = -1, bgHeight = -1;
+    private int bgOffset = 4;
+    public void PlaceBackground(int width, int height)
     {
-        if (backgroundTiles == null || backgroundTiles.Count < 2)
-        {
-            Debug.LogWarning("backgroundTiles에 최소 2개의 타일이 필요합니다.");
-            return;
-        }
-
-        backgroundTilemap.ClearAllTiles();
-
-        // 짝수 / 홀수 인덱스 타일 분리
+        Debug.Log($"Placing background with width {width} and height {height}");
+        bgTilemap.ClearAllTiles();
         List<TileBase> evenTiles = new();
         List<TileBase> oddTiles = new();
+        bgWidth = width;
+        bgHeight = height;
 
-        for (int i = 0; i < backgroundTiles.Count; i++)
+        for (int i = 0; i < bgTiles.Count; i++)
         {
             if (i % 2 == 0)
-                evenTiles.Add(backgroundTiles[i]);
+            {
+                evenTiles.Add(bgTiles[i]);
+            }    
             else
-                oddTiles.Add(backgroundTiles[i]);
+            {
+                oddTiles.Add(bgTiles[i]);
+            }
         }
 
-        int startX = -backgroundTileWidth / 2;
-        int startY = -backgroundTileHeight / 2;
-
-        for (int y = 0; y < backgroundTileHeight; y++)
+        for (int y = -bgOffset; y < height + bgOffset; y++)
         {
-            for (int x = 0; x < backgroundTileWidth; x++)
+            for (int x = -bgOffset; x < width + bgOffset; x++)
             {
                 bool useEven = (x + y) % 2 == 0;
-
                 List<TileBase> pool = useEven ? evenTiles : oddTiles;
 
                 if (pool.Count == 0)
+                {
                     continue;
+                }
 
                 TileBase tile = pool[Random.Range(0, pool.Count)];
-
-                Vector3Int pos = new(
-                    startX + x,
-                    startY + y,
-                    0
-                );
-
-                backgroundTilemap.SetTile(pos, tile);
+                Vector3Int pos = new(x, y, 0);
+                bgTilemap.SetTile(pos, tile);
             }
         }
+        Debug.Log(bgTiles.Count);
+    }
+    public void RemoveBackground()
+    {
+        bgTilemap.ClearAllTiles();
+        bgWidth = -1; bgHeight = -1;
     }
 
     [Header("Tiles")]
@@ -74,51 +70,77 @@ public class TilePlacer : MonoBehaviour
     [SerializeField] private TileBase tileBottom;
     [SerializeField] private TileBase tileBottomLeft;
     [SerializeField] private TileBase tileBottomRight;
+    private int tileWidth = -1, tileHeight = -1;
+    private int tileStartX = -1, tileStartY = -1;
+    private Tilemap tileShadow = null;
 
     #region Tile Placement
     public void RemoveTiles()
     {
         tileTilemap.ClearAllTiles();
-        width = -1; height = -1;
+        tileWidth = -1; tileHeight = -1;
+        tileStartX = -1; tileStartY = -1;
 
         RemoveTileCollider();
         RemoveCameraBoundary();
         RemoveGrids();
     }
-    private int width = -1, height = -1;
-    public void PlaceTiles(int width, int height)
+    public void PlaceTiles(
+        int startX,
+        int startY,
+        int width,
+        int height
+    )
     {
         if (tileTilemap == null || tileCenter == null) { Utils.PrintError("Invalid tilemap or tiles"); return; }
 
-        this.width = width;
-        this.height = height;
+        this.tileStartX = startX;
+        this.tileStartY = startY;   
+        this.tileWidth = width;
+        this.tileHeight = height;
+
         for (int x = 0; x < height; x++)
+        {
             for (int y = 0; y < width; y++)
+            {
                 tileTilemap.SetTile(TileToCell(x, y), tileCenter);
+            }
+        }
+            
 
         PlaceBoundaries();
         PlaceCamera();
-        PlaceCameraBoundary();
-        PlaceTileCollider();
+        //PlaceCameraBoundary();
+        //PlaceTileCollider();
         PlaceGrids();
     }
     private void PlaceBoundaries()
     {
         if (tileTilemap == null || tileCenter == null) { Utils.PrintError("Invalid tilemap or tiles"); return; }
-        for (int x = 0; x < height; x++)
+        if (tileShadow == null)
+        {
+            tileShadow = tileTilemap.gameObject.transform.GetChild(0).GetComponent<Tilemap>();
+        }
+
+        for (int x = 0; x < tileHeight; x++)
         {
             tileTilemap.SetTile(TileToCell(x, -1), tileLeft);
-            tileTilemap.SetTile(TileToCell(x, width), tileRight);
+            tileTilemap.SetTile(TileToCell(x, tileWidth), tileRight);
+            tileShadow.SetTile(TileToCell(x, -1), tileLeft);
         }
-        for (int y = 0; y < width; y++)
+        for (int y = 0; y < tileWidth; y++)
         {
             tileTilemap.SetTile(TileToCell(-1, y), tileTop);
-            tileTilemap.SetTile(TileToCell(height, y), tileBottom);
+            tileTilemap.SetTile(TileToCell(tileHeight, y), tileBottom);
+            tileShadow.SetTile(TileToCell(tileHeight, y), tileBottom);
         }
         tileTilemap.SetTile(TileToCell(-1, -1), tileTopLeft);
-        tileTilemap.SetTile(TileToCell(-1, width), tileTopRight);
-        tileTilemap.SetTile(TileToCell(height, -1), tileBottomLeft);
-        tileTilemap.SetTile(TileToCell(height, width), tileBottomRight);
+        tileTilemap.SetTile(TileToCell(-1, tileWidth), tileTopRight);
+        tileTilemap.SetTile(TileToCell(tileHeight, -1), tileBottomLeft);
+        tileTilemap.SetTile(TileToCell(tileHeight, tileWidth), tileBottomRight);
+        tileShadow.SetTile(TileToCell(-1, -1), tileTopLeft);
+        tileShadow.SetTile(TileToCell(tileHeight, -1), tileBottomLeft);
+        tileShadow.SetTile(TileToCell(tileHeight, tileWidth), tileBottomRight);
     }
 
     private GameObject tileWall = null;
@@ -132,7 +154,7 @@ public class TilePlacer : MonoBehaviour
     }
     private void PlaceTileCollider()
     {
-        Vector2 size = new Vector2(tileTilemap.cellSize.x * (width + 2), tileTilemap.cellSize.y * (height + 2));
+        Vector2 size = new Vector2(tileTilemap.cellSize.x * (tileWidth + 2), tileTilemap.cellSize.y * (tileHeight + 2));
         Vector2 pos = (Vector2)GetTileTopLeftWorld(0, 0);
         pos = new Vector2(pos.x - tileTilemap.cellSize.x, pos.y + tileTilemap.cellSize.y);
         pos = new Vector2(pos.x + size.x / 2f, pos.y - size.y / 2f);
@@ -154,29 +176,31 @@ public class TilePlacer : MonoBehaviour
     [SerializeField] private PixelPerfectCamera PPCamera;
     public void PlaceCamera()
     {
-        if (tileTilemap == null) { Utils.PrintError("Tilemap not set"); return; }
+        if (bgTilemap == null) { Utils.PrintError("Tilemap not set"); return; }
 
         Camera cam = Camera.main;
         if (cam == null) { Utils.PrintError("Main Camera not found"); return; }
 
-        int cellX = width / 2, cellY = height / 2;
-        Vector3 centerWorld = tileTilemap.GetCellCenterWorld(new(cellX, cellY));
+        Vector3 centerWorld = bgTilemap.GetCellCenterWorld(
+            new Vector3Int(
+                bgWidth / 2,
+                bgHeight / 2,
+                0
+            )
+        );
 
         // height, width가 짝수라면 offset 추가한다
-        if (height % 2 == 0) centerWorld -= new Vector3(0, tileTilemap.cellSize.y / 2f, 0);
-        if (width % 2 == 0) centerWorld -= new Vector3(tileTilemap.cellSize.x / 2f, 0, 0);
-
-        // 타일맵 성질에 따른 offset 추가한다
-        centerWorld += new Vector3(tileTilemap.cellSize.x / 8f, 0f, 0f);
+        if (bgHeight % 2 == 0) centerWorld -= new Vector3(0, bgTilemap.cellSize.y / 2f, 0);
+        if (bgWidth % 2 == 0) centerWorld -= new Vector3(bgTilemap.cellSize.x / 2f, 0, 0);
         cam.transform.position = new Vector3(centerWorld.x, centerWorld.y, cam.transform.position.z);
 
         // 타일맵 크기 (월드 단위)
-        Vector3 cellSize = tileTilemap.cellSize;
-        float worldWidth = width * cellSize.x;
-        float worldHeight = height * cellSize.y;
+        Vector3 cellSize = bgTilemap.cellSize;
+        float worldWidth = bgWidth * cellSize.x;
+        float worldHeight = bgHeight * cellSize.y;
 
         // 화면 비율에 맞게 카메라 크기 계산
-        float percent = (width >= Utils.FILL_THRESHOLD || height >= Utils.FILL_THRESHOLD) ? Utils.TILE_FILL_PERCENT2 : Utils.TILE_FILL_PERCENT1;
+        float percent = 0.95f;
         float aspect = Screen.width / (float)Screen.height;
         float cameraHalfHeight = worldHeight / percent / 2f;
         float cameraHalfWidth = worldWidth / percent / 2f;
@@ -185,8 +209,8 @@ public class TilePlacer : MonoBehaviour
         cam.orthographic = true;
         cam.orthographicSize = Mathf.Max(cameraHalfHeight, cameraHalfWidth / aspect);
 
-        PPCamera.refResolutionY = Mathf.RoundToInt(cam.orthographicSize * 2f * Utils.PPU);
-        PPCamera.refResolutionX = Mathf.RoundToInt(PPCamera.refResolutionY * aspect);
+        //PPCamera.refResolutionY = Mathf.RoundToInt(cam.orthographicSize * 2f * Utils.PPU);
+        //PPCamera.refResolutionX = Mathf.RoundToInt(PPCamera.refResolutionY * aspect);
 
         // 카메라 월드 좌표 기준 최소/최대 좌표
         Vector3 camPos = cam.transform.position;
@@ -264,9 +288,9 @@ public class TilePlacer : MonoBehaviour
     public void PlaceGrids()
     {
         grids = new List<GameObject>();
-        for (int x = 0; x < height + 1; x++)
+        for (int x = 0; x < tileHeight + 1; x++)
         {
-            for (int y = 0; y < width + 1; y++)
+            for (int y = 0; y < tileWidth + 1; y++)
             {
                 GameObject grid = Instantiate(gridPrefab, gridParent.transform);
                 grid.name = $"Grid_{x}_{y}";
@@ -281,19 +305,26 @@ public class TilePlacer : MonoBehaviour
     #endregion
 
     #region Tile Position
-    private Vector3Int TileToCell(int x, int y) => new(y, height - 1 - x, 0);
+    private Vector3Int TileToCell(int x, int y)
+    {
+        return new(
+            tileStartY + y,
+            tileStartX + (tileHeight - 1 - x),
+            0
+        );
+    }
     public Vector3 GetTileSize() => tileTilemap.cellSize;
     public Vector3? GetTileCenterWorld(int x, int y)
     {
         // Grid 고려 height + 1, width + 1까지는 타일로 처리함
-        if (x < 0 || x >= height + 1 || y < 0 || y >= width + 1) return null;
+        if (x < 0 || x >= tileHeight + 1 || y < 0 || y >= tileWidth + 1) return null;
         return tileTilemap.GetCellCenterWorld(TileToCell(x, y));
     }
 
     public Vector3? GetTileTopLeftWorld(int x, int y)
     {
         // Grid 고려 height + 1, width + 1까지는 타일로 처리함
-        if (x < 0 || x >= height + 1 || y < 0 || y >= width + 1) return null;
+        if (x < 0 || x >= tileHeight + 1 || y < 0 || y >= tileWidth + 1) return null;
         Vector3 center = tileTilemap.GetCellCenterWorld(TileToCell(x, y));
         return center + new Vector3(-tileTilemap.cellSize.x / 2f, tileTilemap.cellSize.y / 2f, 0);
     }
@@ -302,7 +333,7 @@ public class TilePlacer : MonoBehaviour
     {
         Vector3 topLeft = (Vector3)GetTileTopLeftWorld(x, y);
         topLeft += new Vector3(tileTilemap.cellSize.x * width / 2f, -tileTilemap.cellSize.y * height / 2f, 0);
-        return topLeft += new Vector3(tileTilemap.cellSize.x / 8f, -tileTilemap.cellSize.y / 8f, 0);
+        return topLeft;
     }
     #endregion
 

@@ -104,7 +104,7 @@ public class GridManager : MonoBehaviour
 
     public void InitStage(StageData stage)
     {
-        int width = stage.Width, height = stage.Height;
+        int width = stage.TileWidth, height = stage.TileHeight;
 
         Grids = new Grid[height + 1, width + 1];
         for (int x = 0; x < height + 1; x++)
@@ -133,7 +133,8 @@ public class GridManager : MonoBehaviour
 
         // 스테이지에 해당하는 타일 배치
         // 스테이지에 해당하는 블록 배치
-        TilePlacer.PlaceTiles(width, height);
+        TilePlacer.PlaceBackground(stage.BgWidth, stage.BgHeight);
+        TilePlacer.PlaceTiles(stage.TilePosition.x, stage.TilePosition.y, width, height);
         BlockPlacer.PlaceBlocks(stage);
 
         // 스테이지에 해당하는 가로 배리어 배치

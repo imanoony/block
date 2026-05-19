@@ -33,7 +33,10 @@ public class ModuleData
 
 public class StageData
 {
-    public int ID, Width, Height;
+    public int ID;
+    public int BgWidth, BgHeight;
+    public int TileWidth, TileHeight;
+    public Vector2Int TilePosition;
     public List<(Vector2Int pos, LogicExpr expr)> Inputs = new(), Outputs = new();
     public string Desc;
     public bool IsCleared { get; private set; } = false;
@@ -41,6 +44,7 @@ public class StageData
 
     #region Blocks
     public List<int> Blocks = new();
+    public List<Vector2Int> BlockPositions = new();
     public List<int> RIndex = new(), FIndex = new(); // Rotate/Flip 가능한 Blocks 인덱스 리스트
     public List<int> SIndex = new(); // Spike Blocks 인덱스 리스트
     #endregion
@@ -56,8 +60,11 @@ public class StageData
         StageData stage = new()
         {
             ID = raw.ID,
-            Width = raw.Width,
-            Height = raw.Height,
+            BgWidth = raw.BgWidth,
+            BgHeight = raw.BgHeight,
+            TileWidth = raw.TileWidth,
+            TileHeight = raw.TileHeight,
+            TilePosition = raw.TilePosition.ToVector2Int(),
             Desc = raw.Desc,
             Inputs = raw.Inputs.Select(
                 io => (
@@ -72,6 +79,7 @@ public class StageData
                 )
             ).ToList(),
             Blocks = raw.Blocks,
+            BlockPositions = raw.BlockPositions.Select(pos => pos.ToVector2Int()).ToList(),
             RIndex = raw.RIndex,
             FIndex = raw.FIndex,
             SIndex = raw.SIndex,
@@ -85,8 +93,11 @@ public class StageData
         Raw raw = new()
         {
             ID = stage.ID,
-            Width = stage.Width,
-            Height = stage.Height,
+            BgWidth = stage.BgWidth,
+            BgHeight = stage.BgHeight,
+            TileWidth = stage.TileWidth,
+            TileHeight = stage.TileHeight,
+            TilePosition = new RawPos { x = stage.TilePosition.x, y = stage.TilePosition.y },
             Inputs = stage.Inputs.Select(
                 io => new RawIO
                 {
@@ -103,6 +114,9 @@ public class StageData
             ).ToList(),
             Desc = stage.Desc,
             Blocks = stage.Blocks,
+            BlockPositions = stage.BlockPositions.Select(
+                pos => new RawPos { x = pos.x, y = pos.y }
+            ).ToList(),
             RIndex = stage.RIndex,
             FIndex = stage.FIndex,
             SIndex = stage.SIndex,
@@ -125,10 +139,14 @@ public class StageData
     [Serializable]
     public class Raw
     {
-        public int ID, Width, Height;
+        public int ID;
+        public int BgWidth, BgHeight;
+        public int TileWidth, TileHeight;
+        public RawPos TilePosition;
         public List<RawIO> Inputs = new(), Outputs = new();
         public string Desc;
         public List<int> Blocks = new();
+        public List<RawPos> BlockPositions = new();
         public List<int> RIndex = new(), FIndex = new();
         public List<int> SIndex = new();
         public List<RawPos> HBarriers = new(), VBarriers = new();
