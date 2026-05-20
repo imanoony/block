@@ -469,13 +469,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 230647260}
+  - component: {fileID: 230647261}
   m_Layer: 5
   m_Name: Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &230647260
 RectTransform:
   m_ObjectHideFlags: 0
@@ -498,6 +499,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -500}
   m_SizeDelta: {x: 1400, y: 560}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &230647261
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230647259}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &281606821
 GameObject:
   m_ObjectHideFlags: 0
@@ -3750,7 +3763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1286124858
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4753,13 +4766,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1516022680}
+  - component: {fileID: 1516022681}
   m_Layer: 5
   m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1516022680
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4781,6 +4795,18 @@ RectTransform:
   m_AnchoredPosition: {x: 400, y: -870}
   m_SizeDelta: {x: 500, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1516022681
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1516022679}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1520501401
 GameObject:
   m_ObjectHideFlags: 0

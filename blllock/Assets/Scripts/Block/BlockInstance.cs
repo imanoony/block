@@ -10,6 +10,7 @@ public class BlockInstance : MonoBehaviour
     private SpriteRenderer sr;
     private Color color;
     private GameObject shadow;
+    private GameObject ghost;
     private Vector2 blockPos;
 
     public bool CanRotate { get; private set; } = false;
@@ -55,6 +56,9 @@ public class BlockInstance : MonoBehaviour
         shadow = transform.GetChild(0).gameObject;
         SpriteRenderer shadowSr = shadow.GetComponent<SpriteRenderer>();
         shadowSr.sprite = sprite;
+
+        ghost = transform.GetChild(1).gameObject;
+        ghost.SetActive(false);
     }
 
     #region Interaction
@@ -70,11 +74,16 @@ public class BlockInstance : MonoBehaviour
         dragOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (isPlaced) Unplace(gm);
+
+        shadow.SetActive(false);
+        ghost.SetActive(true);
     }
 
     public void EndDrag()
     {
         isDragging = false;
+        ghost.SetActive(false);
+        shadow.SetActive(true);
 
         Vector2Int? snapPos = gm.GetNearestTile(GetBaseTilePos());
         if (snapPos == null)
@@ -101,6 +110,22 @@ public class BlockInstance : MonoBehaviour
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 newPos = mousePos + dragOffset;
             transform.position = GetClampedPos(new Vector3(newPos.x, newPos.y, Utils.BLOCK_Z));
+
+            // TODO: Ghost 위치 표시
+            Vector2Int? snapPos = gm.GetNearestTile(GetBaseTilePos());
+            if (snapPos != null)
+            {
+                ghost.transform.position = gm.GetBlockCenterOnTile(snapPos.Value.x, snapPos.Value.y, blockData.Height, blockData.Width);
+
+                if (CanPlace(gm, snapPos.Value))
+                {
+                    ghost.GetComponent<SpriteRenderer>().color = Color.white;
+                }
+                else
+                {
+                    ghost.GetComponent<SpriteRenderer>().color = Utils.CodeToColor("#FF0034");
+                }
+            }
         }
 
         if (Input.GetMouseButtonUp(0) && isDragging)
@@ -146,23 +171,23 @@ public class BlockInstance : MonoBehaviour
         if (GameManager.Instance.State != GameState.InGame) return;
         if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
 
-        Vector3 tooltipPos = transform.position + new Vector3(0, (blockData.Height + 1.4f) / 2f * GameManager.Instance.Grid.GetTileSize().y, 0);
-        GameManager.Instance.UI.BlockTooltipAppear(CanRotate, CanFlip, tooltipPos);
+        //Vector3 tooltipPos = transform.position + new Vector3(0, (blockData.Height + 1.4f) / 2f * GameManager.Instance.Grid.GetTileSize().y, 0);
+        //GameManager.Instance.UI.BlockTooltipAppear(CanRotate, CanFlip, tooltipPos);
 
-        Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
-        gameObject.transform.position += Utils.HOVER;
-        shadow.transform.localPosition -= offset;
+        //Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
+        //gameObject.transform.position += Utils.HOVER;
+        //shadow.transform.localPosition -= offset;
         isHovering = true;
     }
     private void OnMouseExit()
     {
-        GameManager.Instance.UI.BlockTooltipDisappear();
+        //GameManager.Instance.UI.BlockTooltipDisappear();
 
         if (GameManager.Instance.State != GameState.InGame) return;
         if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
-        Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
-        gameObject.transform.position -= Utils.HOVER;
-        shadow.transform.localPosition += offset;
+        //Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
+        //gameObject.transform.position -= Utils.HOVER;
+        //shadow.transform.localPosition += offset;
         isHovering = false;
     }
     private void OnMouseUp()
@@ -177,7 +202,7 @@ public class BlockInstance : MonoBehaviour
     private Vector2Int baseTile = new(-1, -1);
     public bool Valid = true;
 
-    private bool PlaceInBackground(GridManager gm, Vector2Int baseTile)
+    private bool CanPlace(GridManager gm, Vector2Int baseTile)
     {
         if (isPlaced || !this.baseTile.Equals(new(-1, -1))) return false;
         if (!gm.IsValidPos(blockData, baseTile))
@@ -188,14 +213,6 @@ public class BlockInstance : MonoBehaviour
             Debug.Log($"Block Tiles: {string.Join(", ", blockData.Tiles)}");
             return false;
         }
-
-        isPlaced = true;
-        this.baseTile = baseTile;
-
-        // 블록의 위치를 snap position (좌표) 에 동기화
-        transform.position = gm.GetBlockCenterOnTile(baseTile.x, baseTile.y, blockData.Height, blockData.Width);
-        transform.position = new(transform.position.x, transform.position.y, Utils.BLOCK_Z);
-        gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
         return true;
     }
@@ -205,15 +222,7 @@ public class BlockInstance : MonoBehaviour
     // Valid가 false인 block들은 타일에 변화가 있을 때마다 
     private bool Place(GridManager gm, Vector2Int baseTile)
     {
-        if (isPlaced || !this.baseTile.Equals(new(-1, -1))) return false;
-        if (!gm.IsValidPos(blockData, baseTile))
-        {
-            Debug.Log("Invalid Pos");
-            Debug.Log($"Block Size: {blockData.Height} x {blockData.Width}");
-            Debug.Log($"Base Tile: {baseTile.x}, {baseTile.y}");
-            Debug.Log($"Block Tiles: {string.Join(", ", blockData.Tiles)}");
-            return false;
-        }
+        if (!CanPlace(gm, baseTile)) return false;
 
         isPlaced = true;
         this.baseTile = baseTile;
@@ -231,7 +240,8 @@ public class BlockInstance : MonoBehaviour
         }
 
         gameObject.GetComponent<SpriteRenderer>().sortingOrder -= 3;
-        shadow.SetActive(false);
+        shadow.GetComponent<SpriteRenderer>().sortingOrder -= 3;
+        //shadow.SetActive(false);
         return true;
     }
 
@@ -248,7 +258,8 @@ public class BlockInstance : MonoBehaviour
         gm.RemoveInvalid(this);
 
         gameObject.GetComponent<SpriteRenderer>().sortingOrder += 3;
-        shadow.SetActive(true);
+        shadow.GetComponent<SpriteRenderer>().sortingOrder += 3;
+        //shadow.SetActive(true);
     }
 
     public bool Check(GridManager gm)

@@ -165,6 +165,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     public GameState State { get; private set; } = GameState.Paused;
+    public void SetState(GameState state) => State = state;
     public ModuleData CurrentModule { get; private set; } = null;
     public int LastStageID { get; private set; } = -1;
     public StageData CurrentStage { get; private set; } = null;
@@ -209,6 +210,7 @@ public class GameManager : MonoBehaviour
         // 어떠한 처리를 합니다... (작성 중)
         if (stage.TutorialID != -1)
         {
+            State = GameState.Paused;
             UI.OpenTutorialPopup(TutorialLibrary[stage.TutorialID]);
         }
     }

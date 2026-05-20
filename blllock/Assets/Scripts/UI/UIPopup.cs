@@ -34,12 +34,9 @@ public class UIPopup: MonoBehaviour
 
         SetPopup();
         SetButtons();
-
+        
         popup.SetActive(true);
-
-        interactable = true; // 임시
-
-        // TODO: 트랜지션 시작시키기
+        StartCoroutine(PopupOnCo());
     }
     public void ClosePopup()
     {
@@ -47,9 +44,7 @@ public class UIPopup: MonoBehaviour
         contentCnt = -1;
         contentCur = -1;
 
-        popup.SetActive(false); // (임시)
-
-        // TODO: 트랜지션 시작하고 끝났을 때 액션에 popup 닫기 예약해두기
+        StartCoroutine(PopupOffCo());
     }
     public void Next()
     {
@@ -112,5 +107,140 @@ public class UIPopup: MonoBehaviour
     }
 
     #region Transitions
+    // 연출 관련 세팅은 하드하게 한다.
+    private IEnumerator PopupOnCo()
+    {
+        interactable = false;
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(ScrimOn(0.4f));
+        seq.Join(WindowOn(0.4f));
+        seq.AppendInterval(0.3f);
+        seq.Append(ButtonsOn(0.4f));
+
+        yield return seq.WaitForCompletion();
+
+        interactable = true;
+    }
+    private IEnumerator PopupOffCo()
+    {
+        interactable = false;
+        Sequence seq = DOTween.Sequence();
+        seq.Append(ButtonsOff(0.4f));
+        seq.Join(WindowOff(0.4f));
+        seq.Append(ScrimOff(0.4f));
+
+        yield return seq.WaitForCompletion();
+
+        popup.SetActive(false);
+
+        GameManager.Instance.SetState(GameState.InGame);
+    }
+    private Tween ScrimOn(float duration)
+    {
+        Image scrimImage = scrim.GetComponent<Image>();
+        scrimImage.color = new Color(0, 0, 0, 0);
+        scrim.SetActive(true);
+
+        return scrimImage.DOFade(0.9f, duration);
+    }
+    private Tween ScrimOff(float duration)
+    {
+        Image scrimImage = scrim.GetComponent<Image>();
+
+        return scrimImage.DOFade(0f, duration).OnComplete(() => scrim.SetActive(false));
+    }
+    private Sequence WindowOn(float duration)
+    {
+        RectTransform windowRect = window.GetComponent<RectTransform>();
+        CanvasGroup windowCG = window.GetComponent<CanvasGroup>();
+
+        windowRect.localScale = Vector3.one * 0.7f;
+        windowCG.alpha = 0f;
+
+        window.SetActive(true);
+
+        Sequence seq = DOTween.Sequence();
+
+        seq.Append(
+            windowRect.DOScale(1f, duration)
+                .SetEase(Ease.OutBack, overshoot: 1.4f)
+        );
+        seq.Join(
+            windowCG.DOFade(1f, duration * 0.5f)
+        );
+
+        return seq;
+    }
+    private Sequence WindowOff(float duration)
+    {
+        RectTransform windowRect = window.GetComponent<RectTransform>();
+        CanvasGroup windowCG = window.GetComponent<CanvasGroup>();
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(
+            windowRect.DOScale(0.5f, duration)
+                .SetEase(Ease.OutQuad)
+        );
+        seq.Join(
+            windowCG.DOFade(0f, duration)
+        );
+        seq.OnComplete(() =>
+        {
+            window.SetActive(false);
+        });
+
+        return seq;
+    }
+    private Sequence ButtonsOn(float duration)
+    {
+        CanvasGroup buttonsCG = buttons.GetComponent<CanvasGroup>();
+        RectTransform buttonsRect = buttons.GetComponent<RectTransform>();
+
+        buttonsCG.alpha = 0f;
+        buttonsRect.anchoredPosition += Vector2.down * 24f;
+        buttons.SetActive(true);
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(
+            buttonsRect.DOAnchorPosY(
+                buttonsRect.anchoredPosition.y + 24f,
+                duration
+            )
+            .SetEase(Ease.OutCubic)
+        );
+        seq.Join(
+            buttonsCG.DOFade(1f, duration * 0.8f)
+        );
+
+        return seq;
+    }
+
+    private Sequence ButtonsOff(float duration)
+    {
+        CanvasGroup buttonsCG = buttons.GetComponent<CanvasGroup>();
+        RectTransform buttonsRect = buttons.GetComponent<RectTransform>();
+
+        Vector2 originPos = buttonsRect.anchoredPosition;
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(
+            buttonsRect.DOAnchorPosY(
+                originPos.y - 16f,
+                duration
+            )
+            .SetEase(Ease.InCubic)
+        );
+        seq.Join(
+            buttonsCG.DOFade(0f, duration * 0.7f)
+        );
+        seq.OnComplete(() =>
+        {
+            buttons.SetActive(false);
+            buttonsRect.anchoredPosition = originPos;
+        });
+
+        return seq;
+    }
     #endregion
 }

@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 7068978202858442694}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.1, y: -0.1, z: 0}
+  m_LocalPosition: {x: -0.05, y: -0.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -52,8 +52,6 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -75,12 +73,98 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 18
+  m_Sprite: {fileID: 21300000, guid: b8b78403439cbc442b3b60701cc8ce78, type: 3}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!1 &7990805559668853638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 622788918295970328}
+  - component: {fileID: 8317559622555240184}
+  m_Layer: 0
+  m_Name: Ghost
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &622788918295970328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7990805559668853638}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8076511288479970610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &8317559622555240184
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7990805559668853638}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 19
-  m_Sprite: {fileID: 8697228794979693286, guid: 7c0f63f0f2e7da04889c033464ecf091, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.39215687}
+  m_Sprite: {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -124,6 +208,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 210609945297016865}
+  - {fileID: 622788918295970328}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3932230301423037583
@@ -146,8 +231,6 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -169,11 +252,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 20
-  m_Sprite: {fileID: 21300000, guid: 9d447e87bf94d8847bb6844fa7a74ebc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b8b78403439cbc442b3b60701cc8ce78, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -209,7 +291,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -223,7 +305,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!60 &394095691985561845
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -262,7 +344,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1.9166666, y: 1.9166666}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -270,10 +352,37 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.9166667, y: -0.9166667}
-      - {x: 0.9166667, y: 0.9166667}
-      - {x: 0.083333336, y: 0.9166667}
-      - {x: 0.083333336, y: -0.083333336}
-      - {x: -0.9166667, y: -0.083333336}
-      - {x: -0.9166667, y: -0.9166667}
+    - - {x: 0.32999998, y: -0.30249998}
+      - {x: 0.3475, y: -0.275}
+      - {x: 0.36749998, y: -0.24}
+      - {x: 0.38, y: -0.195}
+      - {x: 0.38, y: 0.17999999}
+      - {x: 0.3775, y: 0.1925}
+      - {x: 0.36249998, y: 0.2525}
+      - {x: 0.35, y: 0.275}
+      - {x: 0.29999998, y: 0.33249998}
+      - {x: 0.26749998, y: 0.3525}
+      - {x: 0.22749999, y: 0.3725}
+      - {x: 0.1925, y: 0.3775}
+      - {x: 0.17, y: 0.38}
+      - {x: -0.17, y: 0.38}
+      - {x: -0.1925, y: 0.3775}
+      - {x: -0.2525, y: 0.36249998}
+      - {x: -0.29999998, y: 0.32999998}
+      - {x: -0.34, y: 0.29}
+      - {x: -0.36249998, y: 0.2525}
+      - {x: -0.375, y: 0.205}
+      - {x: -0.38, y: 0.1725}
+      - {x: -0.38, y: -0.1925}
+      - {x: -0.36249998, y: -0.2525}
+      - {x: -0.3475, y: -0.275}
+      - {x: -0.32999998, y: -0.29999998}
+      - {x: -0.29, y: -0.3375}
+      - {x: -0.2625, y: -0.355}
+      - {x: -0.2175, y: -0.375}
+      - {x: -0.17, y: -0.38}
+      - {x: 0.17, y: -0.38}
+      - {x: 0.1925, y: -0.3775}
+      - {x: 0.2525, y: -0.36249998}
+      - {x: 0.275, y: -0.35}
   m_UseDelaunayMesh: 0
