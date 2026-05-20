@@ -10,6 +10,7 @@ public class BlockInstance : MonoBehaviour
     private SpriteRenderer sr;
     private Color color;
     private GameObject shadow;
+    [SerializeField] private GameObject ghostPrefab;
     private GameObject ghost;
     private Vector2 blockPos;
 
@@ -56,13 +57,25 @@ public class BlockInstance : MonoBehaviour
         shadow = transform.GetChild(0).gameObject;
         SpriteRenderer shadowSr = shadow.GetComponent<SpriteRenderer>();
         shadowSr.sprite = sprite;
-
-        ghost = transform.GetChild(1).gameObject;
+        
+        ghost = Instantiate(ghostPrefab, transform.position, Quaternion.identity);
         ghost.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(ghost);
     }
 
     #region Interaction
     private Vector2 dragOffset;
+    private float dragSmoothTime = 0.05f;
+    private float ghostSmoothTime = 0.07f;
+    private Vector3 dragVelocity;
+    private Vector3 ghostVelocity;
+    private Vector3 targetBlockPos;
+    private Vector3 targetGhostPos;
+    private Vector2Int? currentGhostSnapPos = null;
     public void BeginDrag()
     {
         if (currentCoroutine != null) return;
@@ -77,6 +90,9 @@ public class BlockInstance : MonoBehaviour
 
         shadow.SetActive(false);
         ghost.SetActive(true);
+
+        targetBlockPos = transform.position;
+        targetGhostPos = ghost.transform.position;
     }
 
     public void EndDrag()
@@ -84,6 +100,8 @@ public class BlockInstance : MonoBehaviour
         isDragging = false;
         ghost.SetActive(false);
         shadow.SetActive(true);
+
+        currentGhostSnapPos = null;
 
         Vector2Int? snapPos = gm.GetNearestTile(GetBaseTilePos());
         if (snapPos == null)
@@ -109,13 +127,38 @@ public class BlockInstance : MonoBehaviour
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 newPos = mousePos + dragOffset;
-            transform.position = GetClampedPos(new Vector3(newPos.x, newPos.y, Utils.BLOCK_Z));
 
-            // TODO: Ghost 위치 표시
+            targetBlockPos = GetClampedPos(new Vector3(newPos.x, newPos.y, Utils.BLOCK_Z));
+            transform.position = Vector3.SmoothDamp(
+                transform.position,
+                targetBlockPos,
+                ref dragVelocity,
+                dragSmoothTime
+            );
+
+            // Ghost 위치 표시
             Vector2Int? snapPos = gm.GetNearestTile(GetBaseTilePos());
             if (snapPos != null)
             {
-                ghost.transform.position = gm.GetBlockCenterOnTile(snapPos.Value.x, snapPos.Value.y, blockData.Height, blockData.Width);
+                if (
+                    currentGhostSnapPos == null ||
+                    currentGhostSnapPos.Value != snapPos.Value
+                )
+                {
+                    currentGhostSnapPos = snapPos;
+                    targetGhostPos = gm.GetBlockCenterOnTile(
+                        snapPos.Value.x, 
+                        snapPos.Value.y, 
+                        blockData.Height, 
+                        blockData.Width
+                    );
+                }
+                ghost.transform.position = Vector3.SmoothDamp(
+                    ghost.transform.position,
+                    targetGhostPos,
+                    ref ghostVelocity,
+                    ghostSmoothTime
+                );
 
                 if (CanPlace(gm, snapPos.Value))
                 {
