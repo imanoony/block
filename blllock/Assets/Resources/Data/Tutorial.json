@@ -2,7 +2,7 @@
     "Tutorials": [
         {
             "ID": 1,
-            "Content": [
+            "Contents": [
                 {
                     "Gif": "",
                     "Text": "드래그 앤 드롭으로 블록을 옮길 수 있습니다."
@@ -19,7 +19,7 @@
         },
         {
             "ID": 2,
-            "Content": [
+            "Contents": [
                 {
                     "Gif": "",
                     "Text": ""

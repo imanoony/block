@@ -31,6 +31,70 @@ public class ModuleData
     }
 }
 
+public class TutorialData
+{
+    public int ID;
+    public List<Content> Contents = new();
+
+    public class Content
+    {
+        public string Gif;
+        public string Text;
+    }
+
+    #region for JSON
+    public static TutorialData FromRaw(Raw raw)
+    {
+        TutorialData tutorial = new()
+        {
+            ID = raw.ID,
+            Contents = raw.Contents.Select(
+                c => new Content
+                {
+                    Gif = c.Gif,
+                    Text = c.Text
+                }
+            ).ToList()
+        };
+        return tutorial;
+    }
+    public static Raw ToRaw(TutorialData tutorial)
+    {
+        Raw raw = new()
+        {
+            ID = tutorial.ID,
+            Contents = tutorial.Contents.Select(
+                c => new RawContent
+                {
+                    Gif = c.Gif,
+                    Text = c.Text
+                }
+            ).ToList()
+        };
+        return raw;
+    }
+
+    // JSON 파일로부터 1차 파싱을 위한 보조 클래스들
+    [Serializable]
+    public class RawTutorials
+    {
+        public List<Raw> Tutorials = new();
+    }
+    [Serializable]
+    public class Raw
+    {
+        public int ID;
+        public List<RawContent> Contents = new();
+    }
+    [Serializable]
+    public class RawContent
+    {
+        public string Gif;
+        public string Text;
+    }
+    #endregion
+}
+
 public class StageData
 {
     public int ID;
@@ -279,6 +343,34 @@ public class DataParser
             result[module.ID] = module;
         }
 
+        return result;
+    }
+
+    public Dictionary<int, TutorialData> LoadTutorialData(string filename)
+    {
+        int i;
+        TutorialData.RawTutorials rawTutorials;
+        TutorialData.Raw raw;
+        TutorialData tutorial;
+        TextAsset jsonAsset;
+        Dictionary<int, TutorialData> result = new();
+
+        // Resources/Data 폴더 기준 경로, 확장자 제외
+        jsonAsset = Resources.Load<TextAsset>($"Data/{filename}");
+        if (jsonAsset == null)
+        {
+            Utils.PrintError($"JSON 파일을 찾을 수 없음: Data/{filename}");
+            return result;
+        }
+
+        rawTutorials = JsonUtility.FromJson<TutorialData.RawTutorials>(jsonAsset.text);
+        for (i = 0; i < rawTutorials.Tutorials.Count; i++)
+        {
+            raw = rawTutorials.Tutorials[i];
+            tutorial = TutorialData.FromRaw(raw);
+            result[tutorial.ID] = tutorial;
+        }
+        
         return result;
     }
 

@@ -600,12 +600,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hello World Hello World Hello World Hello World Hello World Hello World
-    Hello World Hello World Hello World Hello World Hello World Hello World Hello
-    World Hello World Hello World Hello World
+  m_text: "\uC548\uB155\uD558\uC138\uC694 \uBC18\uAC11\uC2B5\uB2C8\uB2E4. \uC774\uAC83\uC740
+    \uD29C\uD1A0\uB9AC\uC5BC \uC124\uBA85\uC785\uB2C8\uB2E4. \uC790\uAC04\uC744 \uD655\uC778\uD558\uAE30
+    \uC704\uD574 \uC774\uB807\uAC8C \uAE00\uC744 \uAE38\uAC8C \uC4F0\uACE0 \uC788\uB294\uB370\uC694,
+    \uD560 \uB9D0\uC774 \uC5C6\uC5B4\uC11C \uBB38\uC81C\uC785\uB2C8\uB2E4. \uC774
+    \uD3F0\uD2B8\uAC00 \uC544\uC8FC \uB9C8\uC74C\uC5D0 \uB4DC\uB294\uAD70\uC694.
+    \uD2F0\uBA38\uB2C8\uC5D0\uC11C \uB098\uC628 \uD3F0\uD2B8\uC778\uB370 \uC544\uC8FC
+    \uC77C\uC744 \uC798 \uD558\uB294\uAD70\uC694. "
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2c6292f0dcdc97b4d9182a3349875bbf, type: 2}
-  m_sharedMaterial: {fileID: 3819408853261785421, guid: 2c6292f0dcdc97b4d9182a3349875bbf, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: eb8db4498d964f74bb2825b62fd5b54f, type: 2}
+  m_sharedMaterial: {fileID: 8216035961651967188, guid: eb8db4498d964f74bb2825b62fd5b54f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -636,12 +640,12 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 20
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -1078,8 +1082,6 @@ TilemapRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1101,7 +1103,6 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
@@ -1538,6 +1539,7 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
+  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -1545,7 +1547,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1991,10 +1992,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Previous
+  m_text: "\uC774\uC804"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2c6292f0dcdc97b4d9182a3349875bbf, type: 2}
-  m_sharedMaterial: {fileID: 3819408853261785421, guid: 2c6292f0dcdc97b4d9182a3349875bbf, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: eb8db4498d964f74bb2825b62fd5b54f, type: 2}
+  m_sharedMaterial: {fileID: 8216035961651967188, guid: eb8db4498d964f74bb2825b62fd5b54f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2123,8 +2124,6 @@ TilemapRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2146,7 +2145,6 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
@@ -3347,8 +3345,6 @@ TilemapRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3370,7 +3366,6 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
@@ -3825,10 +3820,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Next
+  m_text: "\uB2E4\uC74C"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2c6292f0dcdc97b4d9182a3349875bbf, type: 2}
-  m_sharedMaterial: {fileID: 3819408853261785421, guid: 2c6292f0dcdc97b4d9182a3349875bbf, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: eb8db4498d964f74bb2825b62fd5b54f, type: 2}
+  m_sharedMaterial: {fileID: 8216035961651967188, guid: eb8db4498d964f74bb2825b62fd5b54f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4543,8 +4538,6 @@ TilemapRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4566,7 +4559,6 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 9
@@ -5413,8 +5405,6 @@ TilemapRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5436,7 +5426,6 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3

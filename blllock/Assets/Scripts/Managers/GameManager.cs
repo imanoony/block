@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour
 
         BlockLibrary = dataParser.ParseBlockData(blockPath);
         ModuleLibrary = dataParser.ParseModuleData(modulePath);
+        TutorialLibrary = dataParser.LoadTutorialData(tutorialPath);
         StageLibrary = dataParser.LoadStageData(stagePath);
 
         //dataParser.LoadData(ModuleLibrary, StageLibrary);
@@ -136,8 +137,9 @@ public class GameManager : MonoBehaviour
     private DataParser dataParser = new();
     public Dictionary<int, BlockData> BlockLibrary { get; private set; }
     public Dictionary<int, ModuleData> ModuleLibrary { get; private set; }
+    public Dictionary<int, TutorialData> TutorialLibrary { get; private set; }
     public Dictionary<int, StageData> StageLibrary { get; private set; }
-    private const string blockPath = "Block", modulePath = "Module", stagePath = "Stage";
+    private const string blockPath = "Block", modulePath = "Module", stagePath = "Stage", tutorialPath = "Tutorial";
 
     #endregion
 
@@ -171,7 +173,7 @@ public class GameManager : MonoBehaviour
     public void ResetGridIdleTile() { if (gt != null) gt.ResetGridIdleTime(); }
 
     // 스테이지를 시작한다
-    public void StartGame(StageData stage)
+    public void StartStage(StageData stage)
     {
         if (State != GameState.Paused) { Utils.PrintError("게임이 이미 진행 중입니다."); return; }
 
@@ -202,8 +204,11 @@ public class GameManager : MonoBehaviour
         State = GameState.InGame;
 
         delay = StartCoroutine(DelayChatStart());
+
+        // TODO: 만약 스테이지에 튜토리얼이 있다면...
+        // 어떠한 처리를 합니다... (작성 중)
     }
-    public void StartGame(int id) => StartGame(StageLibrary[id]);
+    public void StartStage(int id) => StartStage(StageLibrary[id]);
 
     private Coroutine delay = null;
     private IEnumerator DelayChatStart()
@@ -302,7 +307,7 @@ public class GameManager : MonoBehaviour
 
         State = GameState.Paused;
         int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
-        if (CurrentModule.Stages.Count > index + 1) StartGame(CurrentModule.Stages[index + 1]);
+        if (CurrentModule.Stages.Count > index + 1) StartStage(CurrentModule.Stages[index + 1]);
         else BackGame();
     }
 
@@ -313,7 +318,7 @@ public class GameManager : MonoBehaviour
 
         State = GameState.Paused;
         int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
-        StartGame(CurrentModule.Stages[index - 1]);
+        StartStage(CurrentModule.Stages[index - 1]);
     }
 
     public void StartModule(ModuleData module)
@@ -339,7 +344,7 @@ public class GameManager : MonoBehaviour
 
         State = GameState.Paused;
         int index = module.StageIndex == module.Stages.Count ? 0 : module.StageIndex;
-        StartGame(StageLibrary[module.Stages[index]]);
+        StartStage(StageLibrary[module.Stages[index]]);
     }
     public void StartModule(int id) => StartModule(ModuleLibrary[id]);
 }
