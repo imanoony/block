@@ -15,8 +15,10 @@ public class Tile
 {
     public Vector2Int Pos { get; private set; }
     public TileType Type { get; private set; }
+    public bool IsCircuit { get; private set; } = false;
     public Tile(Vector2Int pos, TileType type = TileType.Empty) { Pos = pos; Type = type; }
     public void SetType(TileType type) => Type = type;
+    public void SetIsCircuit(bool isCircuit) => IsCircuit = isCircuit;
 }
 
 public class Grid
@@ -99,16 +101,24 @@ public class GridManager : MonoBehaviour
 
     public HashSet<Vector2Int> HBarriers { get; private set; } = new();
     public HashSet<Vector2Int> VBarriers { get; private set; } = new();
+    private StageData? stageCache = null;
 
     public void InitStage(int id) => InitStage(GameManager.Instance.StageLibrary[id]);
 
     public void InitStage(StageData stage)
     {
-        int width = stage.TileWidth, height = stage.TileHeight;
+        stageCache = stage;
 
-        Grids = new Grid[height + 1, width + 1];
-        for (int x = 0; x < height + 1; x++)
-            for (int y = 0; y < width + 1; y++)
+        int bgWidth = stage.BgWidth;
+        int bgHeight = stage.BgHeight;
+        int cWidth = stage.CircuitWidth;
+        int cHeight = stage.CircuitHeight;
+        int cStartX = stage.CircuitPosition.x;
+        int cStartY = stage.CircuitPosition.y;
+
+        Grids = new Grid[cHeight + 1, cWidth + 1];
+        for (int x = 0; x < cHeight + 1; x++)
+            for (int y = 0; y < cWidth + 1; y++)
                 Grids[x, y] = new Grid(new(x, y));
 
         foreach (var (pos, expr) in stage.Inputs)
@@ -123,18 +133,66 @@ public class GridManager : MonoBehaviour
             Grids[pos.x, pos.y].SetExpr(expr);
         }
 
-        Tiles = new Tile[height, width];
-        for (int x = 0; x < height; x++)
-            for (int y = 0; y < width; y++)
-                Tiles[x, y] = new Tile(new(x, y));
+        Tiles = new Tile[bgHeight, bgWidth];
+        for (int x = 0; x < bgHeight; x++)
+        {
+            for (int y = 0; y < bgWidth; y++)
+            {
+                bool isHorizontalBorder =
+                    (x == cStartX - 1 || x == cStartX + cHeight) &&
+                    y >= cStartY - 1 && y <= cStartY + cWidth;
+
+                bool isVerticalBorder =
+                    (y == cStartY - 1 || y == cStartY + cWidth) &&
+                    x >= cStartX - 1 && x <= cStartX + cHeight;
+
+                bool isCircuit =
+                    x >= cStartX &&
+                    x < cStartX + cHeight &&
+                    y >= cStartY &&
+                    y < cStartY + cWidth;
+
+                Tile tile;
+
+                if (isHorizontalBorder || isVerticalBorder)
+                {
+                    tile = new Tile(new(x, y), TileType.Occupied);
+                }
+                else
+                {
+                    tile = new Tile(new(x, y));
+
+                    if (isCircuit)
+                    {
+                        tile.SetIsCircuit(true);
+                    }
+                }
+
+                Tiles[x, y] = tile;
+            }
+        }
+        // DEBUG
+        /*for (int x = 0; x < bgHeight; x++)
+        {
+            for (int y = 0; y < bgWidth; y++)
+            {
+                Tile tile = Tiles[x, y];
+
+                Debug.Log(
+                    $"Tile ({x}, {y}) | " +
+                    $"Occupied: {tile.Type == TileType.Occupied} | " +
+                    $"IsCircuit: {tile.IsCircuit}"
+                );
+            }
+        }*/
 
         HBarriers = stage.HBarriers.ToHashSet();
         VBarriers = stage.VBarriers.ToHashSet();
 
         // 스테이지에 해당하는 타일 배치
         // 스테이지에 해당하는 블록 배치
-        TilePlacer.PlaceBackground(stage.BgWidth, stage.BgHeight);
-        TilePlacer.PlaceTiles(stage.TilePosition.x, stage.TilePosition.y, width, height);
+        TilePlacer.PlaceBackground(bgWidth, bgHeight);
+        TilePlacer.PlaceCircuit(cStartX, cStartY, cWidth, cHeight);
         BlockPlacer.PlaceBlocks(stage);
 
         // 스테이지에 해당하는 가로 배리어 배치
@@ -151,7 +209,7 @@ public class GridManager : MonoBehaviour
         placeCount = 0;
         GameManager.Instance.Audio.ResetBGM();
 
-        TilePlacer.RemoveTiles();
+        TilePlacer.RemoveCircuit();
         BlockPlacer.RemoveBlocks();
     }
     public LogicExpr? GetGridExpr(int x, int y)
@@ -208,7 +266,10 @@ public class GridManager : MonoBehaviour
             Tiles![spike.x + baseTile.x, spike.y + baseTile.y].SetType(TileType.Occupied);
         }
 
-        if (!IsValidPort(block, baseTile, GameManager.Instance.Wire)) return false;
+        if (!IsInCircuit(baseTile.x, baseTile.y)) return true;
+        
+        Vector2Int circuitBase = GetCircuitBase(baseTile.x, baseTile.y);
+        if (!IsValidPort(block, circuitBase, GameManager.Instance.Wire)) return false;
 
         // 점유된 그리드에 Port를 추가한다.
         List<Vector2Int> gridOffsets = block.Grids;
@@ -216,7 +277,7 @@ public class GridManager : MonoBehaviour
         {
             Vector2Int offset = gridOffsets[i];
             WireExpr port = block.Ports[i];
-            Grids![offset.x + baseTile.x, offset.y + baseTile.y].AddPort(port);
+            Grids![offset.x + circuitBase.x, offset.y + circuitBase.y].AddPort(port);
         }
 
         // 블록의 portIDs를 Evaluate 한다.
@@ -242,7 +303,11 @@ public class GridManager : MonoBehaviour
             Tiles![spike.x + baseTile.x, spike.y + baseTile.y].SetType(TileType.Empty);
         }
 
+        if (!IsInCircuit(baseTile.x, baseTile.y)) return;
+
         if (!valid) return;
+
+        Vector2Int circuitBase = GetCircuitBase(baseTile.x, baseTile.y);
 
         // 점유했던 그리드에서 Port를 제거한다.
         // Wire Manager의 WireDict, WireLogic을 수정한다.
@@ -251,7 +316,7 @@ public class GridManager : MonoBehaviour
         {
             Vector2Int offset = gridOffsets[i];
             WireExpr port = block.Ports[i];
-            Grids![offset.x + baseTile.x, offset.y + baseTile.y].RemovePort(port);
+            Grids![offset.x + circuitBase.x, offset.y + circuitBase.y].RemovePort(port);
         }
         foreach (int id in block.PortIds) GameManager.Instance.Wire.RemoveWire(id);
         GameManager.Instance.Wire.RemoveSignature();
@@ -316,6 +381,12 @@ public class GridManager : MonoBehaviour
     {
         if (Tiles == null) return false;
         return x >= 0 && y >= 0 && x < Tiles.GetLength(0) && y < Tiles.GetLength(1);
+    }
+    private bool IsInCircuit(int x, int y)
+    {
+        if (Tiles == null) return false;
+        if (!IsInTileBounds(x, y)) return false;
+        return Tiles[x, y].IsCircuit;
     }
 
     // is horizontally barriered?
@@ -409,6 +480,14 @@ public class GridManager : MonoBehaviour
         Vector3 pos = (Vector3)TilePlacer.GetTileTopLeftWorld(x, y)!;
         pos = new(pos.x + GetTileSize().x / 8f, pos.y + GetTileSize().y / 12f, pos.z);
         return pos;
+    }
+    private Vector2Int GetCircuitBase(int x, int y)
+    {
+        if (stageCache == null) return Vector2Int.zero;
+        int cStartX = stageCache.CircuitPosition.x;
+        int cStartY = stageCache.CircuitPosition.y;
+
+        return new Vector2Int(x - cStartX, y - cStartY);
     }
     #endregion
 }

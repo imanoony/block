@@ -10,6 +10,7 @@ public class BlockInstance : MonoBehaviour
     private SpriteRenderer sr;
     private Color color;
     private GameObject shadow;
+    private Vector2 blockPos;
 
     public bool CanRotate { get; private set; } = false;
     public bool CanFlip { get; private set; } = false;
@@ -76,9 +77,19 @@ public class BlockInstance : MonoBehaviour
         isDragging = false;
 
         Vector2Int? snapPos = gm.GetNearestTile(GetBaseTilePos());
-        if (snapPos == null) return; // 여기에 블록 슬라이딩 로직
+        if (snapPos == null)
+        {
+            transform.position = blockPos;
+            return;
+        }
 
-        if (!Place(gm, (Vector2Int)snapPos)) return; // 여기도 블록 슬라이딩 로직
+        if (!Place(gm, (Vector2Int)snapPos))
+        {
+            transform.position = blockPos;
+            return;
+        }
+
+        blockPos = transform.position;
     }
 
     private void Update()
@@ -165,6 +176,29 @@ public class BlockInstance : MonoBehaviour
     private bool isPlaced = false;
     private Vector2Int baseTile = new(-1, -1);
     public bool Valid = true;
+
+    private bool PlaceInBackground(GridManager gm, Vector2Int baseTile)
+    {
+        if (isPlaced || !this.baseTile.Equals(new(-1, -1))) return false;
+        if (!gm.IsValidPos(blockData, baseTile))
+        {
+            Debug.Log("Invalid Pos");
+            Debug.Log($"Block Size: {blockData.Height} x {blockData.Width}");
+            Debug.Log($"Base Tile: {baseTile.x}, {baseTile.y}");
+            Debug.Log($"Block Tiles: {string.Join(", ", blockData.Tiles)}");
+            return false;
+        }
+
+        isPlaced = true;
+        this.baseTile = baseTile;
+
+        // 블록의 위치를 snap position (좌표) 에 동기화
+        transform.position = gm.GetBlockCenterOnTile(baseTile.x, baseTile.y, blockData.Height, blockData.Width);
+        transform.position = new(transform.position.x, transform.position.y, Utils.BLOCK_Z);
+        gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+
+        return true;
+    }
 
     // Invalid Position이면 아예 둘 수 없다.
     // Invalid Ports면 둘 수는 있으나 Block Instance의 Valid가 false가 된다.

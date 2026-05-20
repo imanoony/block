@@ -7,6 +7,7 @@ using UnityEngine.Rendering.Universal;
 // Tilemap-based
 public class TilePlacer : MonoBehaviour
 {   
+    #region Background Placement
     [Header("Background")]
     [SerializeField] private Tilemap bgTilemap;
     [SerializeField] private List<TileBase> bgTiles;
@@ -57,53 +58,57 @@ public class TilePlacer : MonoBehaviour
         bgTilemap.ClearAllTiles();
         bgWidth = -1; bgHeight = -1;
     }
+    #endregion
 
-    [Header("Tiles")]
+    #region Circuit Placement
+    [Header("Circuit")]
     
-    [SerializeField] private Tilemap tileTilemap;
-    [SerializeField] private TileBase tileCenter;
-    [SerializeField] private TileBase tileLeft;
-    [SerializeField] private TileBase tileRight;
-    [SerializeField] private TileBase tileTop;
-    [SerializeField] private TileBase tileTopLeft;
-    [SerializeField] private TileBase tileTopRight;
-    [SerializeField] private TileBase tileBottom;
-    [SerializeField] private TileBase tileBottomLeft;
-    [SerializeField] private TileBase tileBottomRight;
-    private int tileWidth = -1, tileHeight = -1;
-    private int tileStartX = -1, tileStartY = -1;
-    private Tilemap tileShadow = null;
-
-    #region Tile Placement
-    public void RemoveTiles()
+    [SerializeField] private Tilemap circuitTilemap;
+    [SerializeField] private TileBase circuitCenter;
+    [SerializeField] private TileBase circuitLeft;
+    [SerializeField] private TileBase circuitRight;
+    [SerializeField] private TileBase circuitTop;
+    [SerializeField] private TileBase circuitTopLeft;
+    [SerializeField] private TileBase circuitTopRight;
+    [SerializeField] private TileBase circuitBotton;
+    [SerializeField] private TileBase circuitBottomLeft;
+    [SerializeField] private TileBase circuitBottomRight;
+    private int circuitWidth = -1, circuitHeight = -1;
+    private int circuitStartX = -1, circuitStartY = -1;
+    private Tilemap circuitShadow = null;
+    public void RemoveCircuit()
     {
-        tileTilemap.ClearAllTiles();
-        tileWidth = -1; tileHeight = -1;
-        tileStartX = -1; tileStartY = -1;
+        circuitTilemap.ClearAllTiles();
+        circuitWidth = -1; circuitHeight = -1;
+        circuitStartX = -1; circuitStartY = -1;
 
-        RemoveTileCollider();
-        RemoveCameraBoundary();
+        //RemoveTileCollider();
+        //RemoveCameraBoundary();
         RemoveGrids();
     }
-    public void PlaceTiles(
+    public void PlaceCircuit(
         int startX,
         int startY,
         int width,
         int height
     )
     {
-        if (tileTilemap == null || tileCenter == null) { Utils.PrintError("Invalid tilemap or tiles"); return; }
+        if (circuitTilemap == null || circuitCenter == null) 
+        { 
+            Utils.PrintError("Invalid tilemap or tiles"); 
+            return; 
+        }
+        
+        this.circuitStartX = startX;
+        this.circuitStartY = startY;
+        this.circuitWidth = width;
+        this.circuitHeight = height;
 
-        this.tileStartX = startX;
-        this.tileStartY = startY;   
-        this.tileWidth = width;
-        this.tileHeight = height;
-
-        for (int x = 0; x < height; x++)
+        for (int x = circuitStartX; x < circuitStartX + circuitHeight; x++)
         {
-            for (int y = 0; y < width; y++)
+            for (int y = circuitStartY; y < circuitStartY + circuitWidth; y++)
             {
-                tileTilemap.SetTile(TileToCell(x, y), tileCenter);
+                circuitTilemap.SetTile(TileToCell(x, y), circuitCenter);
             }
         }
             
@@ -116,64 +121,41 @@ public class TilePlacer : MonoBehaviour
     }
     private void PlaceBoundaries()
     {
-        if (tileTilemap == null || tileCenter == null) { Utils.PrintError("Invalid tilemap or tiles"); return; }
-        if (tileShadow == null)
+        if (circuitTilemap == null || circuitCenter == null) 
+        { 
+            Utils.PrintError("Invalid tilemap or tiles"); 
+            return; 
+        }
+        if (circuitShadow == null)
         {
-            tileShadow = tileTilemap.gameObject.transform.GetChild(0).GetComponent<Tilemap>();
+            circuitShadow = circuitTilemap.gameObject.transform.GetChild(0).GetComponent<Tilemap>();
         }
 
-        for (int x = 0; x < tileHeight; x++)
+        for (int x = circuitStartX; x < circuitStartX + circuitHeight; x++)
         {
-            tileTilemap.SetTile(TileToCell(x, -1), tileLeft);
-            tileTilemap.SetTile(TileToCell(x, tileWidth), tileRight);
-            tileShadow.SetTile(TileToCell(x, -1), tileLeft);
+            circuitTilemap.SetTile(TileToCell(x, circuitStartY - 1), circuitLeft);
+            circuitTilemap.SetTile(TileToCell(x, circuitStartY + circuitWidth), circuitRight);
+            circuitShadow.SetTile(TileToCell(x, circuitStartY - 1), circuitLeft);
         }
-        for (int y = 0; y < tileWidth; y++)
+        for (int y = circuitStartY; y < circuitStartY + circuitWidth; y++)
         {
-            tileTilemap.SetTile(TileToCell(-1, y), tileTop);
-            tileTilemap.SetTile(TileToCell(tileHeight, y), tileBottom);
-            tileShadow.SetTile(TileToCell(tileHeight, y), tileBottom);
+            circuitTilemap.SetTile(TileToCell(circuitStartX - 1, y), circuitTop);
+            circuitTilemap.SetTile(TileToCell(circuitStartX + circuitHeight, y), circuitBotton);
+            circuitShadow.SetTile(TileToCell(circuitStartX + circuitHeight, y), circuitBotton);
         }
-        tileTilemap.SetTile(TileToCell(-1, -1), tileTopLeft);
-        tileTilemap.SetTile(TileToCell(-1, tileWidth), tileTopRight);
-        tileTilemap.SetTile(TileToCell(tileHeight, -1), tileBottomLeft);
-        tileTilemap.SetTile(TileToCell(tileHeight, tileWidth), tileBottomRight);
-        tileShadow.SetTile(TileToCell(-1, -1), tileTopLeft);
-        tileShadow.SetTile(TileToCell(tileHeight, -1), tileBottomLeft);
-        tileShadow.SetTile(TileToCell(tileHeight, tileWidth), tileBottomRight);
+        circuitTilemap.SetTile(TileToCell(circuitStartX - 1, circuitStartY - 1), circuitTopLeft);
+        circuitTilemap.SetTile(TileToCell(circuitStartX - 1, circuitStartY + circuitWidth), circuitTopRight);
+        circuitTilemap.SetTile(TileToCell(circuitStartX + circuitHeight, circuitStartY - 1), circuitBottomLeft);
+        circuitTilemap.SetTile(TileToCell(circuitStartX + circuitHeight, circuitStartY + circuitWidth), circuitBottomRight);
+        circuitShadow.SetTile(TileToCell(circuitStartX - 1, circuitStartY - 1), circuitTopLeft);
+        circuitShadow.SetTile(TileToCell(circuitStartX + circuitHeight, circuitStartY - 1), circuitBottomLeft);
+        circuitShadow.SetTile(TileToCell(circuitStartX + circuitHeight, circuitStartY + circuitWidth), circuitBottomRight);
     }
+    #endregion
 
-    private GameObject tileWall = null;
-    private void RemoveTileCollider()
-    {
-        if (tileWall != null)
-        {
-            Destroy(tileWall);
-            tileWall = null;
-        }
-    }
-    private void PlaceTileCollider()
-    {
-        Vector2 size = new Vector2(tileTilemap.cellSize.x * (tileWidth + 2), tileTilemap.cellSize.y * (tileHeight + 2));
-        Vector2 pos = (Vector2)GetTileTopLeftWorld(0, 0);
-        pos = new Vector2(pos.x - tileTilemap.cellSize.x, pos.y + tileTilemap.cellSize.y);
-        pos = new Vector2(pos.x + size.x / 2f, pos.y - size.y / 2f);
-        size = new Vector2(size.x, Camera.main.orthographicSize * 5);
-
-        tileWall = new GameObject("TileWall");
-        tileWall.transform.position = pos;
-
-        var collider = tileWall.AddComponent<BoxCollider2D>();
-        collider.size = size;
-
-        var rb = tileWall.AddComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Static; // 움직이지 않는 벽
-    }
-
-    [Header("Camera")]
+    #region Camera Placement
     // Base Position, Offset, Scale 모두 포함해서 카메라 세팅
     // 카메라 세팅 이후 바운더리 수정
-    [SerializeField] private PixelPerfectCamera PPCamera;
     public void PlaceCamera()
     {
         if (bgTilemap == null) { Utils.PrintError("Tilemap not set"); return; }
@@ -200,7 +182,7 @@ public class TilePlacer : MonoBehaviour
         float worldHeight = bgHeight * cellSize.y;
 
         // 화면 비율에 맞게 카메라 크기 계산
-        float percent = 0.95f;
+        float percent = 1f;
         float aspect = Screen.width / (float)Screen.height;
         float cameraHalfHeight = worldHeight / percent / 2f;
         float cameraHalfWidth = worldWidth / percent / 2f;
@@ -267,8 +249,9 @@ public class TilePlacer : MonoBehaviour
 
         return wall;
     }
+    #endregion
 
-
+    #region Grid Placement
     [Header("Grid")]
     [SerializeField] private GameObject gridParent;
     [SerializeField] private GameObject gridPrefab;
@@ -288,9 +271,9 @@ public class TilePlacer : MonoBehaviour
     public void PlaceGrids()
     {
         grids = new List<GameObject>();
-        for (int x = 0; x < tileHeight + 1; x++)
+        for (int x = 0; x < circuitHeight + 1; x++)
         {
-            for (int y = 0; y < tileWidth + 1; y++)
+            for (int y = 0; y < circuitWidth + 1; y++)
             {
                 GameObject grid = Instantiate(gridPrefab, gridParent.transform);
                 grid.name = $"Grid_{x}_{y}";
@@ -305,34 +288,28 @@ public class TilePlacer : MonoBehaviour
     #endregion
 
     #region Tile Position
-    private Vector3Int TileToCell(int x, int y)
-    {
-        return new(
-            tileStartY + y,
-            tileStartX + (tileHeight - 1 - x),
-            0
-        );
-    }
-    public Vector3 GetTileSize() => tileTilemap.cellSize;
+    // Tile은 Background Tile과 Circuit Tile로 분류됨.
+    // Background Tile과 Circuit Tile은 서로 다른 타일맵에 배치되지만,
+    // 두 타일맵의 타일 크기와 좌표는 일치해야 함.
+    private Vector3Int TileToCell(int x, int y) => new(y, bgHeight - 1 - x, 0);
+    public Vector3 GetTileSize() => bgTilemap.cellSize;
     public Vector3? GetTileCenterWorld(int x, int y)
     {
-        // Grid 고려 height + 1, width + 1까지는 타일로 처리함
-        if (x < 0 || x >= tileHeight + 1 || y < 0 || y >= tileWidth + 1) return null;
-        return tileTilemap.GetCellCenterWorld(TileToCell(x, y));
+        if (x < 0 || x >= bgHeight || y < 0 || y >= bgWidth) return null;
+        return bgTilemap.GetCellCenterWorld(TileToCell(x, y));
     }
 
     public Vector3? GetTileTopLeftWorld(int x, int y)
     {
-        // Grid 고려 height + 1, width + 1까지는 타일로 처리함
-        if (x < 0 || x >= tileHeight + 1 || y < 0 || y >= tileWidth + 1) return null;
-        Vector3 center = tileTilemap.GetCellCenterWorld(TileToCell(x, y));
-        return center + new Vector3(-tileTilemap.cellSize.x / 2f, tileTilemap.cellSize.y / 2f, 0);
+        if (x < 0 || x >= bgHeight || y < 0 || y >= bgWidth) return null;
+        Vector3 center = bgTilemap.GetCellCenterWorld(TileToCell(x, y));
+        return center + new Vector3(-GetTileSize().x / 2f, GetTileSize().y / 2f, 0);
     }
 
     public Vector3 GetBlockCenterOnTile(int x, int y, int height, int width)
     {
         Vector3 topLeft = (Vector3)GetTileTopLeftWorld(x, y);
-        topLeft += new Vector3(tileTilemap.cellSize.x * width / 2f, -tileTilemap.cellSize.y * height / 2f, 0);
+        topLeft += new Vector3(GetTileSize().x * width / 2f, -GetTileSize().y * height / 2f, 0);
         return topLeft;
     }
     #endregion

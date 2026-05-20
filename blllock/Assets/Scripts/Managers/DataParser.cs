@@ -35,12 +35,13 @@ public class StageData
 {
     public int ID;
     public int BgWidth, BgHeight;
-    public int TileWidth, TileHeight;
-    public Vector2Int TilePosition;
+    public int CircuitWidth, CircuitHeight;
+    public Vector2Int CircuitPosition;
     public List<(Vector2Int pos, LogicExpr expr)> Inputs = new(), Outputs = new();
     public string Desc;
     public bool IsCleared { get; private set; } = false;
     public void SetCleared(bool cleared) => IsCleared = cleared;
+    public int TutorialID = -1; // 튜토리얼 스테이지인 경우, 해당 튜토리얼 ID (튜토리얼이 아닌 경우 -1)
 
     #region Blocks
     public List<int> Blocks = new();
@@ -62,10 +63,11 @@ public class StageData
             ID = raw.ID,
             BgWidth = raw.BgWidth,
             BgHeight = raw.BgHeight,
-            TileWidth = raw.TileWidth,
-            TileHeight = raw.TileHeight,
-            TilePosition = raw.TilePosition.ToVector2Int(),
+            CircuitWidth = raw.CircuitWidth,
+            CircuitHeight = raw.CircuitHeight,
+            CircuitPosition = raw.CircuitPosition.ToVector2Int(),
             Desc = raw.Desc,
+            TutorialID = raw.TutorialID,
             Inputs = raw.Inputs.Select(
                 io => (
                     io.pos.ToVector2Int(),
@@ -95,9 +97,9 @@ public class StageData
             ID = stage.ID,
             BgWidth = stage.BgWidth,
             BgHeight = stage.BgHeight,
-            TileWidth = stage.TileWidth,
-            TileHeight = stage.TileHeight,
-            TilePosition = new RawPos { x = stage.TilePosition.x, y = stage.TilePosition.y },
+            CircuitWidth = stage.CircuitWidth,
+            CircuitHeight = stage.CircuitHeight,
+            CircuitPosition = new RawPos { x = stage.CircuitPosition.x, y = stage.CircuitPosition.y },
             Inputs = stage.Inputs.Select(
                 io => new RawIO
                 {
@@ -113,6 +115,7 @@ public class StageData
                 }
             ).ToList(),
             Desc = stage.Desc,
+            TutorialID = stage.TutorialID,
             Blocks = stage.Blocks,
             BlockPositions = stage.BlockPositions.Select(
                 pos => new RawPos { x = pos.x, y = pos.y }
@@ -141,10 +144,11 @@ public class StageData
     {
         public int ID;
         public int BgWidth, BgHeight;
-        public int TileWidth, TileHeight;
-        public RawPos TilePosition;
+        public int CircuitWidth, CircuitHeight;
+        public RawPos CircuitPosition;
         public List<RawIO> Inputs = new(), Outputs = new();
         public string Desc;
+        public int TutorialID = -1;
         public List<int> Blocks = new();
         public List<RawPos> BlockPositions = new();
         public List<int> RIndex = new(), FIndex = new();
