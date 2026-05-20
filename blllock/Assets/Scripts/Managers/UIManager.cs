@@ -702,4 +702,10 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    #region Tutorial Popup
+    [Header("Tutorial Popup")]
+    [SerializeField] private UIPopup popup;
+    public void OpenTutorialPopup(TutorialData tutorial) => popup.OpenPopup(tutorial);
+    #endregion
 }

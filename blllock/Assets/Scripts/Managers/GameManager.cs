@@ -207,6 +207,10 @@ public class GameManager : MonoBehaviour
 
         // TODO: 만약 스테이지에 튜토리얼이 있다면...
         // 어떠한 처리를 합니다... (작성 중)
+        if (stage.TutorialID != -1)
+        {
+            UI.OpenTutorialPopup(TutorialLibrary[stage.TutorialID]);
+        }
     }
     public void StartStage(int id) => StartStage(StageLibrary[id]);
 
