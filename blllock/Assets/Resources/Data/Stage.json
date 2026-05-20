@@ -2030,7 +2030,12 @@
             "Blocks": [
                 8
             ],
-            "BlockPositions": [],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 9
+                }
+            ],
             "RIndex": [],
             "FIndex": [],
             "SIndex": [],

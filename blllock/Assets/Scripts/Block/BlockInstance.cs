@@ -20,6 +20,7 @@ public class BlockInstance : MonoBehaviour
     public void Initialize(
         BlockData blockData, 
         Sprite sprite, 
+        Vector2Int initPos,
         bool canRotate = false, 
         bool canFlip = false,
         bool hasSpike = false
@@ -57,6 +58,8 @@ public class BlockInstance : MonoBehaviour
         shadow = transform.GetChild(0).gameObject;
         SpriteRenderer shadowSr = shadow.GetComponent<SpriteRenderer>();
         shadowSr.sprite = sprite;
+
+        Place(gm, initPos);
         
         ghost = Instantiate(ghostPrefab, transform.position, Quaternion.identity);
         ghost.SetActive(false);

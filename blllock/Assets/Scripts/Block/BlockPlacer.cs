@@ -28,45 +28,38 @@ public class BlockPlacer : MonoBehaviour
         List<int> blocks = stage.Blocks;
         List<int> rotate = stage.RIndex, flip = stage.FIndex;
         List<int> spike = stage.SIndex;
+        List<Vector2Int> blockPositions = stage.BlockPositions;
+        if (blockPositions.Count < blocks.Count)
+        {
+            // 부족한만큼 (0, 0)으로 채워넣기
+            for (int i = blockPositions.Count; i < blocks.Count; i++)
+                blockPositions.Add(Vector2Int.zero);
+        }
 
-        List<(int, bool, bool, bool)> quad = new();
         for (int i = 0; i < blocks.Count; i++)
         {
             bool r = rotate.Contains(i);
             bool f = flip.Contains(i);
             bool s = spike.Contains(i);
-            quad.Add((blocks[i], r, f, s));
-        }
-        quad.Shuffle();
-
-        for (int i = 0; i < quad.Count; i++)
-        {
-            if (i < quad.Count / 2) blockInstances.Add(PlaceBlock(quad[i].Item1, true, quad[i].Item2, quad[i].Item3, quad[i].Item4));
-            else blockInstances.Add(PlaceBlock(quad[i].Item1, false, quad[i].Item2, quad[i].Item3, quad[i].Item4));
+            blockInstances.Add(PlaceBlock(blocks[i], blockPositions[i], r, f, s));
         }
     }
 
-    private GameObject PlaceBlock(int id, bool isLeft, bool canRotate, bool canFlip, bool hasSpike)
+    private GameObject PlaceBlock(
+        int id, 
+        Vector2Int pos, 
+        bool canRotate, 
+        bool canFlip, 
+        bool hasSpike
+    )
     {
+        GameObject instance = Instantiate(blockPrefab);
         BlockData blockData = new BlockData(GameManager.Instance.BlockLibrary[id]);
-        GameObject instance = Instantiate(blockPrefab, GetPlacedWorld(isLeft), Quaternion.identity);
+        BlockInstance blockInstance = instance.GetComponent<BlockInstance>();
+        
         Sprite sprite = hasSpike ? sblockSprites[id] : blockSprites[id];
-        instance.GetComponent<BlockInstance>().Initialize(blockData, sprite, canRotate, canFlip, hasSpike);
+        blockInstance.Initialize(blockData, sprite, pos, canRotate, canFlip, hasSpike);
 
         return instance;
-    }
-
-    private Vector3 GetPlacedWorld(bool isLeft)
-    {
-        Camera cam = Camera.main;
-        Vector3 center = cam.transform.position;
-        float halfW = cam.orthographicSize * cam.aspect;
-        float halfH = cam.orthographicSize;
-
-        float randX = Random.Range(1f, 2f);
-        float randY = Random.Range(-halfH, halfH);
-
-        if (isLeft) return new Vector3(center.x - halfW / 2f * randX, center.y + randY, Utils.BLOCK_Z);
-        else return new Vector3(center.x + halfW / 2f * randX, center.y + randY, Utils.BLOCK_Z);
     }
 }
