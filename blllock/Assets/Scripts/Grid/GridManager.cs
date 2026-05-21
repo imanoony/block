@@ -395,7 +395,10 @@ public class GridManager : MonoBehaviour
     private bool IsHBarriered(int y, int x1, int x2)
     {
         int x = x1 > x2 ? x1 : x2;
-        return HBarriers.Contains(new(x, y));
+        if (stageCache == null) return false;
+        int circuitStartX = stageCache.CircuitPosition.x;
+        int circuitStartY = stageCache.CircuitPosition.y;
+        return HBarriers.Contains(new(x - circuitStartX, y - circuitStartY));
     }
 
     // is vertically barriered?
@@ -404,7 +407,10 @@ public class GridManager : MonoBehaviour
     private bool IsVBarriered(int x, int y1, int y2)
     {
         int y = y1 > y2 ? y1 : y2;
-        return VBarriers.Contains(new(x, y));
+        if (stageCache == null) return false;
+        int circuitStartX = stageCache.CircuitPosition.x;
+        int circuitStartY = stageCache.CircuitPosition.y;
+        return VBarriers.Contains(new(x - circuitStartX, y - circuitStartY));
     }
 
     // 블록의 포트를 모두 Compatible -> AddToDict/AddToLogic 한다.

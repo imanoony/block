@@ -320,28 +320,29 @@ public class TilePlacer : MonoBehaviour
 
     #region Barrier Placement
     [Header("Barriers")]
-    [SerializeField] private Tilemap HBarrierTilemap;
-    [SerializeField] private Tilemap VBarrierTilemap;
-    [SerializeField] private TileBase HB;
-    [SerializeField] private TileBase VBstart;
-    [SerializeField] private TileBase VBmiddle;
-    [SerializeField] private TileBase VBend;
+    [SerializeField] private GameObject barrierParent;
+    [SerializeField] private GameObject hBarrierPrefab;
+    [SerializeField] private GameObject vBarrierPrefab;
     public void PlaceHBarriers(HashSet<Vector2Int> HBarriers)
     {
         foreach (Vector2Int pos in HBarriers)
         {
-            HBarrierTilemap.SetTile(TileToCell(pos.x, pos.y), HB);
+            GameObject barrier = Instantiate(hBarrierPrefab, barrierParent.transform);
+            int x = pos.x + circuitStartX;
+            int y = pos.y + circuitStartY;
+            Vector2 topLeft = (Vector2)GetTileTopLeftWorld(x, y);
+            barrier.transform.position = new Vector3(topLeft.x + GetTileSize().x / 2f, topLeft.y, barrier.transform.position.z);
         }
     }
     public void PlaceVBarriers(HashSet<Vector2Int> VBarriers)
     {
         foreach (Vector2Int pos in VBarriers)
         {
-            VBarrierTilemap.SetTile(TileToCell(pos.x, pos.y), VBstart);
-            if (VBarriers.Contains(new(pos.x - 1, pos.y)))
-                VBarrierTilemap.SetTile(TileToCell(pos.x, pos.y), VBmiddle);
-            if (!VBarriers.Contains(new(pos.x + 1, pos.y)))
-                VBarrierTilemap.SetTile(TileToCell(pos.x + 1, pos.y), VBend);
+            GameObject barrier = Instantiate(vBarrierPrefab, barrierParent.transform);
+            int x = pos.x + circuitStartX;
+            int y = pos.y + circuitStartY;
+            Vector2 topLeft = (Vector2)GetTileTopLeftWorld(x, y);
+            barrier.transform.position = new Vector3(topLeft.x, topLeft.y - GetTileSize().y / 2f, barrier.transform.position.z);
         }
     }
     #endregion
