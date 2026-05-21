@@ -23,7 +23,7 @@ public static class Utils
     public const string GREEN = "#CAFFCA";
     public const string YELLOW = "#FEFCCD";
     public const string CLEAR = "#F0F0F0FF";
-    public const float CLEAR_ALPHA = 0.4f;
+    public const float CLEAR_ALPHA = 1f;
     public const float THRESHOLD = 0.6f;
     public const float TILE_FILL_PERCENT1 = 0.5f;
     public const float TILE_FILL_PERCENT2 = 0.7f;
@@ -194,6 +194,7 @@ public class GameManager : MonoBehaviour
         UI.ResetAppear();
         UI.QuitToBack();
         UI.SetStageText(stage.Desc);
+        UI.SetChat(stage.CircuitWidth, stage.CircuitHeight);
 
         Audio.ResetBGM();
 
@@ -222,14 +223,14 @@ public class GameManager : MonoBehaviour
         yield return null;
 
         if (CurrentStage == null) yield break;
-        for (int i = 0; i < CurrentStage.Inputs.Count; i++) UI.EnableGridHover(CurrentStage.Inputs[i].pos);
-        for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.EnableGridHover(CurrentStage.Outputs[i].pos);
+        for (int i = 0; i < CurrentStage.Inputs.Count; i++) UI.EnableChat(CurrentStage.Inputs[i].pos);
+        for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.EnableChat(CurrentStage.Outputs[i].pos);
 
         yield return new WaitForSeconds(5f);
 
         if (CurrentStage == null) yield break;
-        for (int i = 0; i < CurrentStage.Inputs.Count; i++) UI.DisableGridHover(CurrentStage.Inputs[i].pos);
-        for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.DisableGridHover(CurrentStage.Outputs[i].pos);
+        for (int i = 0; i < CurrentStage.Inputs.Count; i++) UI.DisableChat(CurrentStage.Inputs[i].pos);
+        for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.DisableChat(CurrentStage.Outputs[i].pos);
 
         if (gt != null) gt.StartCheck();
 

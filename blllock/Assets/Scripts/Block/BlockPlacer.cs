@@ -6,6 +6,7 @@ public class BlockPlacer : MonoBehaviour
     [SerializeField] private GameObject blockPrefab;
     [SerializeField] private Sprite[] blockSprites;
     [SerializeField] private Sprite[] sblockSprites;
+    [SerializeField] private Sprite[] blockGhostSprites;
 
     private List<GameObject> blockInstances = null;
     public void RemoveBlocks()
@@ -58,7 +59,8 @@ public class BlockPlacer : MonoBehaviour
         BlockInstance blockInstance = instance.GetComponent<BlockInstance>();
         
         Sprite sprite = hasSpike ? sblockSprites[id] : blockSprites[id];
-        blockInstance.Initialize(blockData, sprite, pos, canRotate, canFlip, hasSpike);
+        Sprite ghostSprite = blockGhostSprites[id];
+        blockInstance.Initialize(blockData, sprite, pos, ghostSprite, canRotate, canFlip, hasSpike);
 
         return instance;
     }

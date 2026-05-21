@@ -478,7 +478,7 @@ public class GridManager : MonoBehaviour
     public Vector3 GetTileTopLeftForChat(int x, int y)
     {
         Vector3 pos = (Vector3)TilePlacer.GetTileTopLeftWorld(x, y)!;
-        pos = new(pos.x + GetTileSize().x / 8f, pos.y + GetTileSize().y / 12f, pos.z);
+        pos = new(pos.x, pos.y + GetTileSize().y / 4f, pos.z);
         return pos;
     }
     private Vector2Int GetCircuitBase(int x, int y)
@@ -489,5 +489,6 @@ public class GridManager : MonoBehaviour
 
         return new Vector2Int(x - cStartX, y - cStartY);
     }
+    public Vector2Int GetCircuitStart() => stageCache == null ? Vector2Int.zero : stageCache.CircuitPosition;
     #endregion
 }

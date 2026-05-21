@@ -271,15 +271,19 @@ public class TilePlacer : MonoBehaviour
     public void PlaceGrids()
     {
         grids = new List<GameObject>();
-        for (int x = 0; x < circuitHeight + 1; x++)
+        for (int x = circuitStartX; x < circuitStartX + circuitHeight + 1; x++)
         {
-            for (int y = 0; y < circuitWidth + 1; y++)
+            for (int y = circuitStartY; y < circuitStartY + circuitWidth + 1; y++)
             {
                 GameObject grid = Instantiate(gridPrefab, gridParent.transform);
-                grid.name = $"Grid_{x}_{y}";
-                Vector3 center = (Vector3)GetTileCenterWorld(x, y);
-                grid.transform.position = new(center.x, center.y, grid.transform.position.z);
-                grid.GetComponent<GridInstance>().Initialize(x, y);
+                Vector3 topLeft = (Vector3)GetTileTopLeftWorld(x, y);
+                grid.transform.position = new(topLeft.x, topLeft.y, grid.transform.position.z);
+
+                int gridX = x - circuitStartX;
+                int gridY = y - circuitStartY;
+                
+                grid.name = $"Grid_{gridX}_{gridY}";
+                grid.GetComponent<GridInstance>().Initialize(gridX, gridY);
 
                 grids.Add(grid);
             }

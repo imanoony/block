@@ -33,8 +33,8 @@ public class GridInstance : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (gm.UI.ChatEnablePos.ContainsKey(new(x, y))) gm.UI.DisableGridHover(x, y);
-        else gm.UI.EnableGridHover(x, y);
+        if (gm.UI.IsChatEnabled(new(x, y))) gm.UI.DisableChat(x, y);
+        else gm.UI.EnableChat(x, y);
     }
 
     private void SubscribePort()
@@ -92,7 +92,7 @@ public class GridInstance : MonoBehaviour
         else
         {
             SetColor(Utils.CodeToColor(Utils.CLEAR));
-            if (gm.UI.ChatEnablePos.ContainsKey(new(x, y))) gm.UI.DisableGridHover(x, y);
+            if (gm.UI.IsChatEnabled(new(x, y))) gm.UI.DisableChat(x, y);
         }
     }
 

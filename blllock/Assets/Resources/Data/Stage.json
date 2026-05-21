@@ -2041,6 +2041,166 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
+        },
+        {
+            "ID": 100012,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "CircuitWidth": 4,
+            "CircuitHeight": 3,
+            "CircuitPosition": {
+                "x": 2,
+                "y": 4
+            },
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 3
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 1,
+                        "y": 1
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "100012",
+            "TutorialID": -1,
+            "Blocks": [
+                8,
+                8
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                }
+            ],
+            "RIndex": [],
+            "FIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": []
+        },
+        {
+            "ID": 100013,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "CircuitWidth": 4,
+            "CircuitHeight": 3,
+            "CircuitPosition": {
+                "x": 2,
+                "y": 4
+            },
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 2
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 0,
+                        "y": 2
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "100013",
+            "TutorialID": -1,
+            "Blocks": [
+                8,
+                8,
+                9
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 10
+                },
+                {
+                    "x": 4,
+                    "y": 9
+                }
+            ],
+            "RIndex": [],
+            "FIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": []
+        },
+        {
+            "ID": 100014,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "CircuitWidth": 4,
+            "CircuitHeight": 3,
+            "CircuitPosition": {
+                "x": 2,
+                "y": 4
+            },
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 0
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 4
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "100014",
+            "TutorialID": -1,
+            "Blocks": [
+                8,
+                8,
+                9
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 2
+                },
+                {
+                    "x": 1,
+                    "y": 9
+                }
+            ],
+            "RIndex": [],
+            "FIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": []
         }
     ]
 }

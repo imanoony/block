@@ -2381,7 +2381,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &654215760
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3135,7 +3135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1148004783
 Transform:
   m_ObjectHideFlags: 0
@@ -3830,6 +3830,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1309503282}
+  - component: {fileID: 1309503283}
   m_Layer: 5
   m_Name: Chats
   m_TagString: Untagged
@@ -3856,6 +3857,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1309503283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309503281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a2818e424de10242b4df28217a98597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1176631393}
+  chatPrefab: {fileID: 5008560076589235524, guid: 04bd33d2e3f216d4ea80ced9a54306ae, type: 3}
+  chatParent: {fileID: 1309503281}
 --- !u!1 &1320627818
 GameObject:
   m_ObjectHideFlags: 0
@@ -5241,6 +5257,18 @@ MonoBehaviour:
   - {fileID: 514382956410544960, guid: a00dbc31835993141a5f2b8417602b91, type: 3}
   - {fileID: -5899813097507063065, guid: 4bbedfc408c57164ab4b7619008e1ebe, type: 3}
   - {fileID: -3954390384974510328, guid: 3a67fadd20b9dbb4b9b11c2b2c438aa3, type: 3}
+  blockGhostSprites:
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 83fd16bd71dbb7545a1782960ee3fc71, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
 --- !u!114 &1895555907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5278,8 +5306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 1176631393}
-  chatPrefab: {fileID: 5008560076589235524, guid: 04bd33d2e3f216d4ea80ced9a54306ae, type: 3}
-  chatParent: {fileID: 1309503281}
+  chat: {fileID: 1309503283}
   menu: {fileID: 2011834549}
   stageText: {fileID: 408678789}
   menuButton: {fileID: 654215763}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class BlockInstance : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class BlockInstance : MonoBehaviour
         BlockData blockData, 
         Sprite sprite, 
         Vector2Int initPos,
+        Sprite ghostSprite,
         bool canRotate = false, 
         bool canFlip = false,
         bool hasSpike = false
@@ -60,8 +62,10 @@ public class BlockInstance : MonoBehaviour
         shadowSr.sprite = sprite;
 
         Place(gm, initPos);
+        blockPos = transform.position;
         
         ghost = Instantiate(ghostPrefab, transform.position, Quaternion.identity);
+        ghost.GetComponent<SpriteRenderer>().sprite = ghostSprite;
         ghost.SetActive(false);
     }
 
@@ -72,8 +76,8 @@ public class BlockInstance : MonoBehaviour
 
     #region Interaction
     private Vector2 dragOffset;
-    private float dragSmoothTime = 0.05f;
-    private float ghostSmoothTime = 0.07f;
+    private float dragSmoothTime = 0.07f;
+    private float ghostSmoothTime = 0.1f;
     private Vector3 dragVelocity;
     private Vector3 ghostVelocity;
     private Vector3 targetBlockPos;
@@ -91,18 +95,23 @@ public class BlockInstance : MonoBehaviour
 
         if (isPlaced) Unplace(gm);
 
-        shadow.SetActive(false);
+        ghost.transform.position = transform.position;
         ghost.SetActive(true);
 
         targetBlockPos = transform.position;
         targetGhostPos = ghost.transform.position;
+
+        if (shadowCo != null) StopCoroutine(shadowCo);
+        shadowCo = StartCoroutine(ShadowOffCo(0.3f));
     }
 
     public void EndDrag()
     {
         isDragging = false;
         ghost.SetActive(false);
-        shadow.SetActive(true);
+
+        if (shadowCo != null) StopCoroutine(shadowCo);
+        shadowCo = StartCoroutine(ShadowOnCo(0.3f));
 
         currentGhostSnapPos = null;
 
@@ -124,8 +133,6 @@ public class BlockInstance : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.State != GameState.InGame) return;
-
         if (isDragging)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -181,7 +188,8 @@ public class BlockInstance : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (isPlaced || currentCoroutine != null) return;
+            if (GameManager.Instance.State != GameState.InGame) return;
+            if (isPlaced || isDragging || currentCoroutine != null) return;
 
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mouseWorld.x, mouseWorld.y);
@@ -215,7 +223,9 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseEnter()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
-        if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
+        if (isHovering) return;
+        if (isDragging) return;
+        //if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
 
         //Vector3 tooltipPos = transform.position + new Vector3(0, (blockData.Height + 1.4f) / 2f * GameManager.Instance.Grid.GetTileSize().y, 0);
         //GameManager.Instance.UI.BlockTooltipAppear(CanRotate, CanFlip, tooltipPos);
@@ -223,6 +233,10 @@ public class BlockInstance : MonoBehaviour
         //Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
         //gameObject.transform.position += Utils.HOVER;
         //shadow.transform.localPosition -= offset;
+
+        if (scaleCo != null) StopCoroutine(scaleCo);
+        scaleCo = StartCoroutine(ScaleUpCo(0.4f));
+
         isHovering = true;
     }
     private void OnMouseExit()
@@ -230,10 +244,16 @@ public class BlockInstance : MonoBehaviour
         //GameManager.Instance.UI.BlockTooltipDisappear();
 
         if (GameManager.Instance.State != GameState.InGame) return;
-        if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
+        if (!isHovering) return;
+        if (isDragging) return;
+        //if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
         //Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
         //gameObject.transform.position -= Utils.HOVER;
         //shadow.transform.localPosition += offset;
+
+        if (scaleCo != null) StopCoroutine(scaleCo);
+        scaleCo = StartCoroutine(ScaleDownCo(0.4f));
+
         isHovering = false;
     }
     private void OnMouseUp()
@@ -276,7 +296,6 @@ public class BlockInstance : MonoBehaviour
         // 블록의 위치를 snap position (좌표) 에 동기화
         transform.position = gm.GetBlockCenterOnTile(baseTile.x, baseTile.y, blockData.Height, blockData.Width);
         transform.position = new(transform.position.x, transform.position.y, Utils.BLOCK_Z);
-        gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
         if (!gm.PlaceBlock(blockData, baseTile))
         {
@@ -297,7 +316,6 @@ public class BlockInstance : MonoBehaviour
         gm.RemoveBlock(blockData, baseTile, Valid);
         isPlaced = false;
         baseTile = new(-1, -1);
-        gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 
         Valid = true;
         sr.color = color;
@@ -336,7 +354,6 @@ public class BlockInstance : MonoBehaviour
         yield return StartCoroutine(ShadowDisappear());
 
         blockData.Rotation();
-        gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
         float startZ = transform.rotation.eulerAngles.z;
         float targetZ = -(int)blockData.BlockRotate;
@@ -376,7 +393,6 @@ public class BlockInstance : MonoBehaviour
 
         yield return StartCoroutine(ShadowAppear());
 
-        gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
         if (isPlaced) Place(gm, baseTile);
 
         currentCoroutine = null;
@@ -467,5 +483,50 @@ public class BlockInstance : MonoBehaviour
     }
     #endregion
 
+    #region Transition
+    // 연출 관련 세팅은 하드하게.
 
+    private Coroutine shadowCo = null;
+    private IEnumerator ShadowOnCo(float duration)
+    {
+        SpriteRenderer sr = shadow.GetComponent<SpriteRenderer>();
+        shadow.SetActive(true);
+
+        Color c = sr.color;
+        c.a = 0f;
+        sr.color = c;
+
+        Tween tween = sr.DOFade(0.5f, duration);
+
+        yield return tween.WaitForCompletion();
+        shadowCo = null;
+    }
+    private IEnumerator ShadowOffCo(float duration)
+    {
+        SpriteRenderer sr = shadow.GetComponent<SpriteRenderer>();
+
+        Tween tween = sr.DOFade(0f, duration);
+
+        yield return tween.WaitForCompletion();
+        shadow.SetActive(false);
+        shadowCo = null;
+    }
+
+    private Coroutine scaleCo = null;
+    private IEnumerator ScaleUpCo(float duration)
+    {
+        Tween tween = transform.DOScale(1.05f, duration).SetEase(Ease.OutQuad);
+
+        yield return tween.WaitForCompletion();
+        scaleCo = null;
+    }
+    private IEnumerator ScaleDownCo(float duration)
+    {
+        Tween tween = transform.DOScale(1f, duration).SetEase(Ease.OutQuad);
+
+        yield return tween.WaitForCompletion();
+        scaleCo = null;
+    }
+
+    #endregion
 }
