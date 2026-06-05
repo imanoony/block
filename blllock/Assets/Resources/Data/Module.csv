@@ -1,16 +1,7 @@
 ID,Desc,Stages
-0,MODULE #1,100;101;102;103;104;105;106;107;108;109
-1,MODULE #2,110;111;112;113;114;115;116;117;118
-2,MODULE #3,120;121;122;123;124;125;126;127
-3,MODULE BARRIER,0
-4,MODULE SPIKE,1
-5,TO BE CONTINUED,
-10001,Tutorial(temp) #1,100011;100012;100013;100014
-10002,Tutorial(temp) #2,
-10003,Tutorial(temp) #3,
-10004,Tutorial(temp) #4,
-10005,Tutorial(temp) #5,
-10006,Tutorial(temp) #6,
-10007,Tutorial(temp) #7,
-10008,Tutorial(temp) #8,
-10009,Tutorial(temp) #9,
+0,Tutorial(temp) #1,100011;100012;100013;100014;100015;100016;100017;100018
+1,Tutorial(temp) #2,200010;200011;200012;200013;0;200014;200015;1;200016
+2,Tutorial(temp) #3,300010;300011
+3,Tutorial(temp) #4,
+4,Tutorial(temp) #5,
+5,Tutorial(temp) #6,

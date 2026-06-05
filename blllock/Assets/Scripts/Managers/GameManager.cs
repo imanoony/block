@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -34,7 +35,7 @@ public static class Utils
     public const float SHADOW_ALPHA = 100 / 255f;
     public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
     public const int MODULE_MIN = 0;
-    public const int MODULE_MAX = 4;
+    public const int MODULE_MAX = 5;
     public const int AUDIO_THRESHOLD0 = 2;
     public const int AUDIO_THRESHOLD1 = 3;
     public const int AUDIO_THRESHOLD2 = 4;
@@ -147,7 +148,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(10001);
+        StartModule(0);
     }
 
     void Update()
@@ -163,7 +164,6 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
-
     public GameState State { get; private set; } = GameState.Paused;
     public void SetState(GameState state) => State = state;
     public ModuleData CurrentModule { get; private set; } = null;
@@ -186,14 +186,14 @@ public class GameManager : MonoBehaviour
         Grid.InitStage(stage);
         CurrentStage = stage;
 
-        if (stage.IsCleared) UI.NextAppear(stage.ID, LastStageID);
-        else UI.NextDisappear();
-        if (CurrentModule.Stages[0] != stage.ID) UI.PrevAppear();
-        else UI.PrevDisappear();
+        if (stage.IsCleared) UI.StageNextAppear(stage.ID, LastStageID);
+        else UI.StageNextDisappear();
+        if (CurrentModule.Stages[0] != stage.ID) UI.MenuPrevAppear();
+        else UI.MenuPrevDisappear();
 
-        UI.ResetAppear();
-        UI.QuitToBack();
-        UI.SetStageText(stage.Desc);
+        //UI.ResetAppear();
+        //UI.QuitToBack();
+        //UI.SetStageText(stage.Desc);
         UI.SetChat(stage.CircuitWidth, stage.CircuitHeight);
 
         Audio.ResetBGM();
@@ -203,19 +203,46 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < CurrentStage.Outputs.Count; i++)
             outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
 
-        State = GameState.InGame;
+        State = GameState.Paused;
 
-        delay = StartCoroutine(DelayChatStart());
+        StartCoroutine(StageStartTrans(
+            () =>
+            {
+                for (int i = 0; i < CurrentStage.Inputs.Count; i++) UI.EnableChat(CurrentStage.Inputs[i].pos);
+                for (int i = 0; i < CurrentStage.Outputs.Count; i++) UI.EnableChat(CurrentStage.Outputs[i].pos);
 
-        // TODO: 만약 스테이지에 튜토리얼이 있다면...
-        // 어떠한 처리를 합니다... (작성 중)
-        if (stage.TutorialID != -1)
-        {
-            State = GameState.Paused;
-            UI.OpenTutorialPopup(TutorialLibrary[stage.TutorialID]);
-        }
+                // 튜토리얼이 있다면 재생
+                if (stage.TutorialID != -1)
+                {
+                    if (!stage.IsCleared)
+                    {
+                        StartTutorial();
+                    }
+                    UI.MenuTutorialAppear();
+                    State = GameState.InGame;
+                }
+                else
+                {
+                    UI.MenuTutorialDisappear();
+                    State = GameState.InGame;
+                }
+            }
+        ));
     }
     public void StartStage(int id) => StartStage(StageLibrary[id]);
+
+    private bool onTutorial = false;
+    public void StartTutorial()
+    {
+        if (CurrentStage == null) return;
+        if (CurrentStage.TutorialID == -1) return;
+
+        UI.MenuDisable();
+
+        State = GameState.Paused;
+        UI.MenuDisappear();
+        UI.OpenTutorialPopup(TutorialLibrary[CurrentStage.TutorialID]);
+    }
 
     private Coroutine delay = null;
     private IEnumerator DelayChatStart()
@@ -245,8 +272,9 @@ public class GameManager : MonoBehaviour
         if (CurrentModule.Stages.IndexOf(CurrentStage.ID) == CurrentModule.StageIndex) CurrentModule.UpStageIndex();
         CurrentStage.SetCleared(true);
 
-        UI.NextAppear(CurrentStage.ID, LastStageID);
-        UI.ResetDisappear();
+        UI.ClearPanelAppear();
+        UI.StageNextAppear(CurrentStage.ID, LastStageID);
+        //UI.ResetDisappear();
 
         if (gt != null) gt.StopCheck();
     }
@@ -275,26 +303,39 @@ public class GameManager : MonoBehaviour
 
     public void BackGame()
     {
-        State = GameState.ModuleSelect;
+        UI.MenuDisable();
+        UI.DisableAllChat();
 
-        Grid.RemoveCurrentStage();
+        StartCoroutine(StageEndTrans(
+            () =>
+            {
+                State = GameState.ModuleSelect;
 
-        UI.NextDisappear();
-        UI.PrevDisappear();
-        UI.BackToQuit();
-        UI.ResetDisappear();
+                Grid.RemoveCurrentStage();
 
-        int achievement = (int)(100 * (float)CurrentModule.StageIndex / CurrentModule.Stages.Count);
-        string text = $"{CurrentModule.Desc} ({achievement}%)";
-        UI.SetStageText(text);
-        UI.ModuleAppear();
+                UI.ClearPanelDisappear();
+                UI.StageNextDisappear();
+                UI.MenuPrevDisappear();
+                UI.MenuTutorialDisappear();
+                UI.MenuBackDisappear();
+                UI.MenuQuitAppear();
+                UI.MenuDisappear();
+                //UI.BackToQuit();
+                //UI.ResetDisappear();
 
-        Audio.SoftMute();
+                int achievement = (int)(100 * (float)CurrentModule.StageIndex / CurrentModule.Stages.Count);
+                string text = $"{CurrentModule.Desc} ({achievement}%)";
+                //UI.SetStageText(text);
+                UI.ModuleAppear();
 
-        CurrentStage = null;
-        CurrentModule = null;
+                Audio.SoftMute();
 
-        if (gt != null) gt.ResetGridIdleTime();
+                CurrentStage = null;
+                CurrentModule = null;
+
+                if (gt != null) gt.ResetGridIdleTime();
+            }
+        ));
     }
 
     public void QuitGame()
@@ -312,10 +353,20 @@ public class GameManager : MonoBehaviour
         if (CurrentStage == null) return;
         if (StageLibrary.Count == 0) return;
 
-        State = GameState.Paused;
-        int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
-        if (CurrentModule.Stages.Count > index + 1) StartStage(CurrentModule.Stages[index + 1]);
-        else BackGame();
+        
+        UI.DisableAllChat();
+
+        StartCoroutine(StageEndTrans(
+            () =>
+            {
+                State = GameState.Paused;
+                UI.MenuDisappear();
+                UI.ClearPanelDisappear();
+                int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
+                if (CurrentModule.Stages.Count > index + 1) StartStage(CurrentModule.Stages[index + 1]);
+                else BackGame();
+            }
+        ));
     }
 
     public void PrevStage()
@@ -323,9 +374,19 @@ public class GameManager : MonoBehaviour
         if (CurrentStage == null) return;
         if (StageLibrary.Count == 0) return;
 
-        State = GameState.Paused;
-        int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
-        StartStage(CurrentModule.Stages[index - 1]);
+        UI.MenuDisable();
+        UI.DisableAllChat();
+
+        StartCoroutine(StageEndTrans(
+            () =>
+            {
+                State = GameState.Paused;
+                UI.MenuDisappear();
+                UI.ClearPanelDisappear();
+                int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
+                StartStage(CurrentModule.Stages[index - 1]);
+            }
+        ));        
     }
 
     public void StartModule(ModuleData module)
@@ -334,9 +395,11 @@ public class GameManager : MonoBehaviour
         if (module == null) { Utils.PrintError("모듈이 없습니다."); return; }
         if (module.Stages.Count == 0) return;
 
+        if (module.ID == 0) UI.DeactivateChat();
+        else UI.ActivateChat();
+
         CurrentModule = module;
         LastStageID = module.Stages[^1];
-        UI.ModuleDisappear();
 
         Audio.SoftUnmute();
 
@@ -349,9 +412,52 @@ public class GameManager : MonoBehaviour
             if (gt != null) { Destroy(gt); gt = null; }
         }
 
+        UI.MenuBackAppear();
+        UI.MenuQuitDisappear();
+
         State = GameState.Paused;
         int index = module.StageIndex == module.Stages.Count ? 0 : module.StageIndex;
-        StartStage(StageLibrary[module.Stages[index]]);
+
+        
+        UI.ModuleDisappear(
+            () =>
+            StartStage(StageLibrary[module.Stages[index]])
+        );
     }
     public void StartModule(int id) => StartModule(ModuleLibrary[id]);
+
+    #region Transition
+
+    private IEnumerator StageStartTrans(Action onComplete)
+    {
+        Grid.TilePlacer.CircuitAppear();
+        Grid.BlockPlacer.BlockAppear();
+
+        yield return new WaitUntil(
+            () =>
+            Grid.TilePlacer.CircuitAppearTransDone &&
+            Grid.BlockPlacer.BlockAppearTransDone
+        );
+        Grid.TilePlacer.CircuitAppearTransDone = false;
+        Grid.BlockPlacer.BlockAppearTransDone = false;
+
+        onComplete?.Invoke();
+    }
+
+    private IEnumerator StageEndTrans(Action onComplete)
+    {
+        Grid.TilePlacer.CircuitDisappear();
+        Grid.BlockPlacer.BlockDisappear();
+
+        yield return new WaitUntil(
+            () =>
+            Grid.TilePlacer.CircuitDisappearTransDone &&
+            Grid.BlockPlacer.BlockDisappearTransDone
+        );
+        Grid.TilePlacer.CircuitDisappearTransDone = false;
+        Grid.BlockPlacer.BlockDisappearTransDone = false;
+
+        onComplete?.Invoke();
+    }
+    #endregion
 }

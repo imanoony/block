@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.Rendering.Universal;
-
+using DG.Tweening;
+using System.Collections;
 
 // Tilemap-based
 public class TilePlacer : MonoBehaviour
@@ -11,52 +11,137 @@ public class TilePlacer : MonoBehaviour
     [Header("Background")]
     [SerializeField] private Tilemap bgTilemap;
     [SerializeField] private List<TileBase> bgTiles;
+
     private int bgWidth = -1, bgHeight = -1;
     private int bgOffset = 4;
+    private int placedBgMinX, placedBgMaxX;
+    private int placedBgMinY, placedBgMaxY;
+    private bool hasBackground = false;
     public void PlaceBackground(int width, int height)
     {
         Debug.Log($"Placing background with width {width} and height {height}");
-        bgTilemap.ClearAllTiles();
-        List<TileBase> evenTiles = new();
-        List<TileBase> oddTiles = new();
+
         bgWidth = width;
         bgHeight = height;
 
+        List<TileBase> evenTiles = new();
+        List<TileBase> oddTiles = new();
+
         for (int i = 0; i < bgTiles.Count; i++)
         {
-            if (i % 2 == 0)
-            {
-                evenTiles.Add(bgTiles[i]);
-            }    
-            else
-            {
-                oddTiles.Add(bgTiles[i]);
-            }
+            if (i % 2 == 0) evenTiles.Add(bgTiles[i]);
+            else oddTiles.Add(bgTiles[i]);
         }
 
-        for (int y = -bgOffset; y < height + bgOffset; y++)
+        int minX = -bgOffset;
+        int maxX = width + bgOffset - 1;
+
+        int minY = -bgOffset;
+        int maxY = height + bgOffset - 1;
+
+        // 첫 생성
+        if (!hasBackground)
         {
-            for (int x = -bgOffset; x < width + bgOffset; x++)
+            bgTilemap.ClearAllTiles();
+
+            FillBackgroundRect(
+                minX, maxX,
+                minY, maxY,
+                evenTiles, oddTiles
+            );
+
+            placedBgMinX = minX;
+            placedBgMaxX = maxX;
+            placedBgMinY = minY;
+            placedBgMaxY = maxY;
+
+            hasBackground = true;
+            return;
+        }
+
+        // Left Expand
+        if (minX < placedBgMinX)
+        {
+            FillBackgroundRect(
+                minX, placedBgMinX - 1,
+                minY, maxY,
+                evenTiles, oddTiles
+            );
+
+            placedBgMinX = minX;
+        }
+
+        // Right Expand
+        if (maxX > placedBgMaxX)
+        {
+            FillBackgroundRect(
+                placedBgMaxX + 1, maxX,
+                minY, maxY,
+                evenTiles, oddTiles
+            );
+
+            placedBgMaxX = maxX;
+        }
+
+        // Top Expand
+        if (minY < placedBgMinY)
+        {
+            FillBackgroundRect(
+                placedBgMinX, placedBgMaxX,
+                minY, placedBgMinY - 1,
+                evenTiles, oddTiles
+            );
+
+            placedBgMinY = minY;
+        }
+
+        // Bottom Expand
+        if (maxY > placedBgMaxY)
+        {
+            FillBackgroundRect(
+                placedBgMinX, placedBgMaxX,
+                placedBgMaxY + 1, maxY,
+                evenTiles, oddTiles
+            );
+
+            placedBgMaxY = maxY;
+        }
+    }
+
+    private void FillBackgroundRect(
+        int minX,
+        int maxX,
+        int minY,
+        int maxY,
+        List<TileBase> evenTiles,
+        List<TileBase> oddTiles
+    )
+    {
+        for (int y = minY; y <= maxY; y++)
+        {
+            for (int x = minX; x <= maxX; x++)
             {
                 bool useEven = (x + y) % 2 == 0;
                 List<TileBase> pool = useEven ? evenTiles : oddTiles;
 
-                if (pool.Count == 0)
-                {
-                    continue;
-                }
+                if (pool.Count == 0) continue;
 
                 TileBase tile = pool[Random.Range(0, pool.Count)];
                 Vector3Int pos = new(x, y, 0);
+
                 bgTilemap.SetTile(pos, tile);
             }
         }
-        Debug.Log(bgTiles.Count);
     }
+
     public void RemoveBackground()
     {
         bgTilemap.ClearAllTiles();
-        bgWidth = -1; bgHeight = -1;
+
+        bgWidth = -1;
+        bgHeight = -1;
+
+        hasBackground = false;
     }
     #endregion
 
@@ -79,12 +164,14 @@ public class TilePlacer : MonoBehaviour
     public void RemoveCircuit()
     {
         circuitTilemap.ClearAllTiles();
+        if (circuitShadow != null) circuitShadow.ClearAllTiles();
         circuitWidth = -1; circuitHeight = -1;
         circuitStartX = -1; circuitStartY = -1;
 
         //RemoveTileCollider();
         //RemoveCameraBoundary();
         RemoveGrids();
+        RemoveBarriers();
     }
     public void PlaceCircuit(
         int startX,
@@ -98,6 +185,8 @@ public class TilePlacer : MonoBehaviour
             Utils.PrintError("Invalid tilemap or tiles"); 
             return; 
         }
+
+        circuitTilemap.gameObject.transform.position = Vector3.zero;
         
         this.circuitStartX = startX;
         this.circuitStartY = startY;
@@ -164,49 +253,61 @@ public class TilePlacer : MonoBehaviour
         if (cam == null) { Utils.PrintError("Main Camera not found"); return; }
 
         Vector3 centerWorld = bgTilemap.GetCellCenterWorld(
-            new Vector3Int(
-                bgWidth / 2,
-                bgHeight / 2,
-                0
-            )
+            new Vector3Int(bgWidth / 2, bgHeight / 2, 0)
         );
 
-        // height, width가 짝수라면 offset 추가한다
         if (bgHeight % 2 == 0) centerWorld -= new Vector3(0, bgTilemap.cellSize.y / 2f, 0);
         if (bgWidth % 2 == 0) centerWorld -= new Vector3(bgTilemap.cellSize.x / 2f, 0, 0);
-        cam.transform.position = new Vector3(centerWorld.x, centerWorld.y, cam.transform.position.z);
 
-        // 타일맵 크기 (월드 단위)
-        Vector3 cellSize = bgTilemap.cellSize;
-        float worldWidth = bgWidth * cellSize.x;
-        float worldHeight = bgHeight * cellSize.y;
+        Vector3 targetPos = new Vector3(centerWorld.x, centerWorld.y, cam.transform.position.z);
 
-        // 화면 비율에 맞게 카메라 크기 계산
-        float percent = 1f;
+        float worldWidth = bgWidth * bgTilemap.cellSize.x;
+        float worldHeight = bgHeight * bgTilemap.cellSize.y;
+
         float aspect = Screen.width / (float)Screen.height;
-        float cameraHalfHeight = worldHeight / percent / 2f;
-        float cameraHalfWidth = worldWidth / percent / 2f;
 
-        // 가로/세로 중 더 큰 값을 사용해야 타일맵 전체가 화면 안에 들어옴
+        float cameraHalfHeight = worldHeight / 2f;
+        float cameraHalfWidth = worldWidth / 2f;
+
+        float targetOrthoSize = Mathf.Max(cameraHalfHeight, cameraHalfWidth / aspect);
+
         cam.orthographic = true;
-        cam.orthographicSize = Mathf.Max(cameraHalfHeight, cameraHalfWidth / aspect);
 
-        //PPCamera.refResolutionY = Mathf.RoundToInt(cam.orthographicSize * 2f * Utils.PPU);
-        //PPCamera.refResolutionX = Mathf.RoundToInt(PPCamera.refResolutionY * aspect);
+        // 기존 트윈 있으면 제거
+        cam.transform.DOKill();
 
-        // 카메라 월드 좌표 기준 최소/최대 좌표
-        Vector3 camPos = cam.transform.position;
-        float camHalfH = cam.orthographicSize;
-        float camHalfW = cam.orthographicSize * aspect;
+        // 카메라 이동 + 줌 동시 트윈
+        Sequence seq = DOTween.Sequence();
 
-        Vector2 min = new Vector2(camPos.x - camHalfW, camPos.y - camHalfH);
-        Vector2 max = new Vector2(camPos.x + camHalfW, camPos.y + camHalfH);
-        Rect boundary = new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
+        seq.Join(
+            cam.transform.DOMove(targetPos, 0.6f)
+                .SetEase(Ease.InOutCubic)
+        );
 
-        // Utils에 바운더리 세팅
-        Utils.SetBoundary(boundary);
+        seq.Join(
+            DOTween.To(
+                () => cam.orthographicSize,
+                x => cam.orthographicSize = x,
+                targetOrthoSize,
+                0.6f
+            ).SetEase(Ease.InOutCubic)
+        );
+
+        seq.OnComplete(() =>
+        {
+            // 바운더리 계산은 "최종 위치 기준"으로
+            Vector3 camPos = cam.transform.position;
+
+            float camHalfH = cam.orthographicSize;
+            float camHalfW = camHalfH * aspect;
+
+            Vector2 min = new Vector2(camPos.x - camHalfW, camPos.y - camHalfH);
+            Vector2 max = new Vector2(camPos.x + camHalfW, camPos.y + camHalfH);
+
+            Rect boundary = new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
+            Utils.SetBoundary(boundary);
+        });
     }
-
     private List<GameObject> boundaryWalls = null;
     private void RemoveCameraBoundary()
     {
@@ -344,6 +445,87 @@ public class TilePlacer : MonoBehaviour
             Vector2 topLeft = (Vector2)GetTileTopLeftWorld(x, y);
             barrier.transform.position = new Vector3(topLeft.x, topLeft.y - GetTileSize().y / 2f, barrier.transform.position.z);
         }
+    }
+    public void RemoveBarriers()
+    {
+        foreach (Transform child in barrierParent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+    #endregion
+
+    #region Transition
+    [HideInInspector] public bool CircuitAppearTransDone = false;
+    [HideInInspector] public bool CircuitDisappearTransDone = false;
+    public void CircuitAppear()
+    {
+        if (currentCo != null) StopCoroutine(currentCo);
+        currentCo = StartCoroutine(CircuitAppearCo());
+    }
+    public void CircuitDisappear()
+    {
+        if (currentCo != null) StopCoroutine(currentCo);
+        currentCo = StartCoroutine(CircuitDisappearCo());
+    }
+
+    private Tween currentTween = null;
+    private Coroutine currentCo = null;
+    private IEnumerator CircuitAppearCo()
+    {
+        currentTween?.Kill();
+
+        Camera cam = Camera.main;
+        GameObject circuit = circuitTilemap.gameObject;
+        Transform tr = circuit.transform;
+
+        tr.DOKill();
+
+        Vector3 targetPos = tr.position;
+        Vector3 viewportPos = cam.WorldToViewportPoint(targetPos);
+        viewportPos.y = 1.2f;
+
+        Vector3 startPos = cam.ViewportToWorldPoint(viewportPos);
+        startPos.z = targetPos.z;
+        tr.position = startPos;
+
+        Tween t = tr.DOMove(targetPos, 1.2f).SetEase(Ease.OutCubic);
+        currentTween = t;
+
+        yield return t.WaitForCompletion();
+
+        if (currentTween == t) currentTween = null;
+        currentCo = null;
+
+        CircuitAppearTransDone = true;
+    }
+
+    private IEnumerator CircuitDisappearCo()
+    {
+        currentTween?.Kill();
+
+        Camera cam = Camera.main;
+        GameObject circuit = circuitTilemap.gameObject;
+        Transform tr = circuit.transform;
+
+        tr.DOKill();
+
+        Vector3 startPos = tr.position;
+        Vector3 viewportPos = cam.WorldToViewportPoint(startPos);
+        viewportPos.y = 1.2f;
+
+        Vector3 targetPos = cam.ViewportToWorldPoint(viewportPos);
+        targetPos.z = startPos.z;
+
+        Tween t = tr.DOMove(targetPos, 1.2f).SetEase(Ease.InCubic);
+        currentTween = t;
+
+        yield return t.WaitForCompletion();
+
+        if (currentTween == t) currentTween = null;
+        currentCo = null;
+
+        CircuitDisappearTransDone = true;
     }
     #endregion
 }

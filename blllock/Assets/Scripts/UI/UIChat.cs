@@ -39,9 +39,9 @@ public class UIChat : MonoBehaviour
     {
         ClearChat();
 
-        for (int x = 0; x < circuitWidth + 1; x++)
+        for (int x = 0; x < circuitHeight + 1; x++)
         {
-            for (int y = 0; y < circuitHeight + 1; y++)
+            for (int y = 0; y < circuitWidth + 1; y++)
             {
                 Vector2Int pos = new(x, y);
 

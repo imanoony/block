@@ -75,6 +75,7 @@ public class GridInstance : MonoBehaviour
                 {
                     GameManager.Instance.OutputCheck(new(x, y), true);
                     SetColor(Utils.CodeToColor(Utils.BLUE));
+                    GameManager.Instance.UI.EnableChat(x, y);
                 }
                 else
                 {
@@ -88,7 +89,10 @@ public class GridInstance : MonoBehaviour
                 SetColor(Utils.CodeToColor(Utils.GRAY));
             }
         }
-        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) SetColor(Utils.CodeToColor(Utils.BLUE));
+        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) {
+            SetColor(Utils.CodeToColor(Utils.BLUE));
+            GameManager.Instance.UI.EnableChat(x, y);
+        }
         else
         {
             SetColor(Utils.CodeToColor(Utils.CLEAR));

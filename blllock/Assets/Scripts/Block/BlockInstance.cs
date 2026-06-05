@@ -14,6 +14,10 @@ public class BlockInstance : MonoBehaviour
     [SerializeField] private GameObject ghostPrefab;
     private GameObject ghost;
     private Vector2 blockPos;
+    private Vector2Int blockTilePos;
+
+    private Transform unplacedRoot = null;
+    private Transform placedRoot = null;
 
     public bool CanRotate { get; private set; } = false;
     public bool CanFlip { get; private set; } = false;
@@ -23,6 +27,7 @@ public class BlockInstance : MonoBehaviour
         Sprite sprite, 
         Vector2Int initPos,
         Sprite ghostSprite,
+        Transform placedRoot,
         bool canRotate = false, 
         bool canFlip = false,
         bool hasSpike = false
@@ -30,6 +35,8 @@ public class BlockInstance : MonoBehaviour
     {
         if (blockData == null) { Utils.PrintError("BlockData는 Null일 수 없음."); return; }
         this.blockData = blockData;
+        this.placedRoot = placedRoot;
+        this.unplacedRoot = gameObject.transform.parent;
 
         this.blockData.Instantiate();
         CanRotate = canRotate;
@@ -63,6 +70,7 @@ public class BlockInstance : MonoBehaviour
 
         Place(gm, initPos);
         blockPos = transform.position;
+        blockTilePos = initPos;
         
         ghost = Instantiate(ghostPrefab, transform.position, Quaternion.identity);
         ghost.GetComponent<SpriteRenderer>().sprite = ghostSprite;
@@ -119,16 +127,19 @@ public class BlockInstance : MonoBehaviour
         if (snapPos == null)
         {
             transform.position = blockPos;
+            Place(gm, blockTilePos);
             return;
         }
 
         if (!Place(gm, (Vector2Int)snapPos))
         {
             transform.position = blockPos;
+            Place(gm, blockTilePos);
             return;
         }
 
         blockPos = transform.position;
+        blockTilePos = snapPos.Value;
     }
 
     private void Update()
@@ -296,6 +307,9 @@ public class BlockInstance : MonoBehaviour
         // 블록의 위치를 snap position (좌표) 에 동기화
         transform.position = gm.GetBlockCenterOnTile(baseTile.x, baseTile.y, blockData.Height, blockData.Width);
         transform.position = new(transform.position.x, transform.position.y, Utils.BLOCK_Z);
+
+        if (gm.IsInCircuit(baseTile.x, baseTile.y)) transform.SetParent(placedRoot);
+        else transform.SetParent(unplacedRoot);
 
         if (!gm.PlaceBlock(blockData, baseTile))
         {

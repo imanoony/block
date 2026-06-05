@@ -382,7 +382,7 @@ public class GridManager : MonoBehaviour
         if (Tiles == null) return false;
         return x >= 0 && y >= 0 && x < Tiles.GetLength(0) && y < Tiles.GetLength(1);
     }
-    private bool IsInCircuit(int x, int y)
+    public bool IsInCircuit(int x, int y)
     {
         if (Tiles == null) return false;
         if (!IsInTileBounds(x, y)) return false;
@@ -483,8 +483,9 @@ public class GridManager : MonoBehaviour
     public Vector3 GetTileSize() => TilePlacer.GetTileSize();
     public Vector3 GetTileTopLeftForChat(int x, int y)
     {
+        Debug.Log($"[GetTileTopLeftForChat] (x:{x}, y:{y})");
         Vector3 pos = (Vector3)TilePlacer.GetTileTopLeftWorld(x, y)!;
-        pos = new(pos.x, pos.y + GetTileSize().y / 4f, pos.z);
+        pos = new(pos.x, pos.y + GetTileSize().y / 16f, pos.z);
         return pos;
     }
     private Vector2Int GetCircuitBase(int x, int y)
