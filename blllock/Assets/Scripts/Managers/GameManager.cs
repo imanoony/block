@@ -25,7 +25,8 @@ public static class Utils
     public const string YELLOW = "#FEFCCD";
     public const string CLEAR = "#F0F0F0FF";
     public const float CLEAR_ALPHA = 1f;
-    public const float THRESHOLD = 0.6f;
+    public const float THRESHOLD = 3f;
+    public const int MAX_SNAP_COUNT = 20;
     public const float TILE_FILL_PERCENT1 = 0.5f;
     public const float TILE_FILL_PERCENT2 = 0.7f;
     public const float FILL_THRESHOLD = 9;

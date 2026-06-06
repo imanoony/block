@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System.Linq;
 
 public class BlockInstance : MonoBehaviour
 {
@@ -123,23 +124,26 @@ public class BlockInstance : MonoBehaviour
 
         currentGhostSnapPos = null;
 
-        Vector2Int? snapPos = gm.GetNearestTile(GetBaseTilePos());
-        if (snapPos == null)
+        List<Vector2Int?> snapPosList = gm.GetNearestTiles(GetBaseTilePos(), Utils.MAX_SNAP_COUNT);
+        for (int i = 0; i < snapPosList.Count; i++)
         {
-            transform.position = blockPos;
-            Place(gm, blockTilePos);
-            return;
+            Vector2Int? snapPos = snapPosList[i];
+            if (snapPos == null)
+            {
+                transform.position = blockPos;
+                Place(gm, blockTilePos);
+                return;
+            }
+            if (Place(gm, (Vector2Int)snapPos))
+            {
+                blockPos = transform.position;
+                blockTilePos = snapPos.Value;
+                return;
+            }
         }
 
-        if (!Place(gm, (Vector2Int)snapPos))
-        {
-            transform.position = blockPos;
-            Place(gm, blockTilePos);
-            return;
-        }
-
-        blockPos = transform.position;
-        blockTilePos = snapPos.Value;
+        transform.position = blockPos;
+        Place(gm, blockTilePos);
     }
 
     private void Update()
@@ -158,7 +162,7 @@ public class BlockInstance : MonoBehaviour
             );
 
             // Ghost 위치 표시
-            Vector2Int? snapPos = gm.GetNearestTile(GetBaseTilePos());
+            Vector2Int? snapPos = gm.GetNearestTiles(GetBaseTilePos())[0];
             if (snapPos != null)
             {
                 if (

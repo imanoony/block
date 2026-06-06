@@ -452,31 +452,57 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
-    public Vector2Int? GetNearestTile(Vector3 worldPos)
+    public List<Vector2Int?> GetNearestTiles(Vector3 worldPos, int count = 1)
     {
-        if (Tiles == null) return null;
+        List<(Vector2Int pos, float distSq)> nearest = new();
 
-        float minDist = float.MaxValue;
-        Vector2Int? nearest = null;
+        if (Tiles == null || count <= 0) return new();
+        float thresholdSq = Utils.THRESHOLD * Utils.THRESHOLD;
 
-        int height = Tiles.GetLength(0), width = Tiles.GetLength(1);
-        Vector3? topLeft;
+        int height = Tiles.GetLength(0);
+        int width = Tiles.GetLength(1);
 
         for (int x = 0; x < height; x++)
         {
             for (int y = 0; y < width; y++)
             {
-                topLeft = TilePlacer.GetTileTopLeftWorld(x, y);
+                Vector3? topLeft = TilePlacer.GetTileTopLeftWorld(x, y);
                 if (topLeft == null) continue;
-                float dist = Vector2.Distance((Vector2)worldPos, (Vector2)topLeft);
 
-                if (dist < minDist) { minDist = dist; nearest = new Vector2Int(x, y); }
+                float distSq = ((Vector2)worldPos - (Vector2)topLeft.Value).sqrMagnitude;
+                if (distSq > thresholdSq) continue;
+
+                (Vector2Int, float) candidate = (new Vector2Int(x, y), distSq);
+
+                if (nearest.Count < count)
+                {
+                    nearest.Add(candidate);
+                }
+                else
+                {
+                    int worstIdx = 0;
+
+                    for (int i = 1; i < nearest.Count; i++)
+                    {
+                        if (nearest[i].distSq > nearest[worstIdx].distSq)
+                            worstIdx = i;
+                    }
+
+                    if (distSq < nearest[worstIdx].distSq)
+                    {
+                        nearest[worstIdx] = candidate;
+                    }
+                }
             }
         }
 
-        Debug.Log($"nearest: {nearest}, minDict: {minDist}");
+        nearest.Sort((a, b) => a.distSq.CompareTo(b.distSq));
 
-        return minDist <= Utils.THRESHOLD ? nearest : null;
+        List<Vector2Int?> result = new();
+        foreach ((Vector2Int pos, float) tile in nearest) result.Add(tile.pos);
+        while (result.Count < count) result.Add(null);
+
+        return result;
     }
 
     public Vector3 GetBlockCenterOnTile(int x, int y, int height, int width) => TilePlacer.GetBlockCenterOnTile(x, y, height, width);
