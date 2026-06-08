@@ -111,6 +111,7 @@ public class BlockInstance : MonoBehaviour
         if (isPlaced) Unplace(gm);
 
         ghost.transform.position = transform.position;
+        ghost.transform.rotation = transform.rotation;
         ghost.SetActive(true);
 
         targetBlockPos = transform.position;
@@ -472,6 +473,8 @@ public class BlockInstance : MonoBehaviour
 
         yield return rotateT.WaitForCompletion();
         yield return StartCoroutine(ScaleDownCo(0.1f));
+
+        shadow.transform.localPosition = -Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
         yield return StartCoroutine(ShadowOnCo(0.2f));
 
         onComplete?.Invoke();

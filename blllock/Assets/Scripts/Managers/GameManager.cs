@@ -32,7 +32,7 @@ public static class Utils
     public const float FILL_THRESHOLD = 9;
     public const int PPU = 24;
     public const int MAX_PORT = 4;
-    public static readonly Vector3 HOVER = new Vector3(0.1f, 0.1f, 0);
+    public static readonly Vector3 HOVER = new Vector3(0.05f, 0.05f, 0);
     public const float SHADOW_ALPHA = 100 / 255f;
     public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
     public const int MODULE_MIN = 0;
