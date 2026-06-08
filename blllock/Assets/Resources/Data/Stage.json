@@ -39,8 +39,10 @@
                     "y": 10
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -89,8 +91,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -130,8 +134,10 @@
                 4
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -171,10 +177,10 @@
                 0
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -229,8 +235,10 @@
                 1
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -278,10 +286,10 @@
                 4
             ],
             "BlockPositions": [],
-            "RIndex": [
-                1
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -329,11 +337,10 @@
                 4
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0,
-                1
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -382,10 +389,10 @@
                 2
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [
-                2
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -433,11 +440,10 @@
                 1
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0,
-                1
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -493,12 +499,10 @@
                 0
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0
-            ],
-            "FIndex": [
-                1
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -558,13 +562,10 @@
                 3
             ],
             "BlockPositions": [],
-            "RIndex": [
-                3,
-                7
-            ],
-            "FIndex": [
-                5
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -631,8 +632,10 @@
                 1
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -671,8 +674,10 @@
                 0
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -712,8 +717,10 @@
                 3
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -753,8 +760,10 @@
                 4
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -794,10 +803,10 @@
                 0
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -852,8 +861,10 @@
                 1
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -900,8 +911,10 @@
                 3
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -949,11 +962,10 @@
                 1
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0,
-                1
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1002,10 +1014,10 @@
                 2
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [
-                2
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1045,8 +1057,10 @@
                 6
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1102,12 +1116,10 @@
                 0
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0
-            ],
-            "FIndex": [
-                1
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1155,8 +1167,10 @@
                 3
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1196,10 +1210,10 @@
                 0
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1247,10 +1261,10 @@
                 4
             ],
             "BlockPositions": [],
-            "RIndex": [
-                1
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1298,11 +1312,10 @@
                 4
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0,
-                1
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1343,11 +1356,10 @@
                 3
             ],
             "BlockPositions": [],
-            "RIndex": [
-                1,
-                2
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1395,8 +1407,10 @@
                 4
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1452,8 +1466,10 @@
                 7
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1509,10 +1525,10 @@
                 5
             ],
             "BlockPositions": [],
-            "RIndex": [
-                2
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1569,11 +1585,10 @@
                 6
             ],
             "BlockPositions": [],
-            "RIndex": [
-                0,
-                4
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1614,10 +1629,10 @@
                 5
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [
-                2
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1658,12 +1673,10 @@
                 3
             ],
             "BlockPositions": [],
-            "RIndex": [
-                2
-            ],
-            "FIndex": [
-                0
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1711,10 +1724,10 @@
                 4
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [
-                2
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1769,12 +1782,10 @@
                 6
             ],
             "BlockPositions": [],
-            "RIndex": [
-                1
-            ],
-            "FIndex": [
-                2
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1823,10 +1834,10 @@
                 7
             ],
             "BlockPositions": [],
-            "RIndex": [],
-            "FIndex": [
-                1
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1883,13 +1894,10 @@
                 6
             ],
             "BlockPositions": [],
-            "RIndex": [
-                2,
-                4
-            ],
-            "FIndex": [
-                3
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1931,13 +1939,10 @@
                 4
             ],
             "BlockPositions": [],
-            "RIndex": [
-                1,
-                2
-            ],
-            "FIndex": [
-                3
-            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -1987,10 +1992,10 @@
                 5
             ],
             "BlockPositions": [],
-            "RIndex": [
-                4
-            ],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2034,8 +2039,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2084,8 +2091,10 @@
                     "y": 1
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2139,8 +2148,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2194,8 +2205,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2249,8 +2262,10 @@
                     "y": 10
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2311,8 +2326,10 @@
                     "y": 10
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2378,8 +2395,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2452,8 +2471,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2526,8 +2547,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2600,8 +2623,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2669,8 +2694,10 @@
                     "y": 10
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2724,8 +2751,10 @@
                     "y": 0
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2774,8 +2803,10 @@
                     "y": 8
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2836,8 +2867,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2891,8 +2924,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []
@@ -2941,8 +2976,10 @@
                     "y": 11
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [
                 {
@@ -3022,8 +3059,10 @@
                     "y": 9
                 }
             ],
-            "RIndex": [],
-            "FIndex": [],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [
@@ -3032,6 +3071,62 @@
                     "y": 2
                 }
             ]
+        },
+        {
+            "ID": 600010,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "CircuitWidth": 4,
+            "CircuitHeight": 3,
+            "CircuitPosition": {
+                "x": 2,
+                "y": 4
+            },
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 3
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 1,
+                        "y": 1
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "600010",
+            "TutorialID": -1,
+            "Blocks": [
+                8,
+                9
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                }
+            ],
+            "RotateCWIndex": [
+                0
+            ],
+            "RotateCCWIndex": [
+                1
+            ],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": []
         }
     ]
 }

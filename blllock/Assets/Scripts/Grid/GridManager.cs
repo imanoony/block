@@ -66,6 +66,10 @@ public class GridManager : MonoBehaviour
 ";
             Debug.Log(debugText);
         }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log($"Current Tile Occupancy: {string.Join(", ", Tiles.Cast<Tile>().Where(t => t.Type == TileType.Occupied).Select(t => t.Pos))}");
+        }
     }
 
     public Grid[,]? Grids { get; private set; } = null;
@@ -333,6 +337,7 @@ public class GridManager : MonoBehaviour
     public bool IsValidPos(BlockData block, Vector2Int baseTile)
     {
         HashSet<Vector2Int> offsets = block.Tiles.ToHashSet();
+        Debug.Log("Checking IsValidPos for block with baseTile: " + baseTile + " and offsets: " + string.Join(", ", offsets));
         foreach (Vector2Int offset in offsets)
         {
             if (!IsInTileBounds(baseTile.x + offset.x, baseTile.y + offset.y)) return false;

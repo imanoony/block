@@ -12,7 +12,15 @@ public class BlockPlacer : MonoBehaviour
     [SerializeField] private Sprite[] sblockSprites;
     [SerializeField] private Sprite[] blockGhostSprites;
 
+    // 우선은 하드하게 넣어두지만 이후 수정 예정
+    // 0: RotateCW
+    // 1: RotateCCW
+    // 2: FlipX
+    // 3: FlipY
+    [SerializeField] private Sprite[] blockTagSprites; 
+
     private List<GameObject> blockInstances = null;
+    private List<BlockTag> blockTags = null;
     public void RemoveBlocks()
     {
         if (blockInstances != null)
@@ -22,16 +30,21 @@ public class BlockPlacer : MonoBehaviour
             blockInstances.Clear();
         }
         blockInstances = null;
+        blockTags = null;
     }
 
     public void PlaceBlocks(StageData stage)
     {
         blockInstances = new List<GameObject>();
+        blockTags = new List<BlockTag>();
         blockParent.transform.localPosition = Vector3.zero;
 
         // 사용할 세 리스트 미리 정리하기
         List<int> blocks = stage.Blocks;
-        List<int> rotate = stage.RIndex, flip = stage.FIndex;
+        List<int> rotateCW = stage.RotateCWIndex;
+        List<int> rotateCCW = stage.RotateCCWIndex;
+        List<int> flipX = stage.FlipXIndex;
+        List<int> flipY = stage.FlipYIndex;
         List<int> spike = stage.SIndex;
         List<Vector2Int> blockPositions = stage.BlockPositions;
         if (blockPositions.Count < blocks.Count)
@@ -43,28 +56,63 @@ public class BlockPlacer : MonoBehaviour
 
         for (int i = 0; i < blocks.Count; i++)
         {
-            bool r = rotate.Contains(i);
-            bool f = flip.Contains(i);
+            bool rCW = rotateCW.Contains(i);
+            bool rCCW = rotateCCW.Contains(i);
+            bool fX = flipX.Contains(i);
+            bool fY = flipY.Contains(i);
             bool s = spike.Contains(i);
-            blockInstances.Add(PlaceBlock(blocks[i], blockPositions[i], r, f, s));
+            GameObject blockInstance = PlaceBlock(blocks[i], blockPositions[i], rCW, rCCW, fX, fY, s);
+            blockInstances.Add(blockInstance);
+            if (rCW || rCCW || fX || fY)
+            {
+                BlockTag blockTag = blockInstance.GetComponentInChildren<BlockTag>();
+                if (blockTag != null)
+                    blockTags.Add(blockTag);
+            }
         }
     }
 
     private GameObject PlaceBlock(
         int id, 
         Vector2Int pos, 
-        bool canRotate, 
-        bool canFlip, 
+        bool canRotateCW,
+        bool canRotateCCW, 
+        bool canFlipX,
+        bool canFlipY, 
         bool hasSpike
     )
     {
         GameObject instance = Instantiate(blockPrefab, blockParent.transform);
         BlockData blockData = new BlockData(GameManager.Instance.BlockLibrary[id]);
         BlockInstance blockInstance = instance.GetComponent<BlockInstance>();
+        BlockTag blockTag = instance.GetComponentInChildren<BlockTag>();
         
         Sprite sprite = hasSpike ? sblockSprites[id] : blockSprites[id];
         Sprite ghostSprite = blockGhostSprites[id];
-        blockInstance.Initialize(blockData, sprite, pos, ghostSprite, placedBlockRoot.transform, canRotate, canFlip, hasSpike);
+        blockInstance.Initialize(
+            blockData,
+            sprite,
+            pos,
+            ghostSprite,
+            placedBlockRoot.transform,
+            canRotateCW,
+            canRotateCCW,
+            canFlipX,
+            canFlipY,
+            hasSpike
+        );
+        
+        // TODO: 나중에 더 깔끔하게 할 수 있을 듯
+        if (canRotateCW) 
+            blockTag.Initialize(TagType.RotateCW, blockTagSprites[0]);
+        else if (canRotateCCW)
+            blockTag.Initialize(TagType.RotateCCW, blockTagSprites[1]);
+        else if (canFlipX)
+            blockTag.Initialize(TagType.FlipX, blockTagSprites[2]);
+        else if (canFlipY)
+            blockTag.Initialize(TagType.FlipY, blockTagSprites[3]);
+        else
+            blockTag.Initialize(TagType.Null, null);
 
         return instance;
     }
@@ -115,6 +163,15 @@ public class BlockPlacer : MonoBehaviour
                 .SetDelay(i * 0.1f);
             
             seq.Join(t);
+        }
+
+        float tagStartTime = seq.Duration() + 0.2f;
+        for (int i = 0; i < blockTags.Count; i++)
+        {
+            seq.Insert(
+                tagStartTime + i * 0.2f,
+                blockTags[i].GetTagOnTween()
+            );
         }
 
         yield return seq.WaitForCompletion();

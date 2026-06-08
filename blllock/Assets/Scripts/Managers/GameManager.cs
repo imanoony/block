@@ -36,7 +36,7 @@ public static class Utils
     public const float SHADOW_ALPHA = 100 / 255f;
     public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
     public const int MODULE_MIN = 0;
-    public const int MODULE_MAX = 5;
+    public const int MODULE_MAX = 6;
     public const int AUDIO_THRESHOLD0 = 2;
     public const int AUDIO_THRESHOLD1 = 3;
     public const int AUDIO_THRESHOLD2 = 4;
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(0);
+        StartModule(6);
     }
 
     void Update()
@@ -167,6 +167,9 @@ public class GameManager : MonoBehaviour
     #endregion
     public GameState State { get; private set; } = GameState.Paused;
     public void SetState(GameState state) => State = state;
+    public bool IsOnAction { get; private set; } = false;
+    public bool ActionOn() => IsOnAction = true;
+    public bool ActionOff() => IsOnAction = false;
     public ModuleData CurrentModule { get; private set; } = null;
     public int LastStageID { get; private set; } = -1;
     public StageData CurrentStage { get; private set; } = null;

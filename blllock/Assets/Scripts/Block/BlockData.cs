@@ -2,7 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum Rotate { Null = -1, None = 0, Rotate90 = 90, Rotate180 = 180, Rotate270 = 270 }
+public enum Rotate 
+{ 
+    Null = -1, 
+    None = 0, 
+    Rotate90 = 90, 
+    Rotate180 = 180, 
+    Rotate270 = 270 
+}
 
 public class BlockData
 {
@@ -43,11 +50,17 @@ public class BlockData
     }
     
     public Rotate BlockRotate { get; private set; } = Rotate.None;
-    public Rotate Rotation()
+    public Rotate RotateCW()
     {
         int i;
-        for (i = 0; i < Tiles.Count; i++) Tiles[i] = new(Tiles[i].y, GetHeight() - 1 - Tiles[i].x);
-        for (i = 0; i < Grids.Count; i++) Grids[i] = new(Grids[i].y, GetHeight() - Grids[i].x);
+        for (i = 0; i < Tiles.Count; i++) 
+        {
+            Tiles[i] = new(Tiles[i].y, GetHeight() - 1 - Tiles[i].x);
+        }
+        for (i = 0; i < Grids.Count; i++) 
+        {
+            Grids[i] = new(Grids[i].y, GetHeight() - Grids[i].x);
+        }
 
         if (HasSpike)
         {
@@ -59,6 +72,29 @@ public class BlockData
         else BlockRotate += (int)Rotate.Rotate90;
         return BlockRotate;
     }
+    public Rotate RotateCCW()
+    {
+        int i;
+        for (i = 0; i < Tiles.Count; i++)
+        {
+            Tiles[i] = new(GetWidth() - 1 - Tiles[i].y, Tiles[i].x);
+        }
+        for (i = 0; i < Grids.Count; i++)
+        {
+            Grids[i] = new(GetWidth() - Grids[i].y, Grids[i].x);
+        }
+
+        if (HasSpike)
+        {
+            for (i = 0; i < SpikeTiles.Count; i++)
+                SpikeTiles[i] = new(GetWidth() - 1 - SpikeTiles[i].y, SpikeTiles[i].x);
+        }
+
+        if (BlockRotate == Rotate.None) BlockRotate = Rotate.Rotate270;
+        else BlockRotate -= (int)Rotate.Rotate90;
+        return BlockRotate;
+    }
+
     public bool BlockFlipX { get; private set; } = false;
     public bool FlipX()
     {

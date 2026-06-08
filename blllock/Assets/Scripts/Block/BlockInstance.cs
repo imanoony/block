@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System.Linq;
+using System;
 
 public class BlockInstance : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class BlockInstance : MonoBehaviour
     private bool isDragging = false;
     private GridManager gm;
     private SpriteRenderer sr;
-    private Color color;
+    private Color color = Color.white;
     private GameObject shadow;
     [SerializeField] private GameObject ghostPrefab;
     private GameObject ghost;
@@ -19,9 +19,10 @@ public class BlockInstance : MonoBehaviour
 
     private Transform unplacedRoot = null;
     private Transform placedRoot = null;
-
-    public bool CanRotate { get; private set; } = false;
-    public bool CanFlip { get; private set; } = false;
+    public bool CanRotateCW { get; private set; } = false;
+    public bool CanRotateCCW { get; private set; } = false;
+    public bool CanFlipX { get; private set; } = false;
+    public bool CanFlipY { get; private set; } = false;
     public bool HasSpike { get; private set; } = false;
     public void Initialize(
         BlockData blockData, 
@@ -29,8 +30,10 @@ public class BlockInstance : MonoBehaviour
         Vector2Int initPos,
         Sprite ghostSprite,
         Transform placedRoot,
-        bool canRotate = false, 
-        bool canFlip = false,
+        bool canRotateCW = false, 
+        bool canRotateCCW = false,
+        bool canFlipX = false,
+        bool canFlipY = false,
         bool hasSpike = false
     )
     {
@@ -40,11 +43,10 @@ public class BlockInstance : MonoBehaviour
         this.unplacedRoot = gameObject.transform.parent;
 
         this.blockData.Instantiate();
-        CanRotate = canRotate;
-        CanFlip = canFlip;
-        if (CanRotate) color = Utils.CodeToColor(Utils.GREEN);
-        else if (CanFlip) color = Utils.CodeToColor(Utils.YELLOW);
-        else color = Color.white;
+        CanRotateCW = canRotateCW;
+        CanRotateCCW = canRotateCCW;
+        CanFlipX = canFlipX;
+        CanFlipY = canFlipY;
         
         HasSpike = hasSpike;
         if (HasSpike) this.blockData.SetSpike();
@@ -69,7 +71,10 @@ public class BlockInstance : MonoBehaviour
         SpriteRenderer shadowSr = shadow.GetComponent<SpriteRenderer>();
         shadowSr.sprite = sprite;
 
-        Place(gm, initPos);
+        if (!Place(gm, initPos))
+        {
+            Debug.LogError("Failed to place block at initial position: " + initPos);
+        }
         blockPos = transform.position;
         blockTilePos = initPos;
         
@@ -94,8 +99,9 @@ public class BlockInstance : MonoBehaviour
     private Vector2Int? currentGhostSnapPos = null;
     public void BeginDrag()
     {
-        if (currentCoroutine != null) return;
+        //if (currentCoroutine != null) return;
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (GameManager.Instance.IsOnAction) return;
 
         GameManager.Instance.UI.BlockTooltipDisappear();
 
@@ -204,7 +210,8 @@ public class BlockInstance : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             if (GameManager.Instance.State != GameState.InGame) return;
-            if (isPlaced || isDragging || currentCoroutine != null) return;
+            if (GameManager.Instance.IsOnAction) return;
+            if (isDragging) return;
 
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mouseWorld.x, mouseWorld.y);
@@ -212,8 +219,8 @@ public class BlockInstance : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
-                if (CanRotate) currentCoroutine = StartCoroutine(Rotate(isPlaced));
-                else if (CanFlip) currentCoroutine = StartCoroutine(Flip(isPlaced));
+                if (CanRotateCW) RotateCW();
+                else if (CanRotateCCW) RotateCCW();
             }
         }
     }
@@ -238,6 +245,7 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseEnter()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (GameManager.Instance.IsOnAction) return;
         if (isHovering) return;
         if (isDragging) return;
         //if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
@@ -259,6 +267,7 @@ public class BlockInstance : MonoBehaviour
         //GameManager.Instance.UI.BlockTooltipDisappear();
 
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (GameManager.Instance.IsOnAction) return;
         if (!isHovering) return;
         if (isDragging) return;
         //if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
@@ -285,7 +294,6 @@ public class BlockInstance : MonoBehaviour
 
     private bool CanPlace(GridManager gm, Vector2Int baseTile)
     {
-        if (isPlaced || !this.baseTile.Equals(new(-1, -1))) return false;
         if (!gm.IsValidPos(blockData, baseTile))
         {
             Debug.Log("Invalid Pos");
@@ -303,6 +311,7 @@ public class BlockInstance : MonoBehaviour
     // Valid가 false인 block들은 타일에 변화가 있을 때마다 
     private bool Place(GridManager gm, Vector2Int baseTile)
     {
+        if (isPlaced || !this.baseTile.Equals(new(-1, -1))) return false;
         if (!CanPlace(gm, baseTile)) return false;
 
         isPlaced = true;
@@ -358,146 +367,122 @@ public class BlockInstance : MonoBehaviour
     #endregion
 
     #region Rotate & Flip
-    private Coroutine currentCoroutine = null;
-    private float time = 0.2f;
-    private IEnumerator Rotate(bool isPlaced)
+    private bool RotateCW()
     {
-        if (!CanRotate) yield break;
-        isHovering = true;
-        GameManager.Instance.UI.BlockTooltipDisappear();
+        if (!CanRotateCW) return false;
 
-        Vector2Int baseTile = this.baseTile;
         if (isPlaced) Unplace(gm);
+        blockData.RotateCW();
 
-        yield return StartCoroutine(ShadowDisappear());
-
-        blockData.Rotation();
-
-        float startZ = transform.rotation.eulerAngles.z;
-        float targetZ = -(int)blockData.BlockRotate;
-
-        // 0~360 정규화
-        startZ %= 360f; if (startZ < 0f) startZ += 360f;
-        targetZ %= 360f; if (targetZ < 0f) targetZ += 360f;
-
-        float deltaZ = targetZ - startZ;
-        if (deltaZ > 0f) deltaZ -= 360f; // 항상 시계 방향
-
-        float elapsed = 0f;
-
-        while (elapsed < time)
+        List<Vector2Int?> snapPosList = gm.GetNearestTiles(GetBaseTilePos(), Utils.MAX_SNAP_COUNT);
+        for (int i = 0; i < snapPosList.Count; i++)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / time);
+            Vector2Int? snapPos = snapPosList[i];
+            if (snapPos == null)
+            {
+                blockData.RotateCCW();
+                transform.position = blockPos;
+                Place(gm, blockTilePos);
 
-            // SmoothStep를 사용해서 휙 바뀌는 느낌
-            t = Mathf.Pow(t, 0.3f); // 초반 빠르게 → 끝에 살짝 느리게
-
-            float newZ = startZ + deltaZ * t;
-
-            Vector3 euler = transform.rotation.eulerAngles;
-            euler.z = newZ;
-            transform.rotation = Quaternion.Euler(euler);
-
-            yield return null;
+                StartCoroutine(RotateFailCo(isCW: true));
+                return false;
+            }
+            if (CanPlace(gm, (Vector2Int)snapPos))
+            {
+                StartCoroutine(RotateCo(
+                    isCW: true,
+                    () =>
+                    {
+                        Place(gm, (Vector2Int)snapPos);
+                        blockPos = transform.position;
+                        blockTilePos = snapPos.Value;
+                    }
+                ));
+                return true;
+            }
         }
+        
+        blockData.RotateCCW();
+        transform.position = blockPos;
+        Place(gm, blockTilePos);
 
-        // 마지막 보정
-        Vector3 finalEuler = transform.rotation.eulerAngles;
-        finalEuler.z = targetZ;
-        transform.rotation = Quaternion.Euler(finalEuler);
-
-        shadow.transform.localPosition = -Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
-
-        yield return StartCoroutine(ShadowAppear());
-
-        if (isPlaced) Place(gm, baseTile);
-
-        currentCoroutine = null;
-        isHovering = false;
+        StartCoroutine(RotateFailCo(isCW: true));
+        return false;
     }
-
-
-    private IEnumerator Flip(bool isPlaced)
+    private bool RotateCCW()
     {
-        if (!CanFlip) yield break;
-        isHovering = true;
-
-        Vector2Int baseTile = this.baseTile;
+        if (!CanRotateCCW) return false;
+        
         if (isPlaced) Unplace(gm);
+        blockData.RotateCCW();
 
-        blockData.FlipX();
-        sr.flipX = blockData.BlockFlipX;
-
-        shadow.transform.localPosition = -Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
-        shadow.GetComponent<SpriteRenderer>().flipX = blockData.BlockFlipX;
-
-        PolygonCollider2D poly = gameObject.GetComponent<PolygonCollider2D>();
-        Vector2[] points = poly.points;
-        for (int i = 0; i < points.Length; i++)
+        List<Vector2Int?> snapPosList = gm.GetNearestTiles(GetBaseTilePos(), Utils.MAX_SNAP_COUNT);
+        for (int i = 0; i < snapPosList.Count; i++)
         {
-            points[i].x *= -1; // X 좌표 반전
+            Vector2Int? snapPos = snapPosList[i];
+            if (snapPos == null)
+            {
+                blockData.RotateCW();
+                transform.position = blockPos;
+                Place(gm, blockTilePos);
+
+                StartCoroutine(RotateFailCo(isCW: false));
+                return false;
+            }
+            if (CanPlace(gm, (Vector2Int)snapPos))
+            {
+                if (isPlaced) Unplace(gm);
+                StartCoroutine(RotateCo(
+                    isCW: false,
+                    () =>
+                    {
+                        Place(gm, (Vector2Int)snapPos);
+                        blockPos = transform.position;
+                        blockTilePos = snapPos.Value;
+                    }
+                ));
+                return true;
+            }
         }
-        poly.points = points;
+        
+        blockData.RotateCW();
+        transform.position = blockPos;
+        Place(gm, blockTilePos);
 
-
-        if (isPlaced) Place(gm, baseTile);
-
-        isHovering = false;
+        StartCoroutine(RotateFailCo(isCW: false));
+        return false;
     }
-
-    private float shadowTime = 0.1f;
-    private IEnumerator ShadowAppear()
+    private IEnumerator RotateCo(bool isCW, Action onComplete = null)
     {
-        float elapsed = 0f;
+        GameManager.Instance.ActionOn();
 
-        // 시작 알파(0 = 투명), 목표 알파(1 = 불투명)
-        float startAlpha = 0f;
-        float targetAlpha = Utils.SHADOW_ALPHA; // 약간 투명하게
+        if (shadowCo != null) StopCoroutine(shadowCo);
+        shadowCo = StartCoroutine(ShadowOffCo(0.2f));
+        yield return shadowCo;
 
-        Color color = shadow.GetComponent<SpriteRenderer>().color;
+        if (scaleCo != null) StopCoroutine(scaleCo);
+        scaleCo = StartCoroutine(ScaleUpCo(0.2f));
+        yield return scaleCo;
 
-        while (elapsed < shadowTime)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / shadowTime;
+        Tween rotateT = transform.DORotate(
+            transform.eulerAngles + new Vector3(0, 0, isCW ? -90f : 90f),
+            0.12f,
+            RotateMode.FastBeyond360
+        ).SetEase(Ease.OutQuad);
 
-            // 알파 보간
-            color.a = Mathf.Lerp(startAlpha, targetAlpha, t);
-            shadow.GetComponent<SpriteRenderer>().color = color;
+        yield return rotateT.WaitForCompletion();
+        yield return StartCoroutine(ScaleDownCo(0.1f));
+        yield return StartCoroutine(ShadowOnCo(0.2f));
 
-            yield return null;
-        }
-
-        // 루프가 끝난 뒤 최종 알파 보정
-        color.a = targetAlpha;
-        shadow.GetComponent<SpriteRenderer>().color = color;
+        onComplete?.Invoke();
+        GameManager.Instance.ActionOff();
+        yield break;
     }
-    private IEnumerator ShadowDisappear()
+    private IEnumerator RotateFailCo(bool isCW)
     {
-        float elapsed = 0f;
+        // TODO
 
-        // 시작 알파(0 = 투명), 목표 알파(1 = 불투명)
-        float startAlpha = Utils.SHADOW_ALPHA;
-        float targetAlpha = 0f; // 약간 투명하게
-
-        Color color = shadow.GetComponent<SpriteRenderer>().color;
-
-        while (elapsed < shadowTime)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / shadowTime;
-
-            // 알파 보간
-            color.a = Mathf.Lerp(startAlpha, targetAlpha, t);
-            shadow.GetComponent<SpriteRenderer>().color = color;
-
-            yield return null;
-        }
-
-        // 루프가 끝난 뒤 최종 알파 보정
-        color.a = targetAlpha;
-        shadow.GetComponent<SpriteRenderer>().color = color;
+        yield break;
     }
     #endregion
 
@@ -531,9 +516,9 @@ public class BlockInstance : MonoBehaviour
     }
 
     private Coroutine scaleCo = null;
-    private IEnumerator ScaleUpCo(float duration)
+    private IEnumerator ScaleUpCo(float duration, float scaleFactor = 1.05f)
     {
-        Tween tween = transform.DOScale(1.05f, duration).SetEase(Ease.OutQuad);
+        Tween tween = transform.DOScale(scaleFactor, duration).SetEase(Ease.OutQuad);
 
         yield return tween.WaitForCompletion();
         scaleCo = null;
