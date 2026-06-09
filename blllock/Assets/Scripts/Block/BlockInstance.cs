@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
+using UnityEngine.Rendering;
 
 public class BlockInstance : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class BlockInstance : MonoBehaviour
     private bool isDragging = false;
     private GridManager gm;
     private SpriteRenderer sr;
+    private SortingGroup sg;
     private Color color = Color.white;
     private GameObject shadow;
     [SerializeField] private GameObject ghostPrefab;
@@ -54,6 +56,7 @@ public class BlockInstance : MonoBehaviour
         gm = GameManager.Instance.Grid;
 
         sr = gameObject.GetComponent<SpriteRenderer>();
+        sg = gameObject.GetComponent<SortingGroup>();
         sr.sprite = sprite;
         sr.color = color;
 
@@ -119,6 +122,8 @@ public class BlockInstance : MonoBehaviour
 
         if (shadowCo != null) StopCoroutine(shadowCo);
         shadowCo = StartCoroutine(ShadowOffCo(0.3f));
+
+        sg.sortingOrder += 10;
     }
 
     public void EndDrag()
@@ -128,6 +133,8 @@ public class BlockInstance : MonoBehaviour
 
         if (shadowCo != null) StopCoroutine(shadowCo);
         shadowCo = StartCoroutine(ShadowOnCo(0.3f));
+
+        sg.sortingOrder -= 10;
 
         currentGhostSnapPos = null;
 
@@ -332,8 +339,6 @@ public class BlockInstance : MonoBehaviour
             gm.AddInvalid(this);
         }
 
-        gameObject.GetComponent<SpriteRenderer>().sortingOrder -= 3;
-        shadow.GetComponent<SpriteRenderer>().sortingOrder -= 3;
         //shadow.SetActive(false);
         return true;
     }
@@ -349,8 +354,6 @@ public class BlockInstance : MonoBehaviour
         sr.color = color;
         gm.RemoveInvalid(this);
 
-        gameObject.GetComponent<SpriteRenderer>().sortingOrder += 3;
-        shadow.GetComponent<SpriteRenderer>().sortingOrder += 3;
         //shadow.SetActive(true);
     }
 

@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 18
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: b8b78403439cbc442b3b60701cc8ce78, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_FlipX: 0
@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 3932230301423037583}
   - component: {fileID: 5715343482408106016}
   - component: {fileID: 3000252840703538830}
+  - component: {fileID: 1553089539782249093}
   m_Layer: 0
   m_Name: Block
   m_TagString: Untagged
@@ -166,7 +167,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 20
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b8b78403439cbc442b3b60701cc8ce78, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -272,6 +273,18 @@ PolygonCollider2D:
       - {x: 0.2525, y: -0.36249998}
       - {x: 0.275, y: -0.35}
   m_UseDelaunayMesh: 0
+--- !u!210 &1553089539782249093
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9210422558639285230}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 20
+  m_SortAtRoot: 0
 --- !u!1001 &7057035581833394812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -283,6 +296,10 @@ PrefabInstance:
     - target: {fileID: 409081169658807374, guid: 852b06539e7d6894d9a988313771e355, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146274882394132825, guid: 852b06539e7d6894d9a988313771e355, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3267903259909496717, guid: 852b06539e7d6894d9a988313771e355, type: 3}
       propertyPath: m_IsActive
@@ -339,6 +356,14 @@ PrefabInstance:
     - target: {fileID: 6399455031120367148, guid: 852b06539e7d6894d9a988313771e355, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8119594398182941434, guid: 852b06539e7d6894d9a988313771e355, type: 3}
+      propertyPath: m_SortingOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8120495944263193765, guid: 852b06539e7d6894d9a988313771e355, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
