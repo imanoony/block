@@ -9,6 +9,7 @@ public class BlockInstance : MonoBehaviour
 {
     private BlockData blockData;
     private bool isDragging = false;
+    private bool isTweening = false;
     private GridManager gm;
     private SpriteRenderer sr;
     private SortingGroup sg;
@@ -78,6 +79,8 @@ public class BlockInstance : MonoBehaviour
         {
             Debug.LogError("Failed to place block at initial position: " + initPos);
         }
+        transform.position = gm.GetBlockCenterOnTile(initPos.x, initPos.y, blockData.Height, blockData.Width);
+        transform.position = new Vector3(transform.position.x, transform.position.y, Utils.BLOCK_Z);
         blockPos = transform.position;
         blockTilePos = initPos;
         
@@ -104,7 +107,7 @@ public class BlockInstance : MonoBehaviour
     {
         //if (currentCoroutine != null) return;
         if (GameManager.Instance.State != GameState.InGame) return;
-        if (GameManager.Instance.IsOnAction) return;
+        if (isTweening) return;
 
         GameManager.Instance.UI.BlockTooltipDisappear();
 
@@ -146,10 +149,12 @@ public class BlockInstance : MonoBehaviour
             {
                 transform.position = blockPos;
                 Place(gm, blockTilePos);
+                StartCoroutine(PlaceCo(blockTilePos, () => { isTweening = false; }));
                 return;
             }
             if (Place(gm, (Vector2Int)snapPos))
             {
+                StartCoroutine(PlaceCo(snapPos.Value, () => { isTweening = false; }));
                 blockPos = transform.position;
                 blockTilePos = snapPos.Value;
                 return;
@@ -158,6 +163,7 @@ public class BlockInstance : MonoBehaviour
 
         transform.position = blockPos;
         Place(gm, blockTilePos);
+        StartCoroutine(PlaceCo(blockTilePos, () => { isTweening = false; }));
     }
 
     private void Update()
@@ -218,8 +224,8 @@ public class BlockInstance : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             if (GameManager.Instance.State != GameState.InGame) return;
-            if (GameManager.Instance.IsOnAction) return;
             if (isDragging) return;
+            if (isTweening) return;
 
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mouseWorld.x, mouseWorld.y);
@@ -253,9 +259,9 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseEnter()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
-        if (GameManager.Instance.IsOnAction) return;
         if (isHovering) return;
         if (isDragging) return;
+        if (isTweening) return;
         //if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
 
         //Vector3 tooltipPos = transform.position + new Vector3(0, (blockData.Height + 1.4f) / 2f * GameManager.Instance.Grid.GetTileSize().y, 0);
@@ -275,9 +281,9 @@ public class BlockInstance : MonoBehaviour
         //GameManager.Instance.UI.BlockTooltipDisappear();
 
         if (GameManager.Instance.State != GameState.InGame) return;
-        if (GameManager.Instance.IsOnAction) return;
         if (!isHovering) return;
         if (isDragging) return;
+        if (isTweening) return;
         //if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
         //Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
         //gameObject.transform.position -= Utils.HOVER;
@@ -325,10 +331,6 @@ public class BlockInstance : MonoBehaviour
         isPlaced = true;
         this.baseTile = baseTile;
 
-        // 블록의 위치를 snap position (좌표) 에 동기화
-        transform.position = gm.GetBlockCenterOnTile(baseTile.x, baseTile.y, blockData.Height, blockData.Width);
-        transform.position = new(transform.position.x, transform.position.y, Utils.BLOCK_Z);
-
         if (gm.IsInCircuit(baseTile.x, baseTile.y)) transform.SetParent(placedRoot);
         else transform.SetParent(unplacedRoot);
 
@@ -338,7 +340,6 @@ public class BlockInstance : MonoBehaviour
             sr.color = Utils.CodeToColor(Utils.RED);
             gm.AddInvalid(this);
         }
-
         //shadow.SetActive(false);
         return true;
     }
@@ -368,6 +369,26 @@ public class BlockInstance : MonoBehaviour
     }
 
     private Vector3 GetBaseTilePos() => transform.position + new Vector3(-blockData.Width / 2f, blockData.Height / 2f, 0);
+    private IEnumerator PlaceCo(Vector2Int baseTile, Action onComplete = null)
+    {
+        isTweening = true;
+
+        Vector3 targetPos =
+            gm.GetBlockCenterOnTile(
+                baseTile.x,
+                baseTile.y,
+                blockData.Height,
+                blockData.Width
+            );
+        targetPos.z = Utils.BLOCK_Z;
+
+        Tween tween = transform.DOMove(targetPos, 0.25f).SetEase(Ease.OutCubic);
+
+        yield return tween.WaitForCompletion();
+
+        onComplete?.Invoke();
+        yield break;
+    }
     #endregion
 
     #region Rotate & Flip
@@ -400,6 +421,7 @@ public class BlockInstance : MonoBehaviour
                         Place(gm, (Vector2Int)snapPos);
                         blockPos = transform.position;
                         blockTilePos = snapPos.Value;
+                        StartCoroutine(PlaceCo(snapPos.Value, () => { isTweening = false; }));
                     }
                 ));
                 return true;
@@ -443,6 +465,7 @@ public class BlockInstance : MonoBehaviour
                         Place(gm, (Vector2Int)snapPos);
                         blockPos = transform.position;
                         blockTilePos = snapPos.Value;
+                        StartCoroutine(PlaceCo(snapPos.Value, () => { isTweening = false; }));
                     }
                 ));
                 return true;
@@ -458,6 +481,7 @@ public class BlockInstance : MonoBehaviour
     }
     private IEnumerator RotateCo(bool isCW, Action onComplete = null)
     {
+        isTweening = true;
         GameManager.Instance.ActionOn();
 
         if (shadowCo != null) StopCoroutine(shadowCo);
