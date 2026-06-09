@@ -9,6 +9,9 @@ public static class Utils
 {
     public const float GRID_IDLE = 10f;
     public const float BLOCK_Z = -2f;
+    public const int BLOCK_SORT_NORMAL = 20;
+    public const int BLOCK_SORT_ACTION = 30;
+    public const int BLOCK_SORT_DRAG = 40;
     public const int SCALE_FACTOR = 625;
     public const int DENOMINATOR = 100;
     public const int TILE_SPACING = 100;

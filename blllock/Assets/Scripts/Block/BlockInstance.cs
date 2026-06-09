@@ -9,7 +9,7 @@ public class BlockInstance : MonoBehaviour
 {
     private BlockData blockData;
     private bool isDragging = false;
-    private bool isTweening = false;
+    private int isTweening = 0;
     private GridManager gm;
     private SpriteRenderer sr;
     private SortingGroup sg;
@@ -60,6 +60,7 @@ public class BlockInstance : MonoBehaviour
         sg = gameObject.GetComponent<SortingGroup>();
         sr.sprite = sprite;
         sr.color = color;
+        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
 
         PolygonCollider2D poly = gameObject.GetComponent<PolygonCollider2D>();
         poly.pathCount = sprite.GetPhysicsShapeCount();
@@ -107,7 +108,7 @@ public class BlockInstance : MonoBehaviour
     {
         //if (currentCoroutine != null) return;
         if (GameManager.Instance.State != GameState.InGame) return;
-        if (isTweening) return;
+        if (isTweening > 0) return;
 
         GameManager.Instance.UI.BlockTooltipDisappear();
 
@@ -126,7 +127,7 @@ public class BlockInstance : MonoBehaviour
         if (shadowCo != null) StopCoroutine(shadowCo);
         shadowCo = StartCoroutine(ShadowOffCo(0.3f));
 
-        sg.sortingOrder += 10;
+        sg.sortingOrder = Utils.BLOCK_SORT_DRAG;
     }
 
     public void EndDrag()
@@ -136,8 +137,6 @@ public class BlockInstance : MonoBehaviour
 
         if (shadowCo != null) StopCoroutine(shadowCo);
         shadowCo = StartCoroutine(ShadowOnCo(0.3f));
-
-        sg.sortingOrder -= 10;
 
         currentGhostSnapPos = null;
 
@@ -149,13 +148,20 @@ public class BlockInstance : MonoBehaviour
             {
                 transform.position = blockPos;
                 Place(gm, blockTilePos);
-                StartCoroutine(PlaceCo(blockTilePos, () => { isTweening = false; }));
+                StartCoroutine(PlaceCo(0.25f, blockTilePos, () => { 
+                    isTweening--;
+                    sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                }));
                 return;
             }
             if (Place(gm, (Vector2Int)snapPos))
             {
-                StartCoroutine(PlaceCo(snapPos.Value, () => { isTweening = false; }));
-                blockPos = transform.position;
+                StartCoroutine(PlaceCo(0.25f, snapPos.Value, () => { 
+                    isTweening--;
+                    blockPos = transform.position;
+                    sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                }));
+                
                 blockTilePos = snapPos.Value;
                 return;
             }
@@ -163,11 +169,53 @@ public class BlockInstance : MonoBehaviour
 
         transform.position = blockPos;
         Place(gm, blockTilePos);
-        StartCoroutine(PlaceCo(blockTilePos, () => { isTweening = false; }));
+        StartCoroutine(PlaceCo(0.25f, blockTilePos, () => { 
+            isTweening--;
+            sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+        }));
     }
 
-    private void Update()
+    private Vector3 downPos;
+    private float downTime;
+    private void OnMouseDown()
     {
+        if (GameManager.Instance.State != GameState.InGame) return;
+        if (isTweening > 0) return;
+
+        downPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        downTime = Time.time;
+    }
+
+    private void OnMouseUp()
+    {
+        if (GameManager.Instance.State != GameState.InGame) return;
+        if (isTweening > 0) return;
+
+        if (isHovering) OnMouseExit();
+    
+        if (isDragging)
+        {
+            EndDrag();
+        }
+        else
+        {
+            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = new Vector2(mouseWorld.x, mouseWorld.y);
+
+            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+            if (hit.collider != null && hit.collider.gameObject == gameObject)
+            {
+                if (CanRotateCW) RotateCW();
+                else if (CanRotateCCW) RotateCCW();
+            }
+        }
+    }
+
+    private void OnMouseDrag()
+    {
+        if (GameManager.Instance.State != GameState.InGame) return;
+        if (isTweening > 0) return;
+
         if (isDragging)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -215,31 +263,18 @@ public class BlockInstance : MonoBehaviour
                 }
             }
         }
-
-        if (Input.GetMouseButtonUp(0) && isDragging)
+        else
         {
-            EndDrag();
-        }
+            Vector3 distance = Camera.main.ScreenToWorldPoint(Input.mousePosition) - downPos;
+            float interval = Time.time - downTime;
+            bool isDrag = distance.magnitude > 0.3f || interval > 0.4f;
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (GameManager.Instance.State != GameState.InGame) return;
-            if (isDragging) return;
-            if (isTweening) return;
-
-            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos2D = new Vector2(mouseWorld.x, mouseWorld.y);
-
-            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-            if (hit.collider != null && hit.collider.gameObject == gameObject)
+            if (isDrag)
             {
-                if (CanRotateCW) RotateCW();
-                else if (CanRotateCCW) RotateCCW();
+                BeginDrag();
             }
         }
     }
-
-    private void OnMouseDown() => BeginDrag();
 
     private Vector3 GetClampedPos(Vector3 pos)
     {
@@ -261,7 +296,7 @@ public class BlockInstance : MonoBehaviour
         if (GameManager.Instance.State != GameState.InGame) return;
         if (isHovering) return;
         if (isDragging) return;
-        if (isTweening) return;
+        if (isTweening > 0) return;
         //if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
 
         //Vector3 tooltipPos = transform.position + new Vector3(0, (blockData.Height + 1.4f) / 2f * GameManager.Instance.Grid.GetTileSize().y, 0);
@@ -283,7 +318,7 @@ public class BlockInstance : MonoBehaviour
         if (GameManager.Instance.State != GameState.InGame) return;
         if (!isHovering) return;
         if (isDragging) return;
-        if (isTweening) return;
+        if (isTweening > 0) return;
         //if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
         //Vector3 offset = Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
         //gameObject.transform.position -= Utils.HOVER;
@@ -294,11 +329,6 @@ public class BlockInstance : MonoBehaviour
 
         isHovering = false;
     }
-    private void OnMouseUp()
-    {
-        if (isHovering) OnMouseExit();
-    }
-
     #endregion
 
     #region Placement
@@ -369,9 +399,9 @@ public class BlockInstance : MonoBehaviour
     }
 
     private Vector3 GetBaseTilePos() => transform.position + new Vector3(-blockData.Width / 2f, blockData.Height / 2f, 0);
-    private IEnumerator PlaceCo(Vector2Int baseTile, Action onComplete = null)
+    private IEnumerator PlaceCo(float duration, Vector2Int baseTile, Action onComplete = null)
     {
-        isTweening = true;
+        isTweening++;
 
         Vector3 targetPos =
             gm.GetBlockCenterOnTile(
@@ -382,7 +412,7 @@ public class BlockInstance : MonoBehaviour
             );
         targetPos.z = Utils.BLOCK_Z;
 
-        Tween tween = transform.DOMove(targetPos, 0.25f).SetEase(Ease.OutCubic);
+        Tween tween = transform.DOMove(targetPos, duration).SetEase(Ease.OutCubic);
 
         yield return tween.WaitForCompletion();
 
@@ -414,14 +444,16 @@ public class BlockInstance : MonoBehaviour
             }
             if (CanPlace(gm, (Vector2Int)snapPos))
             {
+                blockTilePos = snapPos.Value;
+                sg.sortingOrder = Utils.BLOCK_SORT_ACTION;
                 StartCoroutine(RotateCo(
                     isCW: true,
                     () =>
                     {
                         Place(gm, (Vector2Int)snapPos);
                         blockPos = transform.position;
-                        blockTilePos = snapPos.Value;
-                        StartCoroutine(PlaceCo(snapPos.Value, () => { isTweening = false; }));
+                        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                        isTweening--;
                     }
                 ));
                 return true;
@@ -457,15 +489,16 @@ public class BlockInstance : MonoBehaviour
             }
             if (CanPlace(gm, (Vector2Int)snapPos))
             {
-                if (isPlaced) Unplace(gm);
+                blockTilePos = snapPos.Value;
+                sg.sortingOrder = Utils.BLOCK_SORT_ACTION;
                 StartCoroutine(RotateCo(
                     isCW: false,
                     () =>
                     {
                         Place(gm, (Vector2Int)snapPos);
                         blockPos = transform.position;
-                        blockTilePos = snapPos.Value;
-                        StartCoroutine(PlaceCo(snapPos.Value, () => { isTweening = false; }));
+                        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                        isTweening--;
                     }
                 ));
                 return true;
@@ -481,22 +514,22 @@ public class BlockInstance : MonoBehaviour
     }
     private IEnumerator RotateCo(bool isCW, Action onComplete = null)
     {
-        isTweening = true;
-        GameManager.Instance.ActionOn();
+        isTweening++;
 
         if (shadowCo != null) StopCoroutine(shadowCo);
         shadowCo = StartCoroutine(ShadowOffCo(0.2f));
         yield return shadowCo;
 
         if (scaleCo != null) StopCoroutine(scaleCo);
-        scaleCo = StartCoroutine(ScaleUpCo(0.2f));
+        scaleCo = StartCoroutine(ScaleUpCo(0.2f, 1.1f));
         yield return scaleCo;
 
         Tween rotateT = transform.DORotate(
             transform.eulerAngles + new Vector3(0, 0, isCW ? -90f : 90f),
-            0.12f,
+            0.2f,
             RotateMode.FastBeyond360
         ).SetEase(Ease.OutQuad);
+        StartCoroutine(PlaceCo(0.2f, blockTilePos, () => { isTweening--; }));
 
         yield return rotateT.WaitForCompletion();
         yield return StartCoroutine(ScaleDownCo(0.1f));
@@ -505,7 +538,6 @@ public class BlockInstance : MonoBehaviour
         yield return StartCoroutine(ShadowOnCo(0.2f));
 
         onComplete?.Invoke();
-        GameManager.Instance.ActionOff();
         yield break;
     }
     private IEnumerator RotateFailCo(bool isCW)
