@@ -1,199 +1,145 @@
 fileFormatVersion: 2
-guid: 2065271b3153e6b4aba5f5a3173d5564
+guid: 83fd16bd71dbb7545a1782960ee3fc71
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7012562498121059922
-    second: nemocuit-block1-ghost_0
+      213: -1026840908032414210
+    second: nemocuit-block9-ghost_0
   - first:
-      213: 4407973852219379246
-    second: nemocuit-block1-ghost_1
+      213: -654422291920937070
+    second: nemocuit-block9-ghost_1
   - first:
-      213: -8919936767831448667
-    second: nemocuit-block1-ghost_2
+      213: 4815916335990124912
+    second: nemocuit-block9-ghost_2
   - first:
-      213: 1332803885415992993
-    second: nemocuit-block1-ghost_3
+      213: -5089368549889309135
+    second: nemocuit-block9-ghost_3
   - first:
-      213: -6742424021348241204
-    second: nemocuit-block1-ghost_4
+      213: -2779331468969063738
+    second: nemocuit-block9-ghost_4
   - first:
-      213: -7653723224770828831
-    second: nemocuit-block1-ghost_5
+      213: -3870487969059411691
+    second: nemocuit-block9-ghost_5
   - first:
-      213: -3836846602980957017
-    second: nemocuit-block1-ghost_6
+      213: 6883611961245158848
+    second: nemocuit-block9-ghost_6
   - first:
-      213: -7172301636972181785
-    second: nemocuit-block1-ghost_7
+      213: 1469577878830441800
+    second: nemocuit-block9-ghost_7
   - first:
-      213: 2274966572202482574
-    second: nemocuit-block1-ghost_8
+      213: 2062623890502907798
+    second: nemocuit-block9-ghost_8
   - first:
-      213: -4382863669067708880
-    second: nemocuit-block1-ghost_9
+      213: 2380916022859635032
+    second: nemocuit-block9-ghost_9
   - first:
-      213: -4806369211572315693
-    second: nemocuit-block1-ghost_10
+      213: -2966228171188022703
+    second: nemocuit-block9-ghost_10
   - first:
-      213: -1724438112002848593
-    second: nemocuit-block1-ghost_11
+      213: -5716064973627398419
+    second: nemocuit-block9-ghost_11
   - first:
-      213: 7967615471999236998
-    second: nemocuit-block1-ghost_12
+      213: -589991755087268061
+    second: nemocuit-block9-ghost_12
   - first:
-      213: -8530879842130029663
-    second: nemocuit-block1-ghost_13
+      213: 351447388768709554
+    second: nemocuit-block9-ghost_13
   - first:
-      213: 5344628471888947781
-    second: nemocuit-block1-ghost_14
+      213: 4258790972498442024
+    second: nemocuit-block9-ghost_14
   - first:
-      213: 2354740723740145123
-    second: nemocuit-block1-ghost_15
+      213: -1324525388614976394
+    second: nemocuit-block9-ghost_15
   - first:
-      213: 481029445172598338
-    second: nemocuit-block1-ghost_16
+      213: 3751017729124597497
+    second: nemocuit-block9-ghost_16
   - first:
-      213: 917215934920510406
-    second: nemocuit-block1-ghost_17
+      213: -1894202199627681111
+    second: nemocuit-block9-ghost_17
   - first:
-      213: -1713755027334665675
-    second: nemocuit-block1-ghost_18
+      213: 5896193081557222414
+    second: nemocuit-block9-ghost_18
   - first:
-      213: 6280147701040148266
-    second: nemocuit-block1-ghost_19
+      213: -754770551624826232
+    second: nemocuit-block9-ghost_19
   - first:
-      213: 3211704994906336290
-    second: nemocuit-block1-ghost_20
+      213: 1166977519249278281
+    second: nemocuit-block9-ghost_20
   - first:
-      213: 3459246598307780417
-    second: nemocuit-block1-ghost_21
+      213: -4648441208918588577
+    second: nemocuit-block9-ghost_21
   - first:
-      213: 1623394719123574039
-    second: nemocuit-block1-ghost_22
+      213: -5846163091161404243
+    second: nemocuit-block9-ghost_22
   - first:
-      213: 797285068615405990
-    second: nemocuit-block1-ghost_23
+      213: 4588199051941662864
+    second: nemocuit-block9-ghost_23
   - first:
-      213: -1395977955539854670
-    second: nemocuit-block1-ghost_24
+      213: -7129220809937522906
+    second: nemocuit-block9-ghost_24
   - first:
-      213: 1327253618530088815
-    second: nemocuit-block1-ghost_25
+      213: 8680088649028579011
+    second: nemocuit-block9-ghost_25
   - first:
-      213: 8721513949048641239
-    second: nemocuit-block1-ghost_26
+      213: -1394618486567268644
+    second: nemocuit-block9-ghost_26
   - first:
-      213: 1918573206523464478
-    second: nemocuit-block1-ghost_27
+      213: 4266217666816855159
+    second: nemocuit-block9-ghost_27
   - first:
-      213: -8357066122317027068
-    second: nemocuit-block1-ghost_28
+      213: -4913942723632599609
+    second: nemocuit-block9-ghost_28
   - first:
-      213: -1896774224446632787
-    second: nemocuit-block1-ghost_29
+      213: -8329200619699477384
+    second: nemocuit-block9-ghost_29
   - first:
-      213: 2936215875580576668
-    second: nemocuit-block1-ghost_30
+      213: 5839919138178440638
+    second: nemocuit-block9-ghost_30
   - first:
-      213: 4698716063213322747
-    second: nemocuit-block1-ghost_31
+      213: -8634824060545145740
+    second: nemocuit-block9-ghost_31
   - first:
-      213: -3405679660580142397
-    second: nemocuit-block1-ghost_32
+      213: -8668958290552013591
+    second: nemocuit-block9-ghost_32
   - first:
-      213: -5636078336335739593
-    second: nemocuit-block1-ghost_33
+      213: -2539537016349417006
+    second: nemocuit-block9-ghost_33
   - first:
-      213: 8732606374157591270
-    second: nemocuit-block1-ghost_34
+      213: -3156374202996638140
+    second: nemocuit-block9-ghost_34
   - first:
-      213: -5189573183320349285
-    second: nemocuit-block1-ghost_35
+      213: -505624936342171481
+    second: nemocuit-block9-ghost_35
   - first:
-      213: -4792455172476618861
-    second: nemocuit-block1-ghost_36
+      213: 8073788977985690938
+    second: nemocuit-block9-ghost_36
   - first:
-      213: -4125196178164835251
-    second: nemocuit-block1-ghost_37
+      213: 5506355447066234120
+    second: nemocuit-block9-ghost_37
   - first:
-      213: 5969583511925493067
-    second: nemocuit-block1-ghost_38
+      213: -3043690206834402256
+    second: nemocuit-block9-ghost_38
   - first:
-      213: -1156276280233323278
-    second: nemocuit-block1-ghost_39
+      213: 5450680283532921040
+    second: nemocuit-block9-ghost_39
   - first:
-      213: -4028658021345411590
-    second: nemocuit-block1-ghost_40
+      213: 8211535671328158699
+    second: nemocuit-block9-ghost_40
   - first:
-      213: 3515246748846237515
-    second: nemocuit-block1-ghost_41
+      213: -8789359340096332757
+    second: nemocuit-block9-ghost_41
   - first:
-      213: 525271051505191950
-    second: nemocuit-block1-ghost_42
+      213: 4313521398750202048
+    second: nemocuit-block9-ghost_42
   - first:
-      213: 933566706957466966
-    second: nemocuit-block1-ghost_43
+      213: -3499032672146677891
+    second: nemocuit-block9-ghost_43
   - first:
-      213: 8119200270225922315
-    second: nemocuit-block1-ghost_44
+      213: -6912346901272351285
+    second: nemocuit-block9-ghost_44
   - first:
-      213: -6430419816673071425
-    second: nemocuit-block1-ghost_45
-  - first:
-      213: -4708481227515766199
-    second: nemocuit-block1-ghost_46
-  - first:
-      213: 7425272110178091080
-    second: nemocuit-block1-ghost_47
-  - first:
-      213: 5318404059930386471
-    second: nemocuit-block1-ghost_48
-  - first:
-      213: -7973597773944755659
-    second: nemocuit-block1-ghost_49
-  - first:
-      213: -1215170816535972071
-    second: nemocuit-block1-ghost_50
-  - first:
-      213: -4727569694464302998
-    second: nemocuit-block1-ghost_51
-  - first:
-      213: 774722757661675753
-    second: nemocuit-block1-ghost_52
-  - first:
-      213: -6400308852733191818
-    second: nemocuit-block1-ghost_53
-  - first:
-      213: -634333684806539518
-    second: nemocuit-block1-ghost_54
-  - first:
-      213: -2249286479149760019
-    second: nemocuit-block1-ghost_55
-  - first:
-      213: -7978558747416407241
-    second: nemocuit-block1-ghost_56
-  - first:
-      213: 2953534147924427428
-    second: nemocuit-block1-ghost_57
-  - first:
-      213: 7170913907768657976
-    second: nemocuit-block1-ghost_58
-  - first:
-      213: 2617218960922831352
-    second: nemocuit-block1-ghost_59
-  - first:
-      213: 1653094096485941002
-    second: nemocuit-block1-ghost_60
-  - first:
-      213: 3877675415879521583
-    second: nemocuit-block1-ghost_61
-  - first:
-      213: 4241072855745219081
-    second: nemocuit-block1-ghost_62
-  - first:
-      213: 5971041140290742109
-    second: nemocuit-block1-ghost_63
+      213: -5093002335380584000
+    second: nemocuit-block9-ghost_45
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -285,539 +231,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_0
-      rect:
-        serializedVersion: 2
-        x: 476
-        y: 746
-        width: 36
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ea1b446ef8f5eae90800000000000000
-      internalID: -7012562498121059922
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_1
-      rect:
-        serializedVersion: 2
-        x: 519
-        y: 758
-        width: 35
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e2e0fb83dd44c2d30800000000000000
-      internalID: 4407973852219379246
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_2
-      rect:
-        serializedVersion: 2
-        x: 562
-        y: 758
-        width: 35
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5a3e57ef4c4063480800000000000000
-      internalID: -8919936767831448667
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_3
-      rect:
-        serializedVersion: 2
-        x: 605
-        y: 758
-        width: 35
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1ae0b7182121f7210800000000000000
-      internalID: 1332803885415992993
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_4
-      rect:
-        serializedVersion: 2
-        x: 648
-        y: 758
-        width: 35
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: cc03a7253191e62a0800000000000000
-      internalID: -6742424021348241204
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_5
-      rect:
-        serializedVersion: 2
-        x: 689
-        y: 745
-        width: 37
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1e5a06a374388c590800000000000000
-      internalID: -7653723224770828831
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_6
-      rect:
-        serializedVersion: 2
-        x: 444
-        y: 718
-        width: 32
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7a4e7a3d758c0cac0800000000000000
-      internalID: -3836846602980957017
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_7
-      rect:
-        serializedVersion: 2
-        x: 725
-        y: 717
-        width: 32
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7e6025269add67c90800000000000000
-      internalID: -7172301636972181785
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_8
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 681
-        width: 22
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e8b540c4b0e429f10800000000000000
-      internalID: 2274966572202482574
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_9
-      rect:
-        serializedVersion: 2
-        x: 750
-        y: 679
-        width: 21
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0360142e6b0fc23c0800000000000000
-      internalID: -4382863669067708880
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_10
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 638
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3d99bd4daa85c4db0800000000000000
-      internalID: -4806369211572315693
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_11
-      rect:
-        serializedVersion: 2
-        x: 758
-        y: 637
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fa8cce07ca09118e0800000000000000
-      internalID: -1724438112002848593
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_12
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 596
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 68bbb6bbe08a29e60800000000000000
-      internalID: 7967615471999236998
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_13
-      rect:
-        serializedVersion: 2
-        x: 758
-        y: 594
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1a39c4c6bf93c9980800000000000000
-      internalID: -8530879842130029663
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_14
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 553
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 54a2163374feb2a40800000000000000
-      internalID: 5344628471888947781
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_15
-      rect:
-        serializedVersion: 2
-        x: 758
-        y: 551
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3e57da85638bda020800000000000000
-      internalID: 2354740723740145123
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_16
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 510
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 24614065bb5fca600800000000000000
-      internalID: 481029445172598338
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_17
-      rect:
-        serializedVersion: 2
-        x: 758
-        y: 508
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6cbc34f780b9abc00800000000000000
-      internalID: 917215934920510406
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_18
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 467
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 53a6dabe1e48738e0800000000000000
-      internalID: -1713755027334665675
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_19
-      rect:
-        serializedVersion: 2
-        x: 758
-        y: 465
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a2feb797f01972750800000000000000
-      internalID: 6280147701040148266
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_20
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 424
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 22c6db03da4429c20800000000000000
-      internalID: 3211704994906336290
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_21
-      rect:
-        serializedVersion: 2
-        x: 758
-        y: 423
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1471d9a0476b10030800000000000000
-      internalID: 3459246598307780417
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_22
-      rect:
-        serializedVersion: 2
-        x: 429
-        y: 382
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 71d0b9b55e4778610800000000000000
-      internalID: 1623394719123574039
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_23
-      rect:
-        serializedVersion: 2
-        x: 758
-        y: 380
-        width: 13
-        height: 35
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6a15b83bb86801b00800000000000000
-      internalID: 797285068615405990
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_24
+      name: nemocuit-block9-ghost_0
       rect:
         serializedVersion: 2
         x: 52
@@ -832,14 +263,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ba55c5127d70ace0800000000000000
-      internalID: -1395977955539854670
+      spriteID: efd63e372adefb1f0800000000000000
+      internalID: -1026840908032414210
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_25
+      name: nemocuit-block9-ghost_1
       rect:
         serializedVersion: 2
         x: 88
@@ -854,14 +285,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f67765b422a5b6210800000000000000
-      internalID: 1327253618530088815
+      spriteID: 29f94fc84660be6f0800000000000000
+      internalID: -654422291920937070
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_26
+      name: nemocuit-block9-ghost_2
       rect:
         serializedVersion: 2
         x: 125
@@ -876,14 +307,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7d698a46aba090970800000000000000
-      internalID: 8721513949048641239
+      spriteID: 07131ba446295d240800000000000000
+      internalID: 4815916335990124912
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_27
+      name: nemocuit-block9-ghost_3
       rect:
         serializedVersion: 2
         x: 168
@@ -898,14 +329,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e1bc9629a2420aa10800000000000000
-      internalID: 1918573206523464478
+      spriteID: 1368dccb44eee59b0800000000000000
+      internalID: -5089368549889309135
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_28
+      name: nemocuit-block9-ghost_4
       rect:
         serializedVersion: 2
         x: 211
@@ -920,14 +351,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 409a7dea3acb50c80800000000000000
-      internalID: -8357066122317027068
+      spriteID: 6cac80721c4dd69d0800000000000000
+      internalID: -2779331468969063738
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_29
+      name: nemocuit-block9-ghost_5
       rect:
         serializedVersion: 2
         x: 253
@@ -942,14 +373,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: daccdb474ed4da5e0800000000000000
-      internalID: -1896774224446632787
+      spriteID: 5196ac8e2b3494ac0800000000000000
+      internalID: -3870487969059411691
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_30
+      name: nemocuit-block9-ghost_6
       rect:
         serializedVersion: 2
         x: 296
@@ -964,14 +395,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c93c7d738c88fb820800000000000000
-      internalID: 2936215875580576668
+      spriteID: 0cdc5a99b90878f50800000000000000
+      internalID: 6883611961245158848
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_31
+      name: nemocuit-block9-ghost_7
       rect:
         serializedVersion: 2
         x: 339
@@ -986,14 +417,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bf180485d51353140800000000000000
-      internalID: 4698716063213322747
+      spriteID: 845e57d6b4df46410800000000000000
+      internalID: 1469577878830441800
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_32
+      name: nemocuit-block9-ghost_8
       rect:
         serializedVersion: 2
         x: 382
@@ -1008,20 +439,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3c2095c84689cb0d0800000000000000
-      internalID: -3405679660580142397
+      spriteID: 697f8aa0089ef9c10800000000000000
+      internalID: 2062623890502907798
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_33
+      name: nemocuit-block9-ghost_9
       rect:
         serializedVersion: 2
         x: 424
         y: 358
-        width: 18
-        height: 16
+        width: 36
+        height: 13
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1030,20 +461,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7350f644d90a8c1b0800000000000000
-      internalID: -5636078336335739593
+      spriteID: 85995961286ba0120800000000000000
+      internalID: 2380916022859635032
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_34
+      name: nemocuit-block9-ghost_10
       rect:
         serializedVersion: 2
-        x: 758
-        y: 337
-        width: 13
-        height: 35
+        x: 467
+        y: 358
+        width: 35
+        height: 13
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1052,14 +483,124 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6e2a9feda33703970800000000000000
-      internalID: 8732606374157591270
+      spriteID: 152d49da137d5d6d0800000000000000
+      internalID: -2966228171188022703
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_35
+      name: nemocuit-block9-ghost_11
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 358
+        width: 35
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de6e2e501357ca0b0800000000000000
+      internalID: -5716064973627398419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-block9-ghost_12
+      rect:
+        serializedVersion: 2
+        x: 553
+        y: 358
+        width: 35
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3273d99ef9defc7f0800000000000000
+      internalID: -589991755087268061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-block9-ghost_13
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 358
+        width: 35
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bb2cccb98790e400800000000000000
+      internalID: 351447388768709554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-block9-ghost_14
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 358
+        width: 35
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 827f86053d34a1b30800000000000000
+      internalID: 4258790972498442024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-block9-ghost_15
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 349
+        width: 36
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67c3e9b3d275e9de0800000000000000
+      internalID: -1324525388614976394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-block9-ghost_16
       rect:
         serializedVersion: 2
         x: 31
@@ -1074,20 +615,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b952c407faeeaf7b0800000000000000
-      internalID: -5189573183320349285
+      spriteID: 9fef9aa30ca4e0430800000000000000
+      internalID: 3751017729124597497
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_36
+      name: nemocuit-block9-ghost_17
       rect:
         serializedVersion: 2
-        x: 758
-        y: 294
-        width: 13
-        height: 35
+        x: 718
+        y: 324
+        width: 34
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1096,14 +637,36 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3973c828967cd7db0800000000000000
-      internalID: -4792455172476618861
+      spriteID: 9a2bd66a22176b5e0800000000000000
+      internalID: -1894202199627681111
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_37
+      name: nemocuit-block9-ghost_18
+      rect:
+        serializedVersion: 2
+        x: 746
+        y: 288
+        width: 24
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0485594e5c73d150800000000000000
+      internalID: 5896193081557222414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-block9-ghost_19
       rect:
         serializedVersion: 2
         x: 29
@@ -1118,18 +681,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d4c9fa3aeeb50c6c0800000000000000
-      internalID: -4125196178164835251
+      spriteID: 8820a77ae248685f0800000000000000
+      internalID: -754770551624826232
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_38
+      name: nemocuit-block9-ghost_20
       rect:
         serializedVersion: 2
         x: 758
-        y: 252
+        y: 246
         width: 13
         height: 35
       alignment: 0
@@ -1140,14 +703,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b4d095d639838d250800000000000000
-      internalID: 5969583511925493067
+      spriteID: 94548bfeedfe13010800000000000000
+      internalID: 1166977519249278281
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_39
+      name: nemocuit-block9-ghost_21
       rect:
         serializedVersion: 2
         x: 29
@@ -1162,18 +725,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2f49b7e69d414ffe0800000000000000
-      internalID: -1156276280233323278
+      spriteID: f53ce17595b6d7fb0800000000000000
+      internalID: -4648441208918588577
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_40
+      name: nemocuit-block9-ghost_22
       rect:
         serializedVersion: 2
         x: 758
-        y: 209
+        y: 203
         width: 13
         height: 35
       alignment: 0
@@ -1184,14 +747,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: afdbd24dfd45718c0800000000000000
-      internalID: -4028658021345411590
+      spriteID: dac235494a14edea0800000000000000
+      internalID: -5846163091161404243
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_41
+      name: nemocuit-block9-ghost_23
       rect:
         serializedVersion: 2
         x: 29
@@ -1206,20 +769,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b47a3d22b4aa8c030800000000000000
-      internalID: 3515246748846237515
+      spriteID: 09054c97abe8caf30800000000000000
+      internalID: 4588199051941662864
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_42
+      name: nemocuit-block9-ghost_24
       rect:
         serializedVersion: 2
         x: 758
         y: 160
         width: 13
-        height: 41
+        height: 35
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1228,14 +791,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e0c43c30d332a4700800000000000000
-      internalID: 525271051505191950
+      spriteID: 62fe952127bef0d90800000000000000
+      internalID: -7129220809937522906
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_43
+      name: nemocuit-block9-ghost_25
       rect:
         serializedVersion: 2
         x: 29
@@ -1250,20 +813,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 65db45649f1b4fc00800000000000000
-      internalID: 933566706957466966
+      spriteID: 3ceaf3023aed57870800000000000000
+      internalID: 8680088649028579011
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_44
+      name: nemocuit-block9-ghost_26
       rect:
         serializedVersion: 2
         x: 757
         y: 117
         width: 14
-        height: 41
+        height: 35
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1272,14 +835,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b09521fd0a13da070800000000000000
-      internalID: 8119200270225922315
+      spriteID: cde07fe10e155ace0800000000000000
+      internalID: -1394618486567268644
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_45
+      name: nemocuit-block9-ghost_27
       rect:
         serializedVersion: 2
         x: 30
@@ -1294,14 +857,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fbea19e1f3f82c6a0800000000000000
-      internalID: -6430419816673071425
+      spriteID: 77c4d155d56a43b30800000000000000
+      internalID: 4266217666816855159
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_46
+      name: nemocuit-block9-ghost_28
       rect:
         serializedVersion: 2
         x: 46
@@ -1316,42 +879,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 94ad35a254d18aeb0800000000000000
-      internalID: -4708481227515766199
+      spriteID: 7cd6347c02b2ecbb0800000000000000
+      internalID: -4913942723632599609
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_47
-      rect:
-        serializedVersion: 2
-        x: 717
-        y: 43
-        width: 37
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 840c7c7b4addb0760800000000000000
-      internalID: 7425272110178091080
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_48
+      name: nemocuit-block9-ghost_29
       rect:
         serializedVersion: 2
         x: 745
         y: 74
-        width: 26
-        height: 42
+        width: 25
+        height: 37
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1360,14 +901,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 720652c7054cec940800000000000000
-      internalID: 5318404059930386471
+      spriteID: 87469d79a2cb86c80800000000000000
+      internalID: -8329200619699477384
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_49
+      name: nemocuit-block9-ghost_30
       rect:
         serializedVersion: 2
         x: 80
@@ -1382,14 +923,58 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 53a6d2e0217185190800000000000000
-      internalID: -7973597773944755659
+      spriteID: ebd9124d38f8b0150800000000000000
+      internalID: 5839919138178440638
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_50
+      name: nemocuit-block9-ghost_31
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 29
+        width: 36
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 474e5352441fa2880800000000000000
+      internalID: -8634824060545145740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-block9-ghost_32
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 43
+        width: 34
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ec38f66d5ca1b780800000000000000
+      internalID: -8668958290552013591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-block9-ghost_33
       rect:
         serializedVersion: 2
         x: 123
@@ -1404,14 +989,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 917b3f2a498d22fe0800000000000000
-      internalID: -1215170816535972071
+      spriteID: 2d1a986e980c1ccd0800000000000000
+      internalID: -2539537016349417006
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_51
+      name: nemocuit-block9-ghost_34
       rect:
         serializedVersion: 2
         x: 166
@@ -1426,14 +1011,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a60ad8e196c446eb0800000000000000
-      internalID: -4727569694464302998
+      spriteID: 44ebd24b26e4234d0800000000000000
+      internalID: -3156374202996638140
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_52
+      name: nemocuit-block9-ghost_35
       rect:
         serializedVersion: 2
         x: 209
@@ -1448,14 +1033,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9e0d5d15e3e50ca00800000000000000
-      internalID: 774722757661675753
+      spriteID: 7a0debf9cc8abf8f0800000000000000
+      internalID: -505624936342171481
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_53
+      name: nemocuit-block9-ghost_36
       rect:
         serializedVersion: 2
         x: 252
@@ -1470,14 +1055,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 679dc0c32098d27a0800000000000000
-      internalID: -6400308852733191818
+      spriteID: a3d1d487c4cdb0070800000000000000
+      internalID: 8073788977985690938
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_54
+      name: nemocuit-block9-ghost_37
       rect:
         serializedVersion: 2
         x: 294
@@ -1492,14 +1077,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 207aa00efd46237f0800000000000000
-      internalID: -634333684806539518
+      spriteID: 80d8b6dea118a6c40800000000000000
+      internalID: 5506355447066234120
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_55
+      name: nemocuit-block9-ghost_38
       rect:
         serializedVersion: 2
         x: 337
@@ -1514,14 +1099,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: de1803c4ddde8c0e0800000000000000
-      internalID: -2249286479149760019
+      spriteID: 03cdc4f02e3a2c5d0800000000000000
+      internalID: -3043690206834402256
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_56
+      name: nemocuit-block9-ghost_39
       rect:
         serializedVersion: 2
         x: 380
@@ -1536,14 +1121,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 733d8a86717764190800000000000000
-      internalID: -7978558747416407241
+      spriteID: 0d88434c6d4b4ab40800000000000000
+      internalID: 5450680283532921040
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_57
+      name: nemocuit-block9-ghost_40
       rect:
         serializedVersion: 2
         x: 423
@@ -1558,14 +1143,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4a28507b8af0df820800000000000000
-      internalID: 2953534147924427428
+      spriteID: be3b6fdbf2c35f170800000000000000
+      internalID: 8211535671328158699
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_58
+      name: nemocuit-block9-ghost_41
       rect:
         serializedVersion: 2
         x: 465
@@ -1580,14 +1165,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 838857bb434348360800000000000000
-      internalID: 7170913907768657976
+      spriteID: b2cdb4a8f3ce50680800000000000000
+      internalID: -8789359340096332757
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_59
+      name: nemocuit-block9-ghost_42
       rect:
         serializedVersion: 2
         x: 508
@@ -1602,14 +1187,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8f9e83147ca325420800000000000000
-      internalID: 2617218960922831352
+      spriteID: 0c84d8fabd4bcdb30800000000000000
+      internalID: 4313521398750202048
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_60
+      name: nemocuit-block9-ghost_43
       rect:
         serializedVersion: 2
         x: 551
@@ -1624,19 +1209,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a0ff6518258f0f610800000000000000
-      internalID: 1653094096485941002
+      spriteID: d7f1637c250f07fc0800000000000000
+      internalID: -3499032672146677891
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_61
+      name: nemocuit-block9-ghost_44
       rect:
         serializedVersion: 2
         x: 594
         y: 29
-        width: 41
+        width: 35
         height: 13
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1646,19 +1231,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f2593c5fe3540d530800000000000000
-      internalID: 3877675415879521583
+      spriteID: bcda361dd196210a0800000000000000
+      internalID: -6912346901272351285
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nemocuit-block1-ghost_62
+      name: nemocuit-block9-ghost_45
       rect:
         serializedVersion: 2
         x: 637
         y: 29
-        width: 41
+        width: 35
         height: 13
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1668,30 +1253,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 90ace39ca415bda30800000000000000
-      internalID: 4241072855745219081
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block1-ghost_63
-      rect:
-        serializedVersion: 2
-        x: 679
-        y: 29
-        width: 42
-        height: 23
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d57e54af7466dd250800000000000000
-      internalID: 5971041140290742109
+      spriteID: 0c9c76f1c550259b0800000000000000
+      internalID: -5093002335380584000
       vertices: []
       indices: 
       edges: []
@@ -1710,70 +1273,52 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      nemocuit-block1-ghost_0: -7012562498121059922
-      nemocuit-block1-ghost_1: 4407973852219379246
-      nemocuit-block1-ghost_10: -4806369211572315693
-      nemocuit-block1-ghost_11: -1724438112002848593
-      nemocuit-block1-ghost_12: 7967615471999236998
-      nemocuit-block1-ghost_13: -8530879842130029663
-      nemocuit-block1-ghost_14: 5344628471888947781
-      nemocuit-block1-ghost_15: 2354740723740145123
-      nemocuit-block1-ghost_16: 481029445172598338
-      nemocuit-block1-ghost_17: 917215934920510406
-      nemocuit-block1-ghost_18: -1713755027334665675
-      nemocuit-block1-ghost_19: 6280147701040148266
-      nemocuit-block1-ghost_2: -8919936767831448667
-      nemocuit-block1-ghost_20: 3211704994906336290
-      nemocuit-block1-ghost_21: 3459246598307780417
-      nemocuit-block1-ghost_22: 1623394719123574039
-      nemocuit-block1-ghost_23: 797285068615405990
-      nemocuit-block1-ghost_24: -1395977955539854670
-      nemocuit-block1-ghost_25: 1327253618530088815
-      nemocuit-block1-ghost_26: 8721513949048641239
-      nemocuit-block1-ghost_27: 1918573206523464478
-      nemocuit-block1-ghost_28: -8357066122317027068
-      nemocuit-block1-ghost_29: -1896774224446632787
-      nemocuit-block1-ghost_3: 1332803885415992993
-      nemocuit-block1-ghost_30: 2936215875580576668
-      nemocuit-block1-ghost_31: 4698716063213322747
-      nemocuit-block1-ghost_32: -3405679660580142397
-      nemocuit-block1-ghost_33: -5636078336335739593
-      nemocuit-block1-ghost_34: 8732606374157591270
-      nemocuit-block1-ghost_35: -5189573183320349285
-      nemocuit-block1-ghost_36: -4792455172476618861
-      nemocuit-block1-ghost_37: -4125196178164835251
-      nemocuit-block1-ghost_38: 5969583511925493067
-      nemocuit-block1-ghost_39: -1156276280233323278
-      nemocuit-block1-ghost_4: -6742424021348241204
-      nemocuit-block1-ghost_40: -4028658021345411590
-      nemocuit-block1-ghost_41: 3515246748846237515
-      nemocuit-block1-ghost_42: 525271051505191950
-      nemocuit-block1-ghost_43: 933566706957466966
-      nemocuit-block1-ghost_44: 8119200270225922315
-      nemocuit-block1-ghost_45: -6430419816673071425
-      nemocuit-block1-ghost_46: -4708481227515766199
-      nemocuit-block1-ghost_47: 7425272110178091080
-      nemocuit-block1-ghost_48: 5318404059930386471
-      nemocuit-block1-ghost_49: -7973597773944755659
-      nemocuit-block1-ghost_5: -7653723224770828831
-      nemocuit-block1-ghost_50: -1215170816535972071
-      nemocuit-block1-ghost_51: -4727569694464302998
-      nemocuit-block1-ghost_52: 774722757661675753
-      nemocuit-block1-ghost_53: -6400308852733191818
-      nemocuit-block1-ghost_54: -634333684806539518
-      nemocuit-block1-ghost_55: -2249286479149760019
-      nemocuit-block1-ghost_56: -7978558747416407241
-      nemocuit-block1-ghost_57: 2953534147924427428
-      nemocuit-block1-ghost_58: 7170913907768657976
-      nemocuit-block1-ghost_59: 2617218960922831352
-      nemocuit-block1-ghost_6: -3836846602980957017
-      nemocuit-block1-ghost_60: 1653094096485941002
-      nemocuit-block1-ghost_61: 3877675415879521583
-      nemocuit-block1-ghost_62: 4241072855745219081
-      nemocuit-block1-ghost_63: 5971041140290742109
-      nemocuit-block1-ghost_7: -7172301636972181785
-      nemocuit-block1-ghost_8: 2274966572202482574
-      nemocuit-block1-ghost_9: -4382863669067708880
+      nemocuit-block9-ghost_0: -1026840908032414210
+      nemocuit-block9-ghost_1: -654422291920937070
+      nemocuit-block9-ghost_10: -2966228171188022703
+      nemocuit-block9-ghost_11: -5716064973627398419
+      nemocuit-block9-ghost_12: -589991755087268061
+      nemocuit-block9-ghost_13: 351447388768709554
+      nemocuit-block9-ghost_14: 4258790972498442024
+      nemocuit-block9-ghost_15: -1324525388614976394
+      nemocuit-block9-ghost_16: 3751017729124597497
+      nemocuit-block9-ghost_17: -1894202199627681111
+      nemocuit-block9-ghost_18: 5896193081557222414
+      nemocuit-block9-ghost_19: -754770551624826232
+      nemocuit-block9-ghost_2: 4815916335990124912
+      nemocuit-block9-ghost_20: 1166977519249278281
+      nemocuit-block9-ghost_21: -4648441208918588577
+      nemocuit-block9-ghost_22: -5846163091161404243
+      nemocuit-block9-ghost_23: 4588199051941662864
+      nemocuit-block9-ghost_24: -7129220809937522906
+      nemocuit-block9-ghost_25: 8680088649028579011
+      nemocuit-block9-ghost_26: -1394618486567268644
+      nemocuit-block9-ghost_27: 4266217666816855159
+      nemocuit-block9-ghost_28: -4913942723632599609
+      nemocuit-block9-ghost_29: -8329200619699477384
+      nemocuit-block9-ghost_3: -5089368549889309135
+      nemocuit-block9-ghost_30: 5839919138178440638
+      nemocuit-block9-ghost_31: -8634824060545145740
+      nemocuit-block9-ghost_32: -8668958290552013591
+      nemocuit-block9-ghost_33: -2539537016349417006
+      nemocuit-block9-ghost_34: -3156374202996638140
+      nemocuit-block9-ghost_35: -505624936342171481
+      nemocuit-block9-ghost_36: 8073788977985690938
+      nemocuit-block9-ghost_37: 5506355447066234120
+      nemocuit-block9-ghost_38: -3043690206834402256
+      nemocuit-block9-ghost_39: 5450680283532921040
+      nemocuit-block9-ghost_4: -2779331468969063738
+      nemocuit-block9-ghost_40: 8211535671328158699
+      nemocuit-block9-ghost_41: -8789359340096332757
+      nemocuit-block9-ghost_42: 4313521398750202048
+      nemocuit-block9-ghost_43: -3499032672146677891
+      nemocuit-block9-ghost_44: -6912346901272351285
+      nemocuit-block9-ghost_45: -5093002335380584000
+      nemocuit-block9-ghost_5: -3870487969059411691
+      nemocuit-block9-ghost_6: 6883611961245158848
+      nemocuit-block9-ghost_7: 1469577878830441800
+      nemocuit-block9-ghost_8: 2062623890502907798
+      nemocuit-block9-ghost_9: 2380916022859635032
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.Burst.Intrinsics;
 
 public abstract class LogicExpr
 {
@@ -10,157 +11,138 @@ public abstract class LogicExpr
     public abstract string ToDataString();
     public abstract override bool Equals(object? obj);
     public abstract override int GetHashCode();
-    public static LogicExpr Parse(string exprString)
+    public static LogicExpr? Parse(string exprString)
     {
-        /*if (string.IsNullOrEmpty(exprString)) 
-            throw new FormatException("LogicExpr.Parse()");
-
-        if (exprString[0] == Utils.NOT)
+        if (exprString.Length > 1)
         {
-            string inner = exprString[1..];
-            if (Utils.IsWrappedByParentheses(inner)) inner = inner[1..^1];
-            return new NotExpr(Parse(inner)).Clean();
+            string[] exprs = exprString.Split(";");
+            return new CombExpr(
+                ParseVar(exprs[0]),
+                ParseVar(exprs[1]),
+                ParseVar(exprs[2]),
+                ParseVar(exprs[3])
+            );
         }
-
-        if (Utils.IsWrappedByParentheses(exprString))
-            return Parse(exprString[1..^1]);
-
-        int depth = 0;
-        for (int i = 0; i < exprString.Length; i++)
+        else
         {
-            char c = exprString[i];
-            if (c == Utils.PARENS[0]) depth++;
-            else if (c == Utils.PARENS[1]) depth--;
-            else if (depth == 0 && (c == Utils.AND || c == Utils.OR))
-            {
-                LogicExpr left = Parse(exprString[0..i]);
-                LogicExpr right = Parse(exprString[(i + 1)..]);
-                return c == Utils.AND ? new AndExpr(left, right) : new OrExpr(left, right);
-            }
+            return ParseVar(exprString);
         }
-
-        if (exprString.Length == 1)
-        {
-            if (char.IsDigit(exprString[0])) return new ConstantExpr(int.Parse(exprString));
-            else return new VarExpr(exprString);
-        }
-
-        throw new InvalidDataException($"LogicExpr.Parse(): {exprString}");*/
-
-        // TODO
-        return new VarExpr("x");
+    }
+    private static VarExpr? ParseVar(string varString)
+    {
+        if (varString.Length == 0) return null;
+        else return new VarExpr(varString);
     }
 }
 
 public class VarExpr : LogicExpr
 {
-    public string Name;
+    public string Name { get; private set; }
     public VarExpr(string name) => Name = name;
+    public bool IsResisted { get; private set; } = false;
+    public void Resist() => IsResisted = true;
+    public CombExpr ToCombExpr() => new(this, this, this, this);
+
     public override string ToString() => Name;
-    public override string ToDataString() => ToString();
-    public override bool Equals(object? obj) => obj is VarExpr v && Name == v.Name;
-    public override int GetHashCode() => Name.GetHashCode();
+    public override string ToDataString() => Name;
+    public override bool Equals(object? obj) 
+    {
+        if (obj is not VarExpr) 
+            return false;
+        VarExpr objV = (VarExpr)obj;
+        if (objV.Name != Name) 
+            return false;
+        if (objV.IsResisted != IsResisted)
+            return false;
+        return true;
+    }
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, IsResisted);
+    }
 }
 
-public class NotExpr : LogicExpr
+public class CombExpr : LogicExpr
 {
-    public LogicExpr Inner;
-    public NotExpr(LogicExpr inner) => Inner = inner;
-    public LogicExpr Clean() // 이중 부정을 제거하기 위함
+    public VarExpr? LeftUp { get; private set; }
+    public VarExpr? LeftDown { get; private set; }
+    public VarExpr? RightUp { get; private set; }
+    public VarExpr? RightDown { get; private set; }
+    public CombExpr(
+        VarExpr? leftup,
+        VarExpr? leftdown,
+        VarExpr? rightup,
+        VarExpr? rightdown
+    )
     {
-        if (Inner is NotExpr innerNot) return innerNot.Inner;
-        return this;
+        LeftUp = leftup;
+        LeftDown = leftdown;
+        RightUp = rightup;
+        RightDown = rightdown;
     }
-    public override string ToString()
+    public LogicExpr? Clean()
     {
-        if (Inner is VarExpr) return $"~{Inner}";
-        else if (Inner is NotExpr not) return not.Inner.ToString();
-        return $"~({Inner})";
+        if (
+            LeftUp == null &&
+            LeftDown == null &&
+            RightUp == null &&
+            RightDown == null
+        )
+        {
+            return null;
+        }
+        else if (
+            LeftUp != null &&
+            LeftDown != null &&
+            RightUp != null &&
+            RightDown != null
+        )
+        {
+            if (
+            LeftUp.Equals(LeftDown) &&
+            LeftUp.Equals(RightUp) &&
+            LeftUp.Equals(RightDown)
+            )
+            {
+                return LeftUp;
+            }
+            else return this;
+        }
+        
+        else return this;
     }
-    public override string ToDataString()
-    {
-        if (Inner is VarExpr) return $"~{Inner}";
-        else if (Inner is NotExpr not) return not.Inner.ToDataString();
-        return $"~({Inner.ToDataString()})";
-    }
+    public override string ToString() => $"{LeftUp}|{RightUp}\n{LeftDown}|{RightDown}";
+    public override string ToDataString() => $"{LeftUp};{LeftDown};{RightUp};{RightDown}";
     public override bool Equals(object? obj)
     {
-        if (obj is not NotExpr n) return false;
-        return Inner.Equals(n.Inner);
+        LogicExpr? cleaned = Clean();
+        if (cleaned is VarExpr v) 
+            return v.Equals(obj);
+        else
+        {
+            if (obj is not CombExpr)
+                return false;
+            CombExpr objC = (CombExpr)obj;
+            return (
+                ((LeftUp == null && objC.LeftUp == null) || (LeftUp != null && LeftUp.Equals(objC.LeftUp))) &&
+                ((LeftDown == null && objC.LeftDown == null) || (LeftDown != null && LeftDown.Equals(objC.LeftDown))) &&
+                ((RightUp == null && objC.RightUp == null) || (RightUp != null && RightUp.Equals(objC.RightUp))) &&
+                ((RightDown == null && objC.RightDown == null) || (RightDown != null && RightDown.Equals(objC.RightDown)))
+            );
+        }
     }
-    public override int GetHashCode() => Inner.GetHashCode() * 17;
-}
+    public override int GetHashCode()
+    {
+        LogicExpr? cleaned = Clean();
 
-public class VertExpr : LogicExpr
-{
-    public List<LogicExpr> Operands;
-    public LogicExpr Up { get; private set; }
-    public LogicExpr Down { get; private set; }
-    public VertExpr(List<LogicExpr> operands)
-    {
-        Operands = operands;
-        Up = Operands[0];
-        Down = Operands[1];
-    }
-    public VertExpr(LogicExpr left, LogicExpr right)
-    {
-        Operands = new List<LogicExpr> { left, right };
-        Up = left;
-        Down = right;
-    }
-    public override string ToString()
-    {
-        if (Operands[0] is VarExpr && Operands[1] is VarExpr)
-            return $"{Operands[0]}{Operands[1]}";
-        else if (Operands[0] is VarExpr) 
-            return $"{Operands[0]}({Operands[1]})";
-        else if (Operands[1] is VarExpr) 
-            return $"({Operands[0]}){Operands[1]}";
-        else 
-            return $"({Operands[0]})({Operands[1]})";
-    }
-    public override string ToDataString() => $"({Operands[0].ToDataString()})*({Operands[1].ToDataString()})";
-    public override bool Equals(object? obj)
-    {
-        if (obj is not VertExpr a) return false;
-        return Up.Equals(a.Up) && Down.Equals(a.Down);
-    }
-    public override int GetHashCode() => Up.GetHashCode() * 31 + Down.GetHashCode();
-}
+        if (cleaned is VarExpr v)
+            return v.GetHashCode();
 
-public class HorzExpr : LogicExpr
-{
-    public List<LogicExpr> Operands;
-    public LogicExpr Left { get; private set; }
-    public LogicExpr Right { get; private set; }
-    public HorzExpr(List<LogicExpr> operands)
-    {
-        Operands = operands;
-        Left = Operands[0];
-        Right = Operands[1];
+        return HashCode.Combine(
+            LeftUp,
+            LeftDown,
+            RightUp,
+            RightDown
+        );
     }
-    public HorzExpr(LogicExpr left, LogicExpr right)
-    {
-        Operands = new List<LogicExpr> { left, right };
-        Left = left;
-        Right = right;
-    }
-    public override string ToString()
-    {
-        if (Operands[0] is VarExpr && Operands[1] is VarExpr)
-            return $"{Operands[0]}+{Operands[1]}";
-        else if (Operands[0] is VarExpr) 
-            return $"{Operands[0]}+({Operands[1]})";
-        else if (Operands[1] is VarExpr) 
-            return $"({Operands[0]})+{Operands[1]}";
-        else 
-            return $"({Operands[0]})+({Operands[1]})";
-    }
-    public override string ToDataString() => $"({Operands[0].ToDataString()})+({Operands[1].ToDataString()})";
-    public override bool Equals(object? obj)
-    {
-        if (obj is not HorzExpr o) return false;
-        return Left.Equals(o.Left) && Right.Equals(o.Right);
-    }
-    public override int GetHashCode() => Left.GetHashCode() * 31 + Right.GetHashCode();
 }

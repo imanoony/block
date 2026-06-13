@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: cde2f2a81bb6d5f4783b4ba873a36e81
+guid: 850331d89c24a6448ae247bd5f1480d2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7126386586975474146
-    second: nemocuit-block2_0_0
+      213: 6111516544338899248
+    second: nemocuit-block10_0_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nemocuit-block2_0_0
+      name: nemocuit-block10_0_0
       rect:
         serializedVersion: 2
         x: 33
-        y: 33
+        y: 46
         width: 1134
-        height: 734
+        height: 321
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2e118c8f7d206e260800000000000000
-      internalID: 7126386586975474146
+      spriteID: 0313e38bae770d450800000000000000
+      internalID: 6111516544338899248
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      nemocuit-block2_0_0: 7126386586975474146
+      nemocuit-block10_0_0: 6111516544338899248
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

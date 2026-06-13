@@ -43,7 +43,7 @@ public static class Utils
     public const int AUDIO_THRESHOLD0 = 2;
     public const int AUDIO_THRESHOLD1 = 3;
     public const int AUDIO_THRESHOLD2 = 4;
-    public const char NOT = '~', AND = '*', OR = '+';
+    public const char NOT = '~', VERT = '*', HORZ = '+';
     public const string PARENS = "()";
     public static bool IsWrappedByParentheses(string s)
     {

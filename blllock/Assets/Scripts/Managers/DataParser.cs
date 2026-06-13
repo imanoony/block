@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -298,9 +299,9 @@ public class DataParser
                 else if (header == Ports.ToLower())
                 {
                     List<string> items = values[j].Split(';').ToList<string>();
-                    List<WireExpr> wires = new();
-                    for (int k = 0; k < items.Count; k++) wires.Add(WireExpr.Parse(items[k]));
-                    block.SetPorts(wires);
+                    List<PortExpr> ports = new();
+                    for (int k = 0; k < items.Count; k++) ports.Add(PortExpr.Parse(items[k]));
+                    block.SetPorts(ports);
                 }
             }
 

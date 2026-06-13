@@ -92,6 +92,10 @@ public class BlockInstance : MonoBehaviour
 
     private void OnDestroy()
     {
+        for (int i = 0; i < blockData.Ports.Count; i++)
+        {
+            blockData.Ports[i].Dispose();
+        }
         Destroy(ghost);
     }
 

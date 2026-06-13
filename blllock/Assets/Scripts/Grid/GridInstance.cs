@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridInstance : MonoBehaviour
@@ -39,13 +40,17 @@ public class GridInstance : MonoBehaviour
 
     private void SubscribePort()
     {
-        foreach (WireExpr port in gridData.Ports)
+        foreach (PortExpr port in gridData.Ports)
+        {
             port.OnCacheChanged += OnPortCacheChanged;
+        }
     }
     private void UnsubscribePort()
     {
-        foreach (WireExpr port in gridData.Ports)
+        foreach (PortExpr port in gridData.Ports)
+        {
             port.OnCacheChanged -= OnPortCacheChanged;
+        }
     }
 
     private void OnPortsChanged()
@@ -56,7 +61,7 @@ public class GridInstance : MonoBehaviour
         UpdateColor();
     }
 
-    private void OnPortCacheChanged(WireExpr _) => UpdateColor();
+    private void OnPortCacheChanged(PortExpr _) => UpdateColor();
 
     private void UpdateColor()
     {
