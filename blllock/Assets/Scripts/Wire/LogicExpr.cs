@@ -12,7 +12,7 @@ public abstract class LogicExpr
     public abstract override int GetHashCode();
     public static LogicExpr Parse(string exprString)
     {
-        if (string.IsNullOrEmpty(exprString)) 
+        /*if (string.IsNullOrEmpty(exprString)) 
             throw new FormatException("LogicExpr.Parse()");
 
         if (exprString[0] == Utils.NOT)
@@ -45,19 +45,11 @@ public abstract class LogicExpr
             else return new VarExpr(exprString);
         }
 
-        throw new InvalidDataException($"LogicExpr.Parse(): {exprString}");
-    }
-}
+        throw new InvalidDataException($"LogicExpr.Parse(): {exprString}");*/
 
-public class ConstantExpr : LogicExpr
-{
-    public bool Value;
-    public ConstantExpr(bool value = false) => Value = value;
-    public ConstantExpr(int value) => Value = value != 0;
-    public override string ToString() => Value ? "1" : "0";
-    public override string ToDataString() => ToString();
-    public override bool Equals(object? obj) => obj is ConstantExpr c && Value == c.Value;
-    public override int GetHashCode() => Value.GetHashCode();
+        // TODO
+        return new VarExpr("x");
+    }
 }
 
 public class VarExpr : LogicExpr
@@ -81,18 +73,14 @@ public class NotExpr : LogicExpr
     }
     public override string ToString()
     {
-        if (Inner is VarExpr || Inner is ConstantExpr)
-            return $"~{Inner}";
-        else if (Inner is NotExpr not)
-            return not.Inner.ToString();
+        if (Inner is VarExpr) return $"~{Inner}";
+        else if (Inner is NotExpr not) return not.Inner.ToString();
         return $"~({Inner})";
     }
     public override string ToDataString()
     {
-        if (Inner is VarExpr || Inner is ConstantExpr)
-            return $"~{Inner}";
-        else if (Inner is NotExpr not)
-            return not.Inner.ToDataString();
+        if (Inner is VarExpr) return $"~{Inner}";
+        else if (Inner is NotExpr not) return not.Inner.ToDataString();
         return $"~({Inner.ToDataString()})";
     }
     public override bool Equals(object? obj)
@@ -103,54 +91,55 @@ public class NotExpr : LogicExpr
     public override int GetHashCode() => Inner.GetHashCode() * 17;
 }
 
-public class AndExpr : LogicExpr
+public class VertExpr : LogicExpr
 {
     public List<LogicExpr> Operands;
-    public LogicExpr Left { get; private set; }
-    public LogicExpr Right { get; private set; }
-    public AndExpr(List<LogicExpr> operands)
+    public LogicExpr Up { get; private set; }
+    public LogicExpr Down { get; private set; }
+    public VertExpr(List<LogicExpr> operands)
     {
         Operands = operands;
-        Left = Operands[0];
-        Right = Operands[1];
+        Up = Operands[0];
+        Down = Operands[1];
     }
-    public AndExpr(LogicExpr left, LogicExpr right)
+    public VertExpr(LogicExpr left, LogicExpr right)
     {
         Operands = new List<LogicExpr> { left, right };
-        Left = left;
-        Right = right;
+        Up = left;
+        Down = right;
     }
     public override string ToString()
     {
-        if (
-            (Operands[0] is VarExpr || Operands[0] is ConstantExpr) &&
-            (Operands[1] is VarExpr || Operands[1] is ConstantExpr)
-        ) return $"{Operands[0]}{Operands[1]}";
-        else if (Operands[0] is VarExpr || Operands[0] is ConstantExpr) return $"{Operands[0]}({Operands[1]})";
-        else if (Operands[1] is VarExpr || Operands[1] is ConstantExpr) return $"({Operands[0]}){Operands[1]}";
-        else return $"({Operands[0]})({Operands[1]})";
+        if (Operands[0] is VarExpr && Operands[1] is VarExpr)
+            return $"{Operands[0]}{Operands[1]}";
+        else if (Operands[0] is VarExpr) 
+            return $"{Operands[0]}({Operands[1]})";
+        else if (Operands[1] is VarExpr) 
+            return $"({Operands[0]}){Operands[1]}";
+        else 
+            return $"({Operands[0]})({Operands[1]})";
     }
     public override string ToDataString() => $"({Operands[0].ToDataString()})*({Operands[1].ToDataString()})";
     public override bool Equals(object? obj)
     {
-        if (obj is not AndExpr a) return false;
-        return Left.Equals(a.Left) && Right.Equals(a.Right);
+        if (obj is not VertExpr a) return false;
+        return Up.Equals(a.Up) && Down.Equals(a.Down);
     }
-    public override int GetHashCode() => Left.GetHashCode() * 31 + Right.GetHashCode();
+    public override int GetHashCode() => Up.GetHashCode() * 31 + Down.GetHashCode();
 }
 
-public class OrExpr : LogicExpr
+public class HorzExpr : LogicExpr
 {
     public List<LogicExpr> Operands;
     public LogicExpr Left { get; private set; }
     public LogicExpr Right { get; private set; }
-    public OrExpr(List<LogicExpr> operands)
+    public HorzExpr(List<LogicExpr> operands)
     {
         Operands = operands;
         Left = Operands[0];
         Right = Operands[1];
     }
-    public OrExpr(LogicExpr left, LogicExpr right)
+    public HorzExpr(LogicExpr left, LogicExpr right)
     {
         Operands = new List<LogicExpr> { left, right };
         Left = left;
@@ -158,18 +147,19 @@ public class OrExpr : LogicExpr
     }
     public override string ToString()
     {
-        if (
-            (Operands[0] is VarExpr || Operands[0] is ConstantExpr) &&
-            (Operands[1] is VarExpr || Operands[1] is ConstantExpr)
-        ) return $"{Operands[0]}+{Operands[1]}";
-        else if (Operands[0] is VarExpr || Operands[0] is ConstantExpr) return $"{Operands[0]}+({Operands[1]})";
-        else if (Operands[1] is VarExpr || Operands[1] is ConstantExpr) return $"({Operands[0]})+{Operands[1]}";
-        else return $"({Operands[0]})+({Operands[1]})";
+        if (Operands[0] is VarExpr && Operands[1] is VarExpr)
+            return $"{Operands[0]}+{Operands[1]}";
+        else if (Operands[0] is VarExpr) 
+            return $"{Operands[0]}+({Operands[1]})";
+        else if (Operands[1] is VarExpr) 
+            return $"({Operands[0]})+{Operands[1]}";
+        else 
+            return $"({Operands[0]})+({Operands[1]})";
     }
     public override string ToDataString() => $"({Operands[0].ToDataString()})+({Operands[1].ToDataString()})";
     public override bool Equals(object? obj)
     {
-        if (obj is not OrExpr o) return false;
+        if (obj is not HorzExpr o) return false;
         return Left.Equals(o.Left) && Right.Equals(o.Right);
     }
     public override int GetHashCode() => Left.GetHashCode() * 31 + Right.GetHashCode();

@@ -278,8 +278,8 @@ public class WireManager
         // l is AndExpr or OrExpr
         if (Wires[w].L != 0)
         {
-            if (l is AndExpr la) return AddToLogic(wire.L, la.Left) && AddToLogic(wire.R, la.Right);
-            if (l is OrExpr lo) return AddToLogic(wire.L, lo.Left) && AddToLogic(wire.R, lo.Right);
+            if (l is VertExpr la) return AddToLogic(wire.L, la.Up) && AddToLogic(wire.R, la.Down);
+            if (l is HorzExpr lo) return AddToLogic(wire.L, lo.Left) && AddToLogic(wire.R, lo.Right);
             return false;
         }
 
@@ -288,11 +288,11 @@ public class WireManager
         Wire right = new Wire(GenerateID(), wire.ID), rightneg = new Wire(-right.ID);
         AddWire(left, leftneg); AddWire(right, rightneg);
 
-        if (l is AndExpr _) wire.Composite(new WireAnd(left, right), left.ID, right.ID);
-        if (l is OrExpr _) wire.Composite(new WireOr(left, right), left.ID, right.ID);
+        if (l is VertExpr _) wire.Composite(new WireAnd(left, right), left.ID, right.ID);
+        if (l is HorzExpr _) wire.Composite(new WireOr(left, right), left.ID, right.ID);
 
-        if (l is AndExpr a) return AddToLogic(left.ID, a.Left) && AddToLogic(right.ID, a.Right);
-        if (l is OrExpr o) return AddToLogic(left.ID, o.Left) && AddToLogic(right.ID, o.Right);
+        if (l is VertExpr a) return AddToLogic(left.ID, a.Up) && AddToLogic(right.ID, a.Down);
+        if (l is HorzExpr o) return AddToLogic(left.ID, o.Left) && AddToLogic(right.ID, o.Right);
         return false;
     }
 
@@ -300,8 +300,8 @@ public class WireManager
     {
         if (w is Wire _) return AddToLogic(((Wire)w).ID, l);
         if (w is WireNot n) return AddToLogic(n.Inner!, new NotExpr(l).Clean());
-        if (w is WireAnd aw && l is AndExpr al) return AddToLogic(aw.Left!, al.Left) && AddToLogic(aw.Right!, al.Right);
-        if (w is WireOr ow && l is OrExpr ol) return AddToLogic(ow.Left!, ol.Left) && AddToLogic(ow.Right!, ol.Right);
+        if (w is WireAnd aw && l is VertExpr al) return AddToLogic(aw.Left!, al.Up) && AddToLogic(aw.Right!, al.Down);
+        if (w is WireOr ow && l is HorzExpr ol) return AddToLogic(ow.Left!, ol.Left) && AddToLogic(ow.Right!, ol.Right);
         return false;
     }
 
@@ -320,13 +320,13 @@ public class WireManager
         if (expr is WireAnd and)
         {
             LogicExpr? left = EvalCache(and.Left), right = EvalCache(and.Right);
-            if (left != null && right != null) return new AndExpr(left, right);
+            if (left != null && right != null) return new VertExpr(left, right);
             else return null;
         }
         if (expr is WireOr or)
         {
             LogicExpr? left = EvalCache(or.Left), right = EvalCache(or.Right);
-            if (left != null && right != null) return new OrExpr(left, right);
+            if (left != null && right != null) return new HorzExpr(left, right);
             else return null;
         }
         return null;
@@ -355,8 +355,8 @@ public class WireManager
                 LogicExpr? left = Eval(Wires[eqID].L), right = Eval(Wires[eqID].R);
                 if (left != null && right != null)
                 {
-                    if (newsig is WireAnd _) result = not ? new NotExpr(new AndExpr(left, right)) : new AndExpr(left, right);
-                    else result = not ? new NotExpr(new OrExpr(left, right)) : new OrExpr(left, right);
+                    if (newsig is WireAnd _) result = not ? new NotExpr(new VertExpr(left, right)) : new VertExpr(left, right);
+                    else result = not ? new NotExpr(new HorzExpr(left, right)) : new HorzExpr(left, right);
 
                     if (AutoEval) EvalEquivalents(eq, result);
                     return result;
@@ -394,13 +394,13 @@ public class WireManager
         if (expr is WireAnd a)
         {
             LogicExpr? left = Eval(a.Left!), right = Eval(a.Right!);
-            if (left != null && right != null) return new AndExpr(left, right);
+            if (left != null && right != null) return new VertExpr(left, right);
             return null;
         }
         if (expr is WireOr o)
         {
             LogicExpr? left = Eval(o.Left!), right = Eval(o.Right!);
-            if (left != null && right != null) return new OrExpr(left, right);
+            if (left != null && right != null) return new HorzExpr(left, right);
             return null;
         }
         return null;
@@ -477,8 +477,8 @@ public class WireManager
     private WireExpr LogicToSig(LogicExpr expr)
     {
         if (expr is NotExpr n) return new WireNot(LogicToSig(n.Inner));
-        else if (expr is AndExpr a) return new WireAnd(LogicToSig(a.Left), LogicToSig(a.Right));
-        else if (expr is OrExpr o) return new WireOr(LogicToSig(o.Left), LogicToSig(o.Right));
+        else if (expr is VertExpr a) return new WireAnd(LogicToSig(a.Up), LogicToSig(a.Down));
+        else if (expr is HorzExpr o) return new WireOr(LogicToSig(o.Left), LogicToSig(o.Right));
         else return new Wire(0);
     }
     private bool CompareSig(WireExpr? w1, WireExpr? w2)

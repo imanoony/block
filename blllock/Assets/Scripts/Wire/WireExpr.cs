@@ -193,7 +193,7 @@ public class WireAnd : WireExpr
     private void UpdateCache()
     {
         if (Left?.Cache != null && Right?.Cache != null)
-            Cache = new AndExpr(Left.Cache, Right.Cache);
+            Cache = new VertExpr(Left.Cache, Right.Cache);
         else Cache = null;
     }
     public override string ToString()
@@ -247,7 +247,7 @@ public class WireOr : WireExpr
     private void UpdateCache()
     {
         if (Left?.Cache != null && Right?.Cache != null)
-            Cache = new OrExpr(Left.Cache, Right.Cache);
+            Cache = new HorzExpr(Left.Cache, Right.Cache);
         else Cache = null;
     }
     
