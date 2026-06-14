@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6894168341417320771
+--- !u!114 &-790992842353629095
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GridAnimInMat
+  m_Name: GridAnimMat
   m_Shader: {fileID: -6465566751694194690, guid: 65a300a51a4ead44b96fa61b6fcbfe02, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -37,7 +37,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _AnimTextures:
-        m_Texture: {fileID: 18700000, guid: 5a11c5fe92138e343a2372ea0be2bb6b, type: 3}
+        m_Texture: {fileID: 18700000, guid: b944f5a641190c2428e2ac34979a84c7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:

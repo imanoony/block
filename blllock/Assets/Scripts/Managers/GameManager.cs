@@ -20,7 +20,7 @@ public static class Utils
     public const int PORT_SIZE = 10;
     public const string RED = "#F25A7B";
     public const string CHAT_RED = "#FFD0D0";
-    public const string BLUE = "#54DCE3";
+    public const string BLUE = "#6FCED5";
     public const string CHAT_BLUE = "#D0F6FF";
     public const string BLACK = "#242424";
     public const string GRAY = "#B8B8B8";
@@ -402,8 +402,8 @@ public class GameManager : MonoBehaviour
         if (module == null) { Utils.PrintError("모듈이 없습니다."); return; }
         if (module.Stages.Count == 0) return;
 
-        if (module.ID == 0) UI.DeactivateChat();
-        else UI.ActivateChat();
+        //if (module.ID == 0) UI.DeactivateChat();
+        //else UI.ActivateChat();
 
         CurrentModule = module;
         LastStageID = module.Stages[^1];

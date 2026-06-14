@@ -5,28 +5,16 @@ using UnityEngine;
 
 public class GridInstance : MonoBehaviour
 {
-    private static WaitForSeconds _waitForSeconds0_01 = new WaitForSeconds(0.01f);
-
     public int x { get; private set; }
     public int y { get; private set; }
     private Grid gridData;
     private GameManager gm;
 
-    // Grid In
-    [SerializeField] private SpriteRenderer gridInSr;
-    [SerializeField] private SpriteRenderer gridInAnimOffSr;
-    [SerializeField] private SpriteRenderer gridInAnimOnSr;
-    private MaterialPropertyBlock gridInMpb;
-    private MaterialPropertyBlock gridInAnimOffMpb;
-    private MaterialPropertyBlock gridInAnimOnMpb;
-
-    // Grid Out
-    [SerializeField] private SpriteRenderer gridOutSr;
-    [SerializeField] private SpriteRenderer gridOutAnimOffSr;
-    [SerializeField] private SpriteRenderer gridOutAnimOnSr;
-    private MaterialPropertyBlock gridOutMpb;
-    private MaterialPropertyBlock gridOutAnimOffMpb;
-    private MaterialPropertyBlock gridOutAnimOnMpb;
+    [SerializeField] private SpriteRenderer sr;
+    [SerializeField] private SpriteRenderer animSr;
+    [SerializeField] private int animFrameCnt = 37;
+    private MaterialPropertyBlock mpb;
+    private MaterialPropertyBlock animMpb;
 
     public void Initialize(int x, int y)
     {
@@ -36,16 +24,23 @@ public class GridInstance : MonoBehaviour
         gm = GameManager.Instance;
 
         SubscribePort();
-        //UpdateColor();
+        mpb = new();
+        animMpb = new();
+        mpb.SetInteger("_IsOff", 1);
+        animMpb.SetInteger("_IsOff", 0);
+        sr.SetPropertyBlock(mpb);
+        animSr.SetPropertyBlock(animMpb);
+        
         if (gridData.Type == GridType.Input) SetColor(gridData.Expr, Utils.CodeToColor(Utils.BLUE));
         else if (gridData.Type == GridType.Output) SetColor(gridData.Expr, Utils.CodeToColor(Utils.GRAY));
+
     }
 
-    void OnMouseDown()
-    {
-        if (gm.UI.IsChatEnabled(new(x, y))) gm.UI.DisableChat(x, y);
-        else gm.UI.EnableChat(x, y);
-    }
+    //void OnMouseDown()
+    //{
+    //    if (gm.UI.IsChatEnabled(new(x, y))) gm.UI.DisableChat(x, y);
+    //    else gm.UI.EnableChat(x, y);
+    //}
 
     private readonly HashSet<PortExpr> subscribedPorts = new(); // 이 GridInstance가 구독 중인 포트들
     private void SubscribePort()
@@ -77,22 +72,17 @@ public class GridInstance : MonoBehaviour
 
     private void UpdateColor()
     {
-        if (this == null)
-        {
-            Utils.PrintWarning("GridInstance가 파괴되었거나 SpriteRenderer가 없음.");
-            return;
-        }
-
         if (gridData.Type == GridType.Input) return;
         else if (gridData.Type == GridType.Output)
         {
+            // Output에 연결된 논리식이 있는 포트가 하나 이상일 때
             if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null)
             {
                 if (gridData.Ports[0].Cache.Equals(gridData.Expr))
                 {
                     GameManager.Instance.OutputCheck(new(x, y), true);
                     SetColor(gridData.Expr, Utils.CodeToColor(Utils.BLUE));
-                    GameManager.Instance.UI.EnableChat(x, y);
+                    //GameManager.Instance.UI.EnableChat(x, y);
                 }
                 else
                 {
@@ -100,6 +90,8 @@ public class GridInstance : MonoBehaviour
                     SetColor(gridData.Expr, Utils.CodeToColor(Utils.RED));
                 }
             }
+            // Output에 연결된 포트가 없거나,
+            // 연결된 포트에 흐르는 논리식이 없을 때
             else
             {
                 GameManager.Instance.OutputCheck(new(x, y), false);
@@ -108,12 +100,12 @@ public class GridInstance : MonoBehaviour
         }
         else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) {
             SetColor(gridData.Ports[0].Cache, Utils.CodeToColor(Utils.BLUE));
-            GameManager.Instance.UI.EnableChat(x, y);
+            //GameManager.Instance.UI.EnableChat(x, y);
         }
         else
         {
             SetColor(null, Utils.CodeToColor(Utils.CLEAR));
-            if (gm.UI.IsChatEnabled(new(x, y))) gm.UI.DisableChat(x, y);
+            //if (gm.UI.IsChatEnabled(new(x, y))) gm.UI.DisableChat(x, y);
         }
     }
 
@@ -126,64 +118,31 @@ public class GridInstance : MonoBehaviour
 
     private IEnumerator SetColorCo(LogicExpr expr, Color color)
     {
-        gridInMpb = new();
-        gridInAnimOffMpb = new();
-        gridInAnimOnMpb = new();
-        gridOutMpb = new();
-        gridOutAnimOffMpb = new();
-        gridOutAnimOnMpb = new();
-
-        
-        gridOutAnimOffSr.gameObject.SetActive(true);
-        gridOutAnimOnSr.gameObject.SetActive(true);
+        animSr.gameObject.SetActive(true);
 
         Vector4 v = Logic2Vector4(expr);
-        gridOutAnimOnMpb.SetVector("_CombExpr", v);
-        gridOutAnimOnSr.SetPropertyBlock(gridOutAnimOnMpb);
+        animMpb.SetVector("_CombExpr", v);
+        animSr.SetPropertyBlock(animMpb);
+        animSr.color = color;
 
-        gridOutAnimOnSr.color = color;
-
-        for (int i = 0; i < 37; i++)
+        for (int i = 0; i < animFrameCnt; i++)
         {
-            gridOutAnimOffMpb.SetFloat("_AnimIndex", i);
-            gridOutAnimOnMpb.SetFloat("_MaskIndex", i);
-            
-            gridOutAnimOffSr.SetPropertyBlock(gridOutAnimOffMpb);
-            gridOutAnimOnSr.SetPropertyBlock(gridOutAnimOnMpb);
+            mpb.SetInteger("_MaskIndex", i);
+            animMpb.SetInteger("_MaskIndex", i);
+            sr.SetPropertyBlock(mpb);
+            animSr.SetPropertyBlock(animMpb);
 
-            yield return _waitForSeconds0_01;
-        }
-        
-        gridInAnimOnMpb.SetVector("_CombExpr", v);
-        gridInAnimOnSr.SetPropertyBlock(gridInAnimOnMpb);
-        gridInAnimOffSr.gameObject.SetActive(true);
-        gridInAnimOnSr.gameObject.SetActive(true);
-        gridInAnimOnSr.color = color;
-
-        for (int i = 0; i < 6; i++)
-        {
-            gridInAnimOffMpb.SetFloat("_AnimIndex", i);
-            gridInAnimOnMpb.SetFloat("_MaskIndex", i);
-
-            gridInAnimOffSr.SetPropertyBlock(gridInAnimOffMpb);
-            gridInAnimOnSr.SetPropertyBlock(gridInAnimOnMpb);
-
-            yield return new WaitForSeconds(0.03f);
+            yield return new WaitForSeconds(0.01f);
         }
 
-        gridInMpb.SetVector("_CombExpr", v);
-        gridInMpb.SetFloat("_MaskIndex", 5);
-        gridOutMpb.SetVector("_CombExpr", v);
-        gridOutMpb.SetFloat("_MaskIndex", 36);
-        gridInSr.SetPropertyBlock(gridInMpb);
-        gridOutSr.SetPropertyBlock(gridOutMpb);
-        gridInSr.color = color;
-        gridOutSr.color = color;
+        mpb.SetVector("_CombExpr", v);
+        mpb.SetInteger("_MaskIndex", 0);
+        animMpb.SetInteger("_MaskIndex", 0);
+        sr.SetPropertyBlock(mpb);
+        sr.color = color;
+        animSr.SetPropertyBlock(animMpb);
 
-        gridInAnimOffSr.gameObject.SetActive(false);
-        gridInAnimOnSr.gameObject.SetActive(false);
-        gridOutAnimOffSr.gameObject.SetActive(false);
-        gridOutAnimOnSr.gameObject.SetActive(false);
+        animSr.gameObject.SetActive(false);
     }
 
     private Vector4 Logic2Vector4(LogicExpr logic=null)
