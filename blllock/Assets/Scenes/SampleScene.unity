@@ -6894,7 +6894,7 @@ MonoBehaviour:
   circuitBottomLeft: {fileID: 11400000, guid: 176759073f4951947a30f36ce713d75d, type: 2}
   circuitBottomRight: {fileID: 11400000, guid: b55d52a9271f004458a1266f568bce23, type: 2}
   gridParent: {fileID: 1148004782}
-  gridPrefab: {fileID: 2555519418431998577, guid: 88592bf3a13327749b3eaf000f52a716, type: 3}
+  gridPrefab: {fileID: 7213145987293988837, guid: 88592bf3a13327749b3eaf000f52a716, type: 3}
   barrierParent: {fileID: 346111146}
   hBarrierPrefab: {fileID: 5102308025333390099, guid: 5c09aef16f4ed0645a10015662bf380d, type: 3}
   vBarrierPrefab: {fileID: 7919743460152423171, guid: 9485be44bf9454d4aa76048b945f286b, type: 3}
@@ -6919,8 +6919,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b8b78403439cbc442b3b60701cc8ce78, type: 3}
   - {fileID: 21300000, guid: 99987670f7bb14641ac92a5db01db972, type: 3}
   - {fileID: 21300000, guid: 850331d89c24a6448ae247bd5f1480d2, type: 3}
-  - {fileID: 21300000, guid: 3f44b0001299cb84a96b9979c1202629, type: 3}
-  - {fileID: 21300000, guid: c408e92e12445d7419b53fd476d6e22d, type: 3}
+  - {fileID: 21300000, guid: 5ab816f622cc4644b870cd9238f16ada, type: 3}
+  - {fileID: 21300000, guid: 5261a1021ee263b4fb8680bc6d750847, type: 3}
   sblockSprites:
   - {fileID: 3105821265316025880, guid: 279bcc0415d149c4890aed4b86426dec, type: 3}
   - {fileID: 1214118329092968321, guid: 6f9f378c517770b4ebba6bc1eefef213, type: 3}

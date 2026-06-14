@@ -309,5 +309,15 @@ public class WireManager
         // "키: {값1, 값2}" 형식으로 변환
         return string.Join("|", target.Select(kv => $"{kv.Key}: {string.Join(", ", kv.Value)}"));
     }
+    public string StringOfWireLogic()
+    {
+        if (WireLogic == null || WireLogic.Count == 0)
+            return "{}";
+
+        return string.Join(
+            "|",
+            WireLogic.Select(kv => $"{kv.Key}: {kv.Value}")
+        );
+    }
     #endregion
 }

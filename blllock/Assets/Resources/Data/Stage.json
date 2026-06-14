@@ -838,7 +838,7 @@
                 {
                     "pos": {
                         "x": 3,
-                        "y": 3
+                        "y": 4
                     },
                     "expr": "X"
                 }
@@ -856,7 +856,7 @@
             "TutorialID": -1,
             "Blocks": [
                 0,
-                1
+                4
             ],
             "BlockPositions": [
                 {

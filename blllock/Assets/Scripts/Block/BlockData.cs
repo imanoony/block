@@ -159,11 +159,11 @@ public class BlockData
         Grids = _grids;
         WireIds = new();
 
-        Dictionary<int, int> lookup = new();
+        Dictionary<(string, int), int> lookup = new();
         for (int i = 0; i < Ports.Count; i++) Ports[i] = Subst(Ports[i], lookup);
         return Ports;
     }
-    private PortExpr Subst(PortExpr port, Dictionary<int, int> lookup)
+    private PortExpr Subst(PortExpr port, Dictionary<(string, int), int> lookup)
     {
         if (port is PortVar var)
         {
@@ -179,28 +179,34 @@ public class BlockData
         }
         return null;
     }
-    private PortVar SubstVar(PortVar port, Dictionary<int, int> lookup)
+    private PortVar SubstVar(PortVar port, Dictionary<(string, int), int> lookup)
     {
         PortVar newPort = new(
             port.Name,
-            SubstWire(port.LeftUp, lookup),
-            SubstWire(port.LeftDown, lookup),
-            SubstWire(port.RightUp, lookup),
-            SubstWire(port.RightDown, lookup)
+            SubstWire(port, 0, lookup),
+            SubstWire(port, 1, lookup),
+            SubstWire(port, 2, lookup),
+            SubstWire(port, 3, lookup)
         );
 
         return newPort;
     }
-    private Wire SubstWire(Wire wire, Dictionary<int, int> lookup)
+    private Wire SubstWire(PortVar port, int param, Dictionary<(string, int), int> lookup)
     {
-        if (lookup.ContainsKey(wire.ID))
-            return GameManager.Instance.Wire.Wires[lookup[wire.ID]];
+        //Debug.Log($"[SubstWire] block: ID={ID}, Wire={wire}");
+        if (lookup.ContainsKey((port.Name, param)))
+        {
+            Wire result = GameManager.Instance.Wire.Wires[lookup[(port.Name, param)]];
+            Debug.Log($"[SubstWire|Result] block: ID={ID}, Result Wire={result}");
+            return GameManager.Instance.Wire.Wires[lookup[(port.Name, param)]];
+        }
         
         Wire newWire = new(GameManager.Instance.Wire.GenerateID());
-        lookup[wire.ID] = newWire.ID;
+        lookup[(port.Name, param)] = newWire.ID;
         GameManager.Instance.Wire.AddWire(newWire);
         WireIds.Add(newWire.ID);
 
+        Debug.Log($"[SubstWire|Result] block: ID={ID}, Result Wire={newWire}");
         return newWire;
     }
 }

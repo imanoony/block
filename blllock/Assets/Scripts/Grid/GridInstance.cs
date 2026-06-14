@@ -1,35 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GridInstance : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds0_01 = new WaitForSeconds(0.01f);
+
     public int x { get; private set; }
     public int y { get; private set; }
     private Grid gridData;
-    private SpriteRenderer sr;
     private GameManager gm;
-    private GameObject anim;
-    private Animator animator;
-    private string animStr = "GridAnim";
+
+    // Grid In
+    [SerializeField] private SpriteRenderer gridInSr;
+    [SerializeField] private SpriteRenderer gridInAnimOffSr;
+    [SerializeField] private SpriteRenderer gridInAnimOnSr;
+    private MaterialPropertyBlock gridInMpb;
+    private MaterialPropertyBlock gridInAnimOffMpb;
+    private MaterialPropertyBlock gridInAnimOnMpb;
+
+    // Grid Out
+    [SerializeField] private SpriteRenderer gridOutSr;
+    [SerializeField] private SpriteRenderer gridOutAnimOffSr;
+    [SerializeField] private SpriteRenderer gridOutAnimOnSr;
+    private MaterialPropertyBlock gridOutMpb;
+    private MaterialPropertyBlock gridOutAnimOffMpb;
+    private MaterialPropertyBlock gridOutAnimOnMpb;
 
     public void Initialize(int x, int y)
     {
         this.x = x; this.y = y;
         gridData = GameManager.Instance.Grid.Grids[x, y];
         gridData.OnPortsChanged += OnPortsChanged;
-        sr = gameObject.GetComponent<SpriteRenderer>();
         gm = GameManager.Instance;
-        anim = gameObject.transform.GetChild(0).gameObject;
-        animator = anim.GetComponent<Animator>();
 
         SubscribePort();
         //UpdateColor();
-
-        sr.color = Utils.CodeToColor(Utils.CLEAR);
-        anim.SetActive(false);
-        if (gridData.Type == GridType.Input) SetColor(Utils.CodeToColor(Utils.BLUE));
-        else if (gridData.Type == GridType.Output) SetColor(Utils.CodeToColor(Utils.GRAY));
+        if (gridData.Type == GridType.Input) SetColor(gridData.Expr, Utils.CodeToColor(Utils.BLUE));
+        else if (gridData.Type == GridType.Output) SetColor(gridData.Expr, Utils.CodeToColor(Utils.GRAY));
     }
 
     void OnMouseDown()
@@ -38,19 +47,22 @@ public class GridInstance : MonoBehaviour
         else gm.UI.EnableChat(x, y);
     }
 
+    private readonly HashSet<PortExpr> subscribedPorts = new(); // 이 GridInstance가 구독 중인 포트들
     private void SubscribePort()
     {
         foreach (PortExpr port in gridData.Ports)
         {
             port.OnCacheChanged += OnPortCacheChanged;
+            subscribedPorts.Add(port);
         }
     }
     private void UnsubscribePort()
     {
-        foreach (PortExpr port in gridData.Ports)
+        foreach (PortExpr port in subscribedPorts)
         {
             port.OnCacheChanged -= OnPortCacheChanged;
         }
+        subscribedPorts.Clear();
     }
 
     private void OnPortsChanged()
@@ -65,7 +77,7 @@ public class GridInstance : MonoBehaviour
 
     private void UpdateColor()
     {
-        if (this == null || sr == null)
+        if (this == null)
         {
             Utils.PrintWarning("GridInstance가 파괴되었거나 SpriteRenderer가 없음.");
             return;
@@ -79,55 +91,127 @@ public class GridInstance : MonoBehaviour
                 if (gridData.Ports[0].Cache.Equals(gridData.Expr))
                 {
                     GameManager.Instance.OutputCheck(new(x, y), true);
-                    SetColor(Utils.CodeToColor(Utils.BLUE));
+                    SetColor(gridData.Expr, Utils.CodeToColor(Utils.BLUE));
                     GameManager.Instance.UI.EnableChat(x, y);
                 }
                 else
                 {
                     GameManager.Instance.OutputCheck(new(x, y), false);
-                    SetColor(Utils.CodeToColor(Utils.RED));
+                    SetColor(gridData.Expr, Utils.CodeToColor(Utils.RED));
                 }
             }
             else
             {
                 GameManager.Instance.OutputCheck(new(x, y), false);
-                SetColor(Utils.CodeToColor(Utils.GRAY));
+                SetColor(gridData.Expr, Utils.CodeToColor(Utils.GRAY));
             }
         }
         else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) {
-            SetColor(Utils.CodeToColor(Utils.BLUE));
+            SetColor(gridData.Ports[0].Cache, Utils.CodeToColor(Utils.BLUE));
             GameManager.Instance.UI.EnableChat(x, y);
         }
         else
         {
-            SetColor(Utils.CodeToColor(Utils.CLEAR));
+            SetColor(null, Utils.CodeToColor(Utils.CLEAR));
             if (gm.UI.IsChatEnabled(new(x, y))) gm.UI.DisableChat(x, y);
         }
     }
 
     private Coroutine colorCoroutine = null;
-    private void SetColor(Color color)
+    private void SetColor(LogicExpr expr, Color color)
     {
-        if (sr.color == color && !anim.activeSelf) return;
         if (colorCoroutine != null) StopCoroutine(colorCoroutine);
-        colorCoroutine = StartCoroutine(SetColorCoroutine(color));
+        colorCoroutine = StartCoroutine(SetColorCo(expr, color));
     }
 
-    private IEnumerator SetColorCoroutine(Color color)
+    private IEnumerator SetColorCo(LogicExpr expr, Color color)
     {
-        Debug.Log($"Color Coroutine | color = {color}");
+        gridInMpb = new();
+        gridInAnimOffMpb = new();
+        gridInAnimOnMpb = new();
+        gridOutMpb = new();
+        gridOutAnimOffMpb = new();
+        gridOutAnimOnMpb = new();
 
-        anim.SetActive(false);
+        
+        gridOutAnimOffSr.gameObject.SetActive(true);
+        gridOutAnimOnSr.gameObject.SetActive(true);
 
-        anim.SetActive(true);
-        anim.GetComponent<SpriteRenderer>().color = color;
-        animator.Play(animStr);
+        Vector4 v = Logic2Vector4(expr);
+        gridOutAnimOnMpb.SetVector("_CombExpr", v);
+        gridOutAnimOnSr.SetPropertyBlock(gridOutAnimOnMpb);
 
-        float clipLength = animator.GetCurrentAnimatorStateInfo(0).length;
-        yield return new WaitForSeconds(clipLength);
+        gridOutAnimOnSr.color = color;
 
-        sr.color = color;
-        anim.SetActive(false);
+        for (int i = 0; i < 37; i++)
+        {
+            gridOutAnimOffMpb.SetFloat("_AnimIndex", i);
+            gridOutAnimOnMpb.SetFloat("_MaskIndex", i);
+            
+            gridOutAnimOffSr.SetPropertyBlock(gridOutAnimOffMpb);
+            gridOutAnimOnSr.SetPropertyBlock(gridOutAnimOnMpb);
+
+            yield return _waitForSeconds0_01;
+        }
+        
+        gridInAnimOnMpb.SetVector("_CombExpr", v);
+        gridInAnimOnSr.SetPropertyBlock(gridInAnimOnMpb);
+        gridInAnimOffSr.gameObject.SetActive(true);
+        gridInAnimOnSr.gameObject.SetActive(true);
+        gridInAnimOnSr.color = color;
+
+        for (int i = 0; i < 6; i++)
+        {
+            gridInAnimOffMpb.SetFloat("_AnimIndex", i);
+            gridInAnimOnMpb.SetFloat("_MaskIndex", i);
+
+            gridInAnimOffSr.SetPropertyBlock(gridInAnimOffMpb);
+            gridInAnimOnSr.SetPropertyBlock(gridInAnimOnMpb);
+
+            yield return new WaitForSeconds(0.03f);
+        }
+
+        gridInMpb.SetVector("_CombExpr", v);
+        gridInMpb.SetFloat("_MaskIndex", 5);
+        gridOutMpb.SetVector("_CombExpr", v);
+        gridOutMpb.SetFloat("_MaskIndex", 36);
+        gridInSr.SetPropertyBlock(gridInMpb);
+        gridOutSr.SetPropertyBlock(gridOutMpb);
+        gridInSr.color = color;
+        gridOutSr.color = color;
+
+        gridInAnimOffSr.gameObject.SetActive(false);
+        gridInAnimOnSr.gameObject.SetActive(false);
+        gridOutAnimOffSr.gameObject.SetActive(false);
+        gridOutAnimOnSr.gameObject.SetActive(false);
+    }
+
+    private Vector4 Logic2Vector4(LogicExpr logic=null)
+    {
+        if (logic == null) return new(0, 0, 0, 0);
+        else if (logic is VarExpr var)
+        {
+            int i = Var2Int(var);
+            return new(i, i, i, i);
+        }
+        else if (logic is CombExpr comb)
+        {
+            int lu = Var2Int(comb.LeftUp);
+            int ld = Var2Int(comb.LeftDown);
+            int ru = Var2Int(comb.RightUp);
+            int rd = Var2Int(comb.RightDown);
+            return new(lu, ld, ru, rd);
+        }
+        else return new(0, 0, 0, 0);
+    }
+
+    private int Var2Int(VarExpr var=null)
+    {
+        if (var == null) return 0;
+        else if (var.Name == "X") return 1;
+        else if (var.Name == "Y") return 2;
+        else if (var.Name == "Z") return 3;
+        else return 0;
     }
 
     private void OnDestroy()

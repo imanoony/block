@@ -62,7 +62,7 @@ public class GridManager : MonoBehaviour
             string debugText = $@"
 [현재 WireDict] {GameManager.Instance.Wire.StringOfWireDict()}
 [현재 Wires] {GameManager.Instance.Wire.StringOfWires()}
-[현재 WireLogic] (TODO)
+[현재 WireLogic] {GameManager.Instance.Wire.StringOfWireLogic()}
 ";
             Debug.Log(debugText);
         }
