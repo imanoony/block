@@ -87,14 +87,15 @@ public static class Utils
         else { PrintError("[CodeToColor] cannot parse"); return Color.white; }
     }
 
-    public static Vector3 GetHoverOffset(Rotate rotate, bool flip)
+    public static Vector3 GetHoverOffset(Rotate rotate, bool flipX, bool flipY)
     {
         Vector3 offset = HOVER;
         if (rotate == Rotate.Rotate90) offset = new Vector3(-offset.y, offset.x, 0);
         else if (rotate == Rotate.Rotate180) offset = -offset;
         else if (rotate == Rotate.Rotate270) offset = new Vector3(offset.y, -offset.x, 0);
 
-        //if (flip) offset.x = -offset.x;
+        if (flipX) offset.x = -offset.x;
+        else if (flipY) offset.y = -offset.y;
         return offset;
     }
 }

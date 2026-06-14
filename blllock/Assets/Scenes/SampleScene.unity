@@ -6939,8 +6939,8 @@ MonoBehaviour:
   blockTagSprites:
   - {fileID: 21300000, guid: 0bc1e435c6845804cae11427579dca73, type: 3}
   - {fileID: 21300000, guid: 21e0f529fbbe9484e9792cf403dc93a8, type: 3}
-  - {fileID: 21300000, guid: 52543583fd715c04c8945ceb5aa3218d, type: 3}
   - {fileID: 21300000, guid: 120ca3797ff0a87409e4077128792b46, type: 3}
+  - {fileID: 21300000, guid: 52543583fd715c04c8945ceb5aa3218d, type: 3}
   BlockAppearTransDone: 0
   BlockDisappearTransDone: 0
 --- !u!114 &1895555907

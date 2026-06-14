@@ -868,14 +868,14 @@
                     "y": 1
                 }
             ],
-            "RotateCWIndex": [
-                0
-            ],
-            "RotateCCWIndex": [
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [
                 1
             ],
-            "FlipXIndex": [],
-            "FlipYIndex": [],
+            "FlipYIndex": [
+                0
+            ],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []

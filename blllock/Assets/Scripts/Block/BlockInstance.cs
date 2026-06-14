@@ -211,6 +211,8 @@ public class BlockInstance : MonoBehaviour
             {
                 if (CanRotateCW) RotateCW();
                 else if (CanRotateCCW) RotateCCW();
+                else if (CanFlipX) FlipX();
+                else if (CanFlipY) FlipY();
             }
         }
     }
@@ -425,7 +427,7 @@ public class BlockInstance : MonoBehaviour
     }
     #endregion
 
-    #region Rotate & Flip
+    #region Rotate
     private bool RotateCW()
     {
         if (!CanRotateCW) return false;
@@ -538,13 +540,150 @@ public class BlockInstance : MonoBehaviour
         yield return rotateT.WaitForCompletion();
         yield return StartCoroutine(ScaleDownCo(0.1f));
 
-        shadow.transform.localPosition = -Utils.GetHoverOffset(blockData.BlockRotate, blockData.BlockFlipX);
+        shadow.transform.localPosition = -Utils.GetHoverOffset(
+            blockData.BlockRotate, 
+            blockData.BlockFlipX, 
+            blockData.BlockFlipY
+        );
         yield return StartCoroutine(ShadowOnCo(0.2f));
 
         onComplete?.Invoke();
         yield break;
     }
     private IEnumerator RotateFailCo(bool isCW)
+    {
+        // TODO
+
+        yield break;
+    }
+    #endregion
+
+    #region Flip
+    private bool FlipX() // y축 기준 회전
+    {
+        if (!CanFlipX) return false;
+
+        if (isPlaced) Unplace(gm);
+        blockData.FlipX();
+
+        List<Vector2Int?> snapPosList = gm.GetNearestTiles(GetBaseTilePos(), Utils.MAX_SNAP_COUNT);
+        for (int i = 0; i < snapPosList.Count; i++)
+        {
+            Vector2Int? snapPos = snapPosList[i];
+            if (snapPos == null)
+            {
+                blockData.FlipX();
+                transform.position = blockPos;
+                Place(gm, blockTilePos);
+
+                StartCoroutine(FlipFailCo(isX: true));
+                return false;
+            }
+            if (CanPlace(gm, (Vector2Int)snapPos))
+            {
+                blockTilePos = snapPos.Value;
+                sg.sortingOrder = Utils.BLOCK_SORT_ACTION;
+                StartCoroutine(FlipCo(
+                    () =>
+                    {
+                        Place(gm, (Vector2Int)snapPos);
+                        blockPos = transform.position;
+                        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                        isTweening--;
+                    }
+                ));
+                return true;
+            }
+        }
+        
+        blockData.FlipX();
+        transform.position = blockPos;
+        Place(gm, blockTilePos);
+
+        StartCoroutine(FlipFailCo(isX: true));
+        return false;
+    }
+    private bool FlipY() // x축 기준 회전
+    {
+        if (!CanFlipY) return false;
+
+        if (isPlaced) Unplace(gm);
+        blockData.FlipY();
+
+        List<Vector2Int?> snapPosList = gm.GetNearestTiles(GetBaseTilePos(), Utils.MAX_SNAP_COUNT);
+        for (int i = 0; i < snapPosList.Count; i++)
+        {
+            Vector2Int? snapPos = snapPosList[i];
+            if (snapPos == null)
+            {
+                blockData.FlipY();
+                transform.position = blockPos;
+                Place(gm, blockTilePos);
+
+                StartCoroutine(FlipFailCo(isX: false));
+                return false;
+            }
+            if (CanPlace(gm, (Vector2Int)snapPos))
+            {
+                blockTilePos = snapPos.Value;
+                sg.sortingOrder = Utils.BLOCK_SORT_ACTION;
+                StartCoroutine(FlipCo(
+                    () =>
+                    {
+                        Place(gm, (Vector2Int)snapPos);
+                        blockPos = transform.position;
+                        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                        isTweening--;
+                    }
+                ));
+                return true;
+            }
+        }
+        
+        blockData.FlipY();
+        transform.position = blockPos;
+        Place(gm, blockTilePos);
+
+        StartCoroutine(FlipFailCo(isX: false));
+        return false;
+    }
+    private IEnumerator FlipCo(Action onComplete = null)
+    {
+        isTweening++;
+
+        if (shadowCo != null) StopCoroutine(shadowCo);
+        shadowCo = StartCoroutine(ShadowOffCo(0.2f));
+        yield return shadowCo;
+
+        if (scaleCo != null) StopCoroutine(scaleCo);
+        scaleCo = StartCoroutine(ScaleUpCo(0.2f, 1.1f));
+        yield return scaleCo;
+
+        Tween flipT = transform.DORotate(
+            new Vector3(
+                blockData.BlockFlipY ? 180 : 0,
+                blockData.BlockFlipX ? 180 : 0,
+                0
+            ),
+            0.2f,
+            RotateMode.FastBeyond360
+        ).SetEase(Ease.OutQuad);
+        StartCoroutine(PlaceCo(0.2f, blockTilePos, () => { isTweening--; }));
+
+        yield return flipT.WaitForCompletion();
+        yield return StartCoroutine(ScaleDownCo(0.1f));
+
+        shadow.transform.localPosition = -Utils.GetHoverOffset(
+            blockData.BlockRotate, 
+            blockData.BlockFlipX,
+            blockData.BlockFlipY
+        );
+        yield return StartCoroutine(ShadowOnCo(0.2f));
+
+        onComplete?.Invoke();
+        yield break;
+    }
+    private IEnumerator FlipFailCo(bool isX, Action onComplete = null)
     {
         // TODO
 

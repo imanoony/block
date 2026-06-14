@@ -22,6 +22,7 @@ public class BlockData
         _tiles = new(blockData._tiles);
         _grids = new(blockData._grids);
         Ports = new(blockData.Ports);
+        TagPos = new(blockData.TagPos.x, blockData.TagPos.y);
         BlockRotate = Rotate.None;
         BlockFlipX = false;
         HasSpike = false;
@@ -49,6 +50,9 @@ public class BlockData
         return (refRotate == Rotate.None || refRotate == Rotate.Rotate180) ? _height : _width;
     }
     
+    public Vector2 TagPos { get; private set; } = new(0, 0);
+    public void SetTagPos(Vector2 tagPos) => TagPos = tagPos;
+
     public Rotate BlockRotate { get; private set; } = Rotate.None;
     public Rotate RotateCW()
     {
@@ -110,6 +114,23 @@ public class BlockData
 
         BlockFlipX = !BlockFlipX;
         return BlockFlipX;
+    }
+
+    public bool BlockFlipY { get; private set; } = false;
+    public bool FlipY()
+    {
+        int i;
+        for (i = 0; i < Tiles.Count; i++) Tiles[i] = new(GetHeight() - 1 - Tiles[i].x, Tiles[i].y);
+        for (i = 0; i < Grids.Count; i++) Grids[i] = new(GetHeight() - Grids[i].x, Grids[i].y);
+
+        if (HasSpike)
+        {
+            for (i = 0; i < SpikeTiles.Count; i++)
+                SpikeTiles[i] = new(GetHeight() - 1 - SpikeTiles[i].x, SpikeTiles[i].y);
+        }
+
+        BlockFlipY = !BlockFlipY;
+        return BlockFlipY;
     }
 
     public bool HasSpike { get; private set; } = false;

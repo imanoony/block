@@ -249,7 +249,7 @@ public class DataParser
     #region Constant Data
     private const string DataFolder = "Assets/Data";
     private const string ID = "ID", Width = "Width", Height = "Height", Desc = "Desc";
-    private const string Tiles = "Tiles", Grids = "Grids", Ports = "Ports";
+    private const string Tiles = "Tiles", Grids = "Grids", Ports = "Ports", TagPos = "TagPos";
     private const string Inputs = "Inputs", Outputs = "Outputs";
     private const string Blocks = "Blocks", Rotate = "Rotate", Flip = "Flip";
     private const string Stages = "Stages";
@@ -302,6 +302,13 @@ public class DataParser
                     List<PortExpr> ports = new();
                     for (int k = 0; k < items.Count; k++) ports.Add(PortExpr.Parse(items[k]));
                     block.SetPorts(ports);
+                }
+                else if (header == TagPos.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    float x = float.Parse(items[0]);
+                    float y = float.Parse(items[1]);
+                    block.SetTagPos(new(x, y));
                 }
             }
 
