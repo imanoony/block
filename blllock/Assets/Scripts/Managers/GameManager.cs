@@ -37,7 +37,8 @@ public static class Utils
     public const float FILL_THRESHOLD = 9;
     public const int PPU = 24;
     public const int MAX_PORT = 4;
-    public static readonly Vector3 HOVER = new Vector3(0.05f, 0.05f, 0);
+    public static readonly Vector3 BLOCK_SHADOW = new(0.05f, 0.05f, 0);
+    public static readonly Vector3 TAG_SHADOW = new(0.015f, 0.015f, 0);
     public const float SHADOW_ALPHA = 100 / 255f;
     public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
     public const int MODULE_MIN = 0;
@@ -89,16 +90,16 @@ public static class Utils
         else { PrintError("[CodeToColor] cannot parse"); return Color.white; }
     }
 
-    public static Vector3 GetHoverOffset(Rotate rotate, bool flipX, bool flipY)
+    public static Vector3 GetHoverOffset(Vector2 offset, Rotate rotate, bool flipX, bool flipY)
     {
-        Vector3 offset = HOVER;
-        if (rotate == Rotate.Rotate90) offset = new Vector3(-offset.y, offset.x, 0);
-        else if (rotate == Rotate.Rotate180) offset = -offset;
-        else if (rotate == Rotate.Rotate270) offset = new Vector3(offset.y, -offset.x, 0);
+        Vector3 off = offset;
+        if (rotate == Rotate.Rotate90) off = new Vector3(-off.y, off.x, 0);
+        else if (rotate == Rotate.Rotate180) off = -off;
+        else if (rotate == Rotate.Rotate270) off = new Vector3(off.y, -off.x, 0);
 
-        if (flipX) offset.x = -offset.x;
-        else if (flipY) offset.y = -offset.y;
-        return offset;
+        if (flipX) off.x = -off.x;
+        else if (flipY) off.y = -off.y;
+        return off;
     }
 }
 

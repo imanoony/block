@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using System.Collections;
 
 public enum TagType
 {
@@ -16,7 +17,7 @@ public class BlockTag: MonoBehaviour
 
     public TagType Type { get; private set; } = TagType.Null;
     
-    private GameObject shadow;
+    [HideInInspector] public GameObject shadow;
     private GameObject effect;
     private SpriteRenderer sr;
     private SpriteRenderer effectSr;

@@ -8,6 +8,7 @@ using UnityEngine.Rendering;
 public class BlockInstance : MonoBehaviour
 {
     private BlockData blockData;
+    [SerializeField] private GameObject tagShadow;
     private bool isDragging = false;
     private int isTweening = 0;
     private GridManager gm;
@@ -523,7 +524,7 @@ public class BlockInstance : MonoBehaviour
         isTweening++;
 
         if (shadowCo != null) StopCoroutine(shadowCo);
-        shadowCo = StartCoroutine(ShadowOffCo(0.2f));
+        shadowCo = StartCoroutine(ShadowOffCo(0.2f, true));
         yield return shadowCo;
 
         if (scaleCo != null) StopCoroutine(scaleCo);
@@ -541,11 +542,18 @@ public class BlockInstance : MonoBehaviour
         yield return StartCoroutine(ScaleDownCo(0.1f));
 
         shadow.transform.localPosition = -Utils.GetHoverOffset(
+            Utils.BLOCK_SHADOW,
             blockData.BlockRotate, 
             blockData.BlockFlipX, 
             blockData.BlockFlipY
         );
-        yield return StartCoroutine(ShadowOnCo(0.2f));
+        tagShadow.transform.localPosition = -Utils.GetHoverOffset(
+            Utils.TAG_SHADOW,
+            blockData.BlockRotate, 
+            blockData.BlockFlipX, 
+            blockData.BlockFlipY
+        );
+        yield return StartCoroutine(ShadowOnCo(0.2f, true));
 
         onComplete?.Invoke();
         yield break;
@@ -652,7 +660,7 @@ public class BlockInstance : MonoBehaviour
         isTweening++;
 
         if (shadowCo != null) StopCoroutine(shadowCo);
-        shadowCo = StartCoroutine(ShadowOffCo(0.2f));
+        shadowCo = StartCoroutine(ShadowOffCo(0.2f, true));
         yield return shadowCo;
 
         if (scaleCo != null) StopCoroutine(scaleCo);
@@ -674,11 +682,18 @@ public class BlockInstance : MonoBehaviour
         yield return StartCoroutine(ScaleDownCo(0.1f));
 
         shadow.transform.localPosition = -Utils.GetHoverOffset(
+            Utils.BLOCK_SHADOW,
             blockData.BlockRotate, 
-            blockData.BlockFlipX,
+            blockData.BlockFlipX, 
             blockData.BlockFlipY
         );
-        yield return StartCoroutine(ShadowOnCo(0.2f));
+        tagShadow.transform.localPosition = -Utils.GetHoverOffset(
+            Utils.TAG_SHADOW,
+            blockData.BlockRotate, 
+            blockData.BlockFlipX, 
+            blockData.BlockFlipY
+        );
+        yield return StartCoroutine(ShadowOnCo(0.2f, true));
 
         onComplete?.Invoke();
         yield break;
@@ -695,28 +710,36 @@ public class BlockInstance : MonoBehaviour
     // 연출 관련 세팅은 하드하게.
 
     private Coroutine shadowCo = null;
-    private IEnumerator ShadowOnCo(float duration)
+    private IEnumerator ShadowOnCo(float duration, bool withTag=false)
     {
         SpriteRenderer sr = shadow.GetComponent<SpriteRenderer>();
+        SpriteRenderer tagSr = tagShadow.GetComponent<SpriteRenderer>();
+
         shadow.SetActive(true);
+        if (withTag) tagShadow.SetActive(true);
 
         Color c = sr.color;
         c.a = 0f;
         sr.color = c;
 
+        if (withTag) tagSr.DOFade(1f, duration);
         Tween tween = sr.DOFade(0.5f, duration);
 
         yield return tween.WaitForCompletion();
         shadowCo = null;
     }
-    private IEnumerator ShadowOffCo(float duration)
+    private IEnumerator ShadowOffCo(float duration, bool withTag=false)
     {
         SpriteRenderer sr = shadow.GetComponent<SpriteRenderer>();
-
+        SpriteRenderer tagSr = tagShadow.GetComponent<SpriteRenderer>();
+        
+        if (withTag) tagSr.DOFade(0f, duration);
         Tween tween = sr.DOFade(0f, duration);
 
         yield return tween.WaitForCompletion();
+
         shadow.SetActive(false);
+        if (withTag) tagShadow.SetActive(false);
         shadowCo = null;
     }
 

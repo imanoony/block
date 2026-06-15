@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 52543583fd715c04c8945ceb5aa3218d
+guid: 120ca3797ff0a87409e4077128792b46
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3238715101670432492
-    second: nemocuit-tag-flipX_0
+      213: -8735631270844384661
+    second: nemocuit-tag-flipY_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nemocuit-tag-flipX_0
+      name: nemocuit-tag-flipY_0
       rect:
         serializedVersion: 2
         x: 31
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 411ad3446c5cd03d0800000000000000
-      internalID: -3238715101670432492
+      spriteID: b6ab68c74adc4c680800000000000000
+      internalID: -8735631270844384661
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      nemocuit-tag-flipX_0: -3238715101670432492
+      nemocuit-tag-flipY_0: -8735631270844384661
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
