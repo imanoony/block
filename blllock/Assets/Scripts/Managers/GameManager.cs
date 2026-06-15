@@ -20,7 +20,7 @@ public static class Utils
     public const int PORT_SIZE = 10;
     public const string RED = "#F25A7B";
     public const string CHAT_RED = "#FFD0D0";
-    public const string BLUE = "#6FCED5";
+    public const string BLUE = "#54DCE3";
     public const string CHAT_BLUE = "#D0F6FF";
     public const string BLACK = "#242424";
     public const string GRAY = "#B8B8B8";
