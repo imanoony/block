@@ -115,7 +115,11 @@ public class BlockInstance : MonoBehaviour
         if (GameManager.Instance.State != GameState.InGame) return;
         if (isTweening > 0) return;
 
-        GameManager.Instance.UI.BlockTooltipDisappear();
+        if (isHovering)
+        {
+            if (scaleCo != null) StopCoroutine(scaleCo);
+            scaleCo = StartCoroutine(ScaleDownCo(0.4f));
+        }
 
         isDragging = true;
         dragOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -156,6 +160,12 @@ public class BlockInstance : MonoBehaviour
                 StartCoroutine(PlaceCo(0.25f, blockTilePos, () => { 
                     isTweening--;
                     sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+
+                    if (isHovering)
+                    {
+                        if (scaleCo != null) StopCoroutine(scaleCo);
+                        scaleCo = StartCoroutine(ScaleUpCo(0.4f));
+                    }
                 }));
                 return;
             }
@@ -165,6 +175,12 @@ public class BlockInstance : MonoBehaviour
                     isTweening--;
                     blockPos = transform.position;
                     sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+
+                    if (isHovering)
+                    {
+                        if (scaleCo != null) StopCoroutine(scaleCo);
+                        scaleCo = StartCoroutine(ScaleUpCo(0.4f));
+                    }
                 }));
                 
                 blockTilePos = snapPos.Value;
@@ -177,6 +193,12 @@ public class BlockInstance : MonoBehaviour
         StartCoroutine(PlaceCo(0.25f, blockTilePos, () => { 
             isTweening--;
             sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+
+            if (isHovering)
+            {
+                if (scaleCo != null) StopCoroutine(scaleCo);
+                scaleCo = StartCoroutine(ScaleUpCo(0.4f));
+            }
         }));
     }
 
@@ -195,8 +217,6 @@ public class BlockInstance : MonoBehaviour
     {
         if (GameManager.Instance.State != GameState.InGame) return;
         if (isTweening > 0) return;
-
-        if (isHovering) OnMouseExit();
     
         if (isDragging)
         {
@@ -301,7 +321,9 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseEnter()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
-        if (isHovering) return;
+
+        isHovering = true;
+        
         if (isDragging) return;
         if (isTweening > 0) return;
         //if (isPlaced || isDragging || isHovering || currentCoroutine != null) return;
@@ -315,15 +337,13 @@ public class BlockInstance : MonoBehaviour
 
         if (scaleCo != null) StopCoroutine(scaleCo);
         scaleCo = StartCoroutine(ScaleUpCo(0.4f));
-
-        isHovering = true;
     }
     private void OnMouseExit()
     {
-        //GameManager.Instance.UI.BlockTooltipDisappear();
-
         if (GameManager.Instance.State != GameState.InGame) return;
-        if (!isHovering) return;
+
+        isHovering = false;
+
         if (isDragging) return;
         if (isTweening > 0) return;
         //if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
@@ -333,8 +353,6 @@ public class BlockInstance : MonoBehaviour
 
         if (scaleCo != null) StopCoroutine(scaleCo);
         scaleCo = StartCoroutine(ScaleDownCo(0.4f));
-
-        isHovering = false;
     }
     #endregion
 
@@ -461,6 +479,12 @@ public class BlockInstance : MonoBehaviour
                         blockPos = transform.position;
                         sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
                         isTweening--;
+
+                        if (isHovering)
+                        {
+                            if (scaleCo != null) StopCoroutine(scaleCo);
+                            scaleCo = StartCoroutine(ScaleUpCo(0.4f));
+                        }
                     }
                 ));
                 return true;
@@ -506,6 +530,12 @@ public class BlockInstance : MonoBehaviour
                         blockPos = transform.position;
                         sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
                         isTweening--;
+
+                        if (isHovering)
+                        {
+                            if (scaleCo != null) StopCoroutine(scaleCo);
+                            scaleCo = StartCoroutine(ScaleUpCo(0.4f));
+                        }
                     }
                 ));
                 return true;
@@ -598,6 +628,12 @@ public class BlockInstance : MonoBehaviour
                         blockPos = transform.position;
                         sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
                         isTweening--;
+
+                        if (isHovering)
+                        {
+                            if (scaleCo != null) StopCoroutine(scaleCo);
+                            scaleCo = StartCoroutine(ScaleUpCo(0.4f));
+                        }
                     }
                 ));
                 return true;
@@ -642,6 +678,12 @@ public class BlockInstance : MonoBehaviour
                         blockPos = transform.position;
                         sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
                         isTweening--;
+                        
+                        if (isHovering)
+                        {
+                            if (scaleCo != null) StopCoroutine(scaleCo);
+                            scaleCo = StartCoroutine(ScaleUpCo(0.4f));
+                        }
                     }
                 ));
                 return true;
