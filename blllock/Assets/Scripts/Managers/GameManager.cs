@@ -27,6 +27,8 @@ public static class Utils
     public const string GREEN = "#CAFFCA";
     public const string YELLOW = "#FEFCCD";
     public const string CLEAR = "#F0F0F0FF";
+    public const string TAG_ROTATE = "#99C79D";
+    public const string TAG_FLIP = "#C29363";
     public const float CLEAR_ALPHA = 1f;
     public const float THRESHOLD = 3f;
     public const int MAX_SNAP_COUNT = 20;

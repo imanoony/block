@@ -39,7 +39,14 @@ public class BlockTag: MonoBehaviour
         sr.sprite = sprite;
         transform.localPosition = pos;
 
-        // TODO: type에 따라 effect 색상 변경
+        if (Type == TagType.RotateCW || Type == TagType.RotateCCW)
+        {
+            effectSr.color = Utils.CodeToColor(Utils.TAG_ROTATE);
+        }
+        else if (Type == TagType.FlipX || Type == TagType.FlipY)
+        {
+            effectSr.color = Utils.CodeToColor(Utils.TAG_FLIP);
+        }
     }
 
     public Tween GetTagOnTween()
