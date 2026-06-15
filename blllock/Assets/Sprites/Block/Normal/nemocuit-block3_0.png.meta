@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5ab816f622cc4644b870cd9238f16ada
+guid: a61f2ead2dc11e940a6d3d4e844eaa9a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2249062682784597110
-    second: nemocuit-block3-0_0
+      213: -384490117869160585
+    second: nemocuit-block3_0_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nemocuit-block3-0_0
+      name: nemocuit-block3_0_0
       rect:
         serializedVersion: 2
         x: 49
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 67486fc0896463f10800000000000000
-      internalID: 2249062682784597110
+      spriteID: 777b2c066440aaaf0800000000000000
+      internalID: -384490117869160585
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      nemocuit-block3-0_0: 2249062682784597110
+      nemocuit-block3_0_0: -384490117869160585
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
