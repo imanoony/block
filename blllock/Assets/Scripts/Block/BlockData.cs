@@ -65,6 +65,10 @@ public class BlockData
         {
             Grids[i] = new(Grids[i].y, GetHeight() - Grids[i].x);
         }
+        for (i = 0; i < Ports.Count; i++)
+        {
+            Ports[i] = Ports[i].RotateCW();
+        }
 
         if (HasSpike)
         {
@@ -87,6 +91,10 @@ public class BlockData
         {
             Grids[i] = new(GetWidth() - Grids[i].y, Grids[i].x);
         }
+        for (i = 0; i < Ports.Count; i++)
+        {
+            Ports[i] = Ports[i].RotateCCW();
+        }
 
         if (HasSpike)
         {
@@ -105,6 +113,10 @@ public class BlockData
         int i;
         for (i = 0; i < Tiles.Count; i++) Tiles[i] = new(Tiles[i].x, GetWidth() - 1 - Tiles[i].y);
         for (i = 0; i < Grids.Count; i++) Grids[i] = new(Grids[i].x, GetWidth() - Grids[i].y);
+        for (i = 0; i < Ports.Count; i++)
+        {
+            Ports[i] = Ports[i].FlipX();
+        }
 
         if (HasSpike)
         {
@@ -122,6 +134,10 @@ public class BlockData
         int i;
         for (i = 0; i < Tiles.Count; i++) Tiles[i] = new(GetHeight() - 1 - Tiles[i].x, Tiles[i].y);
         for (i = 0; i < Grids.Count; i++) Grids[i] = new(GetHeight() - Grids[i].x, Grids[i].y);
+        for (i = 0; i < Ports.Count; i++)
+        {
+            Ports[i] = Ports[i].FlipY();
+        }
 
         if (HasSpike)
         {
@@ -176,8 +192,8 @@ public class BlockData
     // 블록이 인스턴스화 될 때 각 Port의 Wire들을 Unique하게 만든다
     public List<PortExpr> Instantiate()
     {
-        Tiles = _tiles;
-        Grids = _grids;
+        Tiles = new(_tiles);
+        Grids = new(_grids);
         WireIds = new();
 
         Dictionary<(string, int), int> lookup = new();

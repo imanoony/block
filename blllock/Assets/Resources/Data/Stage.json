@@ -841,6 +841,13 @@
                         "y": 4
                     },
                     "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 1
+                    },
+                    "expr": "Z"
                 }
             ],
             "Outputs": [
@@ -868,11 +875,9 @@
                     "y": 1
                 }
             ],
-            "RotateCWIndex": [],
+            "RotateCWIndex": [1],
             "RotateCCWIndex": [],
-            "FlipXIndex": [
-                1
-            ],
+            "FlipXIndex": [],
             "FlipYIndex": [
                 0
             ],

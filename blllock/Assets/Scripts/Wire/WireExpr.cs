@@ -55,6 +55,14 @@ public abstract class PortExpr
     public abstract Wire LeftDown { get; }
     public abstract Wire RightUp { get; }
     public abstract Wire RightDown { get; }
+
+    // Rotate
+    public abstract PortExpr RotateCW();
+    public abstract PortExpr RotateCCW();
+
+    // Flip
+    public abstract PortExpr FlipX();
+    public abstract PortExpr FlipY();
 }
 public class PortVar : PortExpr
 {
@@ -89,8 +97,12 @@ public class PortVar : PortExpr
         SubscribeWire(RightDown);
     }
 
+    private bool _disposed = false;
     public override void Dispose()
     {
+        if (_disposed) return;
+        _disposed = true;
+
         UnsubscribeWire(LeftUp);
         UnsubscribeWire(LeftDown);
         UnsubscribeWire(RightUp);
@@ -103,6 +115,14 @@ public class PortVar : PortExpr
     public override Wire LeftDown => _leftDown;
     public override Wire RightUp => _rightUp;
     public override Wire RightDown => _rightDown;
+
+    // Rotate
+    public override PortExpr RotateCW() => this;
+    public override PortExpr RotateCCW() => this;
+
+    // Flip
+    public override PortExpr FlipX() => this;
+    public override PortExpr FlipY() => this;
 }
 public class PortVert : PortExpr
 {
@@ -119,8 +139,12 @@ public class PortVert : PortExpr
         SubscribeWire(RightDown);
     }
 
+    private bool _disposed = false;
     public override void Dispose()
     {
+        if (_disposed) return;
+        _disposed = true;
+
         UnsubscribeWire(LeftUp);
         UnsubscribeWire(LeftDown);
         UnsubscribeWire(RightUp);
@@ -132,6 +156,29 @@ public class PortVert : PortExpr
     public override Wire LeftDown => Down.LeftDown;
     public override Wire RightUp => Up.RightUp;
     public override Wire RightDown => Down.RightDown;
+
+    // Rotate
+    public override PortExpr RotateCW()
+    {
+        Dispose();
+        return new PortHorz(Down, Up);
+    }
+    public override PortExpr RotateCCW()
+    {
+        Dispose();
+        return new PortHorz(Up, Down);
+    }
+
+    // Flip
+    public override PortExpr FlipX()
+    {
+        return this;
+    }
+    public override PortExpr FlipY()
+    {
+        Dispose();
+        return new PortVert(Down, Up);
+    }
 }
 public class PortHorz : PortExpr
 {
@@ -148,8 +195,12 @@ public class PortHorz : PortExpr
         SubscribeWire(RightDown);
     }
 
+    private bool _disposed = false;
     public override void Dispose()
     {
+        if (_disposed) return;
+        _disposed = true;
+
         UnsubscribeWire(LeftUp);
         UnsubscribeWire(LeftDown);
         UnsubscribeWire(RightUp);
@@ -161,6 +212,29 @@ public class PortHorz : PortExpr
     public override Wire LeftDown => Left.LeftDown;
     public override Wire RightUp => Right.RightUp;
     public override Wire RightDown => Right.RightDown;
+
+    // Rotate
+    public override PortExpr RotateCW()
+    {
+        Dispose();
+        return new PortVert(Left, Right);
+    }
+    public override PortExpr RotateCCW()
+    {
+        Dispose();
+        return new PortVert(Right, Left);
+    }
+
+    // Flip
+    public override PortExpr FlipX()
+    {
+        Dispose();
+        return new PortHorz(Right, Left);
+    }
+    public override PortExpr FlipY()
+    {
+        return this;
+    }
 }
 
 
