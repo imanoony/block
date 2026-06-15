@@ -25,7 +25,8 @@ public class BlockTag: MonoBehaviour
     
     public void Initialize(
         TagType type,
-        Sprite sprite
+        Sprite sprite,
+        Vector2 pos
     )
     {
         shadow = transform.GetChild(0).gameObject;
@@ -36,8 +37,16 @@ public class BlockTag: MonoBehaviour
 
         Type = type;
         sr.sprite = sprite;
+        transform.localPosition = pos;
 
-        // TODO: type에 따라 effect 색상 변경
+        if (Type == TagType.RotateCW || Type == TagType.RotateCCW)
+        {
+            effectSr.color = Utils.CodeToColor(Utils.TAG_ROTATE);
+        }
+        else if (Type == TagType.FlipX || Type == TagType.FlipY)
+        {
+            effectSr.color = Utils.CodeToColor(Utils.TAG_FLIP);
+        }
     }
 
     public Tween GetTagOnTween()

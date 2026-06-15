@@ -4889,7 +4889,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1309503282
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5921,7 +5921,7 @@ Transform:
   m_GameObject: {fileID: 1514770098}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.1, y: -0.1, z: 0}
+  m_LocalPosition: {x: -0.06, y: -0.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6894,7 +6894,7 @@ MonoBehaviour:
   circuitBottomLeft: {fileID: 11400000, guid: 176759073f4951947a30f36ce713d75d, type: 2}
   circuitBottomRight: {fileID: 11400000, guid: b55d52a9271f004458a1266f568bce23, type: 2}
   gridParent: {fileID: 1148004782}
-  gridPrefab: {fileID: 2555519418431998577, guid: 88592bf3a13327749b3eaf000f52a716, type: 3}
+  gridPrefab: {fileID: 7213145987293988837, guid: 88592bf3a13327749b3eaf000f52a716, type: 3}
   barrierParent: {fileID: 346111146}
   hBarrierPrefab: {fileID: 5102308025333390099, guid: 5c09aef16f4ed0645a10015662bf380d, type: 3}
   vBarrierPrefab: {fileID: 7919743460152423171, guid: 9485be44bf9454d4aa76048b945f286b, type: 3}
@@ -6916,17 +6916,11 @@ MonoBehaviour:
   blockParent: {fileID: 1977407425}
   placedBlockRoot: {fileID: 1585512964}
   blockSprites:
-  - {fileID: 21300000, guid: b8c44f551610fac48a801c3156880e74, type: 3}
-  - {fileID: 21300000, guid: 9d447e87bf94d8847bb6844fa7a74ebc, type: 3}
-  - {fileID: 21300000, guid: cde2f2a81bb6d5f4783b4ba873a36e81, type: 3}
-  - {fileID: 21300000, guid: 3f44b0001299cb84a96b9979c1202629, type: 3}
-  - {fileID: 21300000, guid: c408e92e12445d7419b53fd476d6e22d, type: 3}
-  - {fileID: 21300000, guid: 6dd36327ac2aceb4fb20d1293ff70dbd, type: 3}
-  - {fileID: 21300000, guid: 3ddefcbc0f6f89f44a6f515fd7dafa1e, type: 3}
-  - {fileID: 21300000, guid: 1d32938415a0dca4a9f88b89defa5bad, type: 3}
   - {fileID: 21300000, guid: b8b78403439cbc442b3b60701cc8ce78, type: 3}
   - {fileID: 21300000, guid: 99987670f7bb14641ac92a5db01db972, type: 3}
   - {fileID: 21300000, guid: 850331d89c24a6448ae247bd5f1480d2, type: 3}
+  - {fileID: 21300000, guid: a61f2ead2dc11e940a6d3d4e844eaa9a, type: 3}
+  - {fileID: 21300000, guid: 5261a1021ee263b4fb8680bc6d750847, type: 3}
   sblockSprites:
   - {fileID: 3105821265316025880, guid: 279bcc0415d149c4890aed4b86426dec, type: 3}
   - {fileID: 1214118329092968321, guid: 6f9f378c517770b4ebba6bc1eefef213, type: 3}
@@ -6937,22 +6931,16 @@ MonoBehaviour:
   - {fileID: -5899813097507063065, guid: 4bbedfc408c57164ab4b7619008e1ebe, type: 3}
   - {fileID: -3954390384974510328, guid: 3a67fadd20b9dbb4b9b11c2b2c438aa3, type: 3}
   blockGhostSprites:
-  - {fileID: 21300000, guid: 108b4220b2f1a5043912ff9833c0fbba, type: 3}
-  - {fileID: 21300000, guid: 2065271b3153e6b4aba5f5a3173d5564, type: 3}
-  - {fileID: 21300000, guid: d6996e29cad29f24090490b7b097d2a3, type: 3}
-  - {fileID: 21300000, guid: f7f090bdcf957664c8cec11462fb3ab6, type: 3}
-  - {fileID: 21300000, guid: 172115eddc58dc246b0e82f12d094963, type: 3}
-  - {fileID: 21300000, guid: c4baf894315503146b8b17ff303765f3, type: 3}
-  - {fileID: 21300000, guid: d554baf36f517754c866122d4b7ff576, type: 3}
-  - {fileID: 21300000, guid: 365e7eaf112d894429c25ed8e6325c44, type: 3}
   - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
   - {fileID: 21300000, guid: 83fd16bd71dbb7545a1782960ee3fc71, type: 3}
   - {fileID: 21300000, guid: ad7c45fb4cd704c4a981f4728e390ce5, type: 3}
+  - {fileID: 21300000, guid: f7f090bdcf957664c8cec11462fb3ab6, type: 3}
+  - {fileID: 21300000, guid: 172115eddc58dc246b0e82f12d094963, type: 3}
   blockTagSprites:
   - {fileID: 21300000, guid: 0bc1e435c6845804cae11427579dca73, type: 3}
   - {fileID: 21300000, guid: 21e0f529fbbe9484e9792cf403dc93a8, type: 3}
-  - {fileID: 21300000, guid: 52543583fd715c04c8945ceb5aa3218d, type: 3}
   - {fileID: 21300000, guid: 120ca3797ff0a87409e4077128792b46, type: 3}
+  - {fileID: 21300000, guid: 52543583fd715c04c8945ceb5aa3218d, type: 3}
   BlockAppearTransDone: 0
   BlockDisappearTransDone: 0
 --- !u!114 &1895555907

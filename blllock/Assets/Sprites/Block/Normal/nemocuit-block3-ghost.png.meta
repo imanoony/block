@@ -212,66 +212,6 @@ TextureImporter:
   - first:
       213: -1544843003213829453
     second: nemocuit-block3-ghost_69
-  - first:
-      213: 5895034673712152539
-    second: nemocuit-block3-ghost_70
-  - first:
-      213: -49012289578288588
-    second: nemocuit-block3-ghost_71
-  - first:
-      213: 2745961190809069185
-    second: nemocuit-block3-ghost_72
-  - first:
-      213: 5213127763320313937
-    second: nemocuit-block3-ghost_73
-  - first:
-      213: -248948799892165130
-    second: nemocuit-block3-ghost_74
-  - first:
-      213: -3285875700067240356
-    second: nemocuit-block3-ghost_75
-  - first:
-      213: 331678251068103301
-    second: nemocuit-block3-ghost_76
-  - first:
-      213: -8251622823506790519
-    second: nemocuit-block3-ghost_77
-  - first:
-      213: 8845285150222746077
-    second: nemocuit-block3-ghost_78
-  - first:
-      213: -8595988941387522747
-    second: nemocuit-block3-ghost_79
-  - first:
-      213: -4607764181190537476
-    second: nemocuit-block3-ghost_80
-  - first:
-      213: -6330495500080708981
-    second: nemocuit-block3-ghost_81
-  - first:
-      213: 246358678308915902
-    second: nemocuit-block3-ghost_82
-  - first:
-      213: 5395889332854901883
-    second: nemocuit-block3-ghost_83
-  - first:
-      213: 4426011844368258629
-    second: nemocuit-block3-ghost_84
-  - first:
-      213: -151644573850378879
-    second: nemocuit-block3-ghost_85
-  - first:
-      213: -3017034668507565283
-    second: nemocuit-block3-ghost_86
-  - first:
-      213: 5458577437832730260
-    second: nemocuit-block3-ghost_87
-  - first:
-      213: 8049133651773090912
-    second: nemocuit-block3-ghost_88
-  - first:
-      213: 5126259307517642014
-    second: nemocuit-block3-ghost_89
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -304,7 +244,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -363,6 +303,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -370,10 +323,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_0
       rect:
         serializedVersion: 2
-        x: 72
-        y: 353
-        width: 34
-        height: 22
+        x: 66
+        y: 341
+        width: 33
+        height: 26
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -392,10 +345,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_1
       rect:
         serializedVersion: 2
-        x: 112
-        y: 363
-        width: 39
-        height: 13
+        x: 103
+        y: 357
+        width: 53
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -414,9 +367,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_2
       rect:
         serializedVersion: 2
-        x: 158
-        y: 364
-        width: 33
+        x: 163
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -436,9 +389,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_3
       rect:
         serializedVersion: 2
-        x: 198
-        y: 364
-        width: 33
+        x: 202
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -458,9 +411,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_4
       rect:
         serializedVersion: 2
-        x: 238
-        y: 364
-        width: 33
+        x: 241
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -480,8 +433,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_5
       rect:
         serializedVersion: 2
-        x: 278
-        y: 364
+        x: 280
+        y: 359
         width: 33
         height: 12
       alignment: 0
@@ -502,9 +455,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_6
       rect:
         serializedVersion: 2
-        x: 318
-        y: 364
-        width: 33
+        x: 320
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -524,9 +477,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_7
       rect:
         serializedVersion: 2
-        x: 358
-        y: 364
-        width: 33
+        x: 359
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -547,8 +500,8 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 398
-        y: 364
-        width: 33
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -568,8 +521,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_9
       rect:
         serializedVersion: 2
-        x: 438
-        y: 364
+        x: 437
+        y: 359
         width: 33
         height: 12
       alignment: 0
@@ -590,9 +543,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_10
       rect:
         serializedVersion: 2
-        x: 478
-        y: 364
-        width: 33
+        x: 477
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -612,9 +565,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_11
       rect:
         serializedVersion: 2
-        x: 518
-        y: 364
-        width: 33
+        x: 516
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -634,9 +587,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_12
       rect:
         serializedVersion: 2
-        x: 558
-        y: 364
-        width: 33
+        x: 555
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -656,8 +609,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_13
       rect:
         serializedVersion: 2
-        x: 598
-        y: 364
+        x: 594
+        y: 359
         width: 33
         height: 12
       alignment: 0
@@ -678,9 +631,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_14
       rect:
         serializedVersion: 2
-        x: 638
-        y: 364
-        width: 33
+        x: 634
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -700,9 +653,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_15
       rect:
         serializedVersion: 2
-        x: 678
-        y: 364
-        width: 33
+        x: 673
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -722,9 +675,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_16
       rect:
         serializedVersion: 2
-        x: 718
-        y: 364
-        width: 33
+        x: 712
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -744,8 +697,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_17
       rect:
         serializedVersion: 2
-        x: 758
-        y: 364
+        x: 751
+        y: 359
         width: 33
         height: 12
       alignment: 0
@@ -766,9 +719,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_18
       rect:
         serializedVersion: 2
-        x: 798
-        y: 364
-        width: 33
+        x: 791
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -788,9 +741,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_19
       rect:
         serializedVersion: 2
-        x: 838
-        y: 364
-        width: 33
+        x: 830
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -810,9 +763,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_20
       rect:
         serializedVersion: 2
-        x: 878
-        y: 364
-        width: 33
+        x: 869
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -832,8 +785,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_21
       rect:
         serializedVersion: 2
-        x: 918
-        y: 364
+        x: 908
+        y: 359
         width: 33
         height: 12
       alignment: 0
@@ -854,8 +807,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_22
       rect:
         serializedVersion: 2
-        x: 958
-        y: 364
+        x: 947
+        y: 359
         width: 33
         height: 12
       alignment: 0
@@ -876,9 +829,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_23
       rect:
         serializedVersion: 2
-        x: 998
-        y: 364
-        width: 33
+        x: 987
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -898,9 +851,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_24
       rect:
         serializedVersion: 2
-        x: 1038
-        y: 364
-        width: 33
+        x: 1026
+        y: 359
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -920,10 +873,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_25
       rect:
         serializedVersion: 2
-        x: 1078
-        y: 364
-        width: 33
-        height: 12
+        x: 1065
+        y: 356
+        width: 34
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -942,10 +895,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_26
       rect:
         serializedVersion: 2
-        x: 1118
-        y: 364
-        width: 33
-        height: 12
+        x: 1102
+        y: 340
+        width: 34
+        height: 26
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -964,10 +917,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_27
       rect:
         serializedVersion: 2
-        x: 1158
-        y: 364
-        width: 33
-        height: 12
+        x: 39
+        y: 313
+        width: 29
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -986,10 +939,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_28
       rect:
         serializedVersion: 2
-        x: 1198
-        y: 364
-        width: 33
-        height: 12
+        x: 1134
+        y: 312
+        width: 27
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1008,10 +961,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_29
       rect:
         serializedVersion: 2
-        x: 1238
-        y: 364
-        width: 33
-        height: 12
+        x: 29
+        y: 278
+        width: 18
+        height: 33
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1030,10 +983,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_30
       rect:
         serializedVersion: 2
-        x: 1278
-        y: 364
-        width: 33
-        height: 12
+        x: 1153
+        y: 276
+        width: 18
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1052,10 +1005,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_31
       rect:
         serializedVersion: 2
-        x: 1318
-        y: 364
-        width: 33
-        height: 12
+        x: 29
+        y: 239
+        width: 12
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1074,10 +1027,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_32
       rect:
         serializedVersion: 2
-        x: 1358
-        y: 364
-        width: 33
-        height: 12
+        x: 1159
+        y: 237
+        width: 12
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1096,10 +1049,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_33
       rect:
         serializedVersion: 2
-        x: 1398
-        y: 364
-        width: 33
-        height: 12
+        x: 29
+        y: 199
+        width: 12
+        height: 33
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1118,10 +1071,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_34
       rect:
         serializedVersion: 2
-        x: 1438
-        y: 364
-        width: 33
-        height: 12
+        x: 1159
+        y: 198
+        width: 12
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1140,10 +1093,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_35
       rect:
         serializedVersion: 2
-        x: 1478
-        y: 359
-        width: 34
-        height: 17
+        x: 29
+        y: 160
+        width: 12
+        height: 33
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1162,10 +1115,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_36
       rect:
         serializedVersion: 2
-        x: 1515
-        y: 339
-        width: 33
-        height: 28
+        x: 1159
+        y: 159
+        width: 12
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1184,10 +1137,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_37
       rect:
         serializedVersion: 2
-        x: 41
-        y: 328
-        width: 31
-        height: 31
+        x: 29
+        y: 121
+        width: 12
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1206,10 +1159,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_38
       rect:
         serializedVersion: 2
-        x: 1544
-        y: 308
-        width: 27
-        height: 34
+        x: 1159
+        y: 119
+        width: 12
+        height: 33
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1228,9 +1181,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_39
       rect:
         serializedVersion: 2
-        x: 25
-        y: 293
-        width: 22
+        x: 29
+        y: 81
+        width: 21
         height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1250,9 +1203,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_40
       rect:
         serializedVersion: 2
-        x: 1561
-        y: 270
-        width: 15
+        x: 1149
+        y: 79
+        width: 21
         height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1272,10 +1225,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_41
       rect:
         serializedVersion: 2
-        x: 24
-        y: 254
-        width: 13
-        height: 33
+        x: 44
+        y: 49
+        width: 29
+        height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1294,10 +1247,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_42
       rect:
         serializedVersion: 2
-        x: 1564
-        y: 230
-        width: 12
-        height: 33
+        x: 73
+        y: 31
+        width: 33
+        height: 23
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1316,10 +1269,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_43
       rect:
         serializedVersion: 2
-        x: 24
-        y: 214
-        width: 12
-        height: 33
+        x: 1092
+        y: 31
+        width: 34
+        height: 23
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1338,10 +1291,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_44
       rect:
         serializedVersion: 2
-        x: 1564
-        y: 190
-        width: 12
-        height: 33
+        x: 1125
+        y: 48
+        width: 31
+        height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1360,10 +1313,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_45
       rect:
         serializedVersion: 2
-        x: 24
-        y: 174
-        width: 12
-        height: 33
+        x: 111
+        y: 29
+        width: 33
+        height: 13
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1382,10 +1335,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_46
       rect:
         serializedVersion: 2
-        x: 1564
-        y: 150
-        width: 12
-        height: 33
+        x: 151
+        y: 29
+        width: 33
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1404,10 +1357,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_47
       rect:
         serializedVersion: 2
-        x: 24
-        y: 134
-        width: 12
-        height: 33
+        x: 190
+        y: 29
+        width: 33
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1426,10 +1379,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_48
       rect:
         serializedVersion: 2
-        x: 1563
-        y: 110
-        width: 13
-        height: 33
+        x: 230
+        y: 29
+        width: 32
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1448,10 +1401,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_49
       rect:
         serializedVersion: 2
-        x: 24
-        y: 93
-        width: 16
-        height: 34
+        x: 269
+        y: 29
+        width: 32
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1470,10 +1423,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_50
       rect:
         serializedVersion: 2
-        x: 1552
-        y: 70
-        width: 23
-        height: 34
+        x: 308
+        y: 29
+        width: 33
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1492,10 +1445,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_51
       rect:
         serializedVersion: 2
-        x: 30
-        y: 56
-        width: 27
-        height: 33
+        x: 347
+        y: 29
+        width: 33
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1514,10 +1467,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_52
       rect:
         serializedVersion: 2
-        x: 54
-        y: 31
-        width: 34
-        height: 28
+        x: 387
+        y: 29
+        width: 32
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1536,10 +1489,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_53
       rect:
         serializedVersion: 2
-        x: 1526
-        y: 39
-        width: 31
-        height: 31
+        x: 426
+        y: 29
+        width: 32
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1558,10 +1511,10 @@ TextureImporter:
       name: nemocuit-block3-ghost_54
       rect:
         serializedVersion: 2
-        x: 91
-        y: 24
-        width: 34
-        height: 16
+        x: 465
+        y: 29
+        width: 33
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1580,8 +1533,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_55
       rect:
         serializedVersion: 2
-        x: 132
-        y: 24
+        x: 504
+        y: 29
         width: 33
         height: 12
       alignment: 0
@@ -1602,9 +1555,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_56
       rect:
         serializedVersion: 2
-        x: 172
-        y: 24
-        width: 33
+        x: 544
+        y: 29
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1624,9 +1577,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_57
       rect:
         serializedVersion: 2
-        x: 212
-        y: 24
-        width: 33
+        x: 583
+        y: 29
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1646,8 +1599,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_58
       rect:
         serializedVersion: 2
-        x: 252
-        y: 24
+        x: 622
+        y: 29
         width: 33
         height: 12
       alignment: 0
@@ -1668,8 +1621,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_59
       rect:
         serializedVersion: 2
-        x: 292
-        y: 24
+        x: 661
+        y: 29
         width: 33
         height: 12
       alignment: 0
@@ -1690,9 +1643,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_60
       rect:
         serializedVersion: 2
-        x: 332
-        y: 24
-        width: 33
+        x: 701
+        y: 29
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1712,9 +1665,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_61
       rect:
         serializedVersion: 2
-        x: 372
-        y: 24
-        width: 33
+        x: 740
+        y: 29
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1734,8 +1687,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_62
       rect:
         serializedVersion: 2
-        x: 412
-        y: 24
+        x: 779
+        y: 29
         width: 33
         height: 12
       alignment: 0
@@ -1756,8 +1709,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_63
       rect:
         serializedVersion: 2
-        x: 452
-        y: 24
+        x: 818
+        y: 29
         width: 33
         height: 12
       alignment: 0
@@ -1778,9 +1731,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_64
       rect:
         serializedVersion: 2
-        x: 492
-        y: 24
-        width: 33
+        x: 858
+        y: 29
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1800,9 +1753,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_65
       rect:
         serializedVersion: 2
-        x: 532
-        y: 24
-        width: 33
+        x: 897
+        y: 29
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1822,8 +1775,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_66
       rect:
         serializedVersion: 2
-        x: 572
-        y: 24
+        x: 936
+        y: 29
         width: 33
         height: 12
       alignment: 0
@@ -1844,8 +1797,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_67
       rect:
         serializedVersion: 2
-        x: 612
-        y: 24
+        x: 975
+        y: 29
         width: 33
         height: 12
       alignment: 0
@@ -1866,9 +1819,9 @@ TextureImporter:
       name: nemocuit-block3-ghost_68
       rect:
         serializedVersion: 2
-        x: 652
-        y: 24
-        width: 33
+        x: 1015
+        y: 29
+        width: 32
         height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -1888,426 +1841,8 @@ TextureImporter:
       name: nemocuit-block3-ghost_69
       rect:
         serializedVersion: 2
-        x: 692
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3ba21b7397d9f8ae0800000000000000
-      internalID: -1544843003213829453
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_70
-      rect:
-        serializedVersion: 2
-        x: 732
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bdf39317dce5fc150800000000000000
-      internalID: 5895034673712152539
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_71
-      rect:
-        serializedVersion: 2
-        x: 772
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 43abe02159fd15ff0800000000000000
-      internalID: -49012289578288588
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_72
-      rect:
-        serializedVersion: 2
-        x: 812
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 186ee21872d9b1620800000000000000
-      internalID: 2745961190809069185
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_73
-      rect:
-        serializedVersion: 2
-        x: 852
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1581f659410c85840800000000000000
-      internalID: 5213127763320313937
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_74
-      rect:
-        serializedVersion: 2
-        x: 892
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6fdea2fa26e8b8cf0800000000000000
-      internalID: -248948799892165130
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_75
-      rect:
-        serializedVersion: 2
-        x: 932
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c567769c5793662d0800000000000000
-      internalID: -3285875700067240356
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_76
-      rect:
-        serializedVersion: 2
-        x: 972
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 58a13aeac9b5a9400800000000000000
-      internalID: 331678251068103301
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_77
-      rect:
-        serializedVersion: 2
-        x: 1012
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9873f50d2c85c7d80800000000000000
-      internalID: -8251622823506790519
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_78
-      rect:
-        serializedVersion: 2
-        x: 1052
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dd18014daf3c0ca70800000000000000
-      internalID: 8845285150222746077
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_79
-      rect:
-        serializedVersion: 2
-        x: 1092
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 54d196fe999e4b880800000000000000
-      internalID: -8595988941387522747
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_80
-      rect:
-        serializedVersion: 2
-        x: 1132
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: cfe8e53e3eeed00c0800000000000000
-      internalID: -4607764181190537476
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_81
-      rect:
-        serializedVersion: 2
-        x: 1172
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b820b7112ef8528a0800000000000000
-      internalID: -6330495500080708981
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_82
-      rect:
-        serializedVersion: 2
-        x: 1212
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: eba00f3a9ed3b6300800000000000000
-      internalID: 246358678308915902
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_83
-      rect:
-        serializedVersion: 2
-        x: 1252
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b7cc22472cc02ea40800000000000000
-      internalID: 5395889332854901883
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_84
-      rect:
-        serializedVersion: 2
-        x: 1292
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 546dd3b825a5c6d30800000000000000
-      internalID: 4426011844368258629
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_85
-      rect:
-        serializedVersion: 2
-        x: 1332
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 18d5883401045edf0800000000000000
-      internalID: -151644573850378879
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_86
-      rect:
-        serializedVersion: 2
-        x: 1372
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d13719434f65126d0800000000000000
-      internalID: -3017034668507565283
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_87
-      rect:
-        serializedVersion: 2
-        x: 1412
-        y: 24
-        width: 33
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4965bf84243c0cb40800000000000000
-      internalID: 5458577437832730260
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_88
-      rect:
-        serializedVersion: 2
-        x: 1452
-        y: 24
+        x: 1054
+        y: 29
         width: 33
         height: 13
       alignment: 0
@@ -2318,30 +1853,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 06ce39ff86444bf60800000000000000
-      internalID: 8049133651773090912
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: nemocuit-block3-ghost_89
-      rect:
-        serializedVersion: 2
-        x: 1491
-        y: 25
-        width: 34
-        height: 21
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e15012b1ea1242740800000000000000
-      internalID: 5126259307517642014
+      spriteID: 3ba21b7397d9f8ae0800000000000000
+      internalID: -1544843003213829453
       vertices: []
       indices: 
       edges: []
@@ -2428,27 +1941,7 @@ TextureImporter:
       nemocuit-block3-ghost_68: 5786261070851978600
       nemocuit-block3-ghost_69: -1544843003213829453
       nemocuit-block3-ghost_7: 6436158199896076903
-      nemocuit-block3-ghost_70: 5895034673712152539
-      nemocuit-block3-ghost_71: -49012289578288588
-      nemocuit-block3-ghost_72: 2745961190809069185
-      nemocuit-block3-ghost_73: 5213127763320313937
-      nemocuit-block3-ghost_74: -248948799892165130
-      nemocuit-block3-ghost_75: -3285875700067240356
-      nemocuit-block3-ghost_76: 331678251068103301
-      nemocuit-block3-ghost_77: -8251622823506790519
-      nemocuit-block3-ghost_78: 8845285150222746077
-      nemocuit-block3-ghost_79: -8595988941387522747
       nemocuit-block3-ghost_8: -7508756156064335987
-      nemocuit-block3-ghost_80: -4607764181190537476
-      nemocuit-block3-ghost_81: -6330495500080708981
-      nemocuit-block3-ghost_82: 246358678308915902
-      nemocuit-block3-ghost_83: 5395889332854901883
-      nemocuit-block3-ghost_84: 4426011844368258629
-      nemocuit-block3-ghost_85: -151644573850378879
-      nemocuit-block3-ghost_86: -3017034668507565283
-      nemocuit-block3-ghost_87: 5458577437832730260
-      nemocuit-block3-ghost_88: 8049133651773090912
-      nemocuit-block3-ghost_89: 5126259307517642014
       nemocuit-block3-ghost_9: -4465898340428951196
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

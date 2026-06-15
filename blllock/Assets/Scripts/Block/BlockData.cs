@@ -22,6 +22,7 @@ public class BlockData
         _tiles = new(blockData._tiles);
         _grids = new(blockData._grids);
         Ports = new(blockData.Ports);
+        TagPos = new(blockData.TagPos.x, blockData.TagPos.y);
         BlockRotate = Rotate.None;
         BlockFlipX = false;
         HasSpike = false;
@@ -49,6 +50,9 @@ public class BlockData
         return (refRotate == Rotate.None || refRotate == Rotate.Rotate180) ? _height : _width;
     }
     
+    public Vector2 TagPos { get; private set; } = new(0, 0);
+    public void SetTagPos(Vector2 tagPos) => TagPos = tagPos;
+
     public Rotate BlockRotate { get; private set; } = Rotate.None;
     public Rotate RotateCW()
     {
@@ -60,6 +64,10 @@ public class BlockData
         for (i = 0; i < Grids.Count; i++) 
         {
             Grids[i] = new(Grids[i].y, GetHeight() - Grids[i].x);
+        }
+        for (i = 0; i < Ports.Count; i++)
+        {
+            Ports[i] = Ports[i].RotateCW();
         }
 
         if (HasSpike)
@@ -83,6 +91,10 @@ public class BlockData
         {
             Grids[i] = new(GetWidth() - Grids[i].y, Grids[i].x);
         }
+        for (i = 0; i < Ports.Count; i++)
+        {
+            Ports[i] = Ports[i].RotateCCW();
+        }
 
         if (HasSpike)
         {
@@ -101,6 +113,10 @@ public class BlockData
         int i;
         for (i = 0; i < Tiles.Count; i++) Tiles[i] = new(Tiles[i].x, GetWidth() - 1 - Tiles[i].y);
         for (i = 0; i < Grids.Count; i++) Grids[i] = new(Grids[i].x, GetWidth() - Grids[i].y);
+        for (i = 0; i < Ports.Count; i++)
+        {
+            Ports[i] = Ports[i].FlipX();
+        }
 
         if (HasSpike)
         {
@@ -110,6 +126,27 @@ public class BlockData
 
         BlockFlipX = !BlockFlipX;
         return BlockFlipX;
+    }
+
+    public bool BlockFlipY { get; private set; } = false;
+    public bool FlipY()
+    {
+        int i;
+        for (i = 0; i < Tiles.Count; i++) Tiles[i] = new(GetHeight() - 1 - Tiles[i].x, Tiles[i].y);
+        for (i = 0; i < Grids.Count; i++) Grids[i] = new(GetHeight() - Grids[i].x, Grids[i].y);
+        for (i = 0; i < Ports.Count; i++)
+        {
+            Ports[i] = Ports[i].FlipY();
+        }
+
+        if (HasSpike)
+        {
+            for (i = 0; i < SpikeTiles.Count; i++)
+                SpikeTiles[i] = new(GetHeight() - 1 - SpikeTiles[i].x, SpikeTiles[i].y);
+        }
+
+        BlockFlipY = !BlockFlipY;
+        return BlockFlipY;
     }
 
     public bool HasSpike { get; private set; } = false;
@@ -147,40 +184,66 @@ public class BlockData
     public List<Vector2Int> Grids;
     public void SetGrids(List<Vector2Int> grids) => _grids = grids;
 
-    public List<WireExpr> Ports { get; private set; }
-    public void SetPorts(List<WireExpr> ports) => Ports = ports;
-    public List<int> PortIds { get; private set; }
+    public List<PortExpr> Ports { get; private set; }
+    public void SetPorts(List<PortExpr> ports) => Ports = ports;
+    public List<int> WireIds { get; private set; }
     #endregion
 
-    // 블록이 인스턴스화 될 때 각 Port를 Unique하게 만든다
-    public List<WireExpr> Instantiate()
+    // 블록이 인스턴스화 될 때 각 Port의 Wire들을 Unique하게 만든다
+    public List<PortExpr> Instantiate()
     {
-        Tiles = _tiles;
-        Grids = _grids;
-        PortIds = new();
+        Tiles = new(_tiles);
+        Grids = new(_grids);
+        WireIds = new();
 
-        Dictionary<int, int> lookup = new();
+        Dictionary<(string, int), int> lookup = new();
         for (int i = 0; i < Ports.Count; i++) Ports[i] = Subst(Ports[i], lookup);
         return Ports;
     }
-    private WireExpr Subst(WireExpr origin, Dictionary<int, int> lookup)
+    private PortExpr Subst(PortExpr port, Dictionary<(string, int), int> lookup)
     {
-        if (origin is Wire wire)
+        if (port is PortVar var)
         {
-            if (lookup.ContainsKey(wire.ID)) return GameManager.Instance.Wire.Wires[lookup[wire.ID]];
-
-            Wire pos = new(GameManager.Instance.Wire.GenerateID()), neg = new(-pos.ID);
-            if (wire.ID > 0) { lookup[wire.ID] = pos.ID; lookup[-wire.ID] = -pos.ID; }
-            else { lookup[wire.ID] = -pos.ID; lookup[-wire.ID] = pos.ID; }
-            GameManager.Instance.Wire.AddWire(pos, neg);
-            PortIds.Add(pos.ID);
-
-            return wire.ID > 0 ? pos : neg;
+            return SubstVar(var, lookup);
+        } 
+        else if (port is PortVert vert)
+        {
+            return new PortVert(SubstVar(vert.Up, lookup), SubstVar(vert.Down, lookup));
         }
-        if (origin is WireNot wireNot) return new WireNot(Subst(wireNot.Inner, lookup)).Clean();
-        if (origin is WireAnd wireAnd) return new WireAnd(Subst(wireAnd.Left, lookup), Subst(wireAnd.Right, lookup));
-        if (origin is WireOr wireOr) return new WireOr(Subst(wireOr.Left, lookup), Subst(wireOr.Right, lookup));
-
+        else if (port is PortHorz horz)
+        {
+            return new PortHorz(SubstVar(horz.Left, lookup), SubstVar(horz.Right, lookup));
+        }
         return null;
+    }
+    private PortVar SubstVar(PortVar port, Dictionary<(string, int), int> lookup)
+    {
+        PortVar newPort = new(
+            port.Name,
+            SubstWire(port, 0, lookup),
+            SubstWire(port, 1, lookup),
+            SubstWire(port, 2, lookup),
+            SubstWire(port, 3, lookup)
+        );
+
+        return newPort;
+    }
+    private Wire SubstWire(PortVar port, int param, Dictionary<(string, int), int> lookup)
+    {
+        //Debug.Log($"[SubstWire] block: ID={ID}, Wire={wire}");
+        if (lookup.ContainsKey((port.Name, param)))
+        {
+            Wire result = GameManager.Instance.Wire.Wires[lookup[(port.Name, param)]];
+            Debug.Log($"[SubstWire|Result] block: ID={ID}, Result Wire={result}");
+            return GameManager.Instance.Wire.Wires[lookup[(port.Name, param)]];
+        }
+        
+        Wire newWire = new(GameManager.Instance.Wire.GenerateID());
+        lookup[(port.Name, param)] = newWire.ID;
+        GameManager.Instance.Wire.AddWire(newWire);
+        WireIds.Add(newWire.ID);
+
+        Debug.Log($"[SubstWire|Result] block: ID={ID}, Result Wire={newWire}");
+        return newWire;
     }
 }

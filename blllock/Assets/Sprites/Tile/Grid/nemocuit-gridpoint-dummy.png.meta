@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 850331d89c24a6448ae247bd5f1480d2
+guid: e6ccb67aa09328f478c7b7cd5257f035
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6111516544338899248
-    second: nemocuit-block10_0_0
+      213: 6925704682504605755
+    second: nemocuit-gridpoint-dummy_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nemocuit-block10_0_0
+      name: nemocuit-gridpoint-dummy_0
       rect:
         serializedVersion: 2
-        x: 33
-        y: 46
-        width: 1134
-        height: 321
+        x: 0
+        y: 0
+        width: 110
+        height: 110
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0313e38bae770d450800000000000000
-      internalID: 6111516544338899248
+      spriteID: b3052fbf6bb0d1060800000000000000
+      internalID: 6925704682504605755
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      nemocuit-block10_0_0: 6111516544338899248
+      nemocuit-gridpoint-dummy_0: 6925704682504605755
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -26,19 +26,19 @@ public class Grid
     public Vector2Int Pos { get; private set; }
     public GridType Type { get; private set; }
     public LogicExpr? Expr { get; private set; } = null; // input, output과 관련된 상수 LogicExpr
-    public List<WireExpr> Ports { get; private set; } = new(); // 인접한 Ports들 (최대 4개)
+    public List<PortExpr> Ports { get; private set; } = new(); // 인접한 Ports들 (최대 4개)
     public event Action? OnPortsChanged;
     public Grid(Vector2Int pos, GridType type = GridType.Null) { Pos = pos; Type = type; }
     public void SetType(GridType type) => Type = type;
     public void SetExpr(LogicExpr? expr) => Expr = expr;
-    public bool AddPort(WireExpr port)
+    public bool AddPort(PortExpr port)
     {
         if (Ports.Count >= Utils.MAX_PORT) return false;
         Ports.Add(port);
         OnPortsChanged?.Invoke();
         return true;
     }
-    public void RemovePort(WireExpr port)
+    public void RemovePort(PortExpr port)
     {
         Ports.Remove(port);
         OnPortsChanged?.Invoke();
@@ -280,7 +280,7 @@ public class GridManager : MonoBehaviour
         for (int i = 0; i < gridOffsets.Count; i++)
         {
             Vector2Int offset = gridOffsets[i];
-            WireExpr port = block.Ports[i];
+            PortExpr port = block.Ports[i];
             Grids![offset.x + circuitBase.x, offset.y + circuitBase.y].AddPort(port);
         }
 
@@ -319,11 +319,10 @@ public class GridManager : MonoBehaviour
         for (int i = 0; i < gridOffsets.Count; i++)
         {
             Vector2Int offset = gridOffsets[i];
-            WireExpr port = block.Ports[i];
+            PortExpr port = block.Ports[i];
             Grids![offset.x + circuitBase.x, offset.y + circuitBase.y].RemovePort(port);
         }
-        foreach (int id in block.PortIds) GameManager.Instance.Wire.RemoveWire(id);
-        GameManager.Instance.Wire.RemoveSignature();
+        foreach (int id in block.WireIds) GameManager.Instance.Wire.RemoveWire(id);
 
         CheckInvalids();
         GameManager.Instance.Wire.EvalAll();
@@ -425,7 +424,7 @@ public class GridManager : MonoBehaviour
     {
         Dictionary<int, Wire> backupWires = wire.Wires.ToDictionary(kvp => kvp.Key, kvp => new Wire(kvp.Value));
         Dictionary<int, HashSet<int>> backupDict = wire.WireDict.ToDictionary(kvp => kvp.Key, kvp => new HashSet<int>(kvp.Value));
-        Dictionary<int, LogicExpr> backupLogic = new(wire.WireLogic);
+        Dictionary<int, VarExpr> backupLogic = new(wire.WireLogic);
 
 
         List<Vector2Int> offsets = block.Grids;
@@ -446,7 +445,7 @@ public class GridManager : MonoBehaviour
             {
                 if (!wire.AddToLogic(block.Ports[i], grid.Expr))
                 {
-                    Debug.Log($"[IsValidPort:--invalid--] try: {block.Ports[i]} -> {grid.Expr} | dict: {wire.StringOfWireLogic()} | backup: {wire.StringOfWireLogic(backupLogic)}");
+                    //Debug.Log($"[IsValidPort:--invalid--] try: {block.Ports[i]} -> {grid.Expr} | dict: {wire.StringOfWireLogic()} | backup: {wire.StringOfWireLogic(backupLogic)}");
 
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;

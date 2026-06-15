@@ -20,13 +20,15 @@ public static class Utils
     public const int PORT_SIZE = 10;
     public const string RED = "#F25A7B";
     public const string CHAT_RED = "#FFD0D0";
-    public const string BLUE = "#54DCE3";
+    public const string BLUE = "#6FCED5";
     public const string CHAT_BLUE = "#D0F6FF";
     public const string BLACK = "#242424";
     public const string GRAY = "#B8B8B8";
     public const string GREEN = "#CAFFCA";
     public const string YELLOW = "#FEFCCD";
     public const string CLEAR = "#F0F0F0FF";
+    public const string TAG_ROTATE = "#99C79D";
+    public const string TAG_FLIP = "#C29363";
     public const float CLEAR_ALPHA = 1f;
     public const float THRESHOLD = 3f;
     public const int MAX_SNAP_COUNT = 20;
@@ -43,7 +45,7 @@ public static class Utils
     public const int AUDIO_THRESHOLD0 = 2;
     public const int AUDIO_THRESHOLD1 = 3;
     public const int AUDIO_THRESHOLD2 = 4;
-    public const char NOT = '~', AND = '*', OR = '+';
+    public const char NOT = '~', VERT = '*', HORZ = '+';
     public const string PARENS = "()";
     public static bool IsWrappedByParentheses(string s)
     {
@@ -87,14 +89,15 @@ public static class Utils
         else { PrintError("[CodeToColor] cannot parse"); return Color.white; }
     }
 
-    public static Vector3 GetHoverOffset(Rotate rotate, bool flip)
+    public static Vector3 GetHoverOffset(Rotate rotate, bool flipX, bool flipY)
     {
         Vector3 offset = HOVER;
         if (rotate == Rotate.Rotate90) offset = new Vector3(-offset.y, offset.x, 0);
         else if (rotate == Rotate.Rotate180) offset = -offset;
         else if (rotate == Rotate.Rotate270) offset = new Vector3(offset.y, -offset.x, 0);
 
-        //if (flip) offset.x = -offset.x;
+        if (flipX) offset.x = -offset.x;
+        else if (flipY) offset.y = -offset.y;
         return offset;
     }
 }
@@ -402,8 +405,8 @@ public class GameManager : MonoBehaviour
         if (module == null) { Utils.PrintError("모듈이 없습니다."); return; }
         if (module.Stages.Count == 0) return;
 
-        if (module.ID == 0) UI.DeactivateChat();
-        else UI.ActivateChat();
+        //if (module.ID == 0) UI.DeactivateChat();
+        //else UI.ActivateChat();
 
         CurrentModule = module;
         LastStageID = module.Stages[^1];
