@@ -445,7 +445,7 @@ public class GridManager : MonoBehaviour
             {
                 if (!wire.AddToLogic(block.Ports[i], grid.Expr))
                 {
-                    //Debug.Log($"[IsValidPort:--invalid--] try: {block.Ports[i]} -> {grid.Expr} | dict: {wire.StringOfWireLogic()} | backup: {wire.StringOfWireLogic(backupLogic)}");
+                    Debug.Log($"[IsValidPort:--invalid--] try: {block.Ports[i]} -> {grid.Expr} | dict: {wire.StringOfWireDict()} | backup dict: {wire.StringOfWireDict(backupDict)} | logic: {wire.StringOfWireLogic()} | backup logic: {wire.StringOfWireLogic(backupLogic)}");
 
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;

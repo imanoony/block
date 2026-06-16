@@ -623,7 +623,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &154120911
 RectTransform:
   m_ObjectHideFlags: 0
@@ -671,6 +671,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   moduleDefault: {fileID: 0}
+  nameText: {fileID: 1753893817}
+  conditionText: {fileID: 1621775856}
+  progress: {fileID: 1479470313}
+  fill: {fileID: 1895762679}
+  text: {fileID: 2072540831}
 --- !u!1 &174203076
 GameObject:
   m_ObjectHideFlags: 0
@@ -6212,7 +6217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1479470313
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6815,7 +6820,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1621775855
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7260,7 +7265,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1753893816
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7628,6 +7633,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 850331d89c24a6448ae247bd5f1480d2, type: 3}
   - {fileID: 21300000, guid: a61f2ead2dc11e940a6d3d4e844eaa9a, type: 3}
   - {fileID: 21300000, guid: 5261a1021ee263b4fb8680bc6d750847, type: 3}
+  - {fileID: 21300000, guid: e27cae0d69dd495498b5e61d045bc138, type: 3}
+  - {fileID: 21300000, guid: d50e8953e872ce34a8345711d96d07b9, type: 3}
+  - {fileID: 21300000, guid: 6c34f509a984f1f49931db4cf47003e7, type: 3}
+  - {fileID: 21300000, guid: 70e7a48897e2165458b93a98accb3b6e, type: 3}
+  - {fileID: 21300000, guid: 43e282c3120d57c459df357fce1f98dc, type: 3}
+  - {fileID: 21300000, guid: 008eef583505ba549a1bcb5f179a28ae, type: 3}
   sblockSprites:
   - {fileID: 3105821265316025880, guid: 279bcc0415d149c4890aed4b86426dec, type: 3}
   - {fileID: 1214118329092968321, guid: 6f9f378c517770b4ebba6bc1eefef213, type: 3}
@@ -7641,8 +7652,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
   - {fileID: 21300000, guid: 83fd16bd71dbb7545a1782960ee3fc71, type: 3}
   - {fileID: 21300000, guid: ad7c45fb4cd704c4a981f4728e390ce5, type: 3}
+  - {fileID: 21300000, guid: 83fd16bd71dbb7545a1782960ee3fc71, type: 3}
   - {fileID: 21300000, guid: f7f090bdcf957664c8cec11462fb3ab6, type: 3}
-  - {fileID: 21300000, guid: 172115eddc58dc246b0e82f12d094963, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 83fd16bd71dbb7545a1782960ee3fc71, type: 3}
+  - {fileID: 21300000, guid: e4fc848debb256d4abded65c179838d2, type: 3}
+  - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
+  - {fileID: 21300000, guid: 83fd16bd71dbb7545a1782960ee3fc71, type: 3}
+  - {fileID: 21300000, guid: 7bd5d08eeb8717b4fa68a60072a9e5ee, type: 3}
   blockTagSprites:
   - {fileID: 21300000, guid: 0bc1e435c6845804cae11427579dca73, type: 3}
   - {fileID: 21300000, guid: 21e0f529fbbe9484e9792cf403dc93a8, type: 3}
@@ -7759,9 +7776,9 @@ RectTransform:
   m_Father: {fileID: 1479470313}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -400, y: 0}
+  m_SizeDelta: {x: 100, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1895762680
 MonoBehaviour:

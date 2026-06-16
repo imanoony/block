@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System;
+using TMPro;
 
 public class UIModule : MonoBehaviour
 {
@@ -124,6 +125,12 @@ public class UIModule : MonoBehaviour
         {
             EnableModuleClick();
             currentTween = null;
+
+            SetText();
+            SetProgress();
+
+            TextAppear();
+            ProgressAppear();
         });
     }
 
@@ -163,6 +170,9 @@ public class UIModule : MonoBehaviour
             moduleFocus = GameManager.Instance.CurrentModule.ID;
             moduleParent.SetActive(false);
             currentTween = null;
+
+            TextDisappear();
+            ProgressDisappear();
         });
     }
     #endregion
@@ -320,6 +330,8 @@ public class UIModule : MonoBehaviour
         moduleStyles.Insert(0, last);
 
         RefreshModule(0);
+        SetText();
+        SetProgress();
     }
 
     private void RotateLeft()
@@ -329,6 +341,8 @@ public class UIModule : MonoBehaviour
         moduleStyles.Add(first);
 
         RefreshModule(moduleCount - 1);
+        SetText();
+        SetProgress();
     }
     #endregion
 
@@ -349,4 +363,56 @@ public class UIModule : MonoBehaviour
         }
     }
     #endregion
+
+    [Header("Text")]
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI conditionText;
+    private void TextAppear()
+    {
+        ModuleData module = GameManager.Instance.ModuleLibrary[moduleFocus];
+        nameText.gameObject.SetActive(true);
+        conditionText.gameObject.SetActive(true);
+    }
+    private void TextDisappear()
+    {
+        nameText.gameObject.SetActive(false);
+        conditionText.gameObject.SetActive(false);
+    }
+    private void SetText()
+    {
+        ModuleData module = GameManager.Instance.ModuleLibrary[moduleFocus];
+        if (!module.Unlocked)
+        {
+            nameText.text = "???";
+            conditionText.text = "해금 조건: ???"; // 임시
+        }
+        else
+        {
+            nameText.text = module.Desc;
+            conditionText.text = "";
+        }
+    }
+
+    [Header("Progress")]
+    [SerializeField] private RectTransform progress;
+    [SerializeField] private RectTransform fill;
+    [SerializeField] private TextMeshProUGUI text;
+    private void ProgressAppear()
+    {
+        progress.gameObject.SetActive(true);
+    }
+    private void ProgressDisappear()
+    {
+        progress.gameObject.SetActive(false);
+    }
+    private void SetProgress()
+    {
+        ModuleData module = GameManager.Instance.ModuleLibrary[moduleFocus];
+        float percent = (float)module.StageIndex / (float)module.Stages.Count;
+        text.text = $"{percent*100f:0}%";
+        fill.SetSizeWithCurrentAnchors(
+            RectTransform.Axis.Horizontal,
+            progress.rect.width * percent
+        );
+    }
 }

@@ -33,6 +33,8 @@ public class WireManager
         foreach (int key in removeKeys) Wires.Remove(key);
         WireDict = dict;
         WireLogic = logic;
+
+        EvalAll();
     }
     private int nextID = 1;
     private readonly SortedSet<int> freeIDs = new(); // 삭제된 ID를 작은 순으로 관리
@@ -152,7 +154,11 @@ public class WireManager
         return true;
     }
 
-    public bool AddToDict(Wire w1, Wire w2) => AddToDict(w1.ID, w2.ID);
+    public bool AddToDict(Wire? w1, Wire? w2)
+    {
+        if (w1 == null || w2 == null) return true;
+        else return AddToDict(w1.ID, w2.ID);
+    }
     public bool AddToDict(PortExpr p1, PortExpr p2) // Port와 Port 매핑
     {
         return (
@@ -169,7 +175,12 @@ public class WireManager
         WireLogic[w] = var;
         return true;
     }
-    public bool AddToLogic(Wire wire, VarExpr? var) => AddToLogic(wire.ID, var);
+    public bool AddToLogic(Wire? wire, VarExpr? var)
+    {
+        if (wire == null) return true;
+        else return AddToLogic(wire.ID, var);
+    }
+
     public bool AddToLogic(PortExpr p, LogicExpr l)
     {
         CombExpr comb = l is VarExpr v ? v.ToCombExpr() : (CombExpr)l;
@@ -182,13 +193,18 @@ public class WireManager
     }
 
     public VarExpr? EvalCache(int id) => Wires[id].Cache;
+    public VarExpr? EvalCache(Wire? wire)
+    {
+        if (wire == null) return null;
+        else return wire.Cache;
+    }
 
     public LogicExpr? EvalCache(PortExpr port)
     {
-        VarExpr? leftup = EvalCache(port.LeftUp.ID);
-        VarExpr? leftdown = EvalCache(port.LeftDown.ID);
-        VarExpr? rightup = EvalCache(port.RightUp.ID);
-        VarExpr? rightdown = EvalCache(port.RightDown.ID);
+        VarExpr? leftup = EvalCache(port.LeftUp);
+        VarExpr? leftdown = EvalCache(port.LeftDown);
+        VarExpr? rightup = EvalCache(port.RightUp);
+        VarExpr? rightdown = EvalCache(port.RightDown);
 
         if (
             leftup == null && 
@@ -229,12 +245,18 @@ public class WireManager
         return null;
     }
 
+    public VarExpr? Eval(Wire? wire)
+    {
+        if (wire == null) return null;
+        else return Eval(wire.ID);
+    }
+
     public LogicExpr? Eval(PortExpr port)
     {
-        VarExpr? leftup = Eval(port.LeftUp.ID);
-        VarExpr? leftdown = Eval(port.LeftDown.ID);
-        VarExpr? rightup = Eval(port.RightUp.ID);
-        VarExpr? rightdown = Eval(port.RightDown.ID);
+        VarExpr? leftup = Eval(port.LeftUp);
+        VarExpr? leftdown = Eval(port.LeftDown);
+        VarExpr? rightup = Eval(port.RightUp);
+        VarExpr? rightdown = Eval(port.RightDown);
 
         if (
             leftup == null && 
@@ -309,14 +331,16 @@ public class WireManager
         // "키: {값1, 값2}" 형식으로 변환
         return string.Join("|", target.Select(kv => $"{kv.Key}: {string.Join(", ", kv.Value)}"));
     }
-    public string StringOfWireLogic()
+    public string StringOfWireLogic(Dictionary<int, VarExpr>? wireLogic = null)
     {
-        if (WireLogic == null || WireLogic.Count == 0)
+        Dictionary<int, VarExpr> target = wireLogic ?? WireLogic;
+
+        if (target == null || target.Count == 0)
             return "{}";
 
         return string.Join(
             "|",
-            WireLogic.Select(kv => $"{kv.Key}: {kv.Value}")
+            target.Select(kv => $"{kv.Key}: {kv.Value}")
         );
     }
     #endregion

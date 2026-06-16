@@ -48,13 +48,17 @@ public abstract class PortExpr
             else return null;
         }
     }
-    private static PortVar Parse(char c) => new(c.ToString());
+    private static PortVar? Parse(char c)
+    {
+        if (c == 'n') return null;
+        else return new(c.ToString());
+    }
 
     // Wire
-    public abstract Wire LeftUp { get; }
-    public abstract Wire LeftDown { get; }
-    public abstract Wire RightUp { get; }
-    public abstract Wire RightDown { get; }
+    public abstract Wire? LeftUp { get; }
+    public abstract Wire? LeftDown { get; }
+    public abstract Wire? RightUp { get; }
+    public abstract Wire? RightDown { get; }
 
     // Rotate
     public abstract PortExpr RotateCW();
@@ -126,17 +130,22 @@ public class PortVar : PortExpr
 }
 public class PortVert : PortExpr
 {
-    public PortVar Up { get; private set; }
-    public PortVar Down { get; private set; }
-    public PortVert(PortVar up, PortVar down)
+    public PortVar? Up { get; private set; }
+    public PortVar? Down { get; private set; }
+    public PortVert(PortVar? up, PortVar? down)
     {
         Up = up;
         Down = down;
 
-        SubscribeWire(LeftUp);
-        SubscribeWire(LeftDown);
-        SubscribeWire(RightUp);
-        SubscribeWire(RightDown);
+        if (Up != null) {
+            SubscribeWire(LeftUp!);
+            SubscribeWire(RightUp!);
+        }
+        if (Down != null)
+        {
+            SubscribeWire(LeftDown!);
+            SubscribeWire(RightDown!);
+        }
     }
 
     private bool _disposed = false;
@@ -145,17 +154,23 @@ public class PortVert : PortExpr
         if (_disposed) return;
         _disposed = true;
 
-        UnsubscribeWire(LeftUp);
-        UnsubscribeWire(LeftDown);
-        UnsubscribeWire(RightUp);
-        UnsubscribeWire(RightDown);
+        if (Up != null)
+        {
+            UnsubscribeWire(LeftUp!);
+            UnsubscribeWire(RightUp!);
+        }
+        if (Down != null)
+        {
+            UnsubscribeWire(LeftDown!);
+            UnsubscribeWire(RightDown!);
+        }
     }
 
     // Wire
-    public override Wire LeftUp => Up.LeftUp;
-    public override Wire LeftDown => Down.LeftDown;
-    public override Wire RightUp => Up.RightUp;
-    public override Wire RightDown => Down.RightDown;
+    public override Wire? LeftUp => Up?.LeftUp;
+    public override Wire? LeftDown => Down?.LeftDown;
+    public override Wire? RightUp => Up?.RightUp;
+    public override Wire? RightDown => Down?.RightDown;
 
     // Rotate
     public override PortExpr RotateCW()
@@ -182,17 +197,23 @@ public class PortVert : PortExpr
 }
 public class PortHorz : PortExpr
 {
-    public PortVar Left { get; private set; }
-    public PortVar Right { get; private set; }
-    public PortHorz(PortVar left, PortVar right)
+    public PortVar? Left { get; private set; }
+    public PortVar? Right { get; private set; }
+    public PortHorz(PortVar? left, PortVar? right)
     {
         Left = left;
         Right = right;
 
-        SubscribeWire(LeftUp);
-        SubscribeWire(LeftDown);
-        SubscribeWire(RightUp);
-        SubscribeWire(RightDown);
+        if (Left != null)
+        {
+            SubscribeWire(LeftUp!);
+            SubscribeWire(LeftDown!);
+        }
+        if (Right != null)
+        {
+            SubscribeWire(RightUp!);
+            SubscribeWire(RightDown!);    
+        }
     }
 
     private bool _disposed = false;
@@ -201,17 +222,23 @@ public class PortHorz : PortExpr
         if (_disposed) return;
         _disposed = true;
 
-        UnsubscribeWire(LeftUp);
-        UnsubscribeWire(LeftDown);
-        UnsubscribeWire(RightUp);
-        UnsubscribeWire(RightDown);
+        if (Left != null)
+        {
+            UnsubscribeWire(LeftUp!);
+            UnsubscribeWire(LeftDown!);
+        }
+        if (Right != null)
+        {
+            UnsubscribeWire(RightUp!);
+            UnsubscribeWire(RightDown!);
+        }
     }
 
     // Wire
-    public override Wire LeftUp => Left.LeftUp;
-    public override Wire LeftDown => Left.LeftDown;
-    public override Wire RightUp => Right.RightUp;
-    public override Wire RightDown => Right.RightDown;
+    public override Wire? LeftUp => Left?.LeftUp;
+    public override Wire? LeftDown => Left?.LeftDown;
+    public override Wire? RightUp => Right?.RightUp;
+    public override Wire? RightDown => Right?.RightDown;
 
     // Rotate
     public override PortExpr RotateCW()
