@@ -42,7 +42,7 @@ public static class Utils
     public const float SHADOW_ALPHA = 100 / 255f;
     public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
     public const int MODULE_MIN = 0;
-    public const int MODULE_MAX = 6;
+    public const int MODULE_MAX = 10;
     public const int AUDIO_THRESHOLD0 = 2;
     public const int AUDIO_THRESHOLD1 = 3;
     public const int AUDIO_THRESHOLD2 = 4;
@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(6);
+        StartModule(9);
     }
 
     void Update()
@@ -288,6 +288,22 @@ public class GameManager : MonoBehaviour
         //UI.ResetDisappear();
 
         if (gt != null) gt.StopCheck();
+
+        // 임시
+        CurrentModule.SetCleared();
+        foreach (var kvp in ModuleLibrary)
+        {
+            ModuleData module = kvp.Value;
+            if (module.IsCleared) continue;
+
+            List<int> conditions = module.Conditions;
+            for (int i = 0; i < conditions.Count; i++)
+            {
+                int cond = conditions[i];
+                if (!ModuleLibrary[cond].IsCleared) break;
+                if (i == conditions.Count - 1) module.Unlock();
+            }
+        }
     }
 
     public void OutputCheck(Vector2Int pos, bool state)
@@ -405,6 +421,7 @@ public class GameManager : MonoBehaviour
         if (State != GameState.ModuleSelect) { Utils.PrintError("모듈 선택 상태가 아닙니다."); return; }
         if (module == null) { Utils.PrintError("모듈이 없습니다."); return; }
         if (module.Stages.Count == 0) return;
+        if (!module.Unlocked) return;
 
         //if (module.ID == 0) UI.DeactivateChat();
         //else UI.ActivateChat();

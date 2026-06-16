@@ -1,3 +1,0 @@
-repository "blllock/blllock@14569154540097@cloud"
-  path "/"
-    smartbranch "/main"

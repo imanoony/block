@@ -31,7 +31,7 @@
             "Desc": "100011",
             "TutorialID": 1,
             "Blocks": [
-                8
+                0
             ],
             "BlockPositions": [
                 {
@@ -881,6 +881,39 @@
             "FlipYIndex": [
                 0
             ],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": []
+        },
+        {
+            "ID": 9999,
+            "BgWidth": 16,
+            "BgHeight": 9,
+            "CircuitWidth": 1,
+            "CircuitHeight": 1,
+            "CircuitPosition": {
+                "x": 0,
+                "y": 0
+            },
+            "Inputs": [
+            ],
+            "Outputs": [
+            ],
+            "Desc": "9999",
+            "TutorialID": -1,
+            "Blocks": [
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 5
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": []

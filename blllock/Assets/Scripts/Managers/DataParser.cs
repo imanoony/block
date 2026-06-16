@@ -12,6 +12,8 @@ public class ModuleData
     public int ID { get; private set; }
     public void SetID(int id) => ID = id;
     public string Desc;
+    public List<int> Conditions { get; private set; } = new();
+    public void SetConditions(List<int> conditions) { Conditions = conditions; }
     public List<int> Stages { get; private set; } = new(); // Stage ID list
 
     // 클리어 하지 못한 최소 스테이지 인덱스
@@ -29,6 +31,12 @@ public class ModuleData
         if (StageIndex < Stages.Count) StageIndex++;
         else StageIndex = 0;
     }
+
+    public bool Unlocked { get; private set; } = false;
+    public void Unlock() => Unlocked = true;
+
+    public bool IsCleared { get; private set; } = false;
+    public void SetCleared() => IsCleared = true;
 }
 
 public class TutorialData
@@ -252,6 +260,7 @@ public class DataParser
     private const string Tiles = "Tiles", Grids = "Grids", Ports = "Ports", TagPos = "TagPos";
     private const string Inputs = "Inputs", Outputs = "Outputs";
     private const string Blocks = "Blocks", Rotate = "Rotate", Flip = "Flip";
+    private const string Conditions = "Conditions";
     private const string Stages = "Stages";
 
     public Dictionary<int, BlockData> ParseBlockData(string filename)
@@ -342,15 +351,32 @@ public class DataParser
 
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
-                if (values[j].Length == 0) continue;
                 string header = headers[j].ToLower();
+                string value = values[j].Trim();
 
-                if (header == ID.ToLower()) module.SetID(int.Parse(values[j]));
-                else if (header == Desc.ToLower()) module.Desc = values[j];
+                if (header == ID.ToLower()) module.SetID(int.Parse(value));
+                else if (header == Desc.ToLower()) module.Desc = value;
+                else if (header == Conditions.ToLower())
+                {
+                    List<int> parsed = value
+                        .Split(';', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(int.Parse)
+                        .ToList();
+
+                    if (parsed.Count == 0)
+                    {
+                        module.Unlock();
+                        Debug.Log($"unlock, {module.ID}");
+                    }
+                    module.SetConditions(parsed);
+                }
                 else if (header == Stages.ToLower())
                 {
-                    List<string> items = values[j].Split(';').ToList<string>();
-                    List<int> parsed = items.Select(int.Parse).ToList();
+                    List<int> parsed = value
+                        .Split(';', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(int.Parse)
+                        .ToList();
+
                     module.SetStages(parsed);
                 }
             }
@@ -462,12 +488,23 @@ public class DataParser
     {
         for (int i = 0; i < modules.Count; i++)
         {
-            modules[i].SetStageIndex(PlayerPrefs.GetInt(modules[i].ID.ToString(), 0));
-            for (int j = 0; j < modules[i].StageIndex; j++)
+            ModuleData module = modules[i];
+
+            module.SetStageIndex(PlayerPrefs.GetInt(module.ID.ToString(), 0));
+            for (int j = 0; j < module.StageIndex; j++)
             {
-                if (j == modules[i].Stages.Count) break;
-                int stageID = modules[i].Stages[j];
+                if (j == module.Stages.Count) break;
+                int stageID = module.Stages[j];
                 if (stages.ContainsKey(stageID)) stages[stageID].SetCleared(true);
+            }
+
+            if (PlayerPrefs.GetInt(module.ID.ToString() + nameof(ModuleData.IsCleared), 0) == 1)
+            {
+                module.SetCleared();
+            }
+            if (PlayerPrefs.GetInt(module.ID.ToString() + nameof(ModuleData.Unlocked), 0) == 1)
+            {
+                module.Unlock();
             }
         }
     }
@@ -475,7 +512,13 @@ public class DataParser
     // ModuleData의 StageIndex 저장하기
     public void SaveData(Dictionary<int, ModuleData> modules)
     {
-        for (int i = 0; i < modules.Count; i++) PlayerPrefs.SetInt(modules[i].ID.ToString(), modules[i].StageIndex);
+        for (int i = 0; i < modules.Count; i++) 
+        {
+            ModuleData module = modules[i];
+            PlayerPrefs.SetInt(module.ID.ToString(), module.StageIndex);
+            PlayerPrefs.SetInt(module.ID.ToString() + nameof(ModuleData.IsCleared), module.IsCleared ? 1 : 0);
+            PlayerPrefs.SetInt(module.ID.ToString() + nameof(ModuleData.Unlocked), module.Unlocked ? 1 : 0);
+        }
         PlayerPrefs.Save();
     }
 
