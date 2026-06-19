@@ -103,7 +103,13 @@ public class UIPopup: MonoBehaviour
         else prevButton.SetActive(false);
 
         if (hasNext) nextButtonText.text = nextText;
-        else nextButtonText.text = closeText;
+        else {
+            if (tutorialCur.ID == 9999)
+            {
+                nextButton.SetActive(false);
+            }
+            nextButtonText.text = closeText;
+        }
     }
 
     #region Transitions

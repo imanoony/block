@@ -42,7 +42,7 @@ public static class Utils
     public const float SHADOW_ALPHA = 100 / 255f;
     public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
     public const int MODULE_MIN = 0;
-    public const int MODULE_MAX = 10;
+    public const int MODULE_MAX = 11;
     public const int AUDIO_THRESHOLD0 = 2;
     public const int AUDIO_THRESHOLD1 = 3;
     public const int AUDIO_THRESHOLD2 = 4;

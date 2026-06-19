@@ -374,16 +374,11 @@
             "Blocks": [
                 2,
                 0,
-                0,
                 1
             ],
             "BlockPositions": [
                 {
                     "x": 0,
-                    "y": 0
-                },
-                {
-                    "x": 4,
                     "y": 0
                 },
                 {
@@ -481,13 +476,13 @@
         },
         {
             "ID": 200010,
-            "BgWidth": 11,
-            "BgHeight": 9,
+            "BgWidth": 13,
+            "BgHeight": 8,
             "CircuitWidth": 5,
             "CircuitHeight": 4,
             "CircuitPosition": {
                 "x": 2,
-                "y": 3
+                "y": 4
             },
             "Inputs": [
                 {
@@ -522,7 +517,7 @@
                 }
             ],
             "Desc": "200010",
-            "TutorialID": 3,
+            "TutorialID": -1,
             "Blocks": [
                 0,
                 2,
@@ -535,16 +530,16 @@
                     "y": 1
                 },
                 {
-                    "x": 7,
-                    "y": 1
+                    "x": 6,
+                    "y": 0
                 },
                 {
                     "x": 2,
-                    "y": 9
+                    "y": 10
                 },
                 {
                     "x": 4,
-                    "y": 9
+                    "y": 10
                 }
             ],
             "RotateCWIndex": [],
@@ -645,40 +640,40 @@
                 {
                     "pos": {
                         "x": 0,
-                        "y": 3
+                        "y": 0
                     },
-                    "expr": "Y"
+                    "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 1,
+                        "y": 3
                     },
-                    "expr": "X"
+                    "expr": "Y"
                 }
             ],
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 0
+                        "x": 2,
+                        "y": 3
                     },
-                    "expr": "Y"
+                    "expr": "X"
                 },
                 {
                     "pos": {
                         "x": 2,
-                        "y": 0
+                        "y": 4
                     },
-                    "expr": "X"
+                    "expr": "Y"
                 }
             ],
             "Desc": "200012",
             "TutorialID": 4,
             "Blocks": [
                 0,
-                0,
-                1
+                2,
+                3
             ],
             "BlockPositions": [
                 {
@@ -704,30 +699,44 @@
         },
         {
             "ID": 200013,
-            "BgWidth": 11,
+            "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 5,
+            "CircuitWidth": 4,
             "CircuitHeight": 3,
             "CircuitPosition": {
                 "x": 2,
-                "y": 3
+                "y": 4
             },
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
+                        "x": 0,
                         "y": 0
                     },
                     "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 0,
+                        "y": 1
+                    },
+                    "expr": "Y"
                 }
             ],
             "Outputs": [
                 {
                     "pos": {
-                        "x": 3,
+                        "x": 0,
                         "y": 3
                     },
                     "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 1
+                    },
+                    "expr": "Y"
                 }
             ],
             "Desc": "200013",
@@ -735,20 +744,25 @@
             "Blocks": [
                 0,
                 0,
-                1
+                3,
+                2
             ],
             "BlockPositions": [
                 {
-                    "x": 0,
-                    "y": 7
+                    "x": 2,
+                    "y": 1
                 },
                 {
                     "x": 4,
                     "y": 0
                 },
                 {
-                    "x": 6,
-                    "y": 0
+                    "x": 4,
+                    "y": 10
+                },
+                {
+                    "x": 2,
+                    "y": 9
                 }
             ],
             "RotateCWIndex": [],
@@ -900,7 +914,7 @@
             "Outputs": [
             ],
             "Desc": "9999",
-            "TutorialID": -1,
+            "TutorialID": 9999,
             "Blocks": [
                 0
             ],
@@ -961,7 +975,7 @@
                 }
             ],
             "Desc": "",
-            "TutorialID": -1,
+            "TutorialID": 5,
             "Blocks": [
                 0,
                 2,
@@ -1484,7 +1498,7 @@
             "Inputs": [
                 {
                     "pos": {
-                        "x": 2,
+                        "x": 3,
                         "y": 0
                     },
                     "expr": "X"
@@ -1956,7 +1970,7 @@
                 {
                     "pos": {
                         "x": 3,
-                        "y": 1
+                        "y": 0
                     },
                     "expr": "X;X;;"
                 },
@@ -2245,7 +2259,7 @@
                         "x": 0,
                         "y": 2
                     },
-                    "expr": "X;X;;"
+                    "expr": "X;;X;"
                 },
                 {
                     "pos": {
@@ -3244,7 +3258,7 @@
                 }
             ],
             "Desc": "",
-            "TutorialID": -1,
+            "TutorialID": 8,
             "Blocks": [
                 1,
                 1,

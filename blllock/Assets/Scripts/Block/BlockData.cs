@@ -218,6 +218,7 @@ public class BlockData
     }
     private PortVar SubstVar(PortVar port, Dictionary<(string, int), int> lookup)
     {
+        if (port == null) return null;
         PortVar newPort = new(
             port.Name,
             SubstWire(port, 0, lookup),
