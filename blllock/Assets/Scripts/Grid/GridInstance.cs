@@ -23,7 +23,7 @@ public class GridInstance : MonoBehaviour
         gridData.OnPortsChanged += OnPortsChanged;
         gm = GameManager.Instance;
 
-        SubscribePort();
+        SubscribeWires();
         mpb = new();
         animMpb = new();
         mpb.SetInteger("_IsOff", 1);
@@ -36,49 +36,87 @@ public class GridInstance : MonoBehaviour
 
     }
 
-    //void OnMouseDown()
-    //{
-    //    if (gm.UI.IsChatEnabled(new(x, y))) gm.UI.DisableChat(x, y);
-    //    else gm.UI.EnableChat(x, y);
-    //}
-
-    private readonly HashSet<PortExpr> subscribedPorts = new(); // 이 GridInstance가 구독 중인 포트들
-    private void SubscribePort()
+    private Wire leftUpRef = null; 
+    private Wire leftDownRef = null; 
+    private Wire rightUpRef = null; 
+    private Wire rightDownRef = null;
+    private void SubscribeWires()
     {
-        foreach (PortExpr port in gridData.Ports)
+        Wire lu, ld, ru, rd;
+        for (int i = 0; i < gridData.Ports.Count; i++)
         {
-            port.OnCacheChanged += OnPortCacheChanged;
-            subscribedPorts.Add(port);
+            lu = gridData.WiresLeftUp[i];
+            ld = gridData.WiresLeftDown[i];
+            ru = gridData.WiresRightUp[i];
+            rd = gridData.WiresRightDown[i];
+
+            if (leftUpRef == null && lu != null)
+            {
+                leftUpRef = lu;
+                leftUpRef.OnCacheChanged += OnWireCacheChanged;
+            }
+            if (leftDownRef == null && ld != null)
+            {
+                leftDownRef = ld;
+                leftDownRef.OnCacheChanged += OnWireCacheChanged;
+            }
+            if (rightUpRef == null && ru != null)
+            {
+                rightUpRef = ru;
+                rightUpRef.OnCacheChanged += OnWireCacheChanged;
+            }
+            if (rightDownRef == null && rd != null)
+            {
+                rightDownRef = rd;
+                rightDownRef.OnCacheChanged += OnWireCacheChanged;
+            }
         }
     }
-    private void UnsubscribePort()
+    private void UnsubscribeWires()
     {
-        foreach (PortExpr port in subscribedPorts)
-        {
-            port.OnCacheChanged -= OnPortCacheChanged;
-        }
-        subscribedPorts.Clear();
+        if (leftUpRef != null) leftUpRef.OnCacheChanged -= OnWireCacheChanged;
+        if (leftDownRef != null) leftDownRef.OnCacheChanged -= OnWireCacheChanged;
+        if (rightUpRef != null) rightUpRef.OnCacheChanged -= OnWireCacheChanged;
+        if (rightDownRef != null) rightDownRef.OnCacheChanged -= OnWireCacheChanged;
+
+        leftUpRef = null;
+        leftDownRef = null;
+        rightUpRef = null;
+        rightDownRef = null;
+    }
+
+    private LogicExpr Wires2Logic()
+    {
+        CombExpr comb = new(
+            leftUpRef?.Cache,
+            leftDownRef?.Cache,
+            rightUpRef?.Cache,
+            rightDownRef?.Cache
+        );
+        return comb.Clean();
     }
 
     private void OnPortsChanged()
     {
-        UnsubscribePort();
-        SubscribePort();
+        UnsubscribeWires();
+        SubscribeWires();
 
         UpdateColor();
     }
 
-    private void OnPortCacheChanged(PortExpr _) => UpdateColor();
+    private void OnWireCacheChanged(Wire _) => UpdateColor();
 
     private void UpdateColor()
     {
+        LogicExpr expr;
+
         if (gridData.Type == GridType.Input) return;
         else if (gridData.Type == GridType.Output)
         {
             // Output에 연결된 논리식이 있는 포트가 하나 이상일 때
-            if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null)
+            if ((expr = Wires2Logic()) != null)
             {
-                if (gridData.Ports[0].Cache.Equals(gridData.Expr))
+                if (expr.Equals(gridData.Expr))
                 {
                     GameManager.Instance.OutputCheck(new(x, y), true);
                     SetColor(gridData.Expr, Utils.CodeToColor(Utils.BLUE));
@@ -98,8 +136,8 @@ public class GridInstance : MonoBehaviour
                 SetColor(gridData.Expr, Utils.CodeToColor(Utils.GRAY));
             }
         }
-        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) {
-            SetColor(gridData.Ports[0].Cache, Utils.CodeToColor(Utils.BLUE));
+        else if ((expr = Wires2Logic()) != null) {
+            SetColor(expr, Utils.CodeToColor(Utils.BLUE));
             //GameManager.Instance.UI.EnableChat(x, y);
         }
         else
@@ -176,7 +214,7 @@ public class GridInstance : MonoBehaviour
     private void OnDestroy()
     {
         gridData.OnPortsChanged -= OnPortsChanged;
-        UnsubscribePort();
+        UnsubscribeWires();
     }
 
     private void OnDisable()
@@ -185,7 +223,7 @@ public class GridInstance : MonoBehaviour
 
         // 모든 이벤트 해제
         gridData.OnPortsChanged -= OnPortsChanged;
-        UnsubscribePort();
+        UnsubscribeWires();
     }
 
 }

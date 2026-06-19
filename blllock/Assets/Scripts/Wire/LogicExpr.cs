@@ -47,14 +47,21 @@ public class VarExpr : LogicExpr
     public override string ToDataString() => Name;
     public override bool Equals(object? obj) 
     {
-        if (obj is not VarExpr) 
-            return false;
-        VarExpr objV = (VarExpr)obj;
-        if (objV.Name != Name) 
-            return false;
-        if (objV.IsResisted != IsResisted)
-            return false;
-        return true;
+        if (obj is CombExpr objC)
+        {
+            if (!Equals(objC.LeftUp)) return false;
+            if (!Equals(objC.LeftDown)) return false;
+            if (!Equals(objC.RightUp)) return false;
+            if (!Equals(objC.RightDown)) return false;
+            return true;
+        }
+        else if (obj is VarExpr objV)
+        {
+            if (objV.Name != Name) return false;
+            if (objV.IsResisted != IsResisted) return false;
+            return true;
+        }
+        else return false;
     }
     public override int GetHashCode()
     {
@@ -99,9 +106,9 @@ public class CombExpr : LogicExpr
         )
         {
             if (
-            LeftUp.Equals(LeftDown) &&
-            LeftUp.Equals(RightUp) &&
-            LeftUp.Equals(RightDown)
+                LeftUp.Equals(LeftDown) &&
+                LeftUp.Equals(RightUp) &&
+                LeftUp.Equals(RightDown)
             )
             {
                 return LeftUp;

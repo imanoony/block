@@ -8,32 +8,6 @@ using System.Runtime.CompilerServices;
 // -------------------------------------------------------
 public abstract class PortExpr
 {
-    public abstract void Dispose();
-    private LogicExpr? _cache;
-    public LogicExpr? Cache
-    {
-        get => _cache;
-        set
-        {
-            if (_cache == value) return;
-            _cache = value;
-            OnCacheChanged?.Invoke(this);
-        }
-    }
-    public event Action<PortExpr>? OnCacheChanged;
-    protected void SubscribeWire(Wire wire)
-    {
-        wire.OnCacheChanged += OnWireCacheChanged;
-    }
-    protected void UnsubscribeWire(Wire wire)
-    {
-        wire.OnCacheChanged -= OnWireCacheChanged;
-    }
-    private void OnWireCacheChanged(Wire _)
-    {
-        Cache = GameManager.Instance.Wire.Eval(this);
-    }
-
     public static PortExpr? Parse(string portString)
     {
         if (string.IsNullOrEmpty(portString)) return null;
@@ -94,23 +68,6 @@ public class PortVar : PortExpr
         _leftDown = leftDown;
         _rightUp = rightUp;
         _rightDown = rightDown;
-
-        SubscribeWire(LeftUp);
-        SubscribeWire(LeftDown);
-        SubscribeWire(RightUp);
-        SubscribeWire(RightDown);
-    }
-
-    private bool _disposed = false;
-    public override void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-
-        UnsubscribeWire(LeftUp);
-        UnsubscribeWire(LeftDown);
-        UnsubscribeWire(RightUp);
-        UnsubscribeWire(RightDown);
     }
 
     // Wire
@@ -136,34 +93,6 @@ public class PortVert : PortExpr
     {
         Up = up;
         Down = down;
-
-        if (Up != null) {
-            SubscribeWire(LeftUp!);
-            SubscribeWire(RightUp!);
-        }
-        if (Down != null)
-        {
-            SubscribeWire(LeftDown!);
-            SubscribeWire(RightDown!);
-        }
-    }
-
-    private bool _disposed = false;
-    public override void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-
-        if (Up != null)
-        {
-            UnsubscribeWire(LeftUp!);
-            UnsubscribeWire(RightUp!);
-        }
-        if (Down != null)
-        {
-            UnsubscribeWire(LeftDown!);
-            UnsubscribeWire(RightDown!);
-        }
     }
 
     // Wire
@@ -175,12 +104,10 @@ public class PortVert : PortExpr
     // Rotate
     public override PortExpr RotateCW()
     {
-        Dispose();
         return new PortHorz(Down, Up);
     }
     public override PortExpr RotateCCW()
     {
-        Dispose();
         return new PortHorz(Up, Down);
     }
 
@@ -191,7 +118,6 @@ public class PortVert : PortExpr
     }
     public override PortExpr FlipY()
     {
-        Dispose();
         return new PortVert(Down, Up);
     }
 }
@@ -203,35 +129,6 @@ public class PortHorz : PortExpr
     {
         Left = left;
         Right = right;
-
-        if (Left != null)
-        {
-            SubscribeWire(LeftUp!);
-            SubscribeWire(LeftDown!);
-        }
-        if (Right != null)
-        {
-            SubscribeWire(RightUp!);
-            SubscribeWire(RightDown!);    
-        }
-    }
-
-    private bool _disposed = false;
-    public override void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-
-        if (Left != null)
-        {
-            UnsubscribeWire(LeftUp!);
-            UnsubscribeWire(LeftDown!);
-        }
-        if (Right != null)
-        {
-            UnsubscribeWire(RightUp!);
-            UnsubscribeWire(RightDown!);
-        }
     }
 
     // Wire
@@ -243,19 +140,16 @@ public class PortHorz : PortExpr
     // Rotate
     public override PortExpr RotateCW()
     {
-        Dispose();
         return new PortVert(Left, Right);
     }
     public override PortExpr RotateCCW()
     {
-        Dispose();
         return new PortVert(Right, Left);
     }
 
     // Flip
     public override PortExpr FlipX()
     {
-        Dispose();
         return new PortHorz(Right, Left);
     }
     public override PortExpr FlipY()
