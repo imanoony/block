@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ public class GridInstance : MonoBehaviour
         gridData.OnPortsChanged += OnPortsChanged;
         gm = GameManager.Instance;
 
-        SubscribePort();
+        SubscribeWires();
         mpb = new();
         animMpb = new();
         mpb.SetInteger("_IsOff", 1);
@@ -36,58 +37,97 @@ public class GridInstance : MonoBehaviour
 
     }
 
-    //void OnMouseDown()
-    //{
-    //    if (gm.UI.IsChatEnabled(new(x, y))) gm.UI.DisableChat(x, y);
-    //    else gm.UI.EnableChat(x, y);
-    //}
-
-    private readonly HashSet<PortExpr> subscribedPorts = new(); // 이 GridInstance가 구독 중인 포트들
-    private void SubscribePort()
+    private Wire leftUpRef = null; 
+    private Wire leftDownRef = null; 
+    private Wire rightUpRef = null; 
+    private Wire rightDownRef = null;
+    private void SubscribeWires()
     {
-        foreach (PortExpr port in gridData.Ports)
+        Wire lu, ld, ru, rd;
+        for (int i = 0; i < gridData.Ports.Count; i++)
         {
-            port.OnCacheChanged += OnPortCacheChanged;
-            subscribedPorts.Add(port);
+            lu = gridData.WiresLeftUp[i];
+            ld = gridData.WiresLeftDown[i];
+            ru = gridData.WiresRightUp[i];
+            rd = gridData.WiresRightDown[i];
+
+            if (leftUpRef == null && lu != null)
+            {
+                leftUpRef = lu;
+                leftUpRef.OnCacheChanged += OnWireCacheChanged;
+            }
+            if (leftDownRef == null && ld != null)
+            {
+                leftDownRef = ld;
+                leftDownRef.OnCacheChanged += OnWireCacheChanged;
+            }
+            if (rightUpRef == null && ru != null)
+            {
+                rightUpRef = ru;
+                rightUpRef.OnCacheChanged += OnWireCacheChanged;
+            }
+            if (rightDownRef == null && rd != null)
+            {
+                rightDownRef = rd;
+                rightDownRef.OnCacheChanged += OnWireCacheChanged;
+            }
         }
     }
-    private void UnsubscribePort()
+    private void UnsubscribeWires()
     {
-        foreach (PortExpr port in subscribedPorts)
-        {
-            port.OnCacheChanged -= OnPortCacheChanged;
-        }
-        subscribedPorts.Clear();
+        if (leftUpRef != null) leftUpRef.OnCacheChanged -= OnWireCacheChanged;
+        if (leftDownRef != null) leftDownRef.OnCacheChanged -= OnWireCacheChanged;
+        if (rightUpRef != null) rightUpRef.OnCacheChanged -= OnWireCacheChanged;
+        if (rightDownRef != null) rightDownRef.OnCacheChanged -= OnWireCacheChanged;
+
+        leftUpRef = null;
+        leftDownRef = null;
+        rightUpRef = null;
+        rightDownRef = null;
+    }
+
+    private LogicExpr Wires2Logic()
+    {
+        CombExpr comb = new(
+            leftUpRef?.Cache,
+            leftDownRef?.Cache,
+            rightUpRef?.Cache,
+            rightDownRef?.Cache
+        );
+        return comb.Clean();
     }
 
     private void OnPortsChanged()
     {
-        UnsubscribePort();
-        SubscribePort();
+        UnsubscribeWires();
+        SubscribeWires();
 
         UpdateColor();
     }
 
-    private void OnPortCacheChanged(PortExpr _) => UpdateColor();
+    private void OnWireCacheChanged(Wire _) => UpdateColor();
 
     private void UpdateColor()
     {
+        LogicExpr expr;
+
         if (gridData.Type == GridType.Input) return;
         else if (gridData.Type == GridType.Output)
         {
             // Output에 연결된 논리식이 있는 포트가 하나 이상일 때
-            if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null)
+            if ((expr = Wires2Logic()) != null)
             {
-                if (gridData.Ports[0].Cache.Equals(gridData.Expr))
+                if (expr.Equals(gridData.Expr))
                 {
                     GameManager.Instance.OutputCheck(new(x, y), true);
                     SetColor(gridData.Expr, Utils.CodeToColor(Utils.BLUE));
-                    //GameManager.Instance.UI.EnableChat(x, y);
                 }
                 else
                 {
                     GameManager.Instance.OutputCheck(new(x, y), false);
-                    SetColor(gridData.Expr, Utils.CodeToColor(Utils.RED));
+
+                    (CombExpr comb, List<Color> colors) = CompareOutput(expr, gridData.Expr);
+                    SetColor(comb, colors);
                 }
             }
             // Output에 연결된 포트가 없거나,
@@ -98,8 +138,8 @@ public class GridInstance : MonoBehaviour
                 SetColor(gridData.Expr, Utils.CodeToColor(Utils.GRAY));
             }
         }
-        else if (gridData.Ports.Count > 0 && gridData.Ports[0].Cache != null) {
-            SetColor(gridData.Ports[0].Cache, Utils.CodeToColor(Utils.BLUE));
+        else if ((expr = Wires2Logic()) != null) {
+            SetColor(expr, Utils.CodeToColor(Utils.BLUE));
             //GameManager.Instance.UI.EnableChat(x, y);
         }
         else
@@ -109,40 +149,79 @@ public class GridInstance : MonoBehaviour
         }
     }
 
+    private (CombExpr, List<Color>) CompareOutput(LogicExpr expr, LogicExpr output)
+    {
+        CombExpr combExpr = expr.ToCombExpr();
+        CombExpr combOutput = output.ToCombExpr();
+
+        (VarExpr luExpr, Color luColor) = CompareOutput(combExpr.LeftUp, combOutput.LeftUp);
+        (VarExpr ldExpr, Color ldColor) = CompareOutput(combExpr.LeftDown, combOutput.LeftDown);
+        (VarExpr ruExpr, Color ruColor) = CompareOutput(combExpr.RightUp, combOutput.RightUp);
+        (VarExpr rdExpr, Color rdColor) = CompareOutput(combExpr.RightDown, combOutput.RightDown);
+
+        return (new CombExpr(luExpr, ldExpr, ruExpr, rdExpr), new List<Color>(){luColor, ldColor, ruColor, rdColor});
+    }
+    private (VarExpr, Color) CompareOutput(VarExpr expr, VarExpr output)
+    {
+        if (expr == null && output == null) return (null, Utils.CodeToColor(Utils.CLEAR));
+        else if (expr == null) return (output, Utils.CodeToColor(Utils.GRAY));
+        else if (output == null) return (expr, Utils.CodeToColor(Utils.RED));
+        else if (expr.Equals(output)) return (output, Utils.CodeToColor(Utils.BLUE));
+        else return (output, Utils.CodeToColor(Utils.RED));
+    }
+
+    private const string CombExpr = "_CombExpr", Colors = "_Colors", MaskIndex = "_MaskIndex";
     private Coroutine colorCoroutine = null;
     private void SetColor(LogicExpr expr, Color color)
     {
-        if (colorCoroutine != null) StopCoroutine(colorCoroutine);
-        colorCoroutine = StartCoroutine(SetColorCo(expr, color));
+        SetColor(expr, new List<Color>(){color, color, color, color});
     }
-
-    private IEnumerator SetColorCo(LogicExpr expr, Color color)
+    private void SetColor(LogicExpr expr, List<Color> colors)
     {
-        animSr.gameObject.SetActive(true);
+        if (colorCoroutine != null) StopCoroutine(colorCoroutine);
 
         Vector4 v = Logic2Vector4(expr);
-        animMpb.SetVector("_CombExpr", v);
-        animSr.SetPropertyBlock(animMpb);
-        animSr.color = color;
+        Matrix4x4 m = new(
+            (Vector4)colors[0].linear,
+            (Vector4)colors[1].linear,
+            (Vector4)colors[2].linear,
+            (Vector4)colors[3].linear
+        );
+        m = m.transpose;
 
+        animSr.gameObject.SetActive(true);
+        animMpb.SetVector(CombExpr, v);
+        animMpb.SetMatrix(Colors, m);
+        animSr.SetPropertyBlock(animMpb);
+
+        colorCoroutine = StartCoroutine(SetColorCo(
+            () =>
+            {
+                mpb.SetVector(CombExpr, v);
+                mpb.SetMatrix(Colors, m);
+                mpb.SetInteger(MaskIndex, 0);
+                sr.SetPropertyBlock(mpb);
+
+                animMpb.SetInteger(MaskIndex, 0);
+                animSr.SetPropertyBlock(animMpb);
+                animSr.gameObject.SetActive(false);
+            }
+        ));
+    }
+
+    private IEnumerator SetColorCo(Action onComplete = null)
+    {
         for (int i = 0; i < animFrameCnt; i++)
         {
-            mpb.SetInteger("_MaskIndex", i);
-            animMpb.SetInteger("_MaskIndex", i);
+            mpb.SetInteger(MaskIndex, i);
+            animMpb.SetInteger(MaskIndex, i);
             sr.SetPropertyBlock(mpb);
             animSr.SetPropertyBlock(animMpb);
 
             yield return new WaitForSeconds(0.01f);
         }
 
-        mpb.SetVector("_CombExpr", v);
-        mpb.SetInteger("_MaskIndex", 0);
-        animMpb.SetInteger("_MaskIndex", 0);
-        sr.SetPropertyBlock(mpb);
-        sr.color = color;
-        animSr.SetPropertyBlock(animMpb);
-
-        animSr.gameObject.SetActive(false);
+        onComplete?.Invoke();
     }
 
     private Vector4 Logic2Vector4(LogicExpr logic=null)
@@ -176,7 +255,7 @@ public class GridInstance : MonoBehaviour
     private void OnDestroy()
     {
         gridData.OnPortsChanged -= OnPortsChanged;
-        UnsubscribePort();
+        UnsubscribeWires();
     }
 
     private void OnDisable()
@@ -185,7 +264,7 @@ public class GridInstance : MonoBehaviour
 
         // 모든 이벤트 해제
         gridData.OnPortsChanged -= OnPortsChanged;
-        UnsubscribePort();
+        UnsubscribeWires();
     }
 
 }
