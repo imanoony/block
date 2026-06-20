@@ -131,6 +131,16 @@ public class BlockPlacer : MonoBehaviour
         currentCo = StartCoroutine(BlockDisappearCo());
     }
 
+    public void BlockHoverCheck()
+    {
+        for (int i = 0; i < blockInstances.Count; i++)
+        {
+            GameObject block = blockInstances[i];
+            BlockInstance blockInstance = block.GetComponent<BlockInstance>();
+            blockInstance.CheckHover();
+        }
+    }
+
     #region Transition
     private Ease transitionEase = Ease.OutCubic;
     private Tween currentTween = null;

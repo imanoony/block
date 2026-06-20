@@ -237,6 +237,8 @@ public class GameManager : MonoBehaviour
                     UI.MenuTutorialDisappear();
                     State = GameState.InGame;
                 }
+
+                Grid.BlockPlacer.BlockHoverCheck();
             }
         ));
     }
