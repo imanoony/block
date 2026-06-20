@@ -160,8 +160,8 @@ public class GridInstance : MonoBehaviour
 
         Vector4 v = Logic2Vector4(expr);
         animMpb.SetVector("_CombExpr", v);
+        animMpb.SetColor("_Color", color);
         animSr.SetPropertyBlock(animMpb);
-        animSr.color = color;
 
         for (int i = 0; i < animFrameCnt; i++)
         {
@@ -175,9 +175,9 @@ public class GridInstance : MonoBehaviour
 
         mpb.SetVector("_CombExpr", v);
         mpb.SetInteger("_MaskIndex", 0);
+        mpb.SetColor("_Color", color);
         animMpb.SetInteger("_MaskIndex", 0);
         sr.SetPropertyBlock(mpb);
-        sr.color = color;
         animSr.SetPropertyBlock(animMpb);
 
         animSr.gameObject.SetActive(false);
