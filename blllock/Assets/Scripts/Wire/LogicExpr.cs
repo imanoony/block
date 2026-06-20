@@ -11,6 +11,7 @@ public abstract class LogicExpr
     public abstract string ToDataString();
     public abstract override bool Equals(object? obj);
     public abstract override int GetHashCode();
+    public abstract CombExpr ToCombExpr();
     public static LogicExpr? Parse(string exprString)
     {
         if (exprString.Length > 1)
@@ -41,7 +42,6 @@ public class VarExpr : LogicExpr
     public VarExpr(string name) => Name = name;
     public bool IsResisted { get; private set; } = false;
     public void Resist() => IsResisted = true;
-    public CombExpr ToCombExpr() => new(this, this, this, this);
 
     public override string ToString() => Name;
     public override string ToDataString() => Name;
@@ -67,6 +67,7 @@ public class VarExpr : LogicExpr
     {
         return HashCode.Combine(Name, IsResisted);
     }
+    public override CombExpr ToCombExpr() => new(this, this, this, this);
 }
 
 public class CombExpr : LogicExpr
@@ -152,4 +153,5 @@ public class CombExpr : LogicExpr
             RightDown
         );
     }
+    public override CombExpr ToCombExpr() => this;
 }

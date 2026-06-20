@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,12 +121,13 @@ public class GridInstance : MonoBehaviour
                 {
                     GameManager.Instance.OutputCheck(new(x, y), true);
                     SetColor(gridData.Expr, Utils.CodeToColor(Utils.BLUE));
-                    //GameManager.Instance.UI.EnableChat(x, y);
                 }
                 else
                 {
                     GameManager.Instance.OutputCheck(new(x, y), false);
-                    SetColor(gridData.Expr, Utils.CodeToColor(Utils.RED));
+
+                    (CombExpr comb, List<Color> colors) = CompareOutput(expr, gridData.Expr);
+                    SetColor(comb, colors);
                 }
             }
             // Output에 연결된 포트가 없거나,
@@ -147,40 +149,79 @@ public class GridInstance : MonoBehaviour
         }
     }
 
+    private (CombExpr, List<Color>) CompareOutput(LogicExpr expr, LogicExpr output)
+    {
+        CombExpr combExpr = expr.ToCombExpr();
+        CombExpr combOutput = output.ToCombExpr();
+
+        (VarExpr luExpr, Color luColor) = CompareOutput(combExpr.LeftUp, combOutput.LeftUp);
+        (VarExpr ldExpr, Color ldColor) = CompareOutput(combExpr.LeftDown, combOutput.LeftDown);
+        (VarExpr ruExpr, Color ruColor) = CompareOutput(combExpr.RightUp, combOutput.RightUp);
+        (VarExpr rdExpr, Color rdColor) = CompareOutput(combExpr.RightDown, combOutput.RightDown);
+
+        return (new CombExpr(luExpr, ldExpr, ruExpr, rdExpr), new List<Color>(){luColor, ldColor, ruColor, rdColor});
+    }
+    private (VarExpr, Color) CompareOutput(VarExpr expr, VarExpr output)
+    {
+        if (expr == null && output == null) return (null, Utils.CodeToColor(Utils.CLEAR));
+        else if (expr == null) return (output, Utils.CodeToColor(Utils.GRAY));
+        else if (output == null) return (expr, Utils.CodeToColor(Utils.RED));
+        else if (expr.Equals(output)) return (output, Utils.CodeToColor(Utils.BLUE));
+        else return (output, Utils.CodeToColor(Utils.RED));
+    }
+
+    private const string CombExpr = "_CombExpr", Colors = "_Colors", MaskIndex = "_MaskIndex";
     private Coroutine colorCoroutine = null;
     private void SetColor(LogicExpr expr, Color color)
     {
-        if (colorCoroutine != null) StopCoroutine(colorCoroutine);
-        colorCoroutine = StartCoroutine(SetColorCo(expr, color));
+        SetColor(expr, new List<Color>(){color, color, color, color});
     }
-
-    private IEnumerator SetColorCo(LogicExpr expr, Color color)
+    private void SetColor(LogicExpr expr, List<Color> colors)
     {
-        animSr.gameObject.SetActive(true);
+        if (colorCoroutine != null) StopCoroutine(colorCoroutine);
 
         Vector4 v = Logic2Vector4(expr);
-        animMpb.SetVector("_CombExpr", v);
-        animMpb.SetColor("_Color", color);
+        Matrix4x4 m = new(
+            (Vector4)colors[0].linear,
+            (Vector4)colors[1].linear,
+            (Vector4)colors[2].linear,
+            (Vector4)colors[3].linear
+        );
+        m = m.transpose;
+
+        animSr.gameObject.SetActive(true);
+        animMpb.SetVector(CombExpr, v);
+        animMpb.SetMatrix(Colors, m);
         animSr.SetPropertyBlock(animMpb);
 
+        colorCoroutine = StartCoroutine(SetColorCo(
+            () =>
+            {
+                mpb.SetVector(CombExpr, v);
+                mpb.SetMatrix(Colors, m);
+                mpb.SetInteger(MaskIndex, 0);
+                sr.SetPropertyBlock(mpb);
+
+                animMpb.SetInteger(MaskIndex, 0);
+                animSr.SetPropertyBlock(animMpb);
+                animSr.gameObject.SetActive(false);
+            }
+        ));
+    }
+
+    private IEnumerator SetColorCo(Action onComplete = null)
+    {
         for (int i = 0; i < animFrameCnt; i++)
         {
-            mpb.SetInteger("_MaskIndex", i);
-            animMpb.SetInteger("_MaskIndex", i);
+            mpb.SetInteger(MaskIndex, i);
+            animMpb.SetInteger(MaskIndex, i);
             sr.SetPropertyBlock(mpb);
             animSr.SetPropertyBlock(animMpb);
 
             yield return new WaitForSeconds(0.01f);
         }
 
-        mpb.SetVector("_CombExpr", v);
-        mpb.SetInteger("_MaskIndex", 0);
-        mpb.SetColor("_Color", color);
-        animMpb.SetInteger("_MaskIndex", 0);
-        sr.SetPropertyBlock(mpb);
-        animSr.SetPropertyBlock(animMpb);
-
-        animSr.gameObject.SetActive(false);
+        onComplete?.Invoke();
     }
 
     private Vector4 Logic2Vector4(LogicExpr logic=null)
