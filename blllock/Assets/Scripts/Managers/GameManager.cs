@@ -107,6 +107,9 @@ public enum GameState { InGame, Paused, ModuleSelect }
 
 public class GameManager : MonoBehaviour
 {
+    // temp for cable development
+    public bool CableActivated = false;
+
     #region Singleton
     public static GameManager Instance { get; private set; }
     public WireManager Wire { get; private set; }
@@ -156,7 +159,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(3);
+        StartModule(11);
     }
 
     void Update()

@@ -8,7 +8,7 @@ public class GridInstance : MonoBehaviour
 {
     public int x { get; private set; }
     public int y { get; private set; }
-    private Grid gridData;
+    public Grid GridData { get; private set; }
     private GameManager gm;
 
     [SerializeField] private SpriteRenderer sr;
@@ -20,8 +20,8 @@ public class GridInstance : MonoBehaviour
     public void Initialize(int x, int y)
     {
         this.x = x; this.y = y;
-        gridData = GameManager.Instance.Grid.Grids[x, y];
-        gridData.OnPortsChanged += OnPortsChanged;
+        GridData = GameManager.Instance.Grid.Grids[x, y];
+        GridData.OnPortsChanged += OnPortsChanged;
         gm = GameManager.Instance;
 
         SubscribeWires();
@@ -32,8 +32,8 @@ public class GridInstance : MonoBehaviour
         sr.SetPropertyBlock(mpb);
         animSr.SetPropertyBlock(animMpb);
         
-        if (gridData.Type == GridType.Input) SetColor(gridData.Expr, Utils.CodeToColor(Utils.BLUE));
-        else if (gridData.Type == GridType.Output) SetColor(gridData.Expr, Utils.CodeToColor(Utils.GRAY));
+        if (GridData.Type == GridType.Input) SetColor(GridData.Expr, Utils.CodeToColor(Utils.BLUE));
+        else if (GridData.Type == GridType.Output) SetColor(GridData.Expr, Utils.CodeToColor(Utils.GRAY));
 
     }
 
@@ -44,12 +44,12 @@ public class GridInstance : MonoBehaviour
     private void SubscribeWires()
     {
         Wire lu, ld, ru, rd;
-        for (int i = 0; i < gridData.Ports.Count; i++)
+        for (int i = 0; i < GridData.Ports.Count; i++)
         {
-            lu = gridData.WiresLeftUp[i];
-            ld = gridData.WiresLeftDown[i];
-            ru = gridData.WiresRightUp[i];
-            rd = gridData.WiresRightDown[i];
+            lu = GridData.WiresLeftUp[i];
+            ld = GridData.WiresLeftDown[i];
+            ru = GridData.WiresRightUp[i];
+            rd = GridData.WiresRightDown[i];
 
             if (leftUpRef == null && lu != null)
             {
@@ -111,22 +111,22 @@ public class GridInstance : MonoBehaviour
     {
         LogicExpr expr;
 
-        if (gridData.Type == GridType.Input) return;
-        else if (gridData.Type == GridType.Output)
+        if (GridData.Type == GridType.Input) return;
+        else if (GridData.Type == GridType.Output)
         {
             // Output에 연결된 논리식이 있는 포트가 하나 이상일 때
             if ((expr = Wires2Logic()) != null)
             {
-                if (expr.Equals(gridData.Expr))
+                if (expr.Equals(GridData.Expr))
                 {
                     GameManager.Instance.OutputCheck(new(x, y), true);
-                    SetColor(gridData.Expr, Utils.CodeToColor(Utils.BLUE));
+                    SetColor(GridData.Expr, Utils.CodeToColor(Utils.BLUE));
                 }
                 else
                 {
                     GameManager.Instance.OutputCheck(new(x, y), false);
 
-                    (CombExpr comb, List<Color> colors) = CompareOutput(expr, gridData.Expr);
+                    (CombExpr comb, List<Color> colors) = CompareOutput(expr, GridData.Expr);
                     SetColor(comb, colors);
                 }
             }
@@ -135,7 +135,7 @@ public class GridInstance : MonoBehaviour
             else
             {
                 GameManager.Instance.OutputCheck(new(x, y), false);
-                SetColor(gridData.Expr, Utils.CodeToColor(Utils.GRAY));
+                SetColor(GridData.Expr, Utils.CodeToColor(Utils.GRAY));
             }
         }
         else if ((expr = Wires2Logic()) != null) {
@@ -254,17 +254,16 @@ public class GridInstance : MonoBehaviour
 
     private void OnDestroy()
     {
-        gridData.OnPortsChanged -= OnPortsChanged;
+        GridData.OnPortsChanged -= OnPortsChanged;
         UnsubscribeWires();
     }
 
     private void OnDisable()
     {
-        if (gridData == null) return;
+        if (GridData == null) return;
 
         // 모든 이벤트 해제
-        gridData.OnPortsChanged -= OnPortsChanged;
+        GridData.OnPortsChanged -= OnPortsChanged;
         UnsubscribeWires();
     }
-
 }
