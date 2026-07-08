@@ -424,7 +424,7 @@ public class TilePlacer : MonoBehaviour
     [SerializeField] private GameObject barrierParent;
     [SerializeField] private GameObject hBarrierPrefab;
     [SerializeField] private GameObject vBarrierPrefab;
-    public void PlaceHBarriers(HashSet<Vector2Int> HBarriers)
+    public void PlaceHBarriers(List<Vector2Int> HBarriers)
     {
         foreach (Vector2Int pos in HBarriers)
         {
@@ -435,7 +435,7 @@ public class TilePlacer : MonoBehaviour
             barrier.transform.position = new Vector3(topLeft.x + GetTileSize().x / 2f, topLeft.y, barrier.transform.position.z);
         }
     }
-    public void PlaceVBarriers(HashSet<Vector2Int> VBarriers)
+    public void PlaceVBarriers(List<Vector2Int> VBarriers)
     {
         foreach (Vector2Int pos in VBarriers)
         {

@@ -57,17 +57,14 @@ public class CablePlacer
         // TODO: 두 grid가 인접한지 확인
         // TODO: 케이블 엣지 위치에 별다른 방해물이 없는지 확인
 
-        Cable cable;
-        CableGroup group;
-
-        cable = new(a, b);
+        Cable cable = new(a, b);
         cables.Add(cable);
 
         CableGroup ga = FindGroup(a);
         CableGroup gb = FindGroup(b);
         if (ga == null && gb == null)
         {
-            group = new();
+            CableGroup group = new();
             group.Add(cable);
             groups.Add(group);
         }
@@ -75,10 +72,10 @@ public class CablePlacer
         else if (ga == null && gb != null) gb.Add(cable);
         else if (ga != gb)
         {
-            group = CableGroup.Merge(ga, gb, cable);
+            CableGroup merged = CableGroup.Merge(ga, gb, cable);
             groups.Remove(ga);
             groups.Remove(gb);
-            groups.Add(group);
+            groups.Add(merged);
         }
         else ga.Add(cable);
 
@@ -87,35 +84,36 @@ public class CablePlacer
     
     public void RemoveCable(Vector2Int a, Vector2Int b)
     {
-        
+        Cable cable = new(a, b);
+        RemoveCable(cable);
     }
 
     public void RemoveCable(Cable cable)
     {
-        
+        cables.Remove(cable);
+
+        CableGroup group = FindGroup(cable);
+        List<CableGroup> splited = CableGroup.Split(group, cable);
+
+        groups.Remove(group);
+        groups.UnionWith(splited);
     }
 
     private CableGroup FindGroup(Vector2Int a)
     {
-        // TODO: a가 포함된 케이블 그룹을 찾아서 리턴
-        // 없으면 null 리턴
+        foreach (CableGroup g in groups)
+        {
+            if (g.Contains(a)) return g;
+        }
 
         return null;
     }
     private CableGroup FindGroup(Cable cable)
     {
-        // TODO: cable이 포함된 케이블 그룹을 찾아서 리턴
-        // 없으면 null 리턴
-
-        return null;
-    }
-    private CableGroup MergeGroup(
-        CableGroup g1,
-        CableGroup g2,
-        Cable cable
-    )
-    {
-        // TODO
+        foreach (CableGroup g in groups)
+        {
+            if (g.Contains(cable)) return g;
+        }
 
         return null;
     }

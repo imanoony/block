@@ -8,63 +8,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public enum TileType { Empty, Occupied }
-public enum GridType { Null, Input, Output }
 
-public class Tile
-{
-    public Vector2Int Pos { get; private set; }
-    public TileType Type { get; private set; }
-    public bool IsCircuit { get; private set; } = false;
-    public Tile(Vector2Int pos, TileType type = TileType.Empty) { Pos = pos; Type = type; }
-    public void SetType(TileType type) => Type = type;
-    public void SetIsCircuit(bool isCircuit) => IsCircuit = isCircuit;
-}
-
-public class Grid
-{
-    public Vector2Int Pos { get; private set; }
-    public GridType Type { get; private set; }
-    public LogicExpr? Expr { get; private set; } = null; // input, output과 관련된 상수 LogicExpr
-
-    public List<PortExpr> Ports { get; private set; } = new(); // 인접한 Ports들 (최대 4개)    
-    public List<Wire?> WiresLeftUp { get; private set; } = new();
-    public List<Wire?> WiresLeftDown { get; private set; } = new();
-    public List<Wire?> WiresRightUp { get; private set; } = new();
-    public List<Wire?> WiresRightDown { get; private set; } = new();
-    public event Action? OnPortsChanged;
-
-    public Grid(Vector2Int pos, GridType type = GridType.Null) { Pos = pos; Type = type; }
-    public void SetType(GridType type) => Type = type;
-    public void SetExpr(LogicExpr? expr) => Expr = expr;
-    public bool AddPort(PortExpr port)
-    {
-        if (Ports.Count >= Utils.MAX_PORT) return false;
-
-        Ports.Add(port);
-        WiresLeftUp.Add(port.LeftUp);
-        WiresLeftDown.Add(port.LeftDown);
-        WiresRightUp.Add(port.RightUp);
-        WiresRightDown.Add(port.RightDown);
-
-        OnPortsChanged?.Invoke();
-        return true;
-    }
-    public void RemovePort(PortExpr port)
-    {
-        int index = Ports.IndexOf(port);
-        if (index < 0) return;
-
-        Ports.RemoveAt(index);
-
-        WiresLeftUp.RemoveAt(index);
-        WiresLeftDown.RemoveAt(index);
-        WiresRightUp.RemoveAt(index);
-        WiresRightDown.RemoveAt(index);
-
-        OnPortsChanged?.Invoke();
-    }
-}
 
 public class GridManager : MonoBehaviour
 {
@@ -95,6 +39,9 @@ public class GridManager : MonoBehaviour
 
     public Grid[,]? Grids { get; private set; } = null;
     public Tile[,]? Tiles { get; private set; } = null;
+    public HEdge[,]? HEdges { get; private set; } = null;
+    public VEdge[,]? VEdges { get; private set; } = null;
+
     private TilePlacer? _tilePlacer;
     public TilePlacer TilePlacer
     {
@@ -123,9 +70,6 @@ public class GridManager : MonoBehaviour
             return _blockPlacer;
         }
     }
-
-    public HashSet<Vector2Int> HBarriers { get; private set; } = new();
-    public HashSet<Vector2Int> VBarriers { get; private set; } = new();
     private StageData? stageCache = null;
 
     public void InitStage(int id) => InitStage(GameManager.Instance.StageLibrary[id]);
@@ -196,6 +140,25 @@ public class GridManager : MonoBehaviour
                 Tiles[x, y] = tile;
             }
         }
+
+        HEdges = new HEdge[cHeight + 1, cWidth];
+        for (int x = 0; x < cHeight + 1; x++)
+            for (int y = 0; y < cWidth; y++)
+                HEdges[x, y] = new HEdge(new(x, y));
+
+        foreach (Vector2Int hbarrier in stage.HBarriers)
+            HEdges[hbarrier.x, hbarrier.y].SetType(EdgeType.Barrier);
+
+        VEdges = new VEdge[cHeight, cWidth + 1];
+        for (int x = 0; x < cHeight; x++)
+            for (int y = 0; y < cWidth + 1; y++)
+                VEdges[x, y] = new VEdge(new(x, y));
+
+        foreach (Vector2Int vbarrier in stage.VBarriers)
+            VEdges[vbarrier.x, vbarrier.y].SetType(EdgeType.Barrier);
+
+        // TODO: VBarriers 관련 처리
+
         // DEBUG
         /*for (int x = 0; x < bgHeight; x++)
         {
@@ -211,9 +174,6 @@ public class GridManager : MonoBehaviour
             }
         }*/
 
-        HBarriers = stage.HBarriers.ToHashSet();
-        VBarriers = stage.VBarriers.ToHashSet();
-
         // 스테이지에 해당하는 타일 배치
         // 스테이지에 해당하는 블록 배치
         TilePlacer.PlaceBackground(bgWidth, bgHeight);
@@ -222,8 +182,8 @@ public class GridManager : MonoBehaviour
 
         // 스테이지에 해당하는 가로 배리어 배치
         // 스테이지에 해당하는 세로 배리어 배치
-        TilePlacer.PlaceHBarriers(HBarriers);
-        TilePlacer.PlaceVBarriers(VBarriers);
+        TilePlacer.PlaceHBarriers(stage.HBarriers);
+        TilePlacer.PlaceVBarriers(stage.VBarriers);
     }
 
     public void RemoveCurrentStage()
@@ -377,7 +337,7 @@ public class GridManager : MonoBehaviour
             // barrier checking
             if (offsets.Contains(new(offset.x - 1, offset.y)))
                 if (
-                    IsHBarriered(
+                    IsHEdgeOccupied(
                         baseTile.y + offset.y, 
                         baseTile.x + offset.x, 
                         baseTile.x + offset.x - 1
@@ -385,7 +345,7 @@ public class GridManager : MonoBehaviour
                 ) return false;
             if (offsets.Contains(new(offset.x, offset.y - 1)))
                 if (
-                    IsVBarriered(
+                    IsVEdgeOccupied(
                         baseTile.x + offset.x,
                         baseTile.y + offset.y,
                         baseTile.y + offset.y - 1
@@ -414,28 +374,40 @@ public class GridManager : MonoBehaviour
         return Tiles[x, y].IsCircuit;
     }
 
-    // is horizontally barriered?
-    // barrier가 가로로 긴 상태, 즉 세로로 이어진 두 칸이 
+    // is the horizontal edge occupied?
+    // edge가 가로로 긴 상태, 즉 세로로 이어진 두 칸이 
     // 막혀있다면 false, 그렇지 않다면 true.
-    private bool IsHBarriered(int y, int x1, int x2)
+    private bool IsHEdgeOccupied(int y, int x1, int x2)
     {
         int x = x1 > x2 ? x1 : x2;
-        if (stageCache == null) return false;
-        int circuitStartX = stageCache.CircuitPosition.x;
-        int circuitStartY = stageCache.CircuitPosition.y;
-        return HBarriers.Contains(new(x - circuitStartX, y - circuitStartY));
+        if (stageCache == null) return true;
+        if (HEdges == null) return true;
+
+        int circuitX = x - stageCache.CircuitPosition.x;
+        int circuitY = y - stageCache.CircuitPosition.y;
+
+        if (circuitX < 0 || circuitX >= stageCache.CircuitHeight) return true;
+        if (circuitY < 0 || circuitY > stageCache.CircuitWidth) return true;
+
+        return HEdges[circuitX, circuitY].Type != EdgeType.Empty;
     }
 
-    // is vertically barriered?
-    // barrier가 세로로 긴 상태, 즉 가로로 이어진 두 칸이
+    // is the vertical edge occupied?
+    // edge가 세로로 긴 상태, 즉 가로로 이어진 두 칸이
     // 막혀있다면 false, 그렇지 않다면 true.
-    private bool IsVBarriered(int x, int y1, int y2)
+    private bool IsVEdgeOccupied(int x, int y1, int y2)
     {
         int y = y1 > y2 ? y1 : y2;
-        if (stageCache == null) return false;
-        int circuitStartX = stageCache.CircuitPosition.x;
-        int circuitStartY = stageCache.CircuitPosition.y;
-        return VBarriers.Contains(new(x - circuitStartX, y - circuitStartY));
+        if (stageCache == null) return true;
+        if (VEdges == null) return true;
+
+        int circuitX = x - stageCache.CircuitPosition.x;
+        int circuitY = y - stageCache.CircuitPosition.y;
+
+        if (circuitX < 0 || circuitX > stageCache.CircuitHeight) return true;
+        if (circuitY < 0 || circuitY >= stageCache.CircuitWidth) return true;
+
+        return VEdges[circuitX, circuitY].Type != EdgeType.Empty;
     }
 
     // 블록의 포트를 모두 Compatible -> AddToDict/AddToLogic 한다.
