@@ -14,6 +14,9 @@ public class Cable
 
     public Cable(Vector2Int a, Vector2Int b)
     {
+        if (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) != 1)
+            throw new ArgumentException("Cable endpoints must be adjacent.");
+
         if (a.x < b.x || (a.x == b.x && a.y < b.y))
         {
             Start = a;
@@ -39,6 +42,19 @@ public class Cable
     {
         return HashCode.Combine(Start, End);
     }
+
+    public Edge ToEdge()
+    {
+        if (Start.x == End.x) // Horizontal
+        {
+            return new HEdge(new(Start.x, Start.y), EdgeType.Cable);   
+        }
+        else // Vertical 
+        {
+            return new VEdge(new(Start.x, Start.y), EdgeType.Cable);
+        }
+        
+    }
 }
 
 public class CableGroup
@@ -48,6 +64,9 @@ public class CableGroup
     
     public HashSet<Vector2Int> Ends { get; private set; }
     public PortVar Port { get; private set; }
+    public List<int> WireIds { get; private set; }
+    public bool Valid { get; private set; } = true;
+    public void SetValid(bool valid) => Valid = valid;
 
     public CableGroup()
     {
@@ -60,6 +79,7 @@ public class CableGroup
         {
             wires[i] = new Wire(GameManager.Instance.Wire.GenerateID());
             GameManager.Instance.Wire.AddWire(wires[i]);
+            WireIds.Add(wires[i].ID);
         }
         Port = new PortVar
         (

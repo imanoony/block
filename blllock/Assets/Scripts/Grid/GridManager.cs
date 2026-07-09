@@ -70,6 +70,20 @@ public class GridManager : MonoBehaviour
             return _blockPlacer;
         }
     }
+    private CablePlacer? _cablePlacer;
+    public CablePlacer CablePlacer
+    {
+        get
+        {
+            if (_cablePlacer == null)
+            {
+                _cablePlacer = gameObject.GetComponent<CablePlacer>();
+                if (_cablePlacer == null)
+                    _cablePlacer = gameObject.AddComponent<CablePlacer>();
+            }
+            return _cablePlacer;
+        }
+    }
     private StageData? stageCache = null;
 
     public void InitStage(int id) => InitStage(GameManager.Instance.StageLibrary[id]);
@@ -214,29 +228,52 @@ public class GridManager : MonoBehaviour
         return Grids[x, y].Type;
     }
 
-    #region Block Placement
-    private List<BlockInstance> invalids = new();
+    #region Invalids
+    private List<BlockInstance> invalidBlocks = new();
+    private List<CableGroup> invalidCables = new();
     public void AddInvalid(BlockInstance instance)
     {
         if (instance.Valid) return;
-        invalids.Add(instance);
+        invalidBlocks.Add(instance);
+    }
+    public void AddInvalid(CableGroup group)
+    {
+        if (group.Valid) return;
+        invalidCables.Add(group);
     }
     public void RemoveInvalid(BlockInstance instance)
     {
         if (!instance.Valid) return;
-        if (invalids.Contains(instance)) invalids.Remove(instance);
+        if (invalidBlocks.Contains(instance)) invalidBlocks.Remove(instance);
+    }
+    public void RemoveInvalid(CableGroup group)
+    {
+        if (!group.Valid) return;
+        if (invalidCables.Contains(group)) invalidCables.Remove(group);
     }
     private void CheckInvalids()
     {
-        List<BlockInstance> valids = new();
-        for (int i = 0; i < invalids.Count; i++)
-        {
-            bool result = invalids[i].Check(this);
-            if (result) valids.Add(invalids[i]);
-        }
-        for (int i = 0; i < valids.Count; i++) invalids.Remove(valids[i]);
-    }
+        int i;
 
+        List<BlockInstance> validBlocks = new();
+        for (i = 0; i < invalidBlocks.Count; i++)
+        {
+            bool result = invalidBlocks[i].Check(this);
+            if (result) validBlocks.Add(invalidBlocks[i]);
+        }
+        for (i = 0; i < validBlocks.Count; i++) invalidBlocks.Remove(validBlocks[i]);
+
+        List<CableGroup> validCables = new();
+        for (i = 0; i < invalidCables.Count; i++)
+        {
+            bool result = CablePlacer.Check(this, invalidCables[i]);
+            if (result) validCables.Add(invalidCables[i]);
+        }
+        for (i = 0; i < invalidCables.Count; i++) invalidCables.Remove(validCables[i]);
+    }
+    #endregion
+
+    #region Block Placement
     private int placeCount = 0;
     public bool PlaceBlock(BlockData block, Vector2Int baseTile)
     {
@@ -576,5 +613,131 @@ public class GridManager : MonoBehaviour
         return new Vector2Int(x - cStartX, y - cStartY);
     }
     public Vector2Int GetCircuitStart() => stageCache == null ? Vector2Int.zero : stageCache.CircuitPosition;
+    #endregion
+
+    #region Cable Placement
+
+    public void PlaceCable(Cable cable)
+    {
+        Edge edge = cable.ToEdge();
+        switch (edge)
+        {
+            case HEdge he:
+                if (HEdges == null) return;
+                HEdges[he.Pos.x, he.Pos.y].SetType(EdgeType.Cable);
+                break;
+            case VEdge ve:
+                if (VEdges == null) return;
+                VEdges[ve.Pos.x, ve.Pos.y].SetType(EdgeType.Cable);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public bool PlaceCableGroup(CableGroup group)
+    {
+        if (!IsValidPort(group, GameManager.Instance.Wire)) return false;
+
+        // 점유된 그리드에 Port를 추가한다.
+        PortVar port = group.Port;
+        foreach (Vector2Int end in group.Ends)
+        {
+            Grids![end.x, end.y].AddPort(port);
+        }
+
+        // 케이블 그룹의 portIDs를 Evaluate 한다.
+        GameManager.Instance.Wire.EvalAll();
+
+        return true;
+    }
+
+    public void RemoveCable(Cable cable)
+    {
+        Edge edge = cable.ToEdge();
+        switch (edge)
+        {
+            case HEdge he:
+                if (HEdges == null) return;
+                HEdges[he.Pos.x, he.Pos.y].SetType(EdgeType.Empty);
+                break;
+            case VEdge ve:
+                if (VEdges == null) return;
+                VEdges[ve.Pos.x, ve.Pos.y].SetType(EdgeType.Empty);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void RemoveCableGroup(CableGroup group, bool valid)
+    {
+        if (!valid) return;
+
+        // 점유했던 그리드에서 Port를 제거한다
+        PortVar port = group.Port;
+        foreach (Vector2Int end in group.Ends)
+        {
+            Grids![end.x, end.y].RemovePort(port);
+        }
+
+        // Wire Manager의 WireDict, WireLogic을 수정한다.
+        foreach (int id in group.WireIds) GameManager.Instance.Wire.RemoveWire(id);
+
+        CheckInvalids();
+        GameManager.Instance.Wire.EvalAll();
+    }
+
+    public bool IsValidPos(Cable cable)
+    {
+        Edge edge = cable.ToEdge();
+        switch (edge)
+        {
+            case HEdge he:
+                if (HEdges == null) return false;
+                return HEdges[he.Pos.x, he.Pos.y].Type == EdgeType.Empty;
+            case VEdge ve:
+                if (VEdges == null) return false;
+                return VEdges[ve.Pos.x, ve.Pos.y].Type == EdgeType.Empty;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    // 케이블 그룹의 포트를 모두 Compatible -> AddToDict/AddToLogic 한다.
+    // 모순 발생 시 Rollback하고 false를 반환한다.
+    // 모순이 발생하지 않으면 포트를 모두 wire manager에 등록하고 true를 반환한다.
+    private bool IsValidPort(CableGroup group, WireManager wire)
+    {
+        Dictionary<int, Wire> backupWires = wire.Wires.ToDictionary(kvp => kvp.Key, kvp => new Wire(kvp.Value));
+        Dictionary<int, HashSet<int>> backupDict = wire.WireDict.ToDictionary(kvp => kvp.Key, kvp => new HashSet<int>(kvp.Value));
+        Dictionary<int, VarExpr> backupLogic = new(wire.WireLogic);
+        
+        PortVar port = group.Port;
+
+        foreach (Vector2Int end in group.Ends)
+        {
+            Grid grid = Grids![end.x, end.y];
+            for (int i = 0; i < grid.Ports.Count; i++)
+            {
+                if (!wire.AddToDict(port, grid.Ports[i]))
+                {
+                    wire.RollBack(backupWires, backupDict, backupLogic);
+                    return false;
+                }
+            }
+            if (grid.Expr != null && grid.Type == GridType.Input)
+            {
+                if (!wire.AddToLogic(port, grid.Expr))
+                {
+                    wire.RollBack(backupWires, backupDict, backupLogic);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
     #endregion
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CablePlacer
+public class CablePlacer : MonoBehaviour
 {
     private Grid startGrid = null;
     private bool isDragging = false;
@@ -52,14 +52,27 @@ public class CablePlacer
 
     private HashSet<Cable> cables;
     private HashSet<CableGroup> groups;
-    public bool PlaceCable(Vector2Int a, Vector2Int b)
-    {
-        // TODO: 두 grid가 인접한지 확인
-        // TODO: 케이블 엣지 위치에 별다른 방해물이 없는지 확인
 
+    private bool CanPlaceCable(GridManager gm, Vector2Int a, Vector2Int b)
+    {
+        if (!gm.IsValidPos(new(a, b)))
+        {
+            // 필요하다면 여기에 디버그 로그 출력
+            return false;
+        }
+        return true;
+    }
+    public bool PlaceCable(GridManager gm, Vector2Int a, Vector2Int b)
+    {
+        if (!IsAdjacent(a, b)) return false;
+        if (!CanPlaceCable(gm, a, b)) return false;
+
+        // Cable 처리
         Cable cable = new(a, b);
         cables.Add(cable);
+        gm.PlaceCable(cable);
 
+        // CableGroup 처리
         CableGroup ga = FindGroup(a);
         CableGroup gb = FindGroup(b);
         if (ga == null && gb == null)
@@ -67,36 +80,90 @@ public class CablePlacer
             CableGroup group = new();
             group.Add(cable);
             groups.Add(group);
+            PlaceCableGroup(gm, group);
         }
-        else if (ga != null && gb == null) ga.Add(cable);
-        else if (ga == null && gb != null) gb.Add(cable);
+        else if (ga != null && gb == null) 
+        {
+            RemoveCableGroup(gm, ga);
+            ga.Add(cable);
+            PlaceCableGroup(gm, ga);
+        }
+        else if (ga == null && gb != null) 
+        {
+            RemoveCableGroup(gm, gb);
+            gb.Add(cable);
+            PlaceCableGroup(gm, gb);
+        }
         else if (ga != gb)
         {
+            RemoveCableGroup(gm, ga);
+            RemoveCableGroup(gm, gb);
             CableGroup merged = CableGroup.Merge(ga, gb, cable);
             groups.Remove(ga);
             groups.Remove(gb);
             groups.Add(merged);
+            PlaceCableGroup(gm, merged);
         }
-        else ga.Add(cable);
+        else 
+        {
+            RemoveCableGroup(gm, ga);
+            ga.Add(cable);
+            PlaceCableGroup(gm, ga);
+        }
 
-        return false;
+        // TODO: 그래픽 처리 및 연출
+
+        return true;
+    }
+
+    public void PlaceCableGroup(GridManager gm, CableGroup group)
+    {
+        if (!gm.PlaceCableGroup(group))
+        {
+            group.SetValid(false);
+            gm.AddInvalid(group);
+            // TODO: 여러가지 연출 처리 (색상 등)
+        }
     }
     
-    public void RemoveCable(Vector2Int a, Vector2Int b)
+    public void RemoveCable(GridManager gm, Vector2Int a, Vector2Int b)
     {
         Cable cable = new(a, b);
-        RemoveCable(cable);
+        RemoveCable(gm, cable);
     }
 
-    public void RemoveCable(Cable cable)
+    public void RemoveCable(GridManager gm, Cable cable)
     {
+        // Cable 처리
         cables.Remove(cable);
+        gm.RemoveCable(cable);
 
+        // CableGroup 처리
         CableGroup group = FindGroup(cable);
-        List<CableGroup> splited = CableGroup.Split(group, cable);
+        List<CableGroup> split = CableGroup.Split(group, cable);
 
         groups.Remove(group);
-        groups.UnionWith(splited);
+        groups.UnionWith(split);
+
+        RemoveCableGroup(gm, group);
+        for (int i = 0; i < split.Count; i++) PlaceCableGroup(gm, split[i]);
+        
+        // TODO: 그래픽 처리 및 연출
+    }
+    public void RemoveCableGroup(GridManager gm, CableGroup group)
+    {
+        gm.RemoveCableGroup(group, group.Valid);
+        gm.RemoveInvalid(group);
+    }
+
+    public bool Check(GridManager gm, CableGroup group)
+    {
+        if (!gm.PlaceCableGroup(group)) return false;
+
+        group.SetValid(true);
+        // TODO: 여러가지 연출 처리 (색상 등)
+
+        return true;
     }
 
     private CableGroup FindGroup(Vector2Int a)
@@ -116,5 +183,9 @@ public class CablePlacer
         }
 
         return null;
+    }
+    private bool IsAdjacent(Vector2Int a, Vector2Int b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
     }
 }

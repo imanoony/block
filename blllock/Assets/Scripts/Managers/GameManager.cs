@@ -36,7 +36,7 @@ public static class Utils
     public const float TILE_FILL_PERCENT2 = 0.7f;
     public const float FILL_THRESHOLD = 9;
     public const int PPU = 24;
-    public const int MAX_PORT = 4;
+    public const int MAX_PORT = 8;
     public static readonly Vector3 BLOCK_SHADOW = new(0.05f, 0.05f, 0);
     public static readonly Vector3 TAG_SHADOW = new(0.015f, 0.015f, 0);
     public const float SHADOW_ALPHA = 100 / 255f;
