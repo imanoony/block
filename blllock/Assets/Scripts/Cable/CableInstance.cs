@@ -16,6 +16,17 @@ public class CableInstance : MonoBehaviour
     private GameObject shadow;
     private SpriteRenderer shadowSr;
     private MaterialPropertyBlock mpb;
+
+    private bool isTweening = false;
+    public void StartTweening() => isTweening = true;
+    public void EndTweening() => isTweening = false;
+
+    public bool IsInteractable()
+    {
+        if (isTweening) return false;
+
+        return true;
+    }
     
     #region Edge
     private Cable edge;
@@ -117,6 +128,8 @@ public class CableInstance : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (!IsInteractable()) return;
+        
         if (Part == CablePart.Edge)
         {
             Debug.Log("Cable Mouse Down");

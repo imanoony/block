@@ -58,7 +58,8 @@ public class CablePlacer : MonoBehaviour
                         Cable cable = new(startGrid, (Vector2Int)endGrid);
                         if (cables.Contains(cable))
                         {
-                            RemoveCable(gm, cable);
+                            if (cableEdgeInstances[cable].IsInteractable())
+                                RemoveCable(gm, cable);
                         }
                         else if (PlaceCable(gm, startGrid, (Vector2Int)endGrid))
                         {
@@ -197,6 +198,14 @@ public class CablePlacer : MonoBehaviour
         }
 
         Sequence seq = DOTween.Sequence();
+        seq.AppendCallback(
+            () =>
+            {
+                cableNodeInstances[start].StartTweening();
+                cableEdgeInstances[cable].StartTweening();
+                cableNodeInstances[end].StartTweening();
+            }
+        );
         seq.Append(cableNodeInstances[start].GetPlaceNodeTween(
             oldStartC,
             group.GetConnection(start),
@@ -204,7 +213,7 @@ public class CablePlacer : MonoBehaviour
             0.05f,
             Ease.InQuad
         ));
-        seq.Append(cableEdgeInstances[cable].GetPlaceEdgeTween(start, end, 0.1f, Ease.InQuad));
+        seq.Append(cableEdgeInstances[cable].GetPlaceEdgeTween(start, end, 0.2f, Ease.InQuad));
         seq.Append(cableNodeInstances[end].GetPlaceNodeTween(
             oldEndC,
             group.GetConnection(end),
@@ -212,7 +221,15 @@ public class CablePlacer : MonoBehaviour
             0.05f,
             Ease.OutQuad
         ));
-
+        seq.AppendCallback(
+            () =>
+            {
+                cableNodeInstances[start].EndTweening();
+                cableEdgeInstances[cable].EndTweening();
+                cableNodeInstances[end].EndTweening();
+            }
+        );
+        
         seq.Play();
 
         // TODO: 위에서 인스턴스 생성하며 애니메이션 출력 queue에
