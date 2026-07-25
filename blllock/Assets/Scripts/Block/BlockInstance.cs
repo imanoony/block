@@ -540,13 +540,13 @@ public class BlockInstance : MonoBehaviour
         yield return rotateT.WaitForCompletion();
         yield return StartCoroutine(ScaleDownCo(0.1f));
 
-        shadow.transform.localPosition = -Utils.GetHoverOffset(
+        shadow.transform.localPosition = -Utils.GetBlockShadowOffset(
             Utils.BLOCK_SHADOW,
             blockData.BlockRotate, 
             blockData.BlockFlipX, 
             blockData.BlockFlipY
         );
-        tagShadow.transform.localPosition = -Utils.GetHoverOffset(
+        tagShadow.transform.localPosition = -Utils.GetBlockShadowOffset(
             Utils.TAG_SHADOW,
             blockData.BlockRotate, 
             blockData.BlockFlipX, 
@@ -682,13 +682,13 @@ public class BlockInstance : MonoBehaviour
         yield return flipT.WaitForCompletion();
         yield return StartCoroutine(ScaleDownCo(0.1f));
 
-        shadow.transform.localPosition = -Utils.GetHoverOffset(
+        shadow.transform.localPosition = -Utils.GetBlockShadowOffset(
             Utils.BLOCK_SHADOW,
             blockData.BlockRotate, 
             blockData.BlockFlipX, 
             blockData.BlockFlipY
         );
-        tagShadow.transform.localPosition = -Utils.GetHoverOffset(
+        tagShadow.transform.localPosition = -Utils.GetBlockShadowOffset(
             Utils.TAG_SHADOW,
             blockData.BlockRotate, 
             blockData.BlockFlipX, 

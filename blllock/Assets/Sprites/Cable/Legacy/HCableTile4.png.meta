@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9f7313b4408979d489dba7d7de37b149
+guid: 646c24a9360b11040887650e4cfb876a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5821063498425585385
-    second: HCableTile1_0
+      213: -5054699986600167068
+    second: HCableTile4_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,11 +96,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HCableTile1_0
+      name: HCableTile4_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9ee46a6196298c050800000000000000
-      internalID: 5821063498425585385
+      spriteID: 4697684a4291ad9b0800000000000000
+      internalID: -5054699986600167068
       vertices: []
       indices: 
       edges: []
@@ -125,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 94838a2d4e2ee1a40850ddf0e0323e63
+    spriteID: 192e2a1a887d2ac4284454619a08d5d7
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      HCableTile1_0: 5821063498425585385
+      HCableTile4_0: -5054699986600167068
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

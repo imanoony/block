@@ -269,7 +269,7 @@ public class GridManager : MonoBehaviour
             bool result = CablePlacer.Check(this, invalidCables[i]);
             if (result) validCables.Add(invalidCables[i]);
         }
-        for (i = 0; i < invalidCables.Count; i++) invalidCables.Remove(validCables[i]);
+        for (i = 0; i < validCables.Count; i++) invalidCables.Remove(validCables[i]);
     }
     #endregion
 
@@ -423,8 +423,8 @@ public class GridManager : MonoBehaviour
         int circuitX = x - stageCache.CircuitPosition.x;
         int circuitY = y - stageCache.CircuitPosition.y;
 
-        if (circuitX < 0 || circuitX >= stageCache.CircuitHeight) return true;
-        if (circuitY < 0 || circuitY > stageCache.CircuitWidth) return true;
+        if (circuitX < 0 || circuitX >= stageCache.CircuitHeight) return false;
+        if (circuitY < 0 || circuitY > stageCache.CircuitWidth) return false;
 
         return HEdges[circuitX, circuitY].Type != EdgeType.Empty;
     }
@@ -441,8 +441,8 @@ public class GridManager : MonoBehaviour
         int circuitX = x - stageCache.CircuitPosition.x;
         int circuitY = y - stageCache.CircuitPosition.y;
 
-        if (circuitX < 0 || circuitX > stageCache.CircuitHeight) return true;
-        if (circuitY < 0 || circuitY >= stageCache.CircuitWidth) return true;
+        if (circuitX < 0 || circuitX > stageCache.CircuitHeight) return false;
+        if (circuitY < 0 || circuitY >= stageCache.CircuitWidth) return false;
 
         return VEdges[circuitX, circuitY].Type != EdgeType.Empty;
     }
@@ -544,7 +544,7 @@ public class GridManager : MonoBehaviour
         List<(Vector2Int pos, float distSq)> nearest = new();
         
         if (Grids == null || count <= 0) return new();
-        float thresholdSq = Utils.THRESHOLD * Utils.THRESHOLD;
+        float thresholdSq = (Utils.THRESHOLD-2.6f) * (Utils.THRESHOLD-2.6f);
 
         int height = Grids.GetLength(0);
         int width = Grids.GetLength(1);
@@ -595,6 +595,7 @@ public class GridManager : MonoBehaviour
         return result;
     }
 
+    public Vector3? GetTileTopLeftWorld(int x, int y) => TilePlacer.GetTileTopLeftWorld(x, y);
     public Vector3 GetBlockCenterOnTile(int x, int y, int height, int width) => TilePlacer.GetBlockCenterOnTile(x, y, height, width);
     public Vector3 GetTileSize() => TilePlacer.GetTileSize();
     public Vector3 GetTileTopLeftForChat(int x, int y)
@@ -672,7 +673,12 @@ public class GridManager : MonoBehaviour
 
     public void RemoveCableGroup(CableGroup group, bool valid)
     {
-        if (!valid) return;
+        Debug.Log($"Remove Cable Group, valid? {valid}");
+        if (!valid)
+        {
+            group.SetValid(true);
+            return;
+        }
 
         // 점유했던 그리드에서 Port를 제거한다
         PortVar port = group.Port;
