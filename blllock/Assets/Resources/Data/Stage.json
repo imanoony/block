@@ -45,7 +45,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 100012,
@@ -97,7 +99,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 100013,
@@ -154,7 +158,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 100014,
@@ -211,7 +217,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 100015,
@@ -268,7 +276,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 100016,
@@ -332,7 +342,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 100017,
@@ -396,7 +408,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 100018,
@@ -472,7 +486,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 200010,
@@ -548,7 +564,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 200011,
@@ -624,7 +642,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 200012,
@@ -695,7 +715,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 200013,
@@ -771,7 +793,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 300011,
@@ -836,7 +860,9 @@
                     "x": 1,
                     "y": 2
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 600010,
@@ -889,7 +915,9 @@
                     "y": 1
                 }
             ],
-            "RotateCWIndex": [1],
+            "RotateCWIndex": [
+                1
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [
@@ -897,7 +925,9 @@
             ],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 9999,
@@ -909,10 +939,8 @@
                 "x": 0,
                 "y": 0
             },
-            "Inputs": [
-            ],
-            "Outputs": [
-            ],
+            "Inputs": [],
+            "Outputs": [],
             "Desc": "9999",
             "TutorialID": 9999,
             "Blocks": [
@@ -930,7 +958,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2001,
@@ -1011,7 +1041,9 @@
                     "x": 1,
                     "y": 2
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2002,
@@ -1085,7 +1117,9 @@
                     "x": 1,
                     "y": 2
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2003,
@@ -1171,7 +1205,9 @@
                     "x": 2,
                     "y": 3
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2004,
@@ -1202,7 +1238,7 @@
                 }
             ],
             "Desc": "",
-            "TutorialID": -1,
+            "TutorialID": 5,
             "Blocks": [
                 5,
                 5,
@@ -1232,12 +1268,14 @@
                 {
                     "x": 1,
                     "y": 0
-                }, 
+                },
                 {
                     "x": 1,
                     "y": 2
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2005,
@@ -1308,7 +1346,9 @@
                     "x": 1,
                     "y": 4
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2006,
@@ -1386,7 +1426,9 @@
                     "y": 3
                 }
             ],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2007,
@@ -1483,7 +1525,9 @@
                     "x": 2,
                     "y": 2
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2008,
@@ -1569,7 +1613,9 @@
                     "x": 2,
                     "y": 1
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2009,
@@ -1664,7 +1710,9 @@
                     "x": 1,
                     "y": 2
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2010,
@@ -1749,7 +1797,9 @@
                     "x": 3,
                     "y": 3
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 2011,
@@ -1829,7 +1879,9 @@
                     "y": 3
                 }
             ],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3001,
@@ -1881,9 +1933,11 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
-                {
+        {
             "ID": 3002,
             "BgWidth": 13,
             "BgHeight": 8,
@@ -1945,7 +1999,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3003,
@@ -2009,7 +2065,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3004,
@@ -2080,7 +2138,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3005,
@@ -2156,7 +2216,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3006,
@@ -2232,7 +2294,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3007,
@@ -2303,7 +2367,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3008,
@@ -2374,7 +2440,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3009,
@@ -2443,7 +2511,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3010,
@@ -2502,7 +2572,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 3011,
@@ -2578,7 +2650,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 4001,
@@ -2647,7 +2721,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 4002,
@@ -2735,7 +2811,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 4003,
@@ -2811,7 +2889,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 4004,
@@ -2899,7 +2979,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 4005,
@@ -2987,7 +3069,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 4006,
@@ -3075,7 +3159,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 4007,
@@ -3132,7 +3218,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 4008,
@@ -3220,7 +3308,9 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 5001,
@@ -3278,13 +3368,17 @@
                     "y": 9
                 }
             ],
-            "RotateCWIndex": [0],
+            "RotateCWIndex": [
+                0
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 5002,
@@ -3347,7 +3441,9 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [2],
+            "RotateCWIndex": [
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
@@ -3358,7 +3454,9 @@
                     "x": 2,
                     "y": 1
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 5003,
@@ -3416,7 +3514,10 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [1, 2],
+            "RotateCWIndex": [
+                1,
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
@@ -3427,7 +3528,9 @@
                     "y": 3
                 }
             ],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 5004,
@@ -3480,13 +3583,17 @@
                     "y": 2
                 }
             ],
-            "RotateCWIndex": [0],
+            "RotateCWIndex": [
+                0
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 5005,
@@ -3537,13 +3644,17 @@
                     "y": 9
                 }
             ],
-            "RotateCWIndex": [2],
+            "RotateCWIndex": [
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 5006,
@@ -3613,7 +3724,9 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [0],
+            "RotateCWIndex": [
+                0
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
@@ -3629,7 +3742,9 @@
                     "x": 1,
                     "y": 3
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 5007,
@@ -3680,7 +3795,10 @@
                     "y": 11
                 }
             ],
-            "RotateCWIndex": [1, 2],
+            "RotateCWIndex": [
+                1,
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
@@ -3691,7 +3809,9 @@
                     "x": 2,
                     "y": 2
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 5008,
@@ -3761,7 +3881,10 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [2, 3],
+            "RotateCWIndex": [
+                2,
+                3
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
@@ -3777,7 +3900,9 @@
                     "x": 0,
                     "y": 3
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         },
         {
             "ID": 5009,
@@ -3833,7 +3958,9 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [2],
+            "RotateCWIndex": [
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
@@ -3849,7 +3976,9 @@
                     "x": 2,
                     "y": 1
                 }
-            ]
+            ],
+            "ToolCable": 0,
+            "ToolResistor": 0
         }
     ]
 }

@@ -129,6 +129,11 @@ public class StageData
     public List<Vector2Int> VBarriers = new(); // (Tile 좌표계, Grid 좌표계)를 사용한다.
     #endregion
 
+    #region Tools
+    public int ToolCable = 0;
+    public int ToolResistor = 0;
+    #endregion
+
     #region for JSON
     public static StageData FromRaw(Raw raw)
     {
@@ -162,7 +167,9 @@ public class StageData
             FlipYIndex = raw.FlipYIndex,
             SIndex = raw.SIndex,
             HBarriers = raw.HBarriers.Select(pos => pos.ToVector2Int()).ToList(),
-            VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList()
+            VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList(),
+            ToolCable = raw.ToolCable,
+            ToolResistor = raw.ToolResistor
         };
         return stage;
     }
@@ -206,7 +213,9 @@ public class StageData
             ).ToList(),
             VBarriers = stage.VBarriers.Select(
                 pos => new RawPos { x = pos.x, y = pos.y }
-            ).ToList()
+            ).ToList(),
+            ToolCable = stage.ToolCable,
+            ToolResistor = stage.ToolResistor
         };
         return raw;
     }
@@ -233,6 +242,8 @@ public class StageData
         public List<int> FlipXIndex = new(), FlipYIndex = new();
         public List<int> SIndex = new();
         public List<RawPos> HBarriers = new(), VBarriers = new();
+        public int ToolCable;
+        public int ToolResistor;
     }
     [Serializable]
     public class RawIO

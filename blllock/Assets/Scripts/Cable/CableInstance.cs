@@ -129,7 +129,7 @@ public class CableInstance : MonoBehaviour
     private void OnMouseDown()
     {
         if (!IsInteractable()) return;
-        
+
         if (Part == CablePart.Edge)
         {
             Debug.Log("Cable Mouse Down");
@@ -137,6 +137,7 @@ public class CableInstance : MonoBehaviour
         }
     }
 
+    /*
     private const string maskIndex = "_MaskIndex", isCurve = "_IsCurve", isNode = "_IsNode";
     private const string rotation = "_Rotation", flip = "_Flip";
     public Tween GetPlaceEdgeTween(
@@ -289,4 +290,53 @@ public class CableInstance : MonoBehaviour
             shadowSr.enabled = true;
         });
     }
+    */
+    
+    public Tween GetPlaceEdgeTween(
+        float duration = 0.2f,
+        Ease ease = Ease.Linear
+    )
+    {
+        transform.localScale = new Vector3(
+            transform.localScale.x,
+            0.1f,
+            transform.localScale.z
+        );
+
+        return transform
+            .DOScaleY(1f, duration)
+            .SetEase(ease);
+    }
+
+    public Tween GetPlaceNodeTween(
+        CableConnection old,
+        CableConnection now,
+        float duration = 0.2f,
+        Ease ease = Ease.Linear
+    )
+    {
+        bool scaleY = true;
+        int nowI = (int)now;
+        int oldI = (int)old;
+
+        if (nowI == 0b1110 && oldI == 0b1100) scaleY = false;
+        else if (nowI == 0b1011 && oldI == 0b0011) scaleY = false;
+        else if (nowI == 0b1101 && oldI == 0b1100) scaleY = false;
+        else if (nowI == 0b0111 && oldI == 0b0011) scaleY = false;
+        else if (nowI == 0b1111 && (oldI == 0b1110 || oldI == 0b1101)) scaleY = false; 
+        else if (nowI == 0b0110 && oldI == 0b0100) scaleY = false;
+        else if (nowI == 0b1010 && oldI == 0b0010) scaleY = false;
+        else if (nowI == 0b1001 && oldI == 0b1000) scaleY = false;
+        else if (nowI == 0b0101 && oldI == 0b0001) scaleY = false;
+        
+        transform.localScale = new Vector3(
+            scaleY ? transform.localScale.x : 0.1f,
+            scaleY ? 0.1f : transform.localScale.y,
+            transform.localScale.z
+        );
+
+        return scaleY ? transform.DOScaleY(1f, duration).SetEase(ease)
+                    : transform.DOScaleX(1f, duration).SetEase(ease);
+    }
+
 }

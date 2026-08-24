@@ -12,6 +12,8 @@ public class BlockPlacer : MonoBehaviour
     [SerializeField] private Sprite[] sblockSprites;
     [SerializeField] private Sprite[] blockGhostSprites;
 
+    public Sprite[] BlockSprites => blockSprites;
+
     // 우선은 하드하게 넣어두지만 이후 수정 예정
     // 0: RotateCW
     // 1: RotateCCW

@@ -7,8 +7,12 @@ public class CablePlacer : MonoBehaviour
 {
     [SerializeField] private GameObject cablePrefab;
     [SerializeField] private GameObject cableParent; // 얘는 나중에 처리
+    [SerializeField] private GameObject cableGhost; // 얘도 일단 씬에서 바로 받아오는 형태로
     [SerializeField] private Sprite[] cableNodeSprites;
     [SerializeField] private Sprite cableEdgeSprite;
+
+    private SpriteRenderer cableGhostSr;
+    private MaterialPropertyBlock cableGhostMpb;
 
 
     private GridManager gm;
@@ -18,6 +22,9 @@ public class CablePlacer : MonoBehaviour
     void Start()
     {
         gm = GameManager.Instance.Grid;
+
+        cableGhostSr = cableGhost.GetComponent<SpriteRenderer>();
+        cableGhostMpb = new(); // 일단 Start로 시작하는 건 임시다
     }
     void Update()
     {
@@ -36,6 +43,13 @@ public class CablePlacer : MonoBehaviour
                 {
                     startGrid = gi.GridData.Pos;
                     isDragging = true;
+
+                    // TODO [Cable Ghost]
+                    // cable ghost 초기화 후 활성화
+
+                    SetCableGhostMat(true, 0);
+                    cableGhost.transform.position = GetCableGhostWorld(startGrid);
+                    cableGhost.SetActive(true);
                 }
             }
         }
@@ -44,6 +58,10 @@ public class CablePlacer : MonoBehaviour
         {
             if (isDragging)
             {
+                // TODO [Cable Ghost]
+                // cable ghost 비활성화
+                cableGhost.SetActive(false);
+                
                 Debug.Log("CablePlace End");
                 Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 List<Vector2Int?> nearGrids = gm.GetNearestGrids(mouseWorld, 4);
@@ -93,6 +111,32 @@ public class CablePlacer : MonoBehaviour
         //   만약 마우스가 다른 그리드 위에 있다면 
         //   그 그리드와의 연결의 정합성 log 출력
         //   만약 연결이 정합하다면 cable 설치 후 시작 지점 재설정
+
+        if (isDragging)
+        {
+            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            List<Vector2Int?> nearGrids = gm.GetNearestGrids(mouseWorld, 4, false);
+
+            Debug.Log(
+                $"mouse: {mouseWorld} / " +
+                $"near: {string.Join(", ", nearGrids)}"
+            );
+
+            for (int i = 0; i < nearGrids.Count; i++)
+            {
+                Vector2Int? endGrid = nearGrids[i];
+                if (endGrid == startGrid) continue;
+                if (endGrid == null) return;
+                if (!IsAdjacent(startGrid, (Vector2Int)endGrid)) return;
+
+                // TODO [Cable Ghost]
+                // start <-> end와 mouse pos 기반 reveal 계산하기
+                // start <-> end, reveal 기반 cable ghost 머티리얼 파라미터 수정하기
+
+                UpdateCableGhost(startGrid, (Vector2Int)endGrid, (Vector2)mouseWorld);
+                break;
+            }
+        }
     }
 
     private HashSet<Cable> cables = new();
@@ -209,17 +253,15 @@ public class CablePlacer : MonoBehaviour
         seq.Append(cableNodeInstances[start].GetPlaceNodeTween(
             oldStartC,
             group.GetConnection(start),
-            false,
-            0.05f,
-            Ease.InQuad
+            0.3f,
+            Ease.OutBack
         ));
-        seq.Append(cableEdgeInstances[cable].GetPlaceEdgeTween(start, end, 0.2f, Ease.InQuad));
-        seq.Append(cableNodeInstances[end].GetPlaceNodeTween(
+        seq.Join(cableEdgeInstances[cable].GetPlaceEdgeTween(0.3f, Ease.OutBack));
+        seq.Join(cableNodeInstances[end].GetPlaceNodeTween(
             oldEndC,
             group.GetConnection(end),
-            true,
-            0.05f,
-            Ease.OutQuad
+            0.3f,
+            Ease.OutBack
         ));
         seq.AppendCallback(
             () =>
@@ -377,4 +419,59 @@ public class CablePlacer : MonoBehaviour
             _ => cableNodeSprites[4]
         };
     }
+
+    #region Cable Ghost
+
+    private Vector3 GetCableGhostWorld(Vector2Int start)
+    {
+        int x = gm.GetCircuitStart().x + start.x;
+        int y = gm.GetCircuitStart().y + start.y;
+
+        return (Vector3)gm.GetTileTopLeftWorld(x, y);
+    }
+
+    private float GetCableGhostReveal(Vector2Int start, Vector2Int end, Vector2 curr)
+    {
+        Vector2Int circuitStart = gm.GetCircuitStart();
+        Vector2Int startGrid = new(circuitStart.x + start.x, circuitStart.y + start.y);
+        Vector2Int endGrid = new(circuitStart.x + end.x, circuitStart.y + end.y);
+        
+        Vector2 startWorld = (Vector2)(Vector3)gm.GetTileTopLeftWorld(startGrid.x, startGrid.y);
+        Vector2 endWorld = (Vector2)(Vector3)gm.GetTileTopLeftWorld(endGrid.x, endGrid.y);
+
+        // start World -> end World에서 curr 이 얼마나 갔는지 그 비율 리턴
+        Vector2 direction = endWorld - startWorld;
+        if (direction.sqrMagnitude < Mathf.Epsilon) return 0f;
+        return Mathf.Clamp01(Vector2.Dot(curr - startWorld, direction) / direction.sqrMagnitude);
+    }
+
+    private void UpdateCableGhost(Vector2Int start, Vector2Int end, Vector2 mouseWorld)
+    {
+        bool fromLeft = true;
+        float reveal = GetCableGhostReveal(start, end, mouseWorld);
+        Debug.Log($"Cable Ghost reveal: {reveal}");
+
+        if (start.x == end.x) // horizontal
+        {
+            if (start.y > end.y) cableGhost.transform.rotation = Quaternion.Euler(0, 0, 180);
+            else cableGhost.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else // vertical
+        {
+            if (start.x < end.x) cableGhost.transform.rotation = Quaternion.Euler(0, 0, -90);
+            else cableGhost.transform.rotation = Quaternion.Euler(0, 0, 90);
+        }
+
+        SetCableGhostMat(fromLeft, reveal);
+    }
+
+    private const string FromLeft = "_FromLeft", Reveal = "_Reveal";
+    private void SetCableGhostMat(bool fromLeft, float reveal)
+    {
+        cableGhostSr.GetPropertyBlock(cableGhostMpb);
+        cableGhostMpb.SetFloat(FromLeft, fromLeft ? 1f : 0f);
+        cableGhostMpb.SetFloat(Reveal, reveal);
+        cableGhostSr.SetPropertyBlock(cableGhostMpb);
+    }
+    #endregion
 }

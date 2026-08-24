@@ -539,7 +539,7 @@ public class GridManager : MonoBehaviour
         return result;
     }
 
-    public List<Vector2Int?> GetNearestGrids(Vector3 worldPos, int count = 1)
+    public List<Vector2Int?> GetNearestGrids(Vector3 worldPos, int count = 1, bool useThreshold = true)
     {
         List<(Vector2Int pos, float distSq)> nearest = new();
         
@@ -560,7 +560,7 @@ public class GridManager : MonoBehaviour
                 if (topLeft == null) continue;
 
                 float distSq = ((Vector2)worldPos - (Vector2)topLeft.Value).sqrMagnitude;
-                if (distSq > thresholdSq) continue;
+                if (useThreshold && distSq > thresholdSq) continue;
 
                 (Vector2Int, float) candidate = (new Vector2Int(x, y), distSq);
 

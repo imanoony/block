@@ -75,7 +75,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _IsCurve: 0
-    - _IsNode: 0
+    - _IsNode: 1
     - _MaskIndex: 25
     - _Rotation: 0
     m_Colors: []

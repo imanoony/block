@@ -182,7 +182,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(8);
+        StartModule(12);
     }
 
     void Update()
