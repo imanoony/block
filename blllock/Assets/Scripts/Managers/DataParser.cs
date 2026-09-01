@@ -130,8 +130,7 @@ public class StageData
     #endregion
 
     #region Tools
-    public int ToolCable = 0;
-    public int ToolResistor = 0;
+    public Dictionary<ToolType, int> ToolCounts = new();
     #endregion
 
     #region for JSON
@@ -168,8 +167,7 @@ public class StageData
             SIndex = raw.SIndex,
             HBarriers = raw.HBarriers.Select(pos => pos.ToVector2Int()).ToList(),
             VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList(),
-            ToolCable = raw.ToolCable,
-            ToolResistor = raw.ToolResistor
+            ToolCounts = raw.ToolCounts.ToDictionary(t => t.type, t => t.count)
         };
         return stage;
     }
@@ -214,8 +212,9 @@ public class StageData
             VBarriers = stage.VBarriers.Select(
                 pos => new RawPos { x = pos.x, y = pos.y }
             ).ToList(),
-            ToolCable = stage.ToolCable,
-            ToolResistor = stage.ToolResistor
+            ToolCounts = stage.ToolCounts.Select(
+                kvp => new RawToolCount { type = kvp.Key, count = kvp.Value }
+            ).ToList(),
         };
         return raw;
     }
@@ -242,8 +241,7 @@ public class StageData
         public List<int> FlipXIndex = new(), FlipYIndex = new();
         public List<int> SIndex = new();
         public List<RawPos> HBarriers = new(), VBarriers = new();
-        public int ToolCable;
-        public int ToolResistor;
+        public List<RawToolCount> ToolCounts = new();
     }
     [Serializable]
     public class RawIO
@@ -257,6 +255,12 @@ public class StageData
         public int x;
         public int y;
         public Vector2Int ToVector2Int() => new(x, y);
+    }
+    [Serializable]
+    public class RawToolCount
+    {
+        public ToolType type;
+        public int count;
     }
     #endregion
 }

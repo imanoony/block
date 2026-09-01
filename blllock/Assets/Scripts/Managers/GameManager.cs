@@ -59,6 +59,8 @@ public static class Utils
     public const int CABLE_ANIM_EDGE_COUNT = 25;
     public const int CABLE_ANIM_NODE_COUNT = 15;
     public const int CABLE_ANIM_NODE_CURVE_COUNT = 12;
+    public const float TOOL_OFFSET_X = -80f;
+    public const float TOOL_OFFSET_Y = 120f;
     public const char NOT = '~', VERT = '*', HORZ = '+';
     public const string PARENS = "()";
     public static bool IsWrappedByParentheses(string s)
@@ -137,6 +139,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public WireManager Wire { get; private set; }
     public GridManager Grid { get; private set; }
+    public ToolManager Tool { get; private set; }
     public UIManager UI { get; private set; }
     public AudioManager Audio { get; private set; }
     private void Awake()
@@ -151,6 +154,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
         Wire = new WireManager();
         Grid = gameObject.GetComponent<GridManager>();
+        Tool = new ToolManager();
         UI = gameObject.GetComponent<UIManager>();
         Audio = gameObject.GetComponent<AudioManager>();
 
@@ -220,6 +224,7 @@ public class GameManager : MonoBehaviour
         outputCheck = new();
         Grid.RemoveCurrentStage();
         Wire.Initialize();
+        Tool.Initialize(stage.ToolCounts);
         Grid.InitStage(stage);
         CurrentStage = stage;
 
@@ -232,6 +237,12 @@ public class GameManager : MonoBehaviour
         //UI.QuitToBack();
         //UI.SetStageText(stage.Desc);
         UI.SetChat(stage.CircuitWidth, stage.CircuitHeight);
+
+        // [TODO Tool 작업]
+        // 지금은 그냥 활성화만, 이후 Tool Appear 애니메이션 들어오면
+        // 이건 아래의 StageStartTrans로 처리함
+        UI.RemoveTool();
+        UI.SetTool(stage.ToolCounts);
 
         Audio.ResetBGM();
 

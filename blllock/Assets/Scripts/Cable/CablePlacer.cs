@@ -28,6 +28,7 @@ public class CablePlacer : MonoBehaviour
     }
     void Update()
     {
+        if (GameManager.Instance.Tool.SelectedTool != ToolType.Cable) return;
         if (!GameManager.Instance.CableActivated) return;
 
         if (Input.GetMouseButtonDown(0))

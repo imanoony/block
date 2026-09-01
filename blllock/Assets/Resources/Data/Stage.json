@@ -46,8 +46,16 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": [
+                {
+                    "type": 0,
+                    "count": 5
+                },
+                {
+                    "type": 1,
+                    "count": 3
+                }
+            ]
         },
         {
             "ID": 100012,
@@ -100,8 +108,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 100013,
@@ -159,8 +166,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 100014,
@@ -218,8 +224,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 100015,
@@ -277,8 +282,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 100016,
@@ -343,8 +347,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 100017,
@@ -409,8 +412,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 100018,
@@ -487,8 +489,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 200010,
@@ -565,8 +566,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 200011,
@@ -643,8 +643,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 200012,
@@ -716,8 +715,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 200013,
@@ -794,8 +792,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 300011,
@@ -861,8 +858,7 @@
                     "y": 2
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 600010,
@@ -926,8 +922,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 9999,
@@ -959,8 +954,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2001,
@@ -1042,8 +1036,7 @@
                     "y": 2
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2002,
@@ -1118,8 +1111,7 @@
                     "y": 2
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2003,
@@ -1206,8 +1198,7 @@
                     "y": 3
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2004,
@@ -1274,8 +1265,7 @@
                     "y": 2
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2005,
@@ -1347,8 +1337,7 @@
                     "y": 4
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2006,
@@ -1427,8 +1416,7 @@
                 }
             ],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2007,
@@ -1526,8 +1514,7 @@
                     "y": 2
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2008,
@@ -1614,8 +1601,7 @@
                     "y": 1
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2009,
@@ -1711,8 +1697,7 @@
                     "y": 2
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2010,
@@ -1798,8 +1783,7 @@
                     "y": 3
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 2011,
@@ -1880,8 +1864,7 @@
                 }
             ],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3001,
@@ -1934,8 +1917,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3002,
@@ -2000,8 +1982,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3003,
@@ -2066,8 +2047,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3004,
@@ -2139,8 +2119,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3005,
@@ -2217,8 +2196,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3006,
@@ -2295,8 +2273,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3007,
@@ -2368,8 +2345,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3008,
@@ -2441,8 +2417,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3009,
@@ -2512,8 +2487,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3010,
@@ -2573,8 +2547,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 3011,
@@ -2651,8 +2624,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 4001,
@@ -2722,8 +2694,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 4002,
@@ -2812,8 +2783,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 4003,
@@ -2890,8 +2860,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 4004,
@@ -2980,8 +2949,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 4005,
@@ -3070,8 +3038,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 4006,
@@ -3160,8 +3127,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 4007,
@@ -3219,8 +3185,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 4008,
@@ -3309,8 +3274,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 5001,
@@ -3377,8 +3341,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 5002,
@@ -3455,8 +3418,7 @@
                     "y": 1
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 5003,
@@ -3529,8 +3491,7 @@
                 }
             ],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 5004,
@@ -3592,8 +3553,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 5005,
@@ -3653,8 +3613,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 5006,
@@ -3743,8 +3702,7 @@
                     "y": 3
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 5007,
@@ -3810,8 +3768,7 @@
                     "y": 2
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 5008,
@@ -3901,8 +3858,7 @@
                     "y": 3
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         },
         {
             "ID": 5009,
@@ -3977,8 +3933,7 @@
                     "y": 1
                 }
             ],
-            "ToolCable": 0,
-            "ToolResistor": 0
+            "ToolCounts": []
         }
     ]
 }

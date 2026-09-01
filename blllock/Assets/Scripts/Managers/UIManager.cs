@@ -423,4 +423,43 @@ public class UIManager : MonoBehaviour
     [SerializeField] private UIPopup popup;
     public void OpenTutorialPopup(TutorialData tutorial) => popup.OpenPopup(tutorial);
     #endregion
+
+    #region Tool UI
+    [Header("Tool")]
+    [SerializeField] private GameObject toolCanvas;
+    [SerializeField] private GameObject toolPrefab;
+    private List<GameObject> tools = new();
+    public void SetTool(Dictionary<ToolType, int> toolCounts)
+    {
+        foreach (ToolType type in Enum.GetValues(typeof(ToolType)))
+        {
+            if (!toolCounts.ContainsKey(type)) continue;
+            GameObject tool = Instantiate(toolPrefab, toolCanvas.transform);
+            tool.GetComponent<UITool>().Init(
+                GameManager.Instance.Tool,
+                type,
+                toolCounts[type]
+            );
+            tools.Add(tool);
+        }
+
+        float startY = Utils.TOOL_OFFSET_Y / 2f * (tools.Count - 1);
+        for (int i = 0; i < tools.Count; i++)
+        {
+            GameObject tool = tools[i];
+            tool.GetComponent<RectTransform>().anchoredPosition = new(
+                Utils.TOOL_OFFSET_X,
+                startY - Utils.TOOL_OFFSET_Y * i
+            );
+        }
+    }
+    public void RemoveTool()
+    {
+        for (int i = 0; i < tools.Count; i++)
+        {
+            Destroy(tools[i]);
+        }
+        tools.Clear();
+    }
+    #endregion
 }
