@@ -12,6 +12,10 @@ public class TilePlacer : MonoBehaviour
     [SerializeField] private Tilemap bgTilemap;
     [SerializeField] private List<TileBase> bgTiles;
 
+    // seamless layout이 10(width) * 6(height)으로 구성되어 있으므로.
+    private const int TileGridWidth = 10;
+    private const int TileGridHeight = 6;
+
     private int bgWidth = -1, bgHeight = -1;
     private int bgOffset = 4;
     private int placedBgMinX, placedBgMaxX;
@@ -19,20 +23,16 @@ public class TilePlacer : MonoBehaviour
     private bool hasBackground = false;
     public void PlaceBackground(int width, int height)
     {
-        Debug.Log($"Placing background with width {width} and height {height}");
+        if (bgTiles.Count != TileGridWidth * TileGridHeight)
+        {
+            Utils.PrintError("Invalid background tile count");
+            return;
+        }
 
         bgWidth = width;
         bgHeight = height;
 
-        List<TileBase> evenTiles = new();
-        List<TileBase> oddTiles = new();
-
-        for (int i = 0; i < bgTiles.Count; i++)
-        {
-            if (i % 2 == 0) evenTiles.Add(bgTiles[i]);
-            else oddTiles.Add(bgTiles[i]);
-        }
-
+        // 카메라 위치 고려해서 수정해야 함
         int minX = -bgOffset;
         int maxX = width + bgOffset - 1;
 
@@ -46,8 +46,7 @@ public class TilePlacer : MonoBehaviour
 
             FillBackgroundRect(
                 minX, maxX,
-                minY, maxY,
-                evenTiles, oddTiles
+                minY, maxY
             );
 
             placedBgMinX = minX;
@@ -64,8 +63,7 @@ public class TilePlacer : MonoBehaviour
         {
             FillBackgroundRect(
                 minX, placedBgMinX - 1,
-                minY, maxY,
-                evenTiles, oddTiles
+                minY, maxY
             );
 
             placedBgMinX = minX;
@@ -76,8 +74,7 @@ public class TilePlacer : MonoBehaviour
         {
             FillBackgroundRect(
                 placedBgMaxX + 1, maxX,
-                minY, maxY,
-                evenTiles, oddTiles
+                minY, maxY
             );
 
             placedBgMaxX = maxX;
@@ -88,8 +85,7 @@ public class TilePlacer : MonoBehaviour
         {
             FillBackgroundRect(
                 placedBgMinX, placedBgMaxX,
-                minY, placedBgMinY - 1,
-                evenTiles, oddTiles
+                minY, placedBgMinY - 1
             );
 
             placedBgMinY = minY;
@@ -100,8 +96,7 @@ public class TilePlacer : MonoBehaviour
         {
             FillBackgroundRect(
                 placedBgMinX, placedBgMaxX,
-                placedBgMaxY + 1, maxY,
-                evenTiles, oddTiles
+                placedBgMaxY + 1, maxY
             );
 
             placedBgMaxY = maxY;
@@ -112,23 +107,22 @@ public class TilePlacer : MonoBehaviour
         int minX,
         int maxX,
         int minY,
-        int maxY,
-        List<TileBase> evenTiles,
-        List<TileBase> oddTiles
+        int maxY
     )
     {
+        int tileX, tileY, index;
+        TileBase tile;
+
         for (int y = minY; y <= maxY; y++)
         {
+            tileY = ((y % TileGridHeight) + TileGridHeight) % TileGridHeight;
             for (int x = minX; x <= maxX; x++)
             {
-                bool useEven = (x + y) % 2 == 0;
-                List<TileBase> pool = useEven ? evenTiles : oddTiles;
+                tileX = ((x % TileGridWidth) + TileGridWidth) % TileGridWidth;
 
-                if (pool.Count == 0) continue;
-
-                TileBase tile = pool[Random.Range(0, pool.Count)];
+                index = tileY * TileGridWidth + tileX;
+                tile = bgTiles[index];
                 Vector3Int pos = new(x, y, 0);
-
                 bgTilemap.SetTile(pos, tile);
             }
         }
