@@ -261,13 +261,13 @@ public class TilePlacer : MonoBehaviour
 
         Vector3 targetPos = new Vector3(centerWorld.x, centerWorld.y, cam.transform.position.z);
 
-        float worldWidth = bgWidth * bgTilemap.cellSize.x;
-        float worldHeight = bgHeight * bgTilemap.cellSize.y;
+        float minWorldWidth = bgWidth * bgTilemap.cellSize.x + 1f;
+        float minWorldHeight = bgHeight * bgTilemap.cellSize.y + 1f;
 
         float aspect = Screen.width / (float)Screen.height;
 
-        float cameraHalfHeight = worldHeight / 2f;
-        float cameraHalfWidth = worldWidth / 2f;
+        float cameraHalfWidth = minWorldWidth / 2f;
+        float cameraHalfHeight = minWorldHeight / 2f;
 
         float targetOrthoSize = Mathf.Max(cameraHalfHeight, cameraHalfWidth / aspect);
 
@@ -307,48 +307,6 @@ public class TilePlacer : MonoBehaviour
             Rect boundary = new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
             Utils.SetBoundary(boundary);
         });
-    }
-    private List<GameObject> boundaryWalls = null;
-    private void RemoveCameraBoundary()
-    {
-        if (boundaryWalls != null)
-        {
-            foreach (var wall in boundaryWalls)
-                if (wall != null) Destroy(wall);
-        }
-        boundaryWalls = null;
-    }
-    private void PlaceCameraBoundary()
-    {
-        boundaryWalls = new List<GameObject>();
-        Camera cam = Camera.main;
-        float camHalfH = cam.orthographicSize;
-        float camHalfW = camHalfH * cam.aspect;
-        Vector3 camPos = cam.transform.position;
-
-        float thickness = 5f; // 벽 두께
-
-        // 상단 벽
-        boundaryWalls.Add(CreateWall(new Vector2(camPos.x, camPos.y + camHalfH + thickness / 2), new Vector2(camHalfW * 2.5f, thickness)));
-        // 하단 벽
-        boundaryWalls.Add(CreateWall(new Vector2(camPos.x, camPos.y - camHalfH - thickness / 2), new Vector2(camHalfW * 2.5f, thickness)));
-        // 왼쪽 벽
-        boundaryWalls.Add(CreateWall(new Vector2(camPos.x - camHalfW - thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2.5f)));
-        // 오른쪽 벽
-        boundaryWalls.Add(CreateWall(new Vector2(camPos.x + camHalfW + thickness / 2, camPos.y), new Vector2(thickness, camHalfH * 2.5f)));
-    }
-    private GameObject CreateWall(Vector2 pos, Vector2 size)
-    {
-        GameObject wall = new GameObject("BoundaryWall");
-        wall.transform.position = pos;
-
-        var collider = wall.AddComponent<BoxCollider2D>();
-        collider.size = size;
-
-        var rb = wall.AddComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Static; // 움직이지 않는 벽
-
-        return wall;
     }
     #endregion
 
@@ -390,6 +348,36 @@ public class TilePlacer : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region Tile Boundary Placement 
+    [Header("Tile Boundary")]
+    [SerializeField] private GameObject tileBoundary;
+    private SpriteRenderer tileBoundarySr = null;
+    public void RemoveTileBoundary()
+    {
+        tileBoundary.SetActive(false);
+    }
+
+    public void PlaceTileBoundary()
+    {
+        if (tileBoundarySr == null) tileBoundarySr = tileBoundary.GetComponent<SpriteRenderer>();
+
+        tileBoundarySr.color = new(
+            tileBoundarySr.color.r,
+            tileBoundarySr.color.g,
+            tileBoundarySr.color.b,
+            0f
+        );
+        tileBoundarySr.size = new(
+            bgWidth,
+            bgHeight
+        );
+        tileBoundary.transform.position = new(tileBoundarySr.size.x / 2f, tileBoundarySr.size.y / 2f);
+
+        tileBoundary.SetActive(true);
+    }
+
     #endregion
 
     #region Tile Position
@@ -460,20 +448,20 @@ public class TilePlacer : MonoBehaviour
     [HideInInspector] public bool CircuitDisappearTransDone = false;
     public void CircuitAppear()
     {
-        if (currentCo != null) StopCoroutine(currentCo);
-        currentCo = StartCoroutine(CircuitAppearCo());
+        if (currentCircuitCo != null) StopCoroutine(currentCircuitCo);
+        currentCircuitCo = StartCoroutine(CircuitAppearCo());
     }
     public void CircuitDisappear()
     {
-        if (currentCo != null) StopCoroutine(currentCo);
-        currentCo = StartCoroutine(CircuitDisappearCo());
+        if (currentCircuitCo != null) StopCoroutine(currentCircuitCo);
+        currentCircuitCo = StartCoroutine(CircuitDisappearCo());
     }
 
-    private Tween currentTween = null;
-    private Coroutine currentCo = null;
+    private Tween currentCircuitTween = null;
+    private Coroutine currentCircuitCo = null;
     private IEnumerator CircuitAppearCo()
     {
-        currentTween?.Kill();
+        currentCircuitTween?.Kill();
 
         Camera cam = Camera.main;
         GameObject circuit = circuitTilemap.gameObject;
@@ -490,19 +478,19 @@ public class TilePlacer : MonoBehaviour
         tr.position = startPos;
 
         Tween t = tr.DOMove(targetPos, 1.2f).SetEase(Ease.OutCubic);
-        currentTween = t;
+        currentCircuitTween = t;
 
         yield return t.WaitForCompletion();
 
-        if (currentTween == t) currentTween = null;
-        currentCo = null;
+        if (currentCircuitTween == t) currentCircuitTween = null;
+        currentCircuitCo = null;
 
         CircuitAppearTransDone = true;
     }
 
     private IEnumerator CircuitDisappearCo()
     {
-        currentTween?.Kill();
+        currentCircuitTween?.Kill();
 
         Camera cam = Camera.main;
         GameObject circuit = circuitTilemap.gameObject;
@@ -518,14 +506,64 @@ public class TilePlacer : MonoBehaviour
         targetPos.z = startPos.z;
 
         Tween t = tr.DOMove(targetPos, 1.2f).SetEase(Ease.InCubic);
-        currentTween = t;
+        currentCircuitTween = t;
 
         yield return t.WaitForCompletion();
 
-        if (currentTween == t) currentTween = null;
-        currentCo = null;
+        if (currentCircuitTween == t) currentCircuitTween = null;
+        currentCircuitCo = null;
 
         CircuitDisappearTransDone = true;
+    }
+
+    [HideInInspector] public bool TileBoundaryAppearTransDone = false;
+    [HideInInspector] public bool TileBoundaryDisappearTransDone = false;
+
+    public void TileBoundaryAppear()
+    {
+        if (currentTileBoundaryCo != null) StopCoroutine(currentTileBoundaryCo);
+        currentTileBoundaryCo = StartCoroutine(TileBoundaryAppearCo());
+    }
+    public void TileBoundaryDisappear()
+    {
+        if (currentTileBoundaryCo != null) StopCoroutine(currentTileBoundaryCo);
+        currentTileBoundaryCo = StartCoroutine(TileBoundaryDisappearCo());
+    }
+
+    private Tween currentTileBoundaryTween = null;
+    private Coroutine currentTileBoundaryCo = null;
+
+    private IEnumerator TileBoundaryAppearCo()
+    {
+        currentTileBoundaryTween?.Kill();
+
+        float targetA = 0.3f;
+
+        Tween t = tileBoundarySr.DOFade(targetA, 0.6f).SetEase(Ease.OutCubic);
+        currentTileBoundaryTween = t;
+
+        yield return t.WaitForCompletion();
+
+        if (currentTileBoundaryTween == t) currentTileBoundaryTween = null;
+        currentTileBoundaryCo = null;
+
+        TileBoundaryAppearTransDone = true;
+    }
+    private IEnumerator TileBoundaryDisappearCo()
+    {
+        currentTileBoundaryTween?.Kill();
+
+        float targetA = 0f;
+
+        Tween t = tileBoundarySr.DOFade(targetA, 0.6f).SetEase(Ease.InCubic);
+        currentTileBoundaryTween = t;
+
+        yield return t.WaitForCompletion();
+
+        if (currentTileBoundaryTween == t) currentTileBoundaryTween = null;
+        currentTileBoundaryCo = null;
+
+        TileBoundaryDisappearTransDone = true;
     }
     #endregion
 }

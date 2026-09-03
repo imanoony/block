@@ -192,6 +192,7 @@ public class GridManager : MonoBehaviour
         // 스테이지에 해당하는 블록 배치
         TilePlacer.PlaceBackground(bgWidth, bgHeight);
         TilePlacer.PlaceCircuit(cStartX, cStartY, cWidth, cHeight);
+        TilePlacer.PlaceTileBoundary();
         BlockPlacer.PlaceBlocks(stage);
 
         // 스테이지에 해당하는 가로 배리어 배치
@@ -209,6 +210,7 @@ public class GridManager : MonoBehaviour
         GameManager.Instance.Audio.ResetBGM();
 
         TilePlacer.RemoveCircuit();
+        TilePlacer.RemoveTileBoundary();
         BlockPlacer.RemoveBlocks();
     }
     public LogicExpr? GetGridExpr(int x, int y)

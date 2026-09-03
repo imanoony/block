@@ -508,20 +508,30 @@ public class GameManager : MonoBehaviour
         Grid.TilePlacer.CircuitAppearTransDone = false;
         Grid.BlockPlacer.BlockAppearTransDone = false;
 
+        Grid.TilePlacer.TileBoundaryAppear();
+        yield return new WaitUntil(
+            () =>
+            Grid.TilePlacer.TileBoundaryAppearTransDone
+        );
+        Grid.TilePlacer.TileBoundaryAppearTransDone = false;
+
         onComplete?.Invoke();
     }
 
     private IEnumerator StageEndTrans(Action onComplete)
     {
         Grid.TilePlacer.CircuitDisappear();
+        Grid.TilePlacer.TileBoundaryDisappear();
         Grid.BlockPlacer.BlockDisappear();
 
         yield return new WaitUntil(
             () =>
             Grid.TilePlacer.CircuitDisappearTransDone &&
+            Grid.TilePlacer.TileBoundaryDisappearTransDone &&
             Grid.BlockPlacer.BlockDisappearTransDone
         );
         Grid.TilePlacer.CircuitDisappearTransDone = false;
+        Grid.TilePlacer.TileBoundaryDisappearTransDone = false;
         Grid.BlockPlacer.BlockDisappearTransDone = false;
 
         onComplete?.Invoke();
