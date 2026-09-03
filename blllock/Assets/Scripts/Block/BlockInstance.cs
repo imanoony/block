@@ -20,6 +20,7 @@ public class BlockInstance : MonoBehaviour
     private GameObject ghost;
     private Vector2 blockPos;
     private Vector2Int blockTilePos;
+    private Rect dragBoundary;
 
     private Transform unplacedRoot = null;
     private Transform placedRoot = null;
@@ -89,6 +90,20 @@ public class BlockInstance : MonoBehaviour
         ghost = Instantiate(ghostPrefab, transform.position, Quaternion.identity);
         ghost.GetComponent<SpriteRenderer>().sprite = ghostSprite;
         ghost.SetActive(false);
+
+        // [TODO]
+        // Utils에서 바운더리 받고,
+        // 이 블록 생김새 바탕으로 블록 로컬 바운더리 생성해서 저장하기
+        // 이후에 블록 로컬 바운더리 바탕으로 드래그 됨.
+
+        float blockWidth = sr.bounds.size.x;
+        float blockHeight = sr.bounds.size.y;
+        dragBoundary = new Rect(
+            Utils.Boundary.xMin + blockWidth / 2f,
+            Utils.Boundary.yMin + blockHeight / 2f,
+            Utils.Boundary.width - blockWidth,
+            Utils.Boundary.height - blockHeight
+        );
     }
 
     private void OnDestroy()
@@ -286,13 +301,12 @@ public class BlockInstance : MonoBehaviour
 
     private Vector3 GetClampedPos(Vector3 pos)
     {
-        Rect boundary = Utils.Boundary;
-        Vector3 tileSize = GameManager.Instance.Grid.GetTileSize();
-        Vector3 clamped = new();
-
-        clamped.x = Mathf.Clamp(pos.x, boundary.xMin + tileSize.x * blockData.Width / 2f, boundary.xMax - tileSize.x * blockData.Width / 2f);
-        clamped.y = Mathf.Clamp(pos.y, boundary.yMin + tileSize.y * blockData.Height / 2f, boundary.yMax - tileSize.y * blockData.Height / 2f);
-        clamped.z = Utils.BLOCK_Z;
+        Vector3 clamped = new()
+        {
+            x = Mathf.Clamp(pos.x, dragBoundary.xMin, dragBoundary.xMax),
+            y = Mathf.Clamp(pos.y, dragBoundary.yMin, dragBoundary.yMax),
+            z = Utils.BLOCK_Z
+        };
 
         return clamped;
     }

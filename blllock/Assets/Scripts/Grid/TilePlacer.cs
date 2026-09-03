@@ -376,6 +376,10 @@ public class TilePlacer : MonoBehaviour
         tileBoundary.transform.position = new(tileBoundarySr.size.x / 2f, tileBoundarySr.size.y / 2f);
 
         tileBoundary.SetActive(true);
+        
+        Bounds b = tileBoundarySr.bounds;
+        Rect r = new(b.min.x, b.min.y, b.size.x, b.size.y);
+        Utils.SetBoundary(r);
     }
 
     #endregion
@@ -555,7 +559,7 @@ public class TilePlacer : MonoBehaviour
 
         float targetA = 0f;
 
-        Tween t = tileBoundarySr.DOFade(targetA, 0.6f).SetEase(Ease.InCubic);
+        Tween t = tileBoundarySr.DOFade(targetA, 0.6f).SetEase(Ease.Linear);
         currentTileBoundaryTween = t;
 
         yield return t.WaitForCompletion();
