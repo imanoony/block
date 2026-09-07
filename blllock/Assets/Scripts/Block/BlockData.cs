@@ -2,15 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum Rotate 
-{ 
-    Null = -1, 
-    None = 0, 
-    Rotate90 = 90, 
-    Rotate180 = 180, 
-    Rotate270 = 270 
-}
-
 public class BlockData
 {
     public BlockData() { }

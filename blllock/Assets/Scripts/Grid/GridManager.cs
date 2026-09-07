@@ -8,63 +8,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public enum TileType { Empty, Occupied }
-public enum GridType { Null, Input, Output }
 
-public class Tile
-{
-    public Vector2Int Pos { get; private set; }
-    public TileType Type { get; private set; }
-    public bool IsCircuit { get; private set; } = false;
-    public Tile(Vector2Int pos, TileType type = TileType.Empty) { Pos = pos; Type = type; }
-    public void SetType(TileType type) => Type = type;
-    public void SetIsCircuit(bool isCircuit) => IsCircuit = isCircuit;
-}
-
-public class Grid
-{
-    public Vector2Int Pos { get; private set; }
-    public GridType Type { get; private set; }
-    public LogicExpr? Expr { get; private set; } = null; // input, output과 관련된 상수 LogicExpr
-
-    public List<PortExpr> Ports { get; private set; } = new(); // 인접한 Ports들 (최대 4개)    
-    public List<Wire?> WiresLeftUp { get; private set; } = new();
-    public List<Wire?> WiresLeftDown { get; private set; } = new();
-    public List<Wire?> WiresRightUp { get; private set; } = new();
-    public List<Wire?> WiresRightDown { get; private set; } = new();
-    public event Action? OnPortsChanged;
-
-    public Grid(Vector2Int pos, GridType type = GridType.Null) { Pos = pos; Type = type; }
-    public void SetType(GridType type) => Type = type;
-    public void SetExpr(LogicExpr? expr) => Expr = expr;
-    public bool AddPort(PortExpr port)
-    {
-        if (Ports.Count >= Utils.MAX_PORT) return false;
-
-        Ports.Add(port);
-        WiresLeftUp.Add(port.LeftUp);
-        WiresLeftDown.Add(port.LeftDown);
-        WiresRightUp.Add(port.RightUp);
-        WiresRightDown.Add(port.RightDown);
-
-        OnPortsChanged?.Invoke();
-        return true;
-    }
-    public void RemovePort(PortExpr port)
-    {
-        int index = Ports.IndexOf(port);
-        if (index < 0) return;
-
-        Ports.RemoveAt(index);
-
-        WiresLeftUp.RemoveAt(index);
-        WiresLeftDown.RemoveAt(index);
-        WiresRightUp.RemoveAt(index);
-        WiresRightDown.RemoveAt(index);
-
-        OnPortsChanged?.Invoke();
-    }
-}
 
 public class GridManager : MonoBehaviour
 {
@@ -95,6 +39,9 @@ public class GridManager : MonoBehaviour
 
     public Grid[,]? Grids { get; private set; } = null;
     public Tile[,]? Tiles { get; private set; } = null;
+    public HEdge[,]? HEdges { get; private set; } = null;
+    public VEdge[,]? VEdges { get; private set; } = null;
+
     private TilePlacer? _tilePlacer;
     public TilePlacer TilePlacer
     {
@@ -123,9 +70,20 @@ public class GridManager : MonoBehaviour
             return _blockPlacer;
         }
     }
-
-    public HashSet<Vector2Int> HBarriers { get; private set; } = new();
-    public HashSet<Vector2Int> VBarriers { get; private set; } = new();
+    private CablePlacer? _cablePlacer;
+    public CablePlacer CablePlacer
+    {
+        get
+        {
+            if (_cablePlacer == null)
+            {
+                _cablePlacer = gameObject.GetComponent<CablePlacer>();
+                if (_cablePlacer == null)
+                    _cablePlacer = gameObject.AddComponent<CablePlacer>();
+            }
+            return _cablePlacer;
+        }
+    }
     private StageData? stageCache = null;
 
     public void InitStage(int id) => InitStage(GameManager.Instance.StageLibrary[id]);
@@ -136,66 +94,118 @@ public class GridManager : MonoBehaviour
 
         int bgWidth = stage.BgWidth;
         int bgHeight = stage.BgHeight;
-        int cWidth = stage.CircuitWidth;
-        int cHeight = stage.CircuitHeight;
-        int cStartX = stage.CircuitPosition.x;
-        int cStartY = stage.CircuitPosition.y;
 
-        Grids = new Grid[cHeight + 1, cWidth + 1];
-        for (int x = 0; x < cHeight + 1; x++)
-            for (int y = 0; y < cWidth + 1; y++)
-                Grids[x, y] = new Grid(new(x, y));
+        // Grid Initialization
+        // step 1: Grids 전체 배열 생성
+        // step 2: Circuit 내부에 있는 Grid들 타입을 Normal로 변경
+        // step 3: Input Grid 검증 후 타입을 Input으로 변경, Expr 설정
+        // step 4: Output Grid 검증 후 타입을 Output으로 변경, Expr 설정
+
+        Grids = new Grid[bgHeight + 1, bgWidth + 1];
+        for (int x = 0; x < bgHeight + 1; x++)
+            for (int y = 0; y < bgWidth + 1; y++)
+                Grids[x, y] = new Grid(new(x, y), GridType.Null);
+
+        for (int i = 0; i < stage.Circuits.Count; i++)
+        {
+            (Vector2Int pos, int width, int height) = stage.Circuits[i];
+            for (int x = pos.x; x < pos.x + height + 1; x++)
+                for (int y = pos.y; y < pos.y + width + 1; y++)
+                    Grids[x, y].SetType(GridType.Normal);
+        }
 
         foreach (var (pos, expr) in stage.Inputs)
         {
+            if (Grids[pos.x, pos.y].Type != GridType.Normal)
+            {
+                Debug.LogWarning($"[GridManager] Input Grid at {pos} is not Normal. Current Type: {Grids[pos.x, pos.y].Type}");
+                continue;
+            }
             Grids[pos.x, pos.y].SetType(GridType.Input);
             Grids[pos.x, pos.y].SetExpr(expr);
         }
 
         foreach (var (pos, expr) in stage.Outputs)
         {
+            if (Grids[pos.x, pos.y].Type != GridType.Normal)
+            {
+                Debug.LogWarning($"[GridManager] Output Grid at {pos} is not Normal. Current Type: {Grids[pos.x, pos.y].Type}");
+                continue;
+            }
             Grids[pos.x, pos.y].SetType(GridType.Output);
             Grids[pos.x, pos.y].SetExpr(expr);
         }
 
+        // Tile Initialization
+        // step 1: Tiles 전체 배열 생성
+        // step 2: Circuit 내부 타일 표시, Circuit 테두리 타일을 점유로 설정
+
         Tiles = new Tile[bgHeight, bgWidth];
         for (int x = 0; x < bgHeight; x++)
-        {
             for (int y = 0; y < bgWidth; y++)
+                Tiles[x, y] = new Tile(new(x, y));
+
+        for (int i = 0; i < stage.Circuits.Count; i++)
+        {
+            (Vector2Int pos, int width, int height) = stage.Circuits[i];
+            for (int x = pos.x; x < pos.x + height; x++)
+                for (int y = pos.y; y < pos.y + width; y++)
+                    Tiles[x, y].SetIsCircuit(true);
+
+            for (int x = pos.x - 1; x < pos.x + height + 1; x++)
             {
-                bool isHorizontalBorder =
-                    (x == cStartX - 1 || x == cStartX + cHeight) &&
-                    y >= cStartY - 1 && y <= cStartY + cWidth;
-
-                bool isVerticalBorder =
-                    (y == cStartY - 1 || y == cStartY + cWidth) &&
-                    x >= cStartX - 1 && x <= cStartX + cHeight;
-
-                bool isCircuit =
-                    x >= cStartX &&
-                    x < cStartX + cHeight &&
-                    y >= cStartY &&
-                    y < cStartY + cWidth;
-
-                Tile tile;
-
-                if (isHorizontalBorder || isVerticalBorder)
+                for (int y = pos.y - 1; y < pos.y + width + 1; y++)
                 {
-                    tile = new Tile(new(x, y), TileType.Occupied);
+                    if (Tiles[x, y].IsCircuit) continue;
+                    Tiles[x, y].SetType(TileType.Occupied);
                 }
-                else
-                {
-                    tile = new Tile(new(x, y));
-
-                    if (isCircuit)
-                    {
-                        tile.SetIsCircuit(true);
-                    }
-                }
-
-                Tiles[x, y] = tile;
             }
         }
+
+        // Edge Initialization
+        // step 1: HEdges, VEdges 전체 배열 생성
+        // step 2: Circuit 내부에 있는 HEdges, VEdges 타입을 Empty로 변경
+        // step 3: Barrier 위치에 있는 HEdges, VEdges 검증 후 타입을 Barrier로 변경
+
+        HEdges = new HEdge[bgHeight + 1, bgWidth];
+        for (int x = 0; x < bgHeight + 1; x++)
+            for (int y = 0; y < bgWidth; y++)
+                HEdges[x, y] = new HEdge(new(x, y), EdgeType.Null);
+        VEdges = new VEdge[bgHeight, bgWidth + 1];
+        for (int x = 0; x < bgHeight; x++)
+            for (int y = 0; y < bgWidth + 1; y++)
+                VEdges[x, y] = new VEdge(new(x, y), EdgeType.Null);
+
+        for (int i = 0; i < stage.Circuits.Count; i++)
+        {
+            (Vector2Int pos, int width, int height) = stage.Circuits[i];
+            for (int x = pos.x; x < pos.x + height + 1; x++)
+                for (int y = pos.y; y < pos.y + width; y++)
+                    HEdges[x, y].SetType(EdgeType.Empty);
+            for (int x = pos.x; x < pos.x + height; x++)
+                for (int y = pos.y; y < pos.y + width + 1; y++)
+                    VEdges[x, y].SetType(EdgeType.Empty);
+        }
+
+        foreach (Vector2Int hbarrier in stage.HBarriers)
+        {
+            if (HEdges[hbarrier.x, hbarrier.y].Type != EdgeType.Empty)
+            {
+                Debug.LogWarning($"[GridManager] HBarrier at {hbarrier} is not Empty. Current Type: {HEdges[hbarrier.x, hbarrier.y].Type}");
+                continue;
+            }
+            HEdges[hbarrier.x, hbarrier.y].SetType(EdgeType.Barrier);
+        }
+        foreach (Vector2Int vbarrier in stage.VBarriers)
+        {
+            if (VEdges[vbarrier.x, vbarrier.y].Type != EdgeType.Empty)
+            {
+                Debug.LogWarning($"[GridManager] VBarrier at {vbarrier} is not Empty. Current Type: {VEdges[vbarrier.x, vbarrier.y].Type}");
+                continue;
+            }
+            VEdges[vbarrier.x, vbarrier.y].SetType(EdgeType.Barrier);
+        }
+
         // DEBUG
         /*for (int x = 0; x < bgHeight; x++)
         {
@@ -211,19 +221,19 @@ public class GridManager : MonoBehaviour
             }
         }*/
 
-        HBarriers = stage.HBarriers.ToHashSet();
-        VBarriers = stage.VBarriers.ToHashSet();
-
         // 스테이지에 해당하는 타일 배치
         // 스테이지에 해당하는 블록 배치
         TilePlacer.PlaceBackground(bgWidth, bgHeight);
-        TilePlacer.PlaceCircuit(cStartX, cStartY, cWidth, cHeight);
+        TilePlacer.PlaceCircuits(stage.Circuits);
+        TilePlacer.PlaceCamera();
+        TilePlacer.PlaceGrids(Grids);
+        TilePlacer.PlaceTileBoundary();
         BlockPlacer.PlaceBlocks(stage);
 
         // 스테이지에 해당하는 가로 배리어 배치
         // 스테이지에 해당하는 세로 배리어 배치
-        TilePlacer.PlaceHBarriers(HBarriers);
-        TilePlacer.PlaceVBarriers(VBarriers);
+        TilePlacer.PlaceHBarriers(stage.HBarriers);
+        TilePlacer.PlaceVBarriers(stage.VBarriers);
     }
 
     public void RemoveCurrentStage()
@@ -234,8 +244,12 @@ public class GridManager : MonoBehaviour
         placeCount = 0;
         GameManager.Instance.Audio.ResetBGM();
 
-        TilePlacer.RemoveCircuit();
+        TilePlacer.RemoveCircuits();
+        TilePlacer.RemoveTileBoundary();
+        TilePlacer.RemoveGrids();
+        TilePlacer.RemoveBarriers();
         BlockPlacer.RemoveBlocks();
+        CablePlacer.RemoveCables();
     }
     public LogicExpr? GetGridExpr(int x, int y)
     {
@@ -250,33 +264,56 @@ public class GridManager : MonoBehaviour
     }
     public GridType GetGridType(int x, int y)
     {
-        if (Grids == null) return GridType.Null;
+        if (Grids == null) return GridType.Normal;
         return Grids[x, y].Type;
     }
 
-    #region Block Placement
-    private List<BlockInstance> invalids = new();
+    #region Invalids
+    private List<BlockInstance> invalidBlocks = new();
+    private List<CableGroup> invalidCables = new();
     public void AddInvalid(BlockInstance instance)
     {
         if (instance.Valid) return;
-        invalids.Add(instance);
+        invalidBlocks.Add(instance);
+    }
+    public void AddInvalid(CableGroup group)
+    {
+        if (group.Valid) return;
+        invalidCables.Add(group);
     }
     public void RemoveInvalid(BlockInstance instance)
     {
         if (!instance.Valid) return;
-        if (invalids.Contains(instance)) invalids.Remove(instance);
+        if (invalidBlocks.Contains(instance)) invalidBlocks.Remove(instance);
+    }
+    public void RemoveInvalid(CableGroup group)
+    {
+        if (!group.Valid) return;
+        if (invalidCables.Contains(group)) invalidCables.Remove(group);
     }
     private void CheckInvalids()
     {
-        List<BlockInstance> valids = new();
-        for (int i = 0; i < invalids.Count; i++)
-        {
-            bool result = invalids[i].Check(this);
-            if (result) valids.Add(invalids[i]);
-        }
-        for (int i = 0; i < valids.Count; i++) invalids.Remove(valids[i]);
-    }
+        int i;
 
+        List<BlockInstance> validBlocks = new();
+        for (i = 0; i < invalidBlocks.Count; i++)
+        {
+            bool result = invalidBlocks[i].Check(this);
+            if (result) validBlocks.Add(invalidBlocks[i]);
+        }
+        for (i = 0; i < validBlocks.Count; i++) invalidBlocks.Remove(validBlocks[i]);
+
+        List<CableGroup> validCables = new();
+        for (i = 0; i < invalidCables.Count; i++)
+        {
+            bool result = CablePlacer.Check(this, invalidCables[i]);
+            if (result) validCables.Add(invalidCables[i]);
+        }
+        for (i = 0; i < validCables.Count; i++) invalidCables.Remove(validCables[i]);
+    }
+    #endregion
+
+    #region Block Placement
     private int placeCount = 0;
     public bool PlaceBlock(BlockData block, Vector2Int baseTile)
     {
@@ -292,9 +329,7 @@ public class GridManager : MonoBehaviour
         }
 
         if (!IsInCircuit(baseTile.x, baseTile.y)) return true;
-        
-        Vector2Int circuitBase = GetCircuitBase(baseTile.x, baseTile.y);
-        if (!IsValidPort(block, circuitBase, GameManager.Instance.Wire)) return false;
+        if (!IsValidPort(block, baseTile, GameManager.Instance.Wire)) return false;
 
         // 점유된 그리드에 Port를 추가한다.
         List<Vector2Int> gridOffsets = block.Grids;
@@ -302,7 +337,7 @@ public class GridManager : MonoBehaviour
         {
             Vector2Int offset = gridOffsets[i];
             PortExpr port = block.Ports[i];
-            Grids![offset.x + circuitBase.x, offset.y + circuitBase.y].AddPort(port);
+            Grids![offset.x + baseTile.x, offset.y + baseTile.y].AddPort(port);
         }
 
         // 블록의 portIDs를 Evaluate 한다.
@@ -332,8 +367,6 @@ public class GridManager : MonoBehaviour
 
         if (!valid) return;
 
-        Vector2Int circuitBase = GetCircuitBase(baseTile.x, baseTile.y);
-
         // 점유했던 그리드에서 Port를 제거한다.
         // Wire Manager의 WireDict, WireLogic을 수정한다.
         List<Vector2Int> gridOffsets = block.Grids;
@@ -341,7 +374,7 @@ public class GridManager : MonoBehaviour
         {
             Vector2Int offset = gridOffsets[i];
             PortExpr port = block.Ports[i];
-            Grids![offset.x + circuitBase.x, offset.y + circuitBase.y].RemovePort(port);
+            Grids![offset.x + baseTile.x, offset.y + baseTile.y].RemovePort(port);
         }
         foreach (int id in block.WireIds) GameManager.Instance.Wire.RemoveWire(id);
 
@@ -377,7 +410,7 @@ public class GridManager : MonoBehaviour
             // barrier checking
             if (offsets.Contains(new(offset.x - 1, offset.y)))
                 if (
-                    IsHBarriered(
+                    IsHEdgeOccupied(
                         baseTile.y + offset.y, 
                         baseTile.x + offset.x, 
                         baseTile.x + offset.x - 1
@@ -385,7 +418,7 @@ public class GridManager : MonoBehaviour
                 ) return false;
             if (offsets.Contains(new(offset.x, offset.y - 1)))
                 if (
-                    IsVBarriered(
+                    IsVEdgeOccupied(
                         baseTile.x + offset.x,
                         baseTile.y + offset.y,
                         baseTile.y + offset.y - 1
@@ -414,28 +447,30 @@ public class GridManager : MonoBehaviour
         return Tiles[x, y].IsCircuit;
     }
 
-    // is horizontally barriered?
-    // barrier가 가로로 긴 상태, 즉 세로로 이어진 두 칸이 
+    // is the horizontal edge occupied?
+    // edge가 가로로 긴 상태, 즉 세로로 이어진 두 칸이 
     // 막혀있다면 false, 그렇지 않다면 true.
-    private bool IsHBarriered(int y, int x1, int x2)
+    private bool IsHEdgeOccupied(int y, int x1, int x2)
     {
         int x = x1 > x2 ? x1 : x2;
-        if (stageCache == null) return false;
-        int circuitStartX = stageCache.CircuitPosition.x;
-        int circuitStartY = stageCache.CircuitPosition.y;
-        return HBarriers.Contains(new(x - circuitStartX, y - circuitStartY));
+        if (stageCache == null) return true;
+        if (HEdges == null) return true;
+        if (HEdges[x, y].Type == EdgeType.Null) return false;
+
+        return HEdges[x, y].Type != EdgeType.Empty;
     }
 
-    // is vertically barriered?
-    // barrier가 세로로 긴 상태, 즉 가로로 이어진 두 칸이
+    // is the vertical edge occupied?
+    // edge가 세로로 긴 상태, 즉 가로로 이어진 두 칸이
     // 막혀있다면 false, 그렇지 않다면 true.
-    private bool IsVBarriered(int x, int y1, int y2)
+    private bool IsVEdgeOccupied(int x, int y1, int y2)
     {
         int y = y1 > y2 ? y1 : y2;
-        if (stageCache == null) return false;
-        int circuitStartX = stageCache.CircuitPosition.x;
-        int circuitStartY = stageCache.CircuitPosition.y;
-        return VBarriers.Contains(new(x - circuitStartX, y - circuitStartY));
+        if (stageCache == null) return true;
+        if (VEdges == null) return true;
+        if (VEdges[x, y].Type == EdgeType.Null) return false;
+
+        return VEdges[x, y].Type != EdgeType.Empty;
     }
 
     // 블록의 포트를 모두 Compatible -> AddToDict/AddToLogic 한다.
@@ -530,6 +565,62 @@ public class GridManager : MonoBehaviour
         return result;
     }
 
+    public List<Vector2Int?> GetNearestGrids(Vector3 worldPos, int count = 1, bool useThreshold = true)
+    {
+        List<(Vector2Int pos, float distSq)> nearest = new();
+        
+        if (Grids == null || count <= 0) return new();
+        float thresholdSq = (Utils.THRESHOLD-2.6f) * (Utils.THRESHOLD-2.6f);
+
+        int height = Grids.GetLength(0);
+        int width = Grids.GetLength(1);
+
+        for (int x = 0; x < height; x++)
+        {
+            for (int y = 0; y < width; y++)
+            {
+                if (Grids[x, y].Type == GridType.Null) continue;
+
+                Vector3? topLeft = TilePlacer.GetTileTopLeftWorld(x, y);
+                if (topLeft == null) continue;
+
+                float distSq = ((Vector2)worldPos - (Vector2)topLeft.Value).sqrMagnitude;
+                if (useThreshold && distSq > thresholdSq) continue;
+
+                (Vector2Int, float) candidate = (new Vector2Int(x, y), distSq);
+
+                if (nearest.Count < count)
+                {
+                    nearest.Add(candidate);
+                }
+                else
+                {
+                    int worstIdx = 0;
+
+                    for (int i = 1; i < nearest.Count; i++)
+                    {
+                        if (nearest[i].distSq > nearest[worstIdx].distSq)
+                            worstIdx = i;
+                    }
+
+                    if (distSq < nearest[worstIdx].distSq)
+                    {
+                        nearest[worstIdx] = candidate;
+                    }
+                }
+            }
+        }
+
+        nearest.Sort((a, b) => a.distSq.CompareTo(b.distSq));
+
+        List<Vector2Int?> result = new();
+        foreach ((Vector2Int pos, float) tile in nearest) result.Add(tile.pos);
+        while (result.Count < count) result.Add(null);
+
+        return result;
+    }
+
+    public Vector3? GetTileTopLeftWorld(int x, int y) => TilePlacer.GetTileTopLeftWorld(x, y);
     public Vector3 GetBlockCenterOnTile(int x, int y, int height, int width) => TilePlacer.GetBlockCenterOnTile(x, y, height, width);
     public Vector3 GetTileSize() => TilePlacer.GetTileSize();
     public Vector3 GetTileTopLeftForChat(int x, int y)
@@ -539,14 +630,136 @@ public class GridManager : MonoBehaviour
         pos = new(pos.x, pos.y + GetTileSize().y / 16f, pos.z);
         return pos;
     }
-    private Vector2Int GetCircuitBase(int x, int y)
-    {
-        if (stageCache == null) return Vector2Int.zero;
-        int cStartX = stageCache.CircuitPosition.x;
-        int cStartY = stageCache.CircuitPosition.y;
+    #endregion
 
-        return new Vector2Int(x - cStartX, y - cStartY);
+    #region Cable Placement
+
+    public void PlaceCable(Cable cable)
+    {
+        Edge edge = cable.ToEdge();
+        switch (edge)
+        {
+            case HEdge he:
+                if (HEdges == null) return;
+                HEdges[he.Pos.x, he.Pos.y].SetType(EdgeType.Cable);
+                break;
+            case VEdge ve:
+                if (VEdges == null) return;
+                VEdges[ve.Pos.x, ve.Pos.y].SetType(EdgeType.Cable);
+                break;
+            default:
+                break;
+        }
     }
-    public Vector2Int GetCircuitStart() => stageCache == null ? Vector2Int.zero : stageCache.CircuitPosition;
+
+    public bool PlaceCableGroup(CableGroup group)
+    {
+        if (!IsValidPort(group, GameManager.Instance.Wire)) return false;
+
+        // 점유된 그리드에 Port를 추가한다.
+        PortVar port = group.Port;
+        foreach (Vector2Int end in group.Ends)
+        {
+            Grids![end.x, end.y].AddPort(port);
+        }
+
+        // 케이블 그룹의 portIDs를 Evaluate 한다.
+        GameManager.Instance.Wire.EvalAll();
+
+        return true;
+    }
+
+    public void RemoveCable(Cable cable)
+    {
+        Edge edge = cable.ToEdge();
+        switch (edge)
+        {
+            case HEdge he:
+                if (HEdges == null) return;
+                HEdges[he.Pos.x, he.Pos.y].SetType(EdgeType.Empty);
+                break;
+            case VEdge ve:
+                if (VEdges == null) return;
+                VEdges[ve.Pos.x, ve.Pos.y].SetType(EdgeType.Empty);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void RemoveCableGroup(CableGroup group, bool valid)
+    {
+        Debug.Log($"Remove Cable Group, valid? {valid}");
+        if (!valid)
+        {
+            group.SetValid(true);
+            return;
+        }
+
+        // 점유했던 그리드에서 Port를 제거한다
+        PortVar port = group.Port;
+        foreach (Vector2Int end in group.Ends)
+        {
+            Grids![end.x, end.y].RemovePort(port);
+        }
+
+        // Wire Manager의 WireDict, WireLogic을 수정한다.
+        foreach (int id in group.WireIds) GameManager.Instance.Wire.RemoveWire(id);
+
+        CheckInvalids();
+        GameManager.Instance.Wire.EvalAll();
+    }
+
+    public bool IsValidPos(Cable cable)
+    {
+        Edge edge = cable.ToEdge();
+        switch (edge)
+        {
+            case HEdge he:
+                if (HEdges == null) return false;
+                return HEdges[he.Pos.x, he.Pos.y].Type == EdgeType.Empty;
+            case VEdge ve:
+                if (VEdges == null) return false;
+                return VEdges[ve.Pos.x, ve.Pos.y].Type == EdgeType.Empty;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    // 케이블 그룹의 포트를 모두 Compatible -> AddToDict/AddToLogic 한다.
+    // 모순 발생 시 Rollback하고 false를 반환한다.
+    // 모순이 발생하지 않으면 포트를 모두 wire manager에 등록하고 true를 반환한다.
+    private bool IsValidPort(CableGroup group, WireManager wire)
+    {
+        Dictionary<int, Wire> backupWires = wire.Wires.ToDictionary(kvp => kvp.Key, kvp => new Wire(kvp.Value));
+        Dictionary<int, HashSet<int>> backupDict = wire.WireDict.ToDictionary(kvp => kvp.Key, kvp => new HashSet<int>(kvp.Value));
+        Dictionary<int, VarExpr> backupLogic = new(wire.WireLogic);
+        
+        PortVar port = group.Port;
+
+        foreach (Vector2Int end in group.Ends)
+        {
+            Grid grid = Grids![end.x, end.y];
+            for (int i = 0; i < grid.Ports.Count; i++)
+            {
+                if (!wire.AddToDict(port, grid.Ports[i]))
+                {
+                    wire.RollBack(backupWires, backupDict, backupLogic);
+                    return false;
+                }
+            }
+            if (grid.Expr != null && grid.Type == GridType.Input)
+            {
+                if (!wire.AddToLogic(port, grid.Expr))
+                {
+                    wire.RollBack(backupWires, backupDict, backupLogic);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
     #endregion
 }

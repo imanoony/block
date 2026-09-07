@@ -1,0 +1,281 @@
+fileFormatVersion: 2
+guid: 2b38e2b5af157504e9764b9b55804aa9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4931005599457348650
+    second: nemocuit-tool-effect_0
+  - first:
+      213: 5020675816629430992
+    second: nemocuit-tool-effect_1
+  - first:
+      213: -6934955396129537854
+    second: nemocuit-tool-effect_2
+  - first:
+      213: 666624596366099020
+    second: nemocuit-tool-effect_3
+  - first:
+      213: -4830445757904379374
+    second: nemocuit-tool-effect_4
+  - first:
+      213: 6423281397634508913
+    second: nemocuit-tool-effect_5
+  - first:
+      213: -4217604056796690148
+    second: nemocuit-tool-effect_6
+  - first:
+      213: -8604020738478748609
+    second: nemocuit-tool-effect_7
+  - first:
+      213: 4998835515055632748
+    second: nemocuit-tool-effect_8
+  - first:
+      213: -65984180507483675
+    second: nemocuit-tool-effect_9
+  - first:
+      213: 3367985220742427130
+    second: nemocuit-tool-effect_10
+  - first:
+      213: 5554484718003712250
+    second: nemocuit-tool-effect_11
+  - first:
+      213: 8972707549945169484
+    second: nemocuit-tool-effect_12
+  - first:
+      213: 6134352840836529752
+    second: nemocuit-tool-effect_13
+  - first:
+      213: -3966326112239402422
+    second: nemocuit-tool-effect_14
+  - first:
+      213: 1604912662847054404
+    second: nemocuit-tool-effect_15
+  - first:
+      213: 2456265922347193233
+    second: nemocuit-tool-effect_16
+  - first:
+      213: -6476084813242987895
+    second: nemocuit-tool-effect_17
+  - first:
+      213: 7466128838171437043
+    second: nemocuit-tool-effect_18
+  - first:
+      213: 8116284758989764444
+    second: nemocuit-tool-effect_19
+  - first:
+      213: 805119803044173498
+    second: nemocuit-tool-effect_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: nemocuit-tool-effect_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 660
+        width: 340
+        height: 340
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d3f1ea688c819bb0800000000000000
+      internalID: -4931005599457348650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-tool-effect_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 520
+        width: 140
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0da6796fd060da540800000000000000
+      internalID: 5020675816629430992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-tool-effect_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 200
+        width: 320
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c045886fc612cf90800000000000000
+      internalID: -6934955396129537854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ffa0203d17c028f4f993aa72e9c75767
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      nemocuit-tool-effect_0: -4931005599457348650
+      nemocuit-tool-effect_1: 5020675816629430992
+      nemocuit-tool-effect_10: 3367985220742427130
+      nemocuit-tool-effect_11: 5554484718003712250
+      nemocuit-tool-effect_12: 8972707549945169484
+      nemocuit-tool-effect_13: 6134352840836529752
+      nemocuit-tool-effect_14: -3966326112239402422
+      nemocuit-tool-effect_15: 1604912662847054404
+      nemocuit-tool-effect_16: 2456265922347193233
+      nemocuit-tool-effect_17: -6476084813242987895
+      nemocuit-tool-effect_18: 7466128838171437043
+      nemocuit-tool-effect_19: 8116284758989764444
+      nemocuit-tool-effect_2: -6934955396129537854
+      nemocuit-tool-effect_20: 805119803044173498
+      nemocuit-tool-effect_21: 89406787
+      nemocuit-tool-effect_3: 666624596366099020
+      nemocuit-tool-effect_4: -4830445757904379374
+      nemocuit-tool-effect_5: 6423281397634508913
+      nemocuit-tool-effect_6: -4217604056796690148
+      nemocuit-tool-effect_7: -8604020738478748609
+      nemocuit-tool-effect_8: 4998835515055632748
+      nemocuit-tool-effect_9: -65984180507483675
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

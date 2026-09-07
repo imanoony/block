@@ -106,8 +106,7 @@ public class StageData
 {
     public int ID;
     public int BgWidth, BgHeight;
-    public int CircuitWidth, CircuitHeight;
-    public Vector2Int CircuitPosition;
+    public List<(Vector2Int pos, int width, int height)> Circuits = new();
     public List<(Vector2Int pos, LogicExpr expr)> Inputs = new(), Outputs = new();
     public string Desc;
     public bool IsCleared { get; private set; } = false;
@@ -129,6 +128,10 @@ public class StageData
     public List<Vector2Int> VBarriers = new(); // (Tile 좌표계, Grid 좌표계)를 사용한다.
     #endregion
 
+    #region Tools
+    public Dictionary<ToolType, int> ToolCounts = new();
+    #endregion
+
     #region for JSON
     public static StageData FromRaw(Raw raw)
     {
@@ -137,9 +140,13 @@ public class StageData
             ID = raw.ID,
             BgWidth = raw.BgWidth,
             BgHeight = raw.BgHeight,
-            CircuitWidth = raw.CircuitWidth,
-            CircuitHeight = raw.CircuitHeight,
-            CircuitPosition = raw.CircuitPosition.ToVector2Int(),
+            Circuits = raw.Circuits.Select(
+                c => (
+                    c.pos.ToVector2Int(),
+                    c.width,
+                    c.height
+                )
+            ).ToList(),
             Desc = raw.Desc,
             TutorialID = raw.TutorialID,
             Inputs = raw.Inputs.Select(
@@ -162,7 +169,8 @@ public class StageData
             FlipYIndex = raw.FlipYIndex,
             SIndex = raw.SIndex,
             HBarriers = raw.HBarriers.Select(pos => pos.ToVector2Int()).ToList(),
-            VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList()
+            VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList(),
+            ToolCounts = raw.ToolCounts.ToDictionary(t => t.type, t => t.count)
         };
         return stage;
     }
@@ -173,9 +181,14 @@ public class StageData
             ID = stage.ID,
             BgWidth = stage.BgWidth,
             BgHeight = stage.BgHeight,
-            CircuitWidth = stage.CircuitWidth,
-            CircuitHeight = stage.CircuitHeight,
-            CircuitPosition = new RawPos { x = stage.CircuitPosition.x, y = stage.CircuitPosition.y },
+            Circuits = stage.Circuits.Select(
+                c => new RawCircuit
+                {
+                    pos = new RawPos { x = c.pos.x, y = c.pos.y },
+                    width = c.width,
+                    height = c.height
+                }
+            ).ToList(),
             Inputs = stage.Inputs.Select(
                 io => new RawIO
                 {
@@ -206,7 +219,10 @@ public class StageData
             ).ToList(),
             VBarriers = stage.VBarriers.Select(
                 pos => new RawPos { x = pos.x, y = pos.y }
-            ).ToList()
+            ).ToList(),
+            ToolCounts = stage.ToolCounts.Select(
+                kvp => new RawToolCount { type = kvp.Key, count = kvp.Value }
+            ).ToList(),
         };
         return raw;
     }
@@ -222,8 +238,7 @@ public class StageData
     {
         public int ID;
         public int BgWidth, BgHeight;
-        public int CircuitWidth, CircuitHeight;
-        public RawPos CircuitPosition;
+        public List<RawCircuit> Circuits = new();
         public List<RawIO> Inputs = new(), Outputs = new();
         public string Desc;
         public int TutorialID = -1;
@@ -233,6 +248,14 @@ public class StageData
         public List<int> FlipXIndex = new(), FlipYIndex = new();
         public List<int> SIndex = new();
         public List<RawPos> HBarriers = new(), VBarriers = new();
+        public List<RawToolCount> ToolCounts = new();
+    }
+    [Serializable]
+    public class RawCircuit
+    {
+        public int width;
+        public int height;
+        public RawPos pos;
     }
     [Serializable]
     public class RawIO
@@ -246,6 +269,12 @@ public class StageData
         public int x;
         public int y;
         public Vector2Int ToVector2Int() => new(x, y);
+    }
+    [Serializable]
+    public class RawToolCount
+    {
+        public ToolType type;
+        public int count;
     }
     #endregion
 }

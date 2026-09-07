@@ -5,6 +5,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum Rotate 
+{ 
+    Null = -1, 
+    None = 0, 
+    Rotate90 = 90, 
+    Rotate180 = 180, 
+    Rotate270 = 270 
+}
+
 public static class Utils
 {
     public const float GRID_IDLE = 10f;
@@ -36,9 +45,10 @@ public static class Utils
     public const float TILE_FILL_PERCENT2 = 0.7f;
     public const float FILL_THRESHOLD = 9;
     public const int PPU = 24;
-    public const int MAX_PORT = 4;
+    public const int MAX_PORT = 8;
     public static readonly Vector3 BLOCK_SHADOW = new(0.05f, 0.05f, 0);
     public static readonly Vector3 TAG_SHADOW = new(0.015f, 0.015f, 0);
+    public static readonly Vector3 CABLE_SHADOW =  new(0.03f, 0.03f, 0);
     public const float SHADOW_ALPHA = 100 / 255f;
     public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
     public const int MODULE_MIN = 0;
@@ -46,6 +56,14 @@ public static class Utils
     public const int AUDIO_THRESHOLD0 = 2;
     public const int AUDIO_THRESHOLD1 = 3;
     public const int AUDIO_THRESHOLD2 = 4;
+    public const int CABLE_ANIM_EDGE_COUNT = 25;
+    public const int CABLE_ANIM_NODE_COUNT = 15;
+    public const int CABLE_ANIM_NODE_CURVE_COUNT = 12;
+    public const float TOOL_OFFSET_X = -80f;
+    public const float TOOL_OFFSET_Y = 120f;
+    public const float PROGRESS_MAX_HEIGHT = 900f;
+    public const float PROGRESS_OFFSET_X = 80f;
+    public const float PROGRESS_OFFSET_Y = 75f;
     public const char NOT = '~', VERT = '*', HORZ = '+';
     public const string PARENS = "()";
     public static bool IsWrappedByParentheses(string s)
@@ -90,7 +108,7 @@ public static class Utils
         else { PrintError("[CodeToColor] cannot parse"); return Color.white; }
     }
 
-    public static Vector3 GetHoverOffset(Vector2 offset, Rotate rotate, bool flipX, bool flipY)
+    public static Vector3 GetBlockShadowOffset(Vector2 offset, Rotate rotate, bool flipX, bool flipY)
     {
         Vector3 off = offset;
         if (rotate == Rotate.Rotate90) off = new Vector3(-off.y, off.x, 0);
@@ -101,16 +119,30 @@ public static class Utils
         else if (flipY) off.y = -off.y;
         return off;
     }
+
+    public static Vector3 GetCableShadowOffset(Vector2 offset, Rotate rotate)
+    {
+        Vector3 off = offset;
+        if (rotate == Rotate.Rotate90) off = new Vector3(-off.y, off.x, 0);
+        else if (rotate == Rotate.Rotate180) off = -off;
+        else if (rotate == Rotate.Rotate270) off = new Vector3(off.y, -off.x, 0);
+
+        return off;
+    }
 }
 
 public enum GameState { InGame, Paused, ModuleSelect }
 
 public class GameManager : MonoBehaviour
 {
+    // temp for cable development
+    public bool CableActivated = false;
+
     #region Singleton
     public static GameManager Instance { get; private set; }
     public WireManager Wire { get; private set; }
     public GridManager Grid { get; private set; }
+    public ToolManager Tool { get; private set; }
     public UIManager UI { get; private set; }
     public AudioManager Audio { get; private set; }
     private void Awake()
@@ -125,6 +157,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
         Wire = new WireManager();
         Grid = gameObject.GetComponent<GridManager>();
+        Tool = new ToolManager();
         UI = gameObject.GetComponent<UIManager>();
         Audio = gameObject.GetComponent<AudioManager>();
 
@@ -156,7 +189,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(3);
+        StartModule(13);
     }
 
     void Update()
@@ -194,6 +227,7 @@ public class GameManager : MonoBehaviour
         outputCheck = new();
         Grid.RemoveCurrentStage();
         Wire.Initialize();
+        Tool.Initialize(stage.ToolCounts);
         Grid.InitStage(stage);
         CurrentStage = stage;
 
@@ -205,7 +239,14 @@ public class GameManager : MonoBehaviour
         //UI.ResetAppear();
         //UI.QuitToBack();
         //UI.SetStageText(stage.Desc);
-        UI.SetChat(stage.CircuitWidth, stage.CircuitHeight);
+        //UI.SetChat(stage.CircuitWidth, stage.CircuitHeight);
+
+        // [TODO Tool 작업]
+        // 지금은 그냥 활성화만, 이후 Tool Appear 애니메이션 들어오면
+        // 이건 아래의 StageStartTrans로 처리함
+        UI.RemoveTool();
+        UI.SetTool(stage.ToolCounts);
+        UI.SetProgress(CurrentModule, stage.ID);
 
         Audio.ResetBGM();
 
@@ -444,6 +485,7 @@ public class GameManager : MonoBehaviour
 
         UI.MenuBackAppear();
         UI.MenuQuitDisappear();
+        UI.RemoveProgress();
 
         State = GameState.Paused;
         int index = module.StageIndex == module.Stages.Count ? 0 : module.StageIndex;
@@ -471,20 +513,30 @@ public class GameManager : MonoBehaviour
         Grid.TilePlacer.CircuitAppearTransDone = false;
         Grid.BlockPlacer.BlockAppearTransDone = false;
 
+        Grid.TilePlacer.TileBoundaryAppear();
+        yield return new WaitUntil(
+            () =>
+            Grid.TilePlacer.TileBoundaryAppearTransDone
+        );
+        Grid.TilePlacer.TileBoundaryAppearTransDone = false;
+
         onComplete?.Invoke();
     }
 
     private IEnumerator StageEndTrans(Action onComplete)
     {
         Grid.TilePlacer.CircuitDisappear();
+        Grid.TilePlacer.TileBoundaryDisappear();
         Grid.BlockPlacer.BlockDisappear();
 
         yield return new WaitUntil(
             () =>
             Grid.TilePlacer.CircuitDisappearTransDone &&
+            Grid.TilePlacer.TileBoundaryDisappearTransDone &&
             Grid.BlockPlacer.BlockDisappearTransDone
         );
         Grid.TilePlacer.CircuitDisappearTransDone = false;
+        Grid.TilePlacer.TileBoundaryDisappearTransDone = false;
         Grid.BlockPlacer.BlockDisappearTransDone = false;
 
         onComplete?.Invoke();

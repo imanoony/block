@@ -4,17 +4,21 @@
             "ID": 100011,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 2
+                        "x": 3,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -22,8 +26,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -45,23 +49,37 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": [
+                {
+                    "type": 0,
+                    "count": 5
+                },
+                {
+                    "type": 1,
+                    "count": 3
+                }
+            ]
         },
         {
             "ID": 100012,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -69,8 +87,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -97,23 +115,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 100013,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 2
+                        "x": 5,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -121,8 +144,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 2
+                        "x": 2,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -154,23 +177,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 100014,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 0
+                        "x": 4,
+                        "y": 4
                     },
                     "expr": "X"
                 }
@@ -178,8 +206,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -211,23 +239,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 100015,
             "BgWidth": 12,
             "BgHeight": 8,
-            "CircuitWidth": 4,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 0
+                        "x": 5,
+                        "y": 4
                     },
                     "expr": "X"
                 }
@@ -235,8 +268,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 4
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -268,23 +301,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 100016,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 0
+                        "x": 3,
+                        "y": 4
                     },
                     "expr": "X"
                 }
@@ -292,15 +330,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 4
+                        "x": 4,
+                        "y": 8
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 2
+                        "x": 5,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -332,23 +370,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 100017,
             "BgWidth": 11,
             "BgHeight": 7,
-            "CircuitWidth": 5,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 3
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 3
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 5
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -356,15 +399,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 0
+                        "x": 4,
+                        "y": 3
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 4
                     },
                     "expr": "X"
                 }
@@ -396,23 +439,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 100018,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -420,22 +468,22 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 1
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 0,
-                        "y": 4
+                        "x": 2,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
                         "x": 2,
-                        "y": 0
+                        "y": 8
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 4
                     },
                     "expr": "X"
                 }
@@ -472,30 +520,35 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 200010,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 4
+                        "x": 2,
+                        "y": 8
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 2
+                        "x": 6,
+                        "y": 6
                     },
                     "expr": "Y"
                 }
@@ -503,15 +556,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 1
+                        "x": 2,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 2
+                        "x": 3,
+                        "y": 6
                     },
                     "expr": "Y"
                 }
@@ -548,30 +601,35 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 200011,
             "BgWidth": 12,
             "BgHeight": 9,
-            "CircuitWidth": 4,
-            "CircuitHeight": 5,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 5,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 2
+                        "x": 2,
+                        "y": 6
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 2
+                        "x": 5,
+                        "y": 6
                     },
                     "expr": "Y"
                 }
@@ -579,15 +637,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 4,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 0
+                        "x": 6,
+                        "y": 4
                     },
                     "expr": "Y"
                 }
@@ -624,30 +682,35 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 200012,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 0
+                        "x": 2,
+                        "y": 4
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 3
+                        "x": 3,
+                        "y": 7
                     },
                     "expr": "Y"
                 }
@@ -655,15 +718,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 4
+                        "x": 4,
+                        "y": 8
                     },
                     "expr": "Y"
                 }
@@ -695,30 +758,35 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 200013,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 0
+                        "x": 2,
+                        "y": 4
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 1
+                        "x": 2,
+                        "y": 5
                     },
                     "expr": "Y"
                 }
@@ -726,15 +794,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 3
+                        "x": 2,
+                        "y": 7
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 4,
+                        "y": 5
                     },
                     "expr": "Y"
                 }
@@ -771,23 +839,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 300011,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -795,8 +868,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -833,33 +906,38 @@
             "HBarriers": [],
             "VBarriers": [
                 {
-                    "x": 1,
-                    "y": 2
+                    "x": 3,
+                    "y": 6
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 600010,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "Z"
                 }
@@ -867,8 +945,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -889,7 +967,9 @@
                     "y": 1
                 }
             ],
-            "RotateCWIndex": [1],
+            "RotateCWIndex": [
+                1
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [
@@ -897,22 +977,25 @@
             ],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 9999,
             "BgWidth": 16,
             "BgHeight": 9,
-            "CircuitWidth": 1,
-            "CircuitHeight": 1,
-            "CircuitPosition": {
-                "x": 0,
-                "y": 0
-            },
-            "Inputs": [
+            "Circuits": [
+                {
+                    "width": 1,
+                    "height": 1,
+                    "pos": {
+                        "x": 0,
+                        "y": 0
+                    }
+                }
             ],
-            "Outputs": [
-            ],
+            "Inputs": [],
+            "Outputs": [],
             "Desc": "9999",
             "TutorialID": 9999,
             "Blocks": [
@@ -930,30 +1013,35 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 2001,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 2
+                        "x": 3,
+                        "y": 6
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 4
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -961,15 +1049,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 4,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -1002,32 +1090,37 @@
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 2,
-                    "y": 3
+                    "x": 4,
+                    "y": 7
                 }
             ],
             "VBarriers": [
                 {
-                    "x": 1,
-                    "y": 2
+                    "x": 3,
+                    "y": 6
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 2002,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -1035,15 +1128,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 4
+                        "x": 2,
+                        "y": 8
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 3
+                        "x": 3,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -1082,26 +1175,31 @@
             "HBarriers": [],
             "VBarriers": [
                 {
-                    "x": 1,
-                    "y": 2
+                    "x": 3,
+                    "y": 6
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 2003,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 4
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -1109,22 +1207,22 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 0
+                        "x": 4,
+                        "y": 4
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 0
+                        "x": 5,
+                        "y": 4
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 2
+                        "x": 5,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -1162,32 +1260,37 @@
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 3,
-                    "y": 2
+                    "x": 5,
+                    "y": 6
                 }
             ],
             "VBarriers": [
                 {
-                    "x": 2,
-                    "y": 3
+                    "x": 4,
+                    "y": 7
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 2004,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 3
+                        "x": 3,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -1195,14 +1298,14 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 0
+                        "x": 3,
+                        "y": 4
                     },
                     "expr": "X"
                 }
             ],
             "Desc": "",
-            "TutorialID": -1,
+            "TutorialID": 5,
             "Blocks": [
                 5,
                 5,
@@ -1230,30 +1333,35 @@
             "HBarriers": [],
             "VBarriers": [
                 {
-                    "x": 1,
-                    "y": 0
-                }, 
+                    "x": 3,
+                    "y": 4
+                },
                 {
-                    "x": 1,
-                    "y": 2
+                    "x": 3,
+                    "y": 6
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 2005,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -1261,8 +1369,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 4,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -1301,30 +1409,35 @@
             "HBarriers": [],
             "VBarriers": [
                 {
-                    "x": 1,
-                    "y": 2
+                    "x": 3,
+                    "y": 6
                 },
                 {
-                    "x": 1,
-                    "y": 4
+                    "x": 3,
+                    "y": 8
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 2006,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -1332,15 +1445,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 2
+                        "x": 4,
+                        "y": 6
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -1378,38 +1491,43 @@
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 2,
-                    "y": 2
+                    "x": 4,
+                    "y": 6
                 },
                 {
-                    "x": 2,
-                    "y": 3
+                    "x": 4,
+                    "y": 7
                 }
             ],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 2007,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "Y"
                 }
@@ -1417,22 +1535,22 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 0
+                        "x": 3,
+                        "y": 4
                     },
                     "expr": "Y"
                 },
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 4
+                        "x": 2,
+                        "y": 8
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 4
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "Y"
                 }
@@ -1470,43 +1588,48 @@
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 1,
-                    "y": 3
+                    "x": 3,
+                    "y": 7
                 }
             ],
             "VBarriers": [
                 {
-                    "x": 1,
-                    "y": 2
+                    "x": 3,
+                    "y": 6
                 },
                 {
-                    "x": 2,
-                    "y": 2
+                    "x": 4,
+                    "y": 6
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 2008,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 0
+                        "x": 5,
+                        "y": 4
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 2
+                        "x": 4,
+                        "y": 6
                     },
                     "expr": "Y"
                 }
@@ -1514,15 +1637,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 4
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "Y"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 2
+                        "x": 5,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -1560,32 +1683,37 @@
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 1,
-                    "y": 0
+                    "x": 3,
+                    "y": 4
                 }
             ],
             "VBarriers": [
                 {
-                    "x": 2,
-                    "y": 1
+                    "x": 4,
+                    "y": 5
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 2009,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 4
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -1593,22 +1721,22 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
                         "x": 3,
-                        "y": 1
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 4
+                        "x": 5,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -1651,43 +1779,48 @@
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 1,
-                    "y": 3
+                    "x": 3,
+                    "y": 7
                 },
                 {
-                    "x": 2,
-                    "y": 2
+                    "x": 4,
+                    "y": 6
                 }
             ],
             "VBarriers": [
                 {
-                    "x": 1,
-                    "y": 2
+                    "x": 3,
+                    "y": 6
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 2010,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "Y"
                 },
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 2
+                        "x": 6,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -1695,15 +1828,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 4
+                        "x": 4,
+                        "y": 8
                     },
                     "expr": "Y"
                 },
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 4
+                        "x": 6,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -1742,37 +1875,42 @@
             "HBarriers": [],
             "VBarriers": [
                 {
-                    "x": 1,
-                    "y": 3
+                    "x": 3,
+                    "y": 7
                 },
                 {
-                    "x": 3,
-                    "y": 3
+                    "x": 5,
+                    "y": 7
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 2011,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
-            "Inputs": [
+            "Circuits": [
                 {
+                    "width": 5,
+                    "height": 4,
                     "pos": {
                         "x": 2,
                         "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 8
                     },
                     "expr": "Y"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -1780,15 +1918,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 4,
+                        "y": 5
                     },
                     "expr": "Y"
                 }
@@ -1821,31 +1959,36 @@
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 1,
-                    "y": 3
+                    "x": 3,
+                    "y": 7
                 },
                 {
-                    "x": 2,
-                    "y": 3
+                    "x": 4,
+                    "y": 7
                 }
             ],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3001,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -1853,8 +1996,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X;;X;"
                 }
@@ -1881,23 +2024,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
-                {
+        {
             "ID": 3002,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -1905,15 +2053,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 2
+                        "x": 3,
+                        "y": 6
                     },
                     "expr": "X;;X;"
                 },
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 3
+                        "x": 6,
+                        "y": 7
                     },
                     "expr": "X;X;;"
                 }
@@ -1945,23 +2093,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3003,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 2
+                        "x": 2,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -1969,15 +2122,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 0
+                        "x": 5,
+                        "y": 4
                     },
                     "expr": "X;X;;"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X;X;;"
                 }
@@ -2009,30 +2162,35 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3004,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 2
+                        "x": 2,
+                        "y": 6
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 3
+                        "x": 6,
+                        "y": 7
                     },
                     "expr": "Y"
                 }
@@ -2040,15 +2198,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 4
+                        "x": 4,
+                        "y": 8
                     },
                     "expr": "Y;;Y;"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X;X;;"
                 }
@@ -2080,23 +2238,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3005,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 2
+                        "x": 6,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -2104,22 +2267,22 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 2
-                    },
-                    "expr": "X;X;;"
-                },
-                {
-                    "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 2,
+                        "y": 6
                     },
                     "expr": "X;X;;"
                 },
                 {
                     "pos": {
                         "x": 3,
-                        "y": 1
+                        "y": 5
+                    },
+                    "expr": "X;X;;"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "X;;X;"
                 }
@@ -2156,30 +2319,35 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3006,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "X;;X;"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 2
+                        "x": 5,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -2187,15 +2355,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 3
+                        "x": 3,
+                        "y": 7
                     },
                     "expr": "X;;X;"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X;;X;"
                 }
@@ -2232,23 +2400,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3007,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -2256,22 +2429,22 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 2
+                        "x": 2,
+                        "y": 6
                     },
                     "expr": "X;;X;"
                 },
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": ";X;;X"
                 }
@@ -2303,30 +2476,35 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3008,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 2
+                        "x": 5,
+                        "y": 6
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -2334,15 +2512,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 3
+                        "x": 3,
+                        "y": 7
                     },
                     "expr": "X;;X;"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -2374,30 +2552,35 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3009,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -2405,8 +2588,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X;X;X;"
                 }
@@ -2443,23 +2626,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3010,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -2467,15 +2655,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 2
+                        "x": 3,
+                        "y": 6
                     },
                     "expr": "X;;X;"
                 },
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 4
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "X;;X;"
                 }
@@ -2502,23 +2690,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 3011,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 3
+                        "x": 6,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -2526,22 +2719,22 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": ";X;;X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X;;;"
                 }
@@ -2578,23 +2771,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 4001,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 1
+                        "x": 2,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -2602,15 +2800,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 0
+                        "x": 4,
+                        "y": 4
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -2647,23 +2845,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 4002,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 3
+                        "x": 3,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -2671,29 +2874,29 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 0
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 1,
-                        "y": 2
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 2,
-                        "y": 3
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 2,
+                        "x": 3,
                         "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 6
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 7
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -2735,23 +2938,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 4003,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 4,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -2759,22 +2967,22 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 0
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 1,
-                        "y": 5
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 3,
+                        "x": 5,
                         "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 9
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -2811,23 +3019,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 4004,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 4
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -2835,29 +3048,29 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 2
+                        "x": 3,
+                        "y": 6
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
+                        "x": 4,
+                        "y": 9
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
                         "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -2899,23 +3112,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 4005,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -2923,29 +3141,29 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 3
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 1,
-                        "y": 3
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
                         "x": 2,
-                        "y": 1
+                        "y": 7
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
                         "x": 3,
-                        "y": 4
+                        "y": 7
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -2987,23 +3205,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 4006,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 3
+                        "x": 4,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -3011,29 +3234,29 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
+                        "x": 3,
+                        "y": 9
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
                         "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -3075,23 +3298,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 4007,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
-            "Inputs": [
+            "Circuits": [
                 {
+                    "width": 5,
+                    "height": 4,
                     "pos": {
                         "x": 2,
                         "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -3099,8 +3327,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -3132,23 +3360,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 4008,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -3156,29 +3389,29 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 2
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 1,
-                        "y": 4
-                    },
-                    "expr": "X"
-                },
-                {
-                    "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 3,
+                        "y": 6
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
                         "x": 3,
-                        "y": 4
+                        "y": 8
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -3220,23 +3453,28 @@
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 5001,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -3244,15 +3482,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 0
+                        "x": 3,
+                        "y": 4
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 2
+                        "x": 2,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -3278,29 +3516,36 @@
                     "y": 9
                 }
             ],
-            "RotateCWIndex": [0],
+            "RotateCWIndex": [
+                0
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 5002,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -3308,15 +3553,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 2
+                        "x": 3,
+                        "y": 6
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": ";X;;X"
                 }
@@ -3347,7 +3592,9 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [2],
+            "RotateCWIndex": [
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
@@ -3355,26 +3602,31 @@
             "HBarriers": [],
             "VBarriers": [
                 {
-                    "x": 2,
-                    "y": 1
+                    "x": 4,
+                    "y": 5
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 5003,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -3382,15 +3634,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "X;X;;"
                 }
@@ -3416,41 +3668,49 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [1, 2],
+            "RotateCWIndex": [
+                1,
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 1,
-                    "y": 3
+                    "x": 3,
+                    "y": 7
                 }
             ],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 5004,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 }
@@ -3458,8 +3718,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 2
+                        "x": 4,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -3480,29 +3740,36 @@
                     "y": 2
                 }
             ],
-            "RotateCWIndex": [0],
+            "RotateCWIndex": [
+                0
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 5005,
             "BgWidth": 12,
             "BgHeight": 7,
-            "CircuitWidth": 4,
-            "CircuitHeight": 3,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -3510,8 +3777,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 2
+                        "x": 5,
+                        "y": 6
                     },
                     "expr": ";X;;X"
                 }
@@ -3537,29 +3804,36 @@
                     "y": 9
                 }
             ],
-            "RotateCWIndex": [2],
+            "RotateCWIndex": [
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [],
-            "VBarriers": []
+            "VBarriers": [],
+            "ToolCounts": []
         },
         {
             "ID": 5006,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 2
+                        "x": 3,
+                        "y": 6
                     },
                     "expr": "X"
                 }
@@ -3567,22 +3841,22 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 1
+                        "x": 6,
+                        "y": 5
                     },
                     "expr": ";X;;X"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 3
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 3
+                        "x": 6,
+                        "y": 7
                     },
                     "expr": "X;X;;"
                 }
@@ -3613,39 +3887,46 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [0],
+            "RotateCWIndex": [
+                0
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 2,
-                    "y": 1
+                    "x": 4,
+                    "y": 5
                 }
             ],
             "VBarriers": [
                 {
-                    "x": 1,
-                    "y": 3
+                    "x": 3,
+                    "y": 7
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 5007,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 4
+                        "x": 3,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -3653,8 +3934,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "X;X;X;"
                 }
@@ -3680,7 +3961,10 @@
                     "y": 11
                 }
             ],
-            "RotateCWIndex": [1, 2],
+            "RotateCWIndex": [
+                1,
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
@@ -3688,33 +3972,38 @@
             "HBarriers": [],
             "VBarriers": [
                 {
-                    "x": 2,
-                    "y": 2
+                    "x": 4,
+                    "y": 6
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 5008,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 0,
-                        "y": 4
+                        "x": 2,
+                        "y": 8
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
-                        "x": 4,
-                        "y": 3
+                        "x": 6,
+                        "y": 7
                     },
                     "expr": "Y"
                 }
@@ -3722,15 +4011,15 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 2,
-                        "y": 1
+                        "x": 4,
+                        "y": 5
                     },
                     "expr": "Y"
                 },
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 4
+                        "x": 5,
+                        "y": 8
                     },
                     "expr": "X"
                 }
@@ -3761,39 +4050,47 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [2, 3],
+            "RotateCWIndex": [
+                2,
+                3
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 2,
-                    "y": 3
+                    "x": 4,
+                    "y": 7
                 }
             ],
             "VBarriers": [
                 {
-                    "x": 0,
-                    "y": 3
+                    "x": 2,
+                    "y": 7
                 }
-            ]
+            ],
+            "ToolCounts": []
         },
         {
             "ID": 5009,
             "BgWidth": 13,
             "BgHeight": 8,
-            "CircuitWidth": 5,
-            "CircuitHeight": 4,
-            "CircuitPosition": {
-                "x": 2,
-                "y": 4
-            },
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 1,
-                        "y": 1
+                        "x": 3,
+                        "y": 5
                     },
                     "expr": "X"
                 }
@@ -3801,8 +4098,8 @@
             "Outputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 1
+                        "x": 5,
+                        "y": 5
                     },
                     "expr": "X;;X;"
                 }
@@ -3833,21 +4130,423 @@
                     "y": 10
                 }
             ],
-            "RotateCWIndex": [2],
+            "RotateCWIndex": [
+                2
+            ],
             "RotateCCWIndex": [],
             "FlipXIndex": [],
             "FlipYIndex": [],
             "SIndex": [],
             "HBarriers": [
                 {
-                    "x": 1,
+                    "x": 3,
+                    "y": 7
+                }
+            ],
+            "VBarriers": [
+                {
+                    "x": 4,
+                    "y": 5
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 123456,
+            "BgWidth": 14,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 3,
+                    "height": 2,
+                    "pos": {
+                        "x": 2,
+                        "y": 3
+                    }
+                },
+                {
+                    "width": 3,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 8
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 3
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 9
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 6
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                1,
+                2
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 12
+                },
+                {
+                    "x": 6,
+                    "y": 12
+                },
+                {
+                    "x": 6,
+                    "y": 3
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": [
+                {
+                    "type": 0,
+                    "count": 5
+                },
+                {
+                    "type": 1,
+                    "count": 3
+                }
+            ]
+        },
+                {
+            "ID": 909001,
+            "BgWidth": 11,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 3
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 4
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 6,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                7
+            ],
+            "BlockPositions": [
+                {
+                    "x": 4,
+                    "y": 9
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 4,
+                    "y": 3
+                },
+                {
+                    "x": 4,
+                    "y": 4
+                },
+                {
+                    "x": 4,
+                    "y": 5
+                },
+                {
+                    "x": 4,
+                    "y": 6
+                },
+                {
+                    "x": 4,
+                    "y": 7
+                }
+            ],
+            "VBarriers": [
+                {
+                    "x": 3,
+                    "y": 4
+                },
+                {
+                    "x": 4,
+                    "y": 7
+                }
+            ],
+            "ToolCounts": [
+                {
+                    "type": 0,
+                    "count": 5
+                }
+            ]
+        },
+        {
+            "ID": 909000,
+            "BgWidth": 10,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 3
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 4
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 7
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                1
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 0
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 4,
+                    "y": 4
+                },
+                {
+                    "x": 4,
                     "y": 3
                 }
             ],
             "VBarriers": [
                 {
-                    "x": 2,
+                    "x": 4,
+                    "y": 4
+                }
+            ],
+            "ToolCounts": [
+                {
+                    "type": 0,
+                    "count": 5
+                }
+            ]
+        },
+        {
+            "ID": 909002,
+            "BgWidth": 10,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 3
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 6
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 7
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
                     "y": 1
+                },
+                {
+                    "x": 3,
+                    "y": 8
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [
+                1
+            ],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 3,
+                    "y": 4
+                },
+                {
+                    "x": 4,
+                    "y": 3
+                },
+                {
+                    "x": 4,
+                    "y": 5
+                },
+                {
+                    "x": 5,
+                    "y": 5
+                }
+            ],
+            "VBarriers": [
+                {
+                    "x": 4,
+                    "y": 5
+                },
+                {
+                    "x": 3,
+                    "y": 7
+                }
+            ],
+            "ToolCounts": [
+                {
+                    "type": 0,
+                    "count": 5
                 }
             ]
         }
