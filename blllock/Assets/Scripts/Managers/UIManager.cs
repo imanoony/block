@@ -462,4 +462,66 @@ public class UIManager : MonoBehaviour
         tools.Clear();
     }
     #endregion
+
+    #region Progress UI
+    [Header("Progress")]
+    [SerializeField] private GameObject progressCanvas;
+    [SerializeField] private GameObject progressPrefab;
+    private List<UIProgress> progresses = new();
+    public void SetProgress(
+        ModuleData module,
+        int focusID
+    )
+    {
+        if (progresses.Count == 0)
+        {
+            GameObject progressGo;
+            float offsetY = Utils.PROGRESS_OFFSET_Y;
+            float maxHeight = Utils.PROGRESS_MAX_HEIGHT;
+            float totalHeight = offsetY * (module.Stages.Count - 1);
+            if (totalHeight > maxHeight) 
+                offsetY = maxHeight / (module.Stages.Count - 1);
+            float startY = offsetY / 2f * (module.Stages.Count - 1);
+            for (int i = 0; i < module.Stages.Count; i++)
+            {
+                progressGo = Instantiate(
+                    progressPrefab, 
+                    progressCanvas.transform
+                );
+                progressGo.GetComponent<RectTransform>().anchoredPosition = new(
+                    Utils.PROGRESS_OFFSET_X,
+                    startY - offsetY * i
+                );
+                progresses.Add(progressGo.GetComponent<UIProgress>());
+            }
+        }
+
+        UIProgress progress;
+        for (int i = 0; i < module.Stages.Count; i++)
+        {
+            Debug.Log($"module stage index: {module.StageIndex}");
+            progress = progresses[i];
+            if (i < module.StageIndex)
+            {
+                if (module.Stages[i] == focusID) progress.SetType(ProgressType.Replay);
+                else progress.SetType(ProgressType.Cleared);
+            }
+            else
+            {
+                if (module.Stages[i] == focusID) progress.SetType(ProgressType.Active);
+                else progress.SetType(ProgressType.Locked);
+            }
+        }
+    }
+
+    public void RemoveProgress()
+    {
+        for (int i = 0; i < progresses.Count; i++)
+        {
+            Destroy(progresses[i].gameObject);
+        }
+        progresses.Clear();
+    }
+
+    #endregion
 }

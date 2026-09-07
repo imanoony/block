@@ -51,8 +51,8 @@ public class CableInstance : MonoBehaviour
 
         float targetX, targetY;
         Vector3 basePos = (Vector3)gm.GetTileTopLeftWorld(
-            edge.A.x + gm.GetCircuitStart().x, 
-            edge.A.y + gm.GetCircuitStart().y
+            edge.A.x, 
+            edge.A.y
         );
         if (isH) 
         {
@@ -103,8 +103,8 @@ public class CableInstance : MonoBehaviour
         sr = gameObject.GetComponent<SpriteRenderer>();
 
         Vector3 targetPos = (Vector3)gm.GetTileTopLeftWorld(
-            node.x + gm.GetCircuitStart().x, 
-            node.y + gm.GetCircuitStart().y
+            node.x, 
+            node.y
         );
         transform.position = targetPos;
         transform.rotation = Quaternion.Euler(0f, 0f, -(float)rotate);

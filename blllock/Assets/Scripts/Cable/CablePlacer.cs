@@ -16,12 +16,14 @@ public class CablePlacer : MonoBehaviour
 
 
     private GridManager gm;
+    private ToolManager tm;
     private Vector2Int startGrid = new(-1, -1);
     private bool isDragging = false;
 
     void Start()
     {
         gm = GameManager.Instance.Grid;
+        tm = GameManager.Instance.Tool;
 
         cableGhostSr = cableGhost.GetComponent<SpriteRenderer>();
         cableGhostMpb = new(); // 일단 Start로 시작하는 건 임시다
@@ -158,6 +160,7 @@ public class CablePlacer : MonoBehaviour
     {
         if (!IsAdjacent(start, end)) return false;
         if (!CanPlaceCable(gm, start, end)) return false;
+        if (!tm.UseTool()) return false;
 
         // Cable 처리
         Cable cable = new(start, end);
@@ -300,6 +303,24 @@ public class CablePlacer : MonoBehaviour
             Debug.Log("Invalid Cable Group");
         }
     }
+
+    public void RemoveCables()
+    {
+        if (cableEdgeInstances.Count != 0)
+        {
+            foreach (var kvp in cableEdgeInstances) 
+                Destroy(kvp.Value.gameObject);
+            cableEdgeInstances = new();
+        }
+        if (cableNodeInstances.Count != 0)
+        {
+            foreach (var kvp in cableNodeInstances)
+                Destroy(kvp.Value.gameObject);
+            cableNodeInstances = new();
+        }
+        cables.Clear();
+        groups.Clear();
+    }
     
     public void RemoveCable(GridManager gm, Vector2Int a, Vector2Int b)
     {
@@ -312,6 +333,7 @@ public class CablePlacer : MonoBehaviour
         // Cable 처리
         cables.Remove(cable);
         gm.RemoveCable(cable);
+        tm.CancelTool(ToolType.Cable);
 
         // CableGroup 처리
         CableGroup group = FindGroup(cable);
@@ -425,20 +447,13 @@ public class CablePlacer : MonoBehaviour
 
     private Vector3 GetCableGhostWorld(Vector2Int start)
     {
-        int x = gm.GetCircuitStart().x + start.x;
-        int y = gm.GetCircuitStart().y + start.y;
-
-        return (Vector3)gm.GetTileTopLeftWorld(x, y);
+        return (Vector3)gm.GetTileTopLeftWorld(start.x, start.y);
     }
 
     private float GetCableGhostReveal(Vector2Int start, Vector2Int end, Vector2 curr)
     {
-        Vector2Int circuitStart = gm.GetCircuitStart();
-        Vector2Int startGrid = new(circuitStart.x + start.x, circuitStart.y + start.y);
-        Vector2Int endGrid = new(circuitStart.x + end.x, circuitStart.y + end.y);
-        
-        Vector2 startWorld = (Vector2)(Vector3)gm.GetTileTopLeftWorld(startGrid.x, startGrid.y);
-        Vector2 endWorld = (Vector2)(Vector3)gm.GetTileTopLeftWorld(endGrid.x, endGrid.y);
+        Vector2 startWorld = (Vector2)(Vector3)gm.GetTileTopLeftWorld(start.x, start.y);
+        Vector2 endWorld = (Vector2)(Vector3)gm.GetTileTopLeftWorld(end.x, end.y);
 
         // start World -> end World에서 curr 이 얼마나 갔는지 그 비율 리턴
         Vector2 direction = endWorld - startWorld;

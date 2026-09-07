@@ -119,7 +119,7 @@ public class UIChat : MonoBehaviour
         Color color;
 
         if ((type = GameManager.Instance.Grid.Grids[x, y].Type)
-            != GridType.Null)
+            != GridType.Normal)
         {
             expr =
                 GameManager.Instance.Grid
@@ -382,14 +382,12 @@ public class UIChat : MonoBehaviour
         Canvas canvas
     )
     {
-        Vector2Int cStart =
-            GameManager.Instance.Grid.GetCircuitStart();
 
         Vector3 worldPos =
             GameManager.Instance.Grid
             .GetTileTopLeftForChat(
-                x + cStart.x,
-                y + cStart.y
+                x,
+                y
             );
 
         Vector3 screenPos =

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum TileType { Empty, Occupied }
-public enum GridType { Null, Input, Output }
-public enum EdgeType { Empty, Barrier, Cable }
+public enum GridType { Null, Normal, Input, Output }
+public enum EdgeType { Null, Empty, Barrier, Cable }
 
 public class Tile
 {
@@ -31,7 +31,7 @@ public class Grid
     public List<Wire?> WiresRightDown { get; private set; } = new();
     public event Action? OnPortsChanged;
 
-    public Grid(Vector2Int pos, GridType type = GridType.Null) { Pos = pos; Type = type; }
+    public Grid(Vector2Int pos, GridType type) { Pos = pos; Type = type; }
     public void SetType(GridType type) => Type = type;
     public void SetExpr(LogicExpr? expr) => Expr = expr;
     public bool AddPort(PortExpr port)
@@ -74,7 +74,7 @@ public class HEdge : Edge
 {
     public HEdge(
         Vector2Int pos,
-        EdgeType type = EdgeType.Empty
+        EdgeType type
     )
     {
         Pos = pos;
@@ -86,7 +86,7 @@ public class VEdge : Edge
 {
     public VEdge(
         Vector2Int pos,
-        EdgeType type = EdgeType.Empty
+        EdgeType type
     )
     {
         Pos = pos;

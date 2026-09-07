@@ -61,6 +61,9 @@ public static class Utils
     public const int CABLE_ANIM_NODE_CURVE_COUNT = 12;
     public const float TOOL_OFFSET_X = -80f;
     public const float TOOL_OFFSET_Y = 120f;
+    public const float PROGRESS_MAX_HEIGHT = 900f;
+    public const float PROGRESS_OFFSET_X = 80f;
+    public const float PROGRESS_OFFSET_Y = 75f;
     public const char NOT = '~', VERT = '*', HORZ = '+';
     public const string PARENS = "()";
     public static bool IsWrappedByParentheses(string s)
@@ -186,7 +189,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(12);
+        StartModule(13);
     }
 
     void Update()
@@ -236,13 +239,14 @@ public class GameManager : MonoBehaviour
         //UI.ResetAppear();
         //UI.QuitToBack();
         //UI.SetStageText(stage.Desc);
-        UI.SetChat(stage.CircuitWidth, stage.CircuitHeight);
+        //UI.SetChat(stage.CircuitWidth, stage.CircuitHeight);
 
         // [TODO Tool 작업]
         // 지금은 그냥 활성화만, 이후 Tool Appear 애니메이션 들어오면
         // 이건 아래의 StageStartTrans로 처리함
         UI.RemoveTool();
         UI.SetTool(stage.ToolCounts);
+        UI.SetProgress(CurrentModule, stage.ID);
 
         Audio.ResetBGM();
 
@@ -481,6 +485,7 @@ public class GameManager : MonoBehaviour
 
         UI.MenuBackAppear();
         UI.MenuQuitDisappear();
+        UI.RemoveProgress();
 
         State = GameState.Paused;
         int index = module.StageIndex == module.Stages.Count ? 0 : module.StageIndex;
