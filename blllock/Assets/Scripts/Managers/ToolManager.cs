@@ -61,6 +61,7 @@ public class ToolManager : MonoBehaviour
         {
             if (!toolMaxCounts.ContainsKey(type)) return false;
             SelectedTool = type;
+            Debug.Log($"EDGE EVENT: {SelectedTool}");
             OnSelectedToolChanged?.Invoke(type);
             return true;
         }

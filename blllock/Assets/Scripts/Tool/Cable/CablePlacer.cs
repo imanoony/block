@@ -7,28 +7,17 @@ public class CablePlacer : MonoBehaviour
 {
     [SerializeField] private GameObject cablePrefab;
     [SerializeField] private GameObject cableParent; // 얘는 나중에 처리
-    [SerializeField] private GameObject cableGhost; // 얘도 일단 씬에서 바로 받아오는 형태로
     [SerializeField] private Sprite[] cableNodeSprites;
     [SerializeField] private Sprite cableEdgeSprite;
 
-    private SpriteRenderer cableGhostSr;
-    private MaterialPropertyBlock cableGhostMpb;
-
-
     private GridManager gm;
     private ToolManager tm;
-    private Vector2Int startGrid = new(-1, -1);
-    private bool isDragging = false;
 
     void Start()
     {
         gm = GameManager.Instance.Grid;
         tm = GameManager.Instance.Tool;
-
-        // 일단 Start로 시작하는 건 임시다
-
         tm.OnToolEdgePlaced += ToolEdgePlacedHandler;
-
     }
     void OnDestroy()
     {
@@ -39,6 +28,8 @@ public class CablePlacer : MonoBehaviour
         List<Vector2Int?> nearGrids
     )
     {
+        if (tm.SelectedTool != ToolType.Cable) return;
+        
         for (int i = 0; i < nearGrids.Count; i++)
         {
             try
@@ -366,52 +357,4 @@ public class CablePlacer : MonoBehaviour
             _ => cableNodeSprites[4]
         };
     }
-
-    #region Cable Ghost
-
-    private Vector3 GetCableGhostWorld(Vector2Int start)
-    {
-        return (Vector3)gm.GetTileTopLeftWorld(start.x, start.y);
-    }
-
-    private float GetCableGhostReveal(Vector2Int start, Vector2Int end, Vector2 curr)
-    {
-        Vector2 startWorld = (Vector2)(Vector3)gm.GetTileTopLeftWorld(start.x, start.y);
-        Vector2 endWorld = (Vector2)(Vector3)gm.GetTileTopLeftWorld(end.x, end.y);
-
-        // start World -> end World에서 curr 이 얼마나 갔는지 그 비율 리턴
-        Vector2 direction = endWorld - startWorld;
-        if (direction.sqrMagnitude < Mathf.Epsilon) return 0f;
-        return Mathf.Clamp01(Vector2.Dot(curr - startWorld, direction) / direction.sqrMagnitude);
-    }
-
-    private void UpdateCableGhost(Vector2Int start, Vector2Int end, Vector2 mouseWorld)
-    {
-        bool fromLeft = true;
-        float reveal = GetCableGhostReveal(start, end, mouseWorld);
-        Debug.Log($"Cable Ghost reveal: {reveal}");
-
-        if (start.x == end.x) // horizontal
-        {
-            if (start.y > end.y) cableGhost.transform.rotation = Quaternion.Euler(0, 0, 180);
-            else cableGhost.transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
-        else // vertical
-        {
-            if (start.x < end.x) cableGhost.transform.rotation = Quaternion.Euler(0, 0, -90);
-            else cableGhost.transform.rotation = Quaternion.Euler(0, 0, 90);
-        }
-
-        SetCableGhostMat(fromLeft, reveal);
-    }
-
-    private const string FromLeft = "_FromLeft", Reveal = "_Reveal";
-    private void SetCableGhostMat(bool fromLeft, float reveal)
-    {
-        cableGhostSr.GetPropertyBlock(cableGhostMpb);
-        cableGhostMpb.SetFloat(FromLeft, fromLeft ? 1f : 0f);
-        cableGhostMpb.SetFloat(Reveal, reveal);
-        cableGhostSr.SetPropertyBlock(cableGhostMpb);
-    }
-    #endregion
 }

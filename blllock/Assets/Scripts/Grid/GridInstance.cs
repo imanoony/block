@@ -170,7 +170,7 @@ public class GridInstance : MonoBehaviour
         else return (output, Utils.CodeToColor(Utils.RED));
     }
 
-    private const string CombExpr = "_CombExpr", Colors = "_Colors", MaskIndex = "_MaskIndex";
+    private const string CombExpr = "_CombExpr", Colors = "_Colors", MaskIndex = "_MaskIndex", Resisted = "_Resisted";
     private Coroutine colorCoroutine = null;
     private void SetColor(LogicExpr expr, Color color)
     {
@@ -188,10 +188,12 @@ public class GridInstance : MonoBehaviour
             (Vector4)colors[3].linear
         );
         m = m.transpose;
+        Vector4 r = Logic2ResistedVector4(expr);
 
         animSr.gameObject.SetActive(true);
         animMpb.SetVector(CombExpr, v);
         animMpb.SetMatrix(Colors, m);
+        animMpb.SetVector(Resisted, r);
         animSr.SetPropertyBlock(animMpb);
 
         colorCoroutine = StartCoroutine(SetColorCo(
@@ -200,6 +202,7 @@ public class GridInstance : MonoBehaviour
                 mpb.SetVector(CombExpr, v);
                 mpb.SetMatrix(Colors, m);
                 mpb.SetInteger(MaskIndex, 0);
+                mpb.SetVector(Resisted, r);
                 sr.SetPropertyBlock(mpb);
 
                 animMpb.SetInteger(MaskIndex, 0);
@@ -238,6 +241,25 @@ public class GridInstance : MonoBehaviour
             int ld = Var2Int(comb.LeftDown);
             int ru = Var2Int(comb.RightUp);
             int rd = Var2Int(comb.RightDown);
+            return new(lu, ld, ru, rd);
+        }
+        else return new(0, 0, 0, 0);
+    }
+
+    private Vector4 Logic2ResistedVector4(LogicExpr logic=null)
+    {
+        if (logic == null) return new(0, 0, 0, 0);
+        else if (logic is VarExpr var)
+        {
+            int i = var.IsResisted ? 1 : 0;
+            return new(i, i, i, i);
+        }
+        else if (logic is CombExpr comb)
+        {
+            int lu = (comb.LeftUp == null || !comb.LeftUp.IsResisted) ? 0 : 1;
+            int ld = (comb.LeftDown == null || !comb.LeftDown.IsResisted) ? 0 : 1;
+            int ru = (comb.RightUp == null || !comb.RightUp.IsResisted) ? 0 : 1;
+            int rd = (comb.RightDown == null || !comb.RightDown.IsResisted) ? 0 : 1;
             return new(lu, ld, ru, rd);
         }
         else return new(0, 0, 0, 0);

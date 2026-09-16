@@ -26,16 +26,7 @@ public class Resistor
             );
         }
         
-        if (a.x < b.x || (a.x == b.x && a.y < b.y))
-        {
-            A = a; 
-            B = b;
-        }
-        else
-        {
-            A = b;
-            B = a;
-        }
+        (A, B) = Utils.SortPositions(a, b);
 
         Nodes = new() { A, B };
 
@@ -44,7 +35,7 @@ public class Resistor
         for (int i = 0; i < wires.Length; i++)
         {
             wires[i] = new Wire(GameManager.Instance.Wire.GenerateID());
-            reverseWires[i] = new Wire(wires[i].ID);
+            reverseWires[i] = new Wire(-wires[i].ID);
 
             GameManager.Instance.Wire.AddWire(wires[i]);
             GameManager.Instance.Wire.AddWire(reverseWires[i]);
@@ -81,5 +72,19 @@ public class Resistor
         {
             return new VEdge(new(A.x, A.y), EdgeType.Resistor);
         }
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is not Resistor other) 
+            return false;
+
+        return A == other.A &&
+               B == other.B;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(A, B);
     }
 }

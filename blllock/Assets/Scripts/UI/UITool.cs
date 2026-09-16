@@ -20,6 +20,7 @@ public class UITool : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler,
     {
         this.tm = tm;
         Type = type;
+        Debug.Log($"[UI Tool] Type is {Type}");
         gameObject.GetComponent<Image>().sprite = toolSprites[(int)type];
 
         hover.gameObject.SetActive(false);

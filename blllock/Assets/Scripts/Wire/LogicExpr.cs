@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using Unity.Burst.Intrinsics;
 
+using UnityEngine; // 임시
+
 public abstract class LogicExpr
 {
     public abstract override string ToString();
@@ -43,6 +45,7 @@ public class VarExpr : LogicExpr
     public bool IsResisted { get; private set; } = false;
     public VarExpr Resist()
     {
+        Debug.Log("Resist");
         VarExpr var = new(Name);
         var.IsResisted = !var.IsResisted;
         return var;

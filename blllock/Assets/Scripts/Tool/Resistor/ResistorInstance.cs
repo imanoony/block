@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ResistorInstance : MonoBehaviour
 {
-    private Resistor resistorData;
+    public Resistor ResistorData { get; private set; }
     private bool isH;
     private bool isTweening = false;
     public void StartTweening() => isTweening = true;
@@ -21,15 +21,10 @@ public class ResistorInstance : MonoBehaviour
     private Animator animator;
     private GridManager gm;
 
-    public void Initialize(
-        Vector2Int start,
-        Vector2Int end
-    )
+    public void Initialize(Resistor resistor)
     {
-        if (!Utils.IsAdjacentGrids(start, end)) { Utils.PrintError("Resistor의 양 끝 점은 이웃이어야 함."); return; }
-
-        resistorData = new(start, end);
-        if (start.x == end.x) isH = true;
+        ResistorData = resistor;
+        if (resistor.A.x == resistor.B.x) isH = true;
         else isH = false;
 
         animator = gameObject.GetComponent<Animator>();
@@ -37,8 +32,8 @@ public class ResistorInstance : MonoBehaviour
 
         float targetX, targetY;
         Vector3 basePos = (Vector3)gm.GetTileTopLeftWorld(
-            resistorData.A.x, 
-            resistorData.A.y
+            ResistorData.A.x, 
+            ResistorData.A.y
         );
         if (isH) 
         {

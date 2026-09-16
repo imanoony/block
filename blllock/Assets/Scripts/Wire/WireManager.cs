@@ -57,8 +57,7 @@ public class WireManager
     // Wire와 Equivalents한 모든 다른 Wire를 반환함
     private HashSet<int> GetEquivalents(
         int id, 
-        HashSet<int>? visited = null,
-        bool checkReverse = true
+        HashSet<int>? visited = null
     )
     {
         HashSet<int> result = new();
@@ -77,6 +76,7 @@ public class WireManager
 
             HashSet<int> eqs = new();
             if (WireDict.ContainsKey(curr)) eqs.UnionWith(WireDict[curr]);
+            if (WireDict.ContainsKey(-curr)) eqs.UnionWith(WireDict[-curr].Select(x => -x));
             if (eqs.Count == 0) continue;
 
             foreach (int eqID in eqs)
@@ -84,9 +84,6 @@ public class WireManager
                 if (!visited.Contains(eqID)) stack.Push(eqID);
             }
         }
-
-        if (checkReverse)
-            result.UnionWith(GetEquivalents(-id, null, false));
 
         return result;
     }
@@ -121,10 +118,11 @@ public class WireManager
 
     // Wires에서는 삭제하지 않고 WireDict, WireLogic에서만 삭제한다.
     // 한 스테이지가 끝날 때까지 모든 Wire는 계속 존재하기 때문.
-    public void RemoveWire(int id)
+    public void RemoveWire(int id, bool delete=false)
     {
-        //Debug.Log($"[RemoveWire:{id}]");
-        if (id <= reservedCount) return;
+        Debug.Log($"[RemoveWire:{id}]");
+        if (id <= reservedCount && id >= -reservedCount) return;
+        Debug.Log($"[RemoveWire:{id}] dd");
 
         if (WireDict.TryGetValue(id, out HashSet<int> eq))
         {
@@ -138,7 +136,15 @@ public class WireManager
             }
             WireDict.Remove(id);
         }
-        if (WireLogic.ContainsKey(id)) WireLogic.Remove(id);
+        if (WireLogic.ContainsKey(id)) 
+        {
+            Debug.Log($"Wire Logic Delete : id={id}");
+            WireLogic.Remove(id);
+        }
+        if (delete)
+        {
+            Wires.Remove(id);
+        }
     }
 
     // ---------------------------------------------------------------------------

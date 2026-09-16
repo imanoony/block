@@ -265,6 +265,7 @@ public class GridManager : MonoBehaviour
         TilePlacer.RemoveBarriers();
         BlockPlacer.RemoveBlocks();
         CablePlacer.RemoveCables();
+        ResistorPlacer.RemoveResistors(this);
     }
     public LogicExpr? GetGridExpr(int x, int y)
     {
@@ -860,14 +861,14 @@ public class GridManager : MonoBehaviour
         Grids![resistor.B.x, resistor.B.y].RemovePort(resistor.PortB);
 
         // Wire Manager의 WireDict, WireLogic을 수정한다.
-        foreach (int id in resistor.WireIds) GameManager.Instance.Wire.RemoveWire(id);
+        foreach (int id in resistor.WireIds) GameManager.Instance.Wire.RemoveWire(id, true);
 
         CheckInvalids();
         GameManager.Instance.Wire.EvalAll();
     }
-    public bool IsValidPos(Resistor resistor)
+    public bool IsValidPos(Vector2Int a, Vector2Int b)
     {
-        Edge edge = resistor.ToEdge();
+        Edge edge = Utils.ToEdge(EdgeType.Resistor, a, b);
         switch (edge)
         {
             case HEdge he:
