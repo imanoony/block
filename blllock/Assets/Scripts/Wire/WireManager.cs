@@ -63,6 +63,8 @@ public class WireManager
     {
         HashSet<int> result = new();
         if (id == 0) return result;
+        if (!Wires.ContainsKey(id)) return result;
+        
         visited ??= new();
         Stack<int> stack = new();
         stack.Push(id);
@@ -239,6 +241,7 @@ public class WireManager
         bool checkReverse = true
     )
     {
+        if (!Wires.ContainsKey(id)) return null;
         HashSet<int> eq = equivalents == null ? GetEquivalents(id) : new(equivalents);
 
         VarExpr? result = null;

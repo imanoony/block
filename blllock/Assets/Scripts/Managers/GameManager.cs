@@ -189,7 +189,7 @@ public class GameManager : MonoBehaviour
     public Dictionary<int, ModuleData> ModuleLibrary { get; private set; }
     public Dictionary<int, TutorialData> TutorialLibrary { get; private set; }
     public Dictionary<int, StageData> StageLibrary { get; private set; }
-    private const string blockPath = "Block", modulePath = "Module", stagePath = "Stage", tutorialPath = "Tutorial";
+    private const string blockPath = "Block", modulePath = "Module", stagePath = "Stages", tutorialPath = "Tutorial";
 
     #endregion
 
@@ -231,6 +231,8 @@ public class GameManager : MonoBehaviour
         if (State != GameState.Paused) { Utils.PrintError("게임이 이미 진행 중입니다."); return; }
 
         if (delay != null) { StopCoroutine(delay); delay = null; }
+
+        Debug.Log($"START STAGE, ID: {stage.ID}");
 
         outputCheck = new();
         Grid.RemoveCurrentStage();

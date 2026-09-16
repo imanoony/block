@@ -14,5 +14,8 @@
             }
         },
         "blockCount": 11
+    },
+    "stages": {
+        "stagesRoot": "../../Resources/Data/Stages"
     }
 }

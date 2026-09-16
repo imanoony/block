@@ -443,29 +443,32 @@ public class DataParser
         return result;
     }
 
-    public Dictionary<int, StageData> LoadStageData(string filename)
+    public Dictionary<int, StageData> LoadStageData(string foldername)
     {
         int i;
         StageData.RawStages rawStages;
         StageData.Raw raw;
         StageData stage;
-        TextAsset jsonAsset;
+        TextAsset[] jsonAssets;
         Dictionary<int, StageData> result = new();
 
         // Resources/Data 폴더 기준 경로, 확장자 제외
-        jsonAsset = Resources.Load<TextAsset>($"Data/{filename}");
-        if (jsonAsset == null)
+        jsonAssets = Resources.LoadAll<TextAsset>($"Data/{foldername}");
+        if (jsonAssets.Length == 0)
         {
-            Utils.PrintError($"JSON 파일을 찾을 수 없음: Data/{filename}");
+            Utils.PrintError($"JSON 파일을 찾을 수 없음: Data/{foldername}");
             return result;
         }
 
-        rawStages = JsonUtility.FromJson<StageData.RawStages>(jsonAsset.text);
-        for (i = 0; i < rawStages.Stages.Count; i++)
+        foreach (TextAsset jsonAsset in jsonAssets)
         {
-            raw = rawStages.Stages[i];
-            stage = StageData.FromRaw(raw);
-            result[stage.ID] = stage;
+            rawStages = JsonUtility.FromJson<StageData.RawStages>(jsonAsset.text);
+            for (i = 0; i < rawStages.Stages.Count; i++)
+            {
+                raw = rawStages.Stages[i];
+                stage = StageData.FromRaw(raw);
+                result[stage.ID] = stage;
+            }
         }
         
         return result;

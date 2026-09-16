@@ -76,3 +76,39 @@ export async function saveDocument() {
         content
     );
 }
+
+export async function loadFirstStage() {
+
+    const result =
+        await window.electronAPI.loadFirstStageFile();
+
+    if (!result) {
+        State.document = {
+            name: "untitled.json",
+            data: newDocument(),
+            index: -1,
+        };
+
+        State.loadStage(emptyStage(), -1);
+        return;
+    }
+
+    const data = normalizeDocument(
+        JSON.parse(result.content)
+    );
+
+    State.document = {
+        name: result.name,
+        data,
+        index: -1,
+    };
+
+    if (data.Stages.length > 0) {
+        State.loadStage(
+            structuredClone(data.Stages[0]),
+            0
+        );
+    } else {
+        State.loadStage(emptyStage(), -1);
+    }
+}
