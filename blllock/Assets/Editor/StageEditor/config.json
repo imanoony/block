@@ -1,0 +1,18 @@
+{
+    "sprites": {
+        "spritesRoot": "../../Sprites",
+        "assets": {
+            "spriteBackground": "Env/nemocuit-background-wood.png",
+            "spriteCircuit": "Tile/Circuit/nemocuit-cuit.png",
+            "spriteBlock": "Block/Normal/nemocuit-block",
+            "spriteTag": {
+                "root": "Block/Tag",
+                "rotateCW": "nemocuit-tag-rotateCW.png",
+                "rotateCCW": "nemocuit-tag-rotateCCW.png",
+                "flipX": "nemocuit-tag-flipX.png",
+                "flipY": "nemocuit-tag-flipY.png"
+            }
+        },
+        "blockCount": 11
+    }
+}

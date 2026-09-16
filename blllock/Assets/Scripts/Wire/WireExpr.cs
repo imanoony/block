@@ -164,7 +164,7 @@ public class PortHorz : PortExpr
 // -------------------------------------------------------
 public class Wire
 {
-    public int ID = -1;
+    public int ID = 0;
     public string Name;
     public bool Updated = false;
 
@@ -188,7 +188,7 @@ public class Wire
         Updated = false;
         Cache = null;
     }
-    public Wire(int id, int parent = 0)
+    public Wire(int id)
     {
         ID = id;
         Name = "";

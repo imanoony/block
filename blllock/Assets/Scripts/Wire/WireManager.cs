@@ -55,7 +55,11 @@ public class WireManager
     #region Graph
 
     // Wire와 Equivalents한 모든 다른 Wire를 반환함
-    private HashSet<int> GetEquivalents(int id, HashSet<int>? visited = null)
+    private HashSet<int> GetEquivalents(
+        int id, 
+        HashSet<int>? visited = null,
+        bool checkReverse = true
+    )
     {
         HashSet<int> result = new();
         if (id == 0) return result;
@@ -78,6 +82,9 @@ public class WireManager
                 if (!visited.Contains(eqID)) stack.Push(eqID);
             }
         }
+
+        if (checkReverse)
+            result.UnionWith(GetEquivalents(-id, null, false));
 
         return result;
     }
@@ -134,7 +141,7 @@ public class WireManager
 
     // ---------------------------------------------------------------------------
     // [ Add To ]
-    // > WireExpr과 WireExpr를 매핑하거나, 또는 WireExpr와 LogicExprs을 매핑한다.
+    // > WireExpr과 WireExpr를 매핑하거나, 또는 WireExpr와 LogicExpr을 매핑한다.
     // > bool AddToDict(int, int): Wire와 Wire를 매핑한다.
     // > bool AddToDict(WireExpr, WireExpr): WireExpr과 WireExpr를 매핑한다.
     // ---------------------------------------------------------------------------
@@ -226,7 +233,11 @@ public class WireManager
         }
     }
 
-    public VarExpr? Eval(int id, HashSet<int>? equivalents = null)
+    public VarExpr? Eval(
+        int id, 
+        HashSet<int>? equivalents = null,
+        bool checkReverse = true
+    )
     {
         HashSet<int> eq = equivalents == null ? GetEquivalents(id) : new(equivalents);
 
@@ -236,6 +247,17 @@ public class WireManager
             if (WireLogic.ContainsKey(eqID))
             {
                 result = WireLogic[eqID];
+                if (AutoEval) EvalEquivalents(eq, result);
+                return result;
+            }
+        }
+
+        if (checkReverse)
+        {
+            VarExpr? reverseResult = Eval(-id, null, false);
+            if (reverseResult != null)
+            {
+                result = reverseResult.Resist();
                 if (AutoEval) EvalEquivalents(eq, result);
                 return result;
             }

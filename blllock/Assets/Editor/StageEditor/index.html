@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>Stage Editor</title>
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+
+	<body>
+		<div class="app">
+		<header>
+			<b>Stage Editor</b>
+			<button id="btn-new-file">새 파일</button>
+			<button id="btn-import">파일 열기</button>
+			<input id="file-import" type="file" accept=".json" hidden />
+
+			<span id="file-name">untitled.json</span>
+
+			<select id="stage-select"></select>
+
+			<button id="btn-new-stage">새 스테이지</button>
+			<button id="btn-save">저장</button>
+		</header>
+
+		<div class="layout">
+			<!-- Left Panel -->
+			<aside class="panel">
+			<section>
+				<b>Stage</b>
+
+				<label>
+				ID
+				<input id="meta-id" type="number" />
+				</label>
+
+				<label>
+				Desc
+				<textarea id="meta-desc"></textarea>
+				</label>
+
+				<label>
+				TutorialID
+				<input id="meta-tutorial-id" type="number" />
+				</label>
+
+				<b>Tool Counts</b>
+
+				<label>
+				Cable (Type 0)
+				<input
+					id="meta-tool-cable"
+					type="number"
+					min="0"
+					step="1"
+					value="0"
+				/>
+				</label>
+
+				<label>
+				Resistor (Type 1)
+				<input
+					id="meta-tool-resistor"
+					type="number"
+					min="0"
+					step="1"
+					value="0"
+				/>
+				</label>
+			</section>
+
+			<section>
+				<b>Canvas</b>
+
+				<label>
+				BgWidth
+				<input id="meta-bg-width" type="number" />
+				</label>
+
+				<label>
+				BgHeight
+				<input id="meta-bg-height" type="number" />
+				</label>
+
+				<button id="btn-clear-bg">배경 지우기</button>
+			</section>
+
+			<section>
+				<b>도구</b>
+
+				<div class="tool-list">
+				<button data-tool="bg-paint">배경</button>
+				<button data-tool="circuit-paint">회로</button>
+				<button data-tool="circuit-erase">회로 삭제</button>
+				<button data-tool="input-paint">Input 배치</button>
+				<button data-tool="output-paint">Output 배치</button>
+				<button data-tool="hbarrier-paint">H Barrier</button>
+				<button data-tool="vbarrier-paint">V Barrier</button>
+				<button data-tool="rotate-cw">Rotate CW</button>
+				<button data-tool="rotate-ccw">Rotate CCW</button>
+				<button data-tool="flip-x">Flip X</button>
+				<button data-tool="flip-y">Flip Y</button>
+				<button data-tool="eraser">지우개</button>
+				</div>
+			</section>
+			</aside>
+
+			<!-- Main -->
+			<main>
+			<div class="canvas-wrap">
+				<canvas id="stage-canvas"></canvas>
+			</div>
+
+			<footer>
+				도구 <b id="status-tool"></b>
+				· 좌표 <b id="status-hover">-</b>
+				· <span id="status-assets"></span>
+			</footer>
+			</main>
+
+			<!-- Right Panel -->
+			<aside class="panel">
+			<section>
+				<b>Blocks</b>
+				<div id="block-palette" class="tool-list"></div>
+			</section>
+
+			<section>
+				<b>IO Expr</b>
+
+				<div class="expr-grid">
+				<label>
+					Left Up
+					<input id="io-lu" />
+				</label>
+
+				<label>
+					Left Down
+					<input id="io-ld" />
+				</label>
+
+				<label>
+					Right Up
+					<input id="io-ru" />
+				</label>
+
+				<label>
+					Right Down
+					<input id="io-rd" />
+				</label>
+				</div>
+
+				<button id="btn-io-apply">Expr 적용</button>
+				<small id="io-expr-preview"></small>
+			</section>
+
+			<section>
+				<b>현재 Stage</b>
+				<div id="io-info"></div>
+			</section>
+			</aside>
+		</div>
+		</div>
+
+		<script type="module" src="js/main.js"></script>
+	</body>
+</html>

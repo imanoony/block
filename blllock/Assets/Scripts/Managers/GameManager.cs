@@ -129,6 +129,14 @@ public static class Utils
 
         return off;
     }
+
+    public static bool IsAdjacentGrids(Vector2Int a, Vector2Int b)
+    {
+        if (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) != 1)
+            return false;
+
+        return true;
+    }
 }
 
 public enum GameState { InGame, Paused, ModuleSelect }
@@ -227,7 +235,7 @@ public class GameManager : MonoBehaviour
         outputCheck = new();
         Grid.RemoveCurrentStage();
         Wire.Initialize();
-        Tool.Initialize(stage.ToolCounts);
+        Tool.InitToolCounts(stage.ToolCounts);
         Grid.InitStage(stage);
         CurrentStage = stage;
 

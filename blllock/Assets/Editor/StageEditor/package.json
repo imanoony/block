@@ -1,0 +1,16 @@
+{
+  "name": "stage-editor",
+  "version": "1.0.0",
+  "description": "타일 기반 스테이지 에디터",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^44.2.0"
+  }
+}
