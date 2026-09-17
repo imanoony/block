@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class WireManager
 {
@@ -120,9 +119,7 @@ public class WireManager
     // 한 스테이지가 끝날 때까지 모든 Wire는 계속 존재하기 때문.
     public void RemoveWire(int id, bool delete=false)
     {
-        Debug.Log($"[RemoveWire:{id}]");
         if (id <= reservedCount && id >= -reservedCount) return;
-        Debug.Log($"[RemoveWire:{id}] dd");
 
         if (WireDict.TryGetValue(id, out HashSet<int> eq))
         {
@@ -138,7 +135,6 @@ public class WireManager
         }
         if (WireLogic.ContainsKey(id)) 
         {
-            Debug.Log($"Wire Logic Delete : id={id}");
             WireLogic.Remove(id);
         }
         if (delete)
@@ -263,12 +259,10 @@ public class WireManager
 
         if (checkReverse)
         {
-            Debug.Log($"Eval, check reverse, id={id}");
             VarExpr? reverseResult = Eval(-id, null, false);
             if (reverseResult != null)
             {
                 result = reverseResult.Resist();
-                Debug.Log($"Eval, check reverse, id={id} // and then get a result={result} // and eq={string.Join(", ", eq)}");
                 if (AutoEval) EvalEquivalents(eq, result);
                 return result;
             }
@@ -319,7 +313,6 @@ public class WireManager
             {
                 Wires[eqID].Cache = l;
                 Wires[eqID].Updated = true;
-                Debug.Log($"Eval Equivalent, id={eqID}, logic={l}");
             }
         }
     }
@@ -328,19 +321,12 @@ public class WireManager
 
     public void EvalAll()
     {
-        string debugText = $@"
-[현재 WireDict] {GameManager.Instance.Wire.StringOfWireDict()}
-[현재 Wires] {GameManager.Instance.Wire.StringOfWires()}
-[현재 WireLogic] {GameManager.Instance.Wire.StringOfWireLogic()}
-";
-        Debug.Log($"Debug Before EvalAll:: {debugText}");
         ResetWires();
         foreach (var kvp in Wires)
         {
             if (kvp.Value.Updated) continue;
             Eval(kvp.Value.ID);
         }
-        Debug.Log($"[EvalAll] {string.Join(" | ", Wires.Select(kvp => $"{kvp.Key}: {kvp.Value.Cache}"))}");
         ResetWires();
     }
 

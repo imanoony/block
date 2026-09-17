@@ -16,9 +16,13 @@ public class ResistorInstance : MonoBehaviour
         return true;
     }
 
+    [SerializeField] private SpriteRenderer shadow;
+    [SerializeField] private Sprite hResistorShadow;
+    [SerializeField] private Sprite vResistorShadow;
     [SerializeField] private string hResistorAnim = "HResistorAnim";
     [SerializeField] private string vResistorAnim = "VResistorAnim";
     private Animator animator;
+    private BoxCollider2D boxCol;
     private GridManager gm;
 
     public void Initialize(Resistor resistor)
@@ -28,6 +32,7 @@ public class ResistorInstance : MonoBehaviour
         else isH = false;
 
         animator = gameObject.GetComponent<Animator>();
+        boxCol = gameObject.GetComponent<BoxCollider2D>();
         gm = GameManager.Instance.Grid;
 
         float targetX, targetY;
@@ -39,14 +44,25 @@ public class ResistorInstance : MonoBehaviour
         {
             targetX = basePos.x + gm.GetTileSize().x / 2f;
             targetY = basePos.y;
+            shadow.sprite = hResistorShadow;
         }
         else    
         {
             targetX = basePos.x;
             targetY = basePos.y - gm.GetTileSize().y / 2f;
+            shadow.sprite = vResistorShadow;
+            Vector2 size = boxCol.size;
+            boxCol.size = new Vector2(size.y, size.x);
         }
 
         transform.position = new(targetX, targetY);
+    }
+
+    private void OnMouseDown()
+    {
+        if (!IsInteractable()) return;
+
+        gm.ResistorPlacer.RemoveResistor(gm, ResistorData.A, ResistorData.B);
     }
 
     private Coroutine resistorCo = null;
