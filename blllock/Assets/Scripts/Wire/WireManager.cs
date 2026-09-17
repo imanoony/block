@@ -62,7 +62,7 @@ public class WireManager
     {
         HashSet<int> result = new();
         if (id == 0) return result;
-        if (!Wires.ContainsKey(id)) return result;
+        if (!Wires.ContainsKey(id) && !Wires.ContainsKey(-id)) return result;
         
         visited ??= new();
         Stack<int> stack = new();
@@ -76,10 +76,7 @@ public class WireManager
 
             HashSet<int> eqs = new();
             if (WireDict.ContainsKey(curr)) eqs.UnionWith(WireDict[curr]);
-            if (WireDict.ContainsKey(-curr)) 
-            {
-                eqs.UnionWith(WireDict[-curr].Where(x => WireDict.ContainsKey(-x)).Select(x => -x));
-            }
+            if (WireDict.ContainsKey(-curr)) eqs.UnionWith(WireDict[-curr].Select(x => -x));
             if (eqs.Count == 0) continue;
 
             foreach (int eqID in eqs)
@@ -169,7 +166,7 @@ public class WireManager
         if (WireDict.ContainsKey(w2)) WireDict[w2].Add(w1);
         else WireDict[w2] = new() { w1 };
 
-        return true;
+        return Check(w1, w2);
     }
 
     public bool AddToDict(Wire? w1, Wire? w2)
@@ -191,7 +188,8 @@ public class WireManager
         if (var == null) return true;
         if (!Compatible(w, var)) return false;
         WireLogic[w] = var;
-        return true;
+
+        return Check(w);
     }
     public bool AddToLogic(Wire? wire, VarExpr? var)
     {
@@ -250,7 +248,6 @@ public class WireManager
         bool checkReverse = true
     )
     {
-        if (!Wires.ContainsKey(id)) return null;
         HashSet<int> eq = equivalents == null ? GetEquivalents(id) : new(equivalents);
 
         VarExpr? result = null;
@@ -266,10 +263,12 @@ public class WireManager
 
         if (checkReverse)
         {
+            Debug.Log($"Eval, check reverse, id={id}");
             VarExpr? reverseResult = Eval(-id, null, false);
             if (reverseResult != null)
             {
                 result = reverseResult.Resist();
+                Debug.Log($"Eval, check reverse, id={id} // and then get a result={result} // and eq={string.Join(", ", eq)}");
                 if (AutoEval) EvalEquivalents(eq, result);
                 return result;
             }
@@ -316,8 +315,12 @@ public class WireManager
     {
         foreach (int eqID in equivalents)
         {
-            Wires[eqID].Cache = l;
-            Wires[eqID].Updated = true;
+            if (Wires.ContainsKey(eqID))
+            {
+                Wires[eqID].Cache = l;
+                Wires[eqID].Updated = true;
+                Debug.Log($"Eval Equivalent, id={eqID}, logic={l}");
+            }
         }
     }
 
@@ -325,13 +328,62 @@ public class WireManager
 
     public void EvalAll()
     {
+        string debugText = $@"
+[현재 WireDict] {GameManager.Instance.Wire.StringOfWireDict()}
+[현재 Wires] {GameManager.Instance.Wire.StringOfWires()}
+[현재 WireLogic] {GameManager.Instance.Wire.StringOfWireLogic()}
+";
+        Debug.Log($"Debug Before EvalAll:: {debugText}");
         ResetWires();
         foreach (var kvp in Wires)
         {
             if (kvp.Value.Updated) continue;
             Eval(kvp.Value.ID);
         }
+        Debug.Log($"[EvalAll] {string.Join(" | ", Wires.Select(kvp => $"{kvp.Key}: {kvp.Value.Cache}"))}");
         ResetWires();
+    }
+
+    // 현재 wire 연결 상태의 정합성을 체크
+    // params ids에 있는 wire 연결 상태의 정합성만 본다
+    public bool Check(params int[] ids)
+    {
+        HashSet<int> visited = new();
+        HashSet<int> eq, neq;
+        HashSet<LogicExpr> leq;
+
+        for (int i = 0; i < ids.Length; i++)
+        {
+            int id = ids[i];
+            if (visited.Contains(id)) continue;
+
+            eq = GetEquivalents(id);
+            visited.UnionWith(eq);
+            leq = new();
+            foreach (int eqID in eq)
+            {
+                if (WireLogic.ContainsKey(eqID)) leq.Add(WireLogic[eqID]);
+            }
+
+            neq = GetEquivalents(-id);
+            visited.UnionWith(neq);
+            foreach (int neqID in neq)
+            {
+                if (WireLogic.ContainsKey(neqID)) leq.Add(WireLogic[neqID].Resist());
+            }
+
+            if (leq.Count > 1) return false;
+        }
+
+        return true;
+    }
+    
+    // 현재 wire 연결 상태의 정합성을 체크
+    // 모든 wire 연결 상태의 정합성을 본다
+    public bool CheckAll()
+    {
+        int[] allIDs = Wires.Keys.ToArray();
+        return Check(allIDs);
     }
     #endregion
 

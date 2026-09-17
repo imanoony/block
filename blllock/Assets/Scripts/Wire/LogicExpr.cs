@@ -51,8 +51,16 @@ public class VarExpr : LogicExpr
         return var;
     }
 
-    public override string ToString() => Name;
-    public override string ToDataString() => Name;
+    public override string ToString() 
+    {
+        if (IsResisted) return $"-{Name}";
+        else return Name;
+    }
+    public override string ToDataString()
+    {
+        if (IsResisted) return $"-{Name}";
+        else return Name;
+    }
     public override bool Equals(object? obj) 
     {
         if (obj is CombExpr objC)
