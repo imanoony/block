@@ -76,7 +76,10 @@ public class WireManager
 
             HashSet<int> eqs = new();
             if (WireDict.ContainsKey(curr)) eqs.UnionWith(WireDict[curr]);
-            if (WireDict.ContainsKey(-curr)) eqs.UnionWith(WireDict[-curr].Select(x => -x));
+            if (WireDict.ContainsKey(-curr)) 
+            {
+                eqs.UnionWith(WireDict[-curr].Where(x => WireDict.ContainsKey(-x)).Select(x => -x));
+            }
             if (eqs.Count == 0) continue;
 
             foreach (int eqID in eqs)

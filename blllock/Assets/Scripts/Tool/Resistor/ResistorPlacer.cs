@@ -36,6 +36,7 @@ public class ResistorPlacer : MonoBehaviour
             {
                 Vector2Int? endGrid = nearGrids[i];
                 if (endGrid == null) break;
+                if (!Utils.IsAdjacentGrids(startGrid, (Vector2Int)endGrid)) continue;
 
                 (Vector2Int A, Vector2Int B) = Utils.SortPositions(startGrid, (Vector2Int)endGrid);
                 if (resistors.Contains((A, B)))
@@ -107,13 +108,12 @@ public class ResistorPlacer : MonoBehaviour
         resistorInstances.Remove((a, b));
         tm.CancelTool(ToolType.Resistor);
     }
-    public void RemoveResistors(
-        GridManager gm
-    )
+    public void RemoveResistors()
     {
-        foreach ((Vector2Int a, Vector2Int b) in resistors)
-        {
-            RemoveResistor(gm, a, b);
+        if (resistorInstances.Count != 0)
+        {   
+            foreach (var kvp in resistorInstances) 
+                Destroy(kvp.Value.gameObject);
         }
         resistors.Clear();
         resistorInstances.Clear();

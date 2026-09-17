@@ -265,7 +265,7 @@ public class GridManager : MonoBehaviour
         TilePlacer.RemoveBarriers();
         BlockPlacer.RemoveBlocks();
         CablePlacer.RemoveCables();
-        ResistorPlacer.RemoveResistors(this);
+        ResistorPlacer.RemoveResistors();
     }
     public LogicExpr? GetGridExpr(int x, int y)
     {
@@ -821,7 +821,7 @@ public class GridManager : MonoBehaviour
         // 논리적 점유
         // 오류가 있을 때 false 반환
         if (!IsValidPort(resistor, GameManager.Instance.Wire)) return false;
-
+    
         Grids![resistor.A.x, resistor.A.y].AddPort(resistor.PortA);
         Grids![resistor.B.x, resistor.B.y].AddPort(resistor.PortB);
 
