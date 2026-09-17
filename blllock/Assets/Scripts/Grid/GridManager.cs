@@ -84,6 +84,21 @@ public class GridManager : MonoBehaviour
             return _cablePlacer;
         }
     }
+    private ResistorPlacer? _resistorPlacer;
+    public ResistorPlacer ResistorPlacer
+    {
+        get
+        {
+            if (_resistorPlacer == null)
+            {
+                _resistorPlacer = gameObject.GetComponent<ResistorPlacer>();
+                if (_resistorPlacer == null)
+                    _resistorPlacer = gameObject.AddComponent<ResistorPlacer>();
+            }
+            return _resistorPlacer;
+        }
+    }
+
     private StageData? stageCache = null;
 
     public void InitStage(int id) => InitStage(GameManager.Instance.StageLibrary[id]);
@@ -250,6 +265,7 @@ public class GridManager : MonoBehaviour
         TilePlacer.RemoveBarriers();
         BlockPlacer.RemoveBlocks();
         CablePlacer.RemoveCables();
+        ResistorPlacer.RemoveResistors();
     }
     public LogicExpr? GetGridExpr(int x, int y)
     {
@@ -271,6 +287,7 @@ public class GridManager : MonoBehaviour
     #region Invalids
     private List<BlockInstance> invalidBlocks = new();
     private List<CableGroup> invalidCables = new();
+    private List<Resistor> invalidResistors = new();
     public void AddInvalid(BlockInstance instance)
     {
         if (instance.Valid) return;
@@ -281,6 +298,11 @@ public class GridManager : MonoBehaviour
         if (group.Valid) return;
         invalidCables.Add(group);
     }
+    public void AddInvalid(Resistor resistor)
+    {
+        if (resistor.Valid) return;
+        invalidResistors.Add(resistor);
+    }
     public void RemoveInvalid(BlockInstance instance)
     {
         if (!instance.Valid) return;
@@ -290,6 +312,11 @@ public class GridManager : MonoBehaviour
     {
         if (!group.Valid) return;
         if (invalidCables.Contains(group)) invalidCables.Remove(group);
+    }
+    public void RemoveInvalid(Resistor resistor)
+    {
+        if (!resistor.Valid) return;
+        if (invalidResistors.Contains(resistor)) invalidResistors.Remove(resistor);
     }
     private void CheckInvalids()
     {
@@ -310,6 +337,14 @@ public class GridManager : MonoBehaviour
             if (result) validCables.Add(invalidCables[i]);
         }
         for (i = 0; i < validCables.Count; i++) invalidCables.Remove(validCables[i]);
+
+        List<Resistor> validResistors = new();
+        for (i = 0; i < invalidResistors.Count; i++)
+        {
+            bool result = ResistorPlacer.Check(this, invalidResistors[i]);
+            if (result) validResistors.Add(invalidResistors[i]);
+        }
+        for (i = 0; i < validResistors.Count; i++) invalidResistors.Remove(validResistors[i]);
     }
     #endregion
 
@@ -752,6 +787,129 @@ public class GridManager : MonoBehaviour
             if (grid.Expr != null && grid.Type == GridType.Input)
             {
                 if (!wire.AddToLogic(port, grid.Expr))
+                {
+                    wire.RollBack(backupWires, backupDict, backupLogic);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+    #endregion
+
+    #region Resistor Placement
+    public bool PlaceResistor(Resistor resistor)
+    {
+        // 공간적 점유 
+        // 외부에서 Valid Pos 확인했다고 가정함
+        Edge edge = resistor.ToEdge();
+        switch (edge)
+        {
+            case HEdge he:
+                if (HEdges == null) throw new Exception("HEdges is null");
+                HEdges[he.Pos.x, he.Pos.y].SetType(EdgeType.Resistor);
+                break;
+            case VEdge ve:
+                if (VEdges == null) throw new Exception("VEdges is null");
+                VEdges[ve.Pos.x, ve.Pos.y].SetType(EdgeType.Resistor);
+                break;
+            default:
+                break;
+        }
+
+        // 논리적 점유
+        // 오류가 있을 때 false 반환
+        if (!IsValidPort(resistor, GameManager.Instance.Wire)) return false;
+    
+        Grids![resistor.A.x, resistor.A.y].AddPort(resistor.PortA);
+        Grids![resistor.B.x, resistor.B.y].AddPort(resistor.PortB);
+
+        GameManager.Instance.Wire.EvalAll();
+
+        return true;
+    }
+    public void RemoveResistor(Resistor resistor)
+    {
+        // 공간적 점유 해제
+        Edge edge = resistor.ToEdge();
+        switch (edge)
+        {
+            case HEdge he:
+                if (HEdges == null) throw new Exception("HEdges is null");
+                HEdges[he.Pos.x, he.Pos.y].SetType(EdgeType.Empty);
+                break;
+            case VEdge ve:
+                if (VEdges == null) throw new Exception("HEdges is null");
+                VEdges[ve.Pos.x, ve.Pos.y].SetType(EdgeType.Empty);
+                break;
+            default:
+                break;
+        }
+
+        // 논리적 점유 해제
+
+        // 만약 invalid한 resistor였다면
+        if (!resistor.Valid)
+        {
+            resistor.SetValid(true);
+            return;
+        }
+
+        // 점유했던 그리드에서 Port를 제거한다
+        Grids![resistor.A.x, resistor.A.y].RemovePort(resistor.PortA);
+        Grids![resistor.B.x, resistor.B.y].RemovePort(resistor.PortB);
+
+        // Wire Manager의 WireDict, WireLogic을 수정한다.
+        foreach (int id in resistor.WireIds) GameManager.Instance.Wire.RemoveWire(id, true);
+
+        CheckInvalids();
+        GameManager.Instance.Wire.EvalAll();
+    }
+    public bool IsValidPos(Vector2Int a, Vector2Int b)
+    {
+        Edge edge = Utils.ToEdge(EdgeType.Resistor, a, b);
+        switch (edge)
+        {
+            case HEdge he:
+                if (HEdges == null) throw new Exception("HEdges is null");
+                return HEdges[he.Pos.x, he.Pos.y].Type == EdgeType.Empty;
+            case VEdge ve:
+                if (VEdges == null) throw new Exception("VEdges is null");
+                return VEdges[ve.Pos.x, ve.Pos.y].Type == EdgeType.Empty;
+            default:
+                break;
+        }
+        return false;
+    }
+    private bool IsValidPort(Resistor resistor, WireManager wire)
+    {
+        Dictionary<int, Wire> backupWires = wire.Wires.ToDictionary(kvp => kvp.Key, kvp => new Wire(kvp.Value));
+        Dictionary<int, HashSet<int>> backupDict = wire.WireDict.ToDictionary(kvp => kvp.Key, kvp => new HashSet<int>(kvp.Value));
+        Dictionary<int, VarExpr> backupLogic = new(wire.WireLogic);
+        
+        PortVar portA = resistor.PortA;
+        PortVar portB = resistor.PortB;
+
+        Grid gridA = Grids![resistor.A.x, resistor.A.y];
+        Grid gridB = Grids![resistor.B.x, resistor.B.y];
+        
+        List<PortVar> ports = new() { portA, portB };
+        List<Grid> grids = new() { gridA, gridB };
+
+        for (int i = 0; i < grids.Count; i++)
+        {
+            for (int j = 0; j < grids[i].Ports.Count; j++)
+            {
+                if (!wire.AddToDict(ports[i], grids[i].Ports[j]))
+                {
+                    wire.RollBack(backupWires, backupDict, backupLogic);
+                    return false;
+                }
+            }
+            if (grids[i].Expr != null && grids[i].Type == GridType.Input)
+            {
+                if (!wire.AddToLogic(ports[i], grids[i].Expr!))
                 {
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;

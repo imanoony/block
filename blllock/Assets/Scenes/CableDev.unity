@@ -3342,10 +3342,12 @@ GameObject:
   - component: {fileID: 638683229}
   - component: {fileID: 638683228}
   - component: {fileID: 638683231}
+  - component: {fileID: 638683233}
   - component: {fileID: 638683224}
   - component: {fileID: 638683227}
   - component: {fileID: 638683225}
   - component: {fileID: 638683226}
+  - component: {fileID: 638683232}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -3612,7 +3614,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cablePrefab: {fileID: 4262874548272097987, guid: d9b5cd4c8acdb7848a9cb16139ac9044, type: 3}
   cableParent: {fileID: 537221570}
-  cableGhost: {fileID: 724188838}
   cableNodeSprites:
   - {fileID: 21300000, guid: 37710a0c6a101094388bb16572cce2e3, type: 3}
   - {fileID: 21300000, guid: ca3dccdc77828b449b7ba93bc596e782, type: 3}
@@ -3620,6 +3621,33 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 093127f1813ad5141bfc1ce26e2d17eb, type: 3}
   - {fileID: 21300000, guid: 5b60d796f04085d4eb681cd1aea380bb, type: 3}
   cableEdgeSprite: {fileID: 21300000, guid: 595753e4faedab142b6566235f175429, type: 3}
+--- !u!114 &638683232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638683223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b148790d83fff43bf9803901b079c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  edgeGhost: {fileID: 724188838}
+--- !u!114 &638683233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638683223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b1ae0632ade2044f88616e33377422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resistorPrefab: {fileID: 5200067466756637714, guid: 4702dcaa82eb84c499d9e9c9a6e21bfa, type: 3}
+  resistorParent: {fileID: 1095793675}
 --- !u!1 &641233056
 GameObject:
   m_ObjectHideFlags: 0
@@ -4051,7 +4079,7 @@ GameObject:
   - component: {fileID: 724188840}
   - component: {fileID: 724188839}
   m_Layer: 0
-  m_Name: CableGhost
+  m_Name: EdgeGhost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

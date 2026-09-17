@@ -129,6 +129,45 @@ public static class Utils
 
         return off;
     }
+
+    public static bool IsAdjacentGrids(Vector2Int a, Vector2Int b)
+    {
+        if (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) != 1)
+            return false;
+
+        return true;
+    }
+    
+    public static (Vector2Int, Vector2Int) SortPositions(Vector2Int a, Vector2Int b)
+    {
+        Vector2Int A, B;
+
+        if (a.x < b.x || (a.x == b.x && a.y < b.y))
+        {
+            A = a; 
+            B = b;
+        }
+        else
+        {
+            A = b;
+            B = a;
+        }
+
+        return (A, B);
+    }
+
+    public static Edge ToEdge(EdgeType type, Vector2Int a, Vector2Int b)
+    {
+        (Vector2Int A, Vector2Int B) = SortPositions(a, b);
+        if (A.x == B.x) // Horizontal
+        {
+            return new HEdge(new(A.x, A.y), type);
+        }
+        else // Vertical
+        {
+            return new VEdge(new(A.x, A.y), type);
+        }
+    }
 }
 
 public enum GameState { InGame, Paused, ModuleSelect }
@@ -157,7 +196,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
         Wire = new WireManager();
         Grid = gameObject.GetComponent<GridManager>();
-        Tool = new ToolManager();
+        Tool = gameObject.GetComponent<ToolManager>();
         UI = gameObject.GetComponent<UIManager>();
         Audio = gameObject.GetComponent<AudioManager>();
 
@@ -165,6 +204,7 @@ public class GameManager : MonoBehaviour
         Grid.Initialize();
         UI.Initialize();
         Audio.Initialize();
+        Tool.Initialize();
 
         BlockLibrary = dataParser.ParseBlockData(blockPath);
         ModuleLibrary = dataParser.ParseModuleData(modulePath);
@@ -181,7 +221,7 @@ public class GameManager : MonoBehaviour
     public Dictionary<int, ModuleData> ModuleLibrary { get; private set; }
     public Dictionary<int, TutorialData> TutorialLibrary { get; private set; }
     public Dictionary<int, StageData> StageLibrary { get; private set; }
-    private const string blockPath = "Block", modulePath = "Module", stagePath = "Stage", tutorialPath = "Tutorial";
+    private const string blockPath = "Block", modulePath = "Module", stagePath = "Stages", tutorialPath = "Tutorial";
 
     #endregion
 
@@ -189,7 +229,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(13);
+        StartModule(0);
     }
 
     void Update()
@@ -224,10 +264,12 @@ public class GameManager : MonoBehaviour
 
         if (delay != null) { StopCoroutine(delay); delay = null; }
 
+        Debug.Log($"START STAGE, ID: {stage.ID}");
+
         outputCheck = new();
         Grid.RemoveCurrentStage();
         Wire.Initialize();
-        Tool.Initialize(stage.ToolCounts);
+        Tool.InitToolCounts(stage.ToolCounts);
         Grid.InitStage(stage);
         CurrentStage = stage;
 

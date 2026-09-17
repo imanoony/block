@@ -1,0 +1,2065 @@
+{
+    "Stages": [
+        {
+            "ID": 10011,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 6
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10011",
+            "TutorialID": 1,
+            "Blocks": [
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": [
+                {
+                    "type": 0,
+                    "count": 5
+                },
+                {
+                    "type": 1,
+                    "count": 3
+                }
+            ]
+        },
+        {
+            "ID": 10012,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 5
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10012",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10013,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 6
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 6
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10013",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                0,
+                1
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 10
+                },
+                {
+                    "x": 4,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10014,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 4
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10014",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                0,
+                1
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10015,
+            "BgWidth": 12,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 4
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10015",
+            "TutorialID": -1,
+            "Blocks": [
+                1,
+                2,
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 9
+                },
+                {
+                    "x": 5,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10016,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 4
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 8
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 6
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10016",
+            "TutorialID": 2,
+            "Blocks": [
+                1,
+                2,
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10017,
+            "BgWidth": 11,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 3
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 3
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 4
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10017",
+            "TutorialID": -1,
+            "Blocks": [
+                2,
+                0,
+                1
+            ],
+            "BlockPositions": [
+                {
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 9
+                },
+                {
+                    "x": 3,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10018,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 8
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 4
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10018",
+            "TutorialID": -1,
+            "Blocks": [
+                1,
+                1,
+                0,
+                2
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 10
+                },
+                {
+                    "x": 4,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10019,
+            "BgWidth": 13,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 8
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 6,
+                        "y": 6
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 6
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Desc": "10019",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                2,
+                0,
+                1
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "x": 6,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 10
+                },
+                {
+                    "x": 4,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10020,
+            "BgWidth": 12,
+            "BgHeight": 9,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 5,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 6
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 6
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 6,
+                        "y": 4
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Desc": "10020",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                0,
+                1,
+                2
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 9
+                },
+                {
+                    "x": 7,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10021,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 7
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 7
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 8
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Desc": "10021",
+            "TutorialID": 4,
+            "Blocks": [
+                0,
+                2,
+                3
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 6,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10022,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 5
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 7
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 5
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Desc": "10022",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                0,
+                3,
+                2
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                },
+                {
+                    "x": 4,
+                    "y": 10
+                },
+                {
+                    "x": 2,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10023,
+            "BgWidth": 13,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 5
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10023",
+            "TutorialID": -1,
+            "Blocks": [
+                2,
+                1
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "x": 3,
+                    "y": 10
+                },
+                {
+                    "x": 7,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [
+                {
+                    "x": 3,
+                    "y": 6
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10024,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 8
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 5
+                    },
+                    "expr": "Z"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 5
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "10024",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                4
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                }
+            ],
+            "RotateCWIndex": [
+                1
+            ],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [
+                0
+            ],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10099,
+            "BgWidth": 16,
+            "BgHeight": 9,
+            "Circuits": [
+                {
+                    "width": 1,
+                    "height": 1,
+                    "pos": {
+                        "x": 0,
+                        "y": 0
+                    }
+                }
+            ],
+            "Inputs": [],
+            "Outputs": [],
+            "Desc": "10099",
+            "TutorialID": 9999,
+            "Blocks": [
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 5
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10025,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 6
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 5
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": 5,
+            "Blocks": [
+                0,
+                2,
+                3
+            ],
+            "BlockPositions": [
+                {
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "x": 3,
+                    "y": 9
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 4,
+                    "y": 7
+                }
+            ],
+            "VBarriers": [
+                {
+                    "x": 3,
+                    "y": 6
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10026,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 5
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 8
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                1,
+                1,
+                5
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 10
+                },
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [
+                {
+                    "x": 3,
+                    "y": 6
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10027,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 6
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                1,
+                6,
+                6,
+                5
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 9
+                },
+                {
+                    "x": 2,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 5,
+                    "y": 6
+                }
+            ],
+            "VBarriers": [
+                {
+                    "x": 4,
+                    "y": 7
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10028,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 4
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": 5,
+            "Blocks": [
+                5,
+                5,
+                2
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "x": 3,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [
+                {
+                    "x": 3,
+                    "y": 4
+                },
+                {
+                    "x": 3,
+                    "y": 6
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10029,
+            "BgWidth": 13,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 5
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                0,
+                2,
+                5,
+                6
+            ],
+            "BlockPositions": [
+                {
+                    "x": 5,
+                    "y": 10
+                },
+                {
+                    "x": 5,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "x": 3,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [
+                {
+                    "x": 3,
+                    "y": 6
+                },
+                {
+                    "x": 3,
+                    "y": 8
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10030,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 5
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 6
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                7,
+                5,
+                5,
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 10
+                },
+                {
+                    "x": 3,
+                    "y": 10
+                },
+                {
+                    "x": 5,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 4,
+                    "y": 6
+                },
+                {
+                    "x": 4,
+                    "y": 7
+                }
+            ],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10031,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 7
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 5
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 4
+                    },
+                    "expr": "Y"
+                },
+                {
+                    "pos": {
+                        "x": 2,
+                        "y": 8
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 8
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                7,
+                5,
+                3,
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 9
+                },
+                {
+                    "x": 4,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 3,
+                    "y": 7
+                }
+            ],
+            "VBarriers": [
+                {
+                    "x": 3,
+                    "y": 6
+                },
+                {
+                    "x": 4,
+                    "y": 6
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10032,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 4,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 6
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 8
+                    },
+                    "expr": "Y"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 6
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                1,
+                1,
+                5,
+                3
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 10
+                },
+                {
+                    "x": 4,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 3,
+                    "y": 4
+                }
+            ],
+            "VBarriers": [
+                {
+                    "x": 4,
+                    "y": 5
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10033,
+            "BgWidth": 13,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                5,
+                4,
+                1,
+                0,
+                5
+            ],
+            "BlockPositions": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "x": 3,
+                    "y": 11
+                },
+                {
+                    "x": 5,
+                    "y": 11
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 3,
+                    "y": 7
+                },
+                {
+                    "x": 4,
+                    "y": 6
+                }
+            ],
+            "VBarriers": [
+                {
+                    "x": 3,
+                    "y": 6
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10034,
+            "BgWidth": 13,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 7
+                    },
+                    "expr": "Y"
+                },
+                {
+                    "pos": {
+                        "x": 6,
+                        "y": 6
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 8
+                    },
+                    "expr": "Y"
+                },
+                {
+                    "pos": {
+                        "x": 6,
+                        "y": 8
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "Desc Test",
+            "TutorialID": -1,
+            "Blocks": [
+                5,
+                4,
+                6,
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 10
+                },
+                {
+                    "x": 5,
+                    "y": 11
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [
+                {
+                    "x": 3,
+                    "y": 7
+                },
+                {
+                    "x": 5,
+                    "y": 7
+                }
+            ],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10035,
+            "BgWidth": 13,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 8
+                    },
+                    "expr": "Y"
+                },
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 5
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 5
+                    },
+                    "expr": "Y"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Blocks": [
+                3,
+                5,
+                7
+            ],
+            "BlockPositions": [
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "x": 3,
+                    "y": 10
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [
+                {
+                    "x": 3,
+                    "y": 7
+                },
+                {
+                    "x": 4,
+                    "y": 7
+                }
+            ],
+            "VBarriers": [],
+            "ToolCounts": []
+        },
+        {
+            "ID": 10036,
+            "BgWidth": 12,
+            "BgHeight": 7,
+            "Circuits": [
+                {
+                    "width": 3,
+                    "height": 2,
+                    "pos": {
+                        "x": 2,
+                        "y": 2
+                    }
+                },
+                {
+                    "width": 3,
+                    "height": 3,
+                    "pos": {
+                        "x": 2,
+                        "y": 7
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 2
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 4
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 4,
+                        "y": 9
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "Stage Editor Test",
+            "TutorialID": -1,
+            "Blocks": [
+                5,
+                1,
+                6,
+                6
+            ],
+            "BlockPositions": [
+                {
+                    "x": 6,
+                    "y": 4
+                },
+                {
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 9
+                }
+            ],
+            "RotateCWIndex": [
+                3
+            ],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "ToolCounts": []
+        }
+    ]
+}

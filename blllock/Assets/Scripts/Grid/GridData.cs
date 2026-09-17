@@ -6,7 +6,7 @@ using UnityEngine;
 
 public enum TileType { Empty, Occupied }
 public enum GridType { Null, Normal, Input, Output }
-public enum EdgeType { Null, Empty, Barrier, Cable }
+public enum EdgeType { Null, Empty, Barrier, Cable, Resistor }
 
 public class Tile
 {
@@ -36,7 +36,7 @@ public class Grid
     public void SetExpr(LogicExpr? expr) => Expr = expr;
     public bool AddPort(PortExpr port)
     {
-        if (Ports.Count >= Utils.MAX_PORT) return false;
+        //if (Ports.Count >= Utils.MAX_PORT) return false;
 
         Ports.Add(port);
         WiresLeftUp.Add(port.LeftUp);
