@@ -243,6 +243,15 @@ public class GameManager : MonoBehaviour
             }
             dataParser.SaveStageData(stages, stagePath);
         }
+
+        if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            UI.PlayWorldMapTransition(true);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            UI.PlayWorldMapTransition(false);
+        }
     }
     #endregion
     public GameState State { get; private set; } = GameState.Paused;

@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
     {
         if (initialized) return;
 
-        module.InitModule();
+        //module.InitModule();
 
         initialized = true;
     }
@@ -521,6 +521,76 @@ public class UIManager : MonoBehaviour
             Destroy(progresses[i].gameObject);
         }
         progresses.Clear();
+    }
+
+    #endregion
+
+    #region World Map Transition UI
+    [Header("World Map Transition")]
+    [SerializeField] private GameObject transitionCanvas;
+    [SerializeField] private GameObject transitionPrefab;
+    private List<UITransition> transitions = new();
+
+    private const float transitionHeight = 270f;
+    private Sequence transitionSeq = null;
+
+    public void PlayWorldMapTransition(bool right2left = true)
+    {
+        if (transitionSeq != null) return;
+
+        GameObject transitionGo;
+        UITransition transition;
+
+        Color[] colors = new Color[3] { Color.black, Color.gray, Color.white };
+        float[] delays = new float[4] { 0f, 0.1f, 0.15f, 0.18f };
+        float layerDelay = 0.2f;
+        float duration = 0.7f;
+        Ease ease = Ease.InOutSine;
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                transitionGo = Instantiate(
+                    transitionPrefab, 
+                    transitionCanvas.transform
+                );
+                transition = transitionGo.GetComponent<UITransition>();
+                transition.Init(
+                    transitionHeight * j,
+                    transitionHeight * (3 - j),
+                    colors[i],
+                    duration,
+                    ease,
+                    right2left
+                );
+                transitions.Add(transition);
+            }
+        }
+
+        transitionSeq = DOTween.Sequence();
+        for (int i = 0; i < transitions.Count; i++)
+        {
+            transitionSeq.Insert(delays[i % 4] + layerDelay * (i / 4), transitions[i].PlayHead());
+            transitionSeq.Insert(delays[i % 4] + layerDelay * ((i / 4)+1), transitions[i].PlayTail());
+        }
+
+        transitionSeq.OnKill(
+            () => 
+            {
+                for (int i = 0; i < transitions.Count; i++)
+                {
+                    Destroy(transitions[i].gameObject);
+                }
+                transitions.Clear();
+                transitionSeq = null;
+            }
+        );
+    }
+
+    public void StopWorldMapTransition()
+    {
+        transitionSeq?.Kill();
     }
 
     #endregion
