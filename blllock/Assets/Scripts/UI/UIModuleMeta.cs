@@ -86,8 +86,6 @@ public class UIModuleMeta : MonoBehaviour
 
         Sequence seq = DOTween.Sequence();
         GameObject progressGo;
-        UIProgress progress;
-        ProgressType type;
         for (int i = 0; i < progressCount; i++)
         {
             progressGo = Instantiate(
@@ -96,16 +94,19 @@ public class UIModuleMeta : MonoBehaviour
             );
             progresses.Add(progressGo);
 
-            progress = progressGo.GetComponent<UIProgress>();
-            type = i < progressIndex ? ProgressType.Cleared : ProgressType.Locked;
+            UIProgress progress = progressGo.GetComponent<UIProgress>();
 
-            seq.InsertCallback(
-                interval * (float)i,
-                () =>
-                {
-                    progress.SetType(type);
-                }
-            );
+            if (i < progressIndex)
+            {
+                seq.InsertCallback(
+                    interval * (float)i,
+                    () =>
+                    {
+                        progress.SetType(ProgressType.Active);
+                        progress.SetType(ProgressType.Cleared);
+                    }
+                );
+            }
         }
         seq.OnKill(() => progressTween = null);
 

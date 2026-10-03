@@ -2969,6 +2969,8 @@ MonoBehaviour:
   worldMapBackground: {fileID: 997583200}
   moduleParent: {fileID: 1149089248}
   moduleMeta: {fileID: 1552114177}
+  arrowLeft: {fileID: 1950881817}
+  arrowRight: {fileID: 1157263277}
   popup: {fileID: 1004574964}
   toolCanvas: {fileID: 404522389}
   toolPrefab: {fileID: 5102754865074387306, guid: 75384d8e1579da14393820a988669647, type: 3}

@@ -425,6 +425,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject worldMapBackground;
     [SerializeField] private GameObject moduleParent;
     [SerializeField] private UIModuleMeta moduleMeta;
+    [SerializeField] private GameObject arrowLeft;
+    [SerializeField] private GameObject arrowRight;
 
     private List<ModuleData> moduleData = new();
     private List<int> moduleIDs = new();
@@ -437,13 +439,19 @@ public class UIManager : MonoBehaviour
         worldMapBackground.SetActive(true);
         moduleParent.SetActive(true);
         moduleMeta.gameObject.SetActive(true);
+        arrowLeft.SetActive(true);
+        arrowRight.SetActive(true);
 
         ModuleUpdate();
     }
 
     public void WorldMapDisappear()
     {
-        
+        worldMapBackground.SetActive(false);
+        moduleParent.SetActive(false);
+        moduleMeta.gameObject.SetActive(false);
+        arrowLeft.SetActive(false);
+        arrowRight.SetActive(false);
     }
 
     public void ModuleNext()

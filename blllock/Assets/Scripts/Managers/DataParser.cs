@@ -36,6 +36,19 @@ public class ModuleData
 
     public bool IsCleared { get; private set; } = false;
     public void SetCleared() => IsCleared = true;
+
+    public string ThumbnailPath;
+    private Sprite thumbnail;
+    public Sprite Thumbnail
+    {
+        get
+        {
+            if (thumbnail == null && !string.IsNullOrEmpty(ThumbnailPath))
+                thumbnail = Resources.Load<Sprite>($"{Utils.THUMBNAILS_PATH}/{ThumbnailPath}");
+            return thumbnail;
+        }
+    }
+
 }
 
 public class TutorialData
@@ -288,6 +301,7 @@ public class DataParser
     private const string Tiles = "Tiles", Grids = "Grids", Ports = "Ports", TagPos = "TagPos";
     private const string Inputs = "Inputs", Outputs = "Outputs";
     private const string Blocks = "Blocks", Rotate = "Rotate", Flip = "Flip";
+    private const string ThumbnailPath = "ThumbnailPath";
     private const string Conditions = "Conditions";
     private const string Stages = "Stages";
 
@@ -384,6 +398,7 @@ public class DataParser
 
                 if (header == ID.ToLower()) module.SetID(int.Parse(value));
                 else if (header == Desc.ToLower()) module.Desc = value;
+                else if (header == ThumbnailPath.ToLower()) module.ThumbnailPath = value;
                 else if (header == Conditions.ToLower())
                 {
                     List<int> parsed = value

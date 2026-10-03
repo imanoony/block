@@ -8,7 +8,7 @@ public class CaptureWindow : EditorWindow
     private int width = 960;
     private int height = 540;
     private int superSample = 2;
-    private string folderPath = "Assets/Thumbnails";
+    private string folderPath = "Assets/Resources/Thumbnails";
     private string fileName = "";
     private bool overwrite = true;
 
