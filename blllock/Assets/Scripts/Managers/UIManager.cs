@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,6 +18,13 @@ public class UIManager : MonoBehaviour
         if (initialized) return;
 
         //module.InitModule();
+
+        Dictionary<int, ModuleData> moduleDict = GameManager.Instance.ModuleLibrary;
+        List<KeyValuePair<int, ModuleData>> sorted = moduleDict.OrderBy(kv => kv.Key).ToList();
+
+        moduleIDs = sorted.Select(kv => kv.Key).ToList();
+        moduleData = sorted.Select(kv => kv.Value).ToList();
+        focusedModuleID = 0;
 
         initialized = true;
     }
@@ -411,11 +419,56 @@ public class UIManager : MonoBehaviour
     public void GridTooltipDisappear() => gridTooltip.gameObject.SetActive(false);
     #endregion
 
-    #region Module UI
-    [Header("Module")]
-    [SerializeField] private UIModule module;
-    public void ModuleAppear() => module.ModuleAppear();
-    public void ModuleDisappear(Action onComplete) => module.ModuleDisappear(onComplete);
+    #region World Map UI
+    [Header("World Map")]
+    [SerializeField] private GameObject worldMapCanvas;
+    [SerializeField] private GameObject worldMapBackground;
+    [SerializeField] private GameObject moduleParent;
+    [SerializeField] private UIModuleMeta moduleMeta;
+
+    private List<ModuleData> moduleData = new();
+    private List<int> moduleIDs = new();
+    private int focusedModuleID = 0;
+    
+    public void WorldMapAppear(int focusedModuleID)
+    {
+        this.focusedModuleID = focusedModuleID;
+
+        worldMapBackground.SetActive(true);
+        moduleParent.SetActive(true);
+        moduleMeta.gameObject.SetActive(true);
+
+        ModuleUpdate();
+    }
+
+    public void WorldMapDisappear()
+    {
+        
+    }
+
+    public void ModuleNext()
+    {
+        
+    }
+
+    public void ModulePrev()
+    {
+        
+    }
+
+    // update module meta
+    // based on focusedModuleID
+    public void ModuleUpdate()
+    {
+        ModuleData currentModule = moduleData[moduleIDs.IndexOf(focusedModuleID)];
+
+        moduleMeta.Init(currentModule);
+
+        float duration = 0.2f;
+        moduleMeta.PlayName(duration);
+        moduleMeta.PlayProgressText(duration);
+        moduleMeta.PlayProgress(duration);
+    }
     #endregion
 
     #region Tutorial Popup
@@ -530,6 +583,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject transitionCanvas;
     [SerializeField] private GameObject transitionPrefab;
     private List<UITransition> transitions = new();
+    private Dictionary<TransitionEvent, Action> transitionEventCallbacks = new();
 
     private const float transitionHeight = 270f;
     private Sequence transitionSeq = null;
@@ -575,6 +629,38 @@ public class UIManager : MonoBehaviour
             transitionSeq.Insert(delays[i % 4] + layerDelay * ((i / 4)+1), transitions[i].PlayTail());
         }
 
+        transitionSeq.InsertCallback(
+            0,
+            () =>
+            {
+                transitionEventCallbacks.TryGetValue(TransitionEvent.Start, out var startCallback);
+                startCallback?.Invoke();
+            }
+        );
+        transitionSeq.InsertCallback(
+            delays[3] + layerDelay * 3,
+            () =>
+            {
+                transitionEventCallbacks.TryGetValue(TransitionEvent.AllCovered, out var allCoveredCallback);
+                allCoveredCallback?.Invoke();
+            }
+        );
+        transitionSeq.InsertCallback(
+            delays[0] + layerDelay * 3,
+            () =>
+            {
+                transitionEventCallbacks.TryGetValue(TransitionEvent.NextAppeared, out var nextAppearedCallback);
+                nextAppearedCallback?.Invoke();
+            }
+        );
+        transitionSeq.OnComplete(
+            () =>
+            {
+                transitionEventCallbacks.TryGetValue(TransitionEvent.End, out var EndCallback);
+                EndCallback?.Invoke();
+            }
+        );
+
         transitionSeq.OnKill(
             () => 
             {
@@ -584,6 +670,7 @@ public class UIManager : MonoBehaviour
                 }
                 transitions.Clear();
                 transitionSeq = null;
+                transitionEventCallbacks.Clear();
             }
         );
     }
@@ -591,6 +678,15 @@ public class UIManager : MonoBehaviour
     public void StopWorldMapTransition()
     {
         transitionSeq?.Kill();
+    }
+
+    public void RegisterTransitionEventCallBack(
+        TransitionEvent transitionEvent,
+        Action callback
+    )
+    {
+        transitionEventCallbacks.TryGetValue(transitionEvent, out var existing);
+        transitionEventCallbacks[transitionEvent] = existing + callback;
     }
 
     #endregion

@@ -194,6 +194,12 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
+
+        BlockLibrary = dataParser.ParseBlockData(blockPath);
+        ModuleLibrary = dataParser.ParseModuleData(modulePath);
+        TutorialLibrary = dataParser.LoadTutorialData(tutorialPath);
+        StageLibrary = dataParser.LoadStageData(stagePath);
+
         Wire = new WireManager();
         Grid = gameObject.GetComponent<GridManager>();
         Tool = gameObject.GetComponent<ToolManager>();
@@ -205,11 +211,6 @@ public class GameManager : MonoBehaviour
         UI.Initialize();
         Audio.Initialize();
         Tool.Initialize();
-
-        BlockLibrary = dataParser.ParseBlockData(blockPath);
-        ModuleLibrary = dataParser.ParseModuleData(modulePath);
-        TutorialLibrary = dataParser.LoadTutorialData(tutorialPath);
-        StageLibrary = dataParser.LoadStageData(stagePath);
 
         //dataParser.LoadData(ModuleLibrary, StageLibrary);
     }
@@ -427,7 +428,21 @@ public class GameManager : MonoBehaviour
         UI.MenuDisable();
         UI.DisableAllChat();
 
-        StartCoroutine(StageEndTrans(
+        State = GameState.ModuleSelect;
+
+        RegisterTransitionEventCallBack(
+            TransitionEvent.AllCovered,
+            () =>
+            {
+                Grid.RemoveCurrentStage();
+
+                UI.WorldMapAppear(CurrentModule.ID);
+            }
+        );
+
+        UI.PlayWorldMapTransition(false);
+
+        /*StartCoroutine(StageEndTrans(
             () =>
             {
                 State = GameState.ModuleSelect;
@@ -447,7 +462,7 @@ public class GameManager : MonoBehaviour
                 int achievement = (int)(100 * (float)CurrentModule.StageIndex / CurrentModule.Stages.Count);
                 string text = $"{CurrentModule.Desc} ({achievement}%)";
                 //UI.SetStageText(text);
-                UI.ModuleAppear();
+                //UI.WorldMapAppear();
 
                 Audio.SoftMute();
 
@@ -456,7 +471,7 @@ public class GameManager : MonoBehaviour
 
                 if (gt != null) gt.ResetGridIdleTime();
             }
-        ));
+        ));*/
     }
 
     public void QuitGame()
@@ -541,11 +556,11 @@ public class GameManager : MonoBehaviour
         State = GameState.Paused;
         int index = module.StageIndex == module.Stages.Count ? 0 : module.StageIndex;
 
-        
-        UI.ModuleDisappear(
-            () =>
-            StartStage(StageLibrary[module.Stages[index]])
-        );
+        StartStage(StageLibrary[module.Stages[index]]);
+        //UI.ModuleDisappear(
+        //    () =>
+        //    StartStage(StageLibrary[module.Stages[index]])
+        //);
     }
     public void StartModule(int id) => StartModule(ModuleLibrary[id]);
 
@@ -593,4 +608,12 @@ public class GameManager : MonoBehaviour
         onComplete?.Invoke();
     }
     #endregion
+
+    public void RegisterTransitionEventCallBack(
+        TransitionEvent transitionEvent,
+        Action callback
+    )
+    {
+        UI.RegisterTransitionEventCallBack(transitionEvent, callback);
+    }
 }

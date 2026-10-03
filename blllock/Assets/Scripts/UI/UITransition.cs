@@ -2,6 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
+public enum TransitionEvent
+{
+    Start,
+    AllCovered,
+    NextAppeared,
+    End
+}
+
 public class UITransition : MonoBehaviour
 {
     [SerializeField] private Sprite right2leftSprite;
