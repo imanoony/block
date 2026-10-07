@@ -7,9 +7,12 @@ public class UIModuleScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 {
     public enum Axis { Horizontal, Vertical }
 
+    [Header("Meta")]
+    [SerializeField] private UIModuleMeta meta;
+
     [Header("Layout")]
     [SerializeField] private Axis axis = Axis.Horizontal;
-    [SerializeField] private List<GameObject> modules;
+    [SerializeField] private List<GameObject> moduleObjects;
     [SerializeField] private RectTransform viewport;
 
 
@@ -20,12 +23,16 @@ public class UIModuleScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     [SerializeField] private float overscrollResistance = 0.35f;
     [SerializeField] private float maxOverscroll = 0.5f;
     [SerializeField] private float maxSpeed = 1.2f;
+    [SerializeField] private float metaChangeThreshold = 0.35f;
+    [SerializeField] private float metaAppearThreshold = 0.3f;
 
-    public Action<GameObject, int> OnBindItem;
+    public Action<UIModule, int> OnBindItem;
     public Action<int> OnFocusChanged;
+    public Action<int> OnMetaFocusChanged;
 
     private List<RectTransform> moduleRects = new();
-    private int[] boundIndex; // pool index to module id
+    private List<UIModule> modules = new();
+    private int[] bindIndex; // pool index to module id
 
     private float pos;
     private float velocity;
@@ -40,6 +47,7 @@ public class UIModuleScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private int poolCount = 5;
     private int moduleCount = 0;
     private int focusedIndex = 0;
+    private UIModule focusedModule = null;
 
     public void Init(int moduleCount)
     {
@@ -47,13 +55,15 @@ public class UIModuleScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
         this.moduleCount = moduleCount;
 
-        poolCount = modules.Count;
+        poolCount = moduleObjects.Count;
         moduleRects.Clear();
         for (int i = 0; i < poolCount; i++)
         {
-            moduleRects.Add(modules[i].GetComponent<RectTransform>());
+            moduleRects.Add(moduleObjects[i].GetComponent<RectTransform>());
+            modules.Add(moduleObjects[i].GetComponent<UIModule>());
         }
-        boundIndex = new int[poolCount];
+        bindIndex = new int[poolCount];
+        Array.Fill(bindIndex, -1);
 
         dragging = false;
         snapping = false;
@@ -74,6 +84,8 @@ public class UIModuleScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         Refresh();
     }
 
+    public void ScrollToNext(bool instant = false) => ScrollTo(focusedIndex + 1, instant);
+    public void ScrollToPrev(bool instant = false) => ScrollTo(focusedIndex - 1, instant);
     public void ScrollTo(int indexToFocus, bool instant = false)
     {
         int focus = Mathf.Clamp(indexToFocus, 0, moduleCount - 1);
@@ -97,36 +109,58 @@ public class UIModuleScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         int center = Mathf.RoundToInt(pos);
         int half = poolCount / 2;
 
-        for (int off = -half; off <= half; off++)
-        {
-            int i = center + off;
-            int slot = ((i % poolCount) + poolCount) % poolCount;
-            RectTransform rt = moduleRects[slot];
-
-            if (i < 0 || i > moduleCount - 1)
-            {
-                if (rt.gameObject.activeSelf) rt.gameObject.SetActive(false);
-                boundIndex[slot] = -1;
-                continue;
-            }
-
-            if (!rt.gameObject.activeSelf) rt.gameObject.SetActive(true);
-            if (boundIndex[slot] != i)
-            {
-                boundIndex[slot] = i;
-                OnBindItem?.Invoke(rt.gameObject, i);
-            }
-
-            float offset = (i - pos) * spacing;
-            rt.anchoredPosition = IsH ? new Vector2(offset, 0) : new Vector2(0, -offset);
-        }
-
         int focus = Mathf.Clamp(Mathf.RoundToInt(pos), 0, moduleCount - 1);
         if (focus != focusedIndex)
         {
             focusedIndex = focus;
             OnFocusChanged?.Invoke(focusedIndex);
+
+            focusedModule.SetFocused(false);
         }
+
+        for (int off = -half; off <= half; off++)
+        {
+            int i = center + off;
+            int slot = ((i % poolCount) + poolCount) % poolCount;
+            RectTransform rt = moduleRects[slot];
+            if (i == focus) 
+            {
+                focusedModule = modules[slot];
+                focusedModule.SetFocused(true);
+            }
+
+            if (i < 0 || i > moduleCount - 1)
+            {
+                if (rt.gameObject.activeSelf) rt.gameObject.SetActive(false);
+                bindIndex[slot] = -1;
+                continue;
+            }
+
+            if (!rt.gameObject.activeSelf) rt.gameObject.SetActive(true);
+            if (bindIndex[slot] != i)
+            {
+                bindIndex[slot] = i;
+                OnBindItem?.Invoke(modules[slot], i);
+            }
+
+            float offset = (i - pos) * spacing;
+            rt.anchoredPosition = IsH ? new Vector2(offset, 0) : new Vector2(0, -offset);
+        }
+        
+        float closeness = Mathf.Abs(pos - focus);
+
+        if (Mathf.Abs(velocity) < snapSpeedThreshold)
+        {
+            if (
+                closeness < metaChangeThreshold && 
+                !meta.CheckModuleID(focus)
+            )
+                OnMetaFocusChanged?.Invoke(focus);
+            meta.SetAlpha(Mathf.Clamp01(-(1/metaAppearThreshold)*closeness + 1));
+
+        }
+        if (focusedModule != null) 
+            focusedModule.SetScrimAlpha(Mathf.Clamp01(1/metaAppearThreshold*closeness) * 0.2f);
     }
 
     public void OnBeginDrag(PointerEventData e) 

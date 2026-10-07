@@ -10,33 +10,80 @@ public class UIModuleMeta : MonoBehaviour
     [SerializeField] private GameObject progressParent;
     [SerializeField] private GameObject progressPrefab;
 
+    private CanvasGroup progressCanvasGroup;
     private List<GameObject> progresses = new();
     
+    private int moduleID = -1;
     private string nameString = "";
     private int progressPercent = 0;
     private int progressCount = 0;
     private int progressIndex = 0;
 
-    private Tween nameTextTween = null;
-    private Tween progressTextTween = null;
-    private Tween progressTween = null;
-    public void Init(ModuleData module)
+    //private Tween nameTextTween = null;
+    //private Tween progressTextTween = null;
+    //private Tween progressTween = null;
+
+    public void Init()
     {
+        progressCanvasGroup = progressParent.GetComponent<CanvasGroup>();
+
+        // TODO    
+    }
+
+    public void InitModule(ModuleData module)
+    {
+        moduleID = module.ID;
         nameString = module.Desc;
         progressCount = module.Stages.Count;
         progressIndex = module.StageIndex;
-        progressPercent = Mathf.RoundToInt((float)progressIndex / (float)progressCount * 100f);
+        progressPercent = progressCount == 0 ? 0 : Mathf.RoundToInt((float)progressIndex / (float)progressCount * 100f);
 
-        nameTextTween?.Kill();
-        progressTextTween?.Kill();
-        progressTween?.Kill();
+        for (int i = 0; i < progresses.Count; i++)
+        {
+            Destroy(progresses[i]);
+        }
+        progresses.Clear();
 
-        nameTextTween = null;
-        progressTextTween = null;
-        progressTween = null;
+        GameObject progressGo;
+        for (int i = 0; i < progressCount; i++)
+        {
+            progressGo = Instantiate( // TODO: pooling?
+                progressPrefab,
+                progressParent.transform
+            );
+            progresses.Add(progressGo);
+
+            UIProgress progress = progressGo.GetComponent<UIProgress>();
+
+            if (i < progressIndex)
+            {
+                progress.SetTypeImmediate(ProgressType.Cleared);
+            }
+        }
+
+        nameText.text = module.Desc;
+        progressText.SetText("{0}%", progressPercent);
+
+        //nameTextTween?.Kill();
+        //progressTextTween?.Kill();
+        //progressTween?.Kill();
+
+        //nameTextTween = null;
+        //progressTextTween = null;
+        //progressTween = null;
     }
 
-    public void PlayName(float duration)
+    public void SetAlpha(float alpha)
+    {
+        nameText.alpha = alpha;
+        progressText.alpha = alpha;
+        progressCanvasGroup.alpha = alpha;
+    }
+
+    // return moduleID is same as id
+    public bool CheckModuleID(int id) => moduleID == id;
+
+    /*public void PlayName(float duration)
     {
         nameTextTween?.Kill();
 
@@ -111,5 +158,5 @@ public class UIModuleMeta : MonoBehaviour
         seq.OnKill(() => progressTween = null);
 
         progressTween = seq;
-    }
+    }*/
 }

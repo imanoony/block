@@ -27,6 +27,9 @@ public class UIManager : MonoBehaviour
         focusedModuleID = 0;
 
         moduleScroll.Init(moduleIDs.Count);
+        moduleScroll.OnMetaFocusChanged += (i) => moduleMeta.InitModule(moduleDict[i]);
+        moduleScroll.OnBindItem += (module, i) => module.InitModule(moduleDict[i]);
+        moduleMeta.Init();
 
         initialized = true;
     }
@@ -441,12 +444,12 @@ public class UIManager : MonoBehaviour
 
         worldMapBackground.SetActive(true);
         moduleParent.SetActive(true);
-        moduleScroll.InitFocus(focusedModuleID);
         moduleMeta.gameObject.SetActive(true);
         arrowLeft.SetActive(true);
         arrowRight.SetActive(true);
 
-        ModuleUpdate();
+        moduleScroll.InitFocus(focusedModuleID);
+        moduleMeta.InitModule(moduleData[moduleIDs.IndexOf(focusedModuleID)]);
     }
 
     public void WorldMapDisappear()
@@ -458,29 +461,8 @@ public class UIManager : MonoBehaviour
         arrowRight.SetActive(false);
     }
 
-    public void ModuleNext()
-    {
-        
-    }
-
-    public void ModulePrev()
-    {
-        
-    }
-
-    // update module meta
-    // based on focusedModuleID
-    public void ModuleUpdate()
-    {
-        ModuleData currentModule = moduleData[moduleIDs.IndexOf(focusedModuleID)];
-
-        moduleMeta.Init(currentModule);
-
-        float duration = 0.2f;
-        moduleMeta.PlayName(duration);
-        moduleMeta.PlayProgressText(duration);
-        moduleMeta.PlayProgress(duration);
-    }
+    public void ModuleNext() => moduleScroll.ScrollToNext();
+    public void ModulePrev() => moduleScroll.ScrollToPrev();
     #endregion
 
     #region Tutorial Popup
@@ -533,50 +515,73 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject progressCanvas;
     [SerializeField] private GameObject progressPrefab;
     private List<UIProgress> progresses = new();
+    private int prevFocusIndex;
     public void SetProgress(
         ModuleData module,
-        int focusID
+        int index
     )
     {
-        if (progresses.Count == 0)
+        GameObject progressGo;
+
+        float offsetY = Utils.PROGRESS_OFFSET_Y;
+        float maxHeight = Utils.PROGRESS_MAX_HEIGHT;
+        float totalHeight = offsetY * (module.Stages.Count - 1);
+        if (totalHeight > maxHeight) 
+            offsetY = maxHeight / (module.Stages.Count - 1);
+        float startY = offsetY / 2f * (module.Stages.Count - 1);
+        
+        for (int i = 0; i < module.Stages.Count; i++)
         {
-            GameObject progressGo;
-            float offsetY = Utils.PROGRESS_OFFSET_Y;
-            float maxHeight = Utils.PROGRESS_MAX_HEIGHT;
-            float totalHeight = offsetY * (module.Stages.Count - 1);
-            if (totalHeight > maxHeight) 
-                offsetY = maxHeight / (module.Stages.Count - 1);
-            float startY = offsetY / 2f * (module.Stages.Count - 1);
-            for (int i = 0; i < module.Stages.Count; i++)
-            {
-                progressGo = Instantiate(
-                    progressPrefab, 
-                    progressCanvas.transform
-                );
-                progressGo.GetComponent<RectTransform>().anchoredPosition = new(
-                    Utils.PROGRESS_OFFSET_X,
-                    startY - offsetY * i
-                );
-                progresses.Add(progressGo.GetComponent<UIProgress>());
-            }
+            progressGo = Instantiate(
+                progressPrefab, 
+                progressCanvas.transform
+            );
+            progressGo.GetComponent<RectTransform>().anchoredPosition = new(
+                Utils.PROGRESS_OFFSET_X,
+                startY - offsetY * i
+            );
+            progresses.Add(progressGo.GetComponent<UIProgress>());
         }
 
         UIProgress progress;
         for (int i = 0; i < module.Stages.Count; i++)
         {
-            Debug.Log($"module stage index: {module.StageIndex}");
             progress = progresses[i];
             if (i < module.StageIndex)
             {
-                if (module.Stages[i] == focusID) progress.SetType(ProgressType.Replay);
-                else progress.SetType(ProgressType.Cleared);
+                if (i == index) 
+                    progress.SetTypeImmediate(ProgressType.Replay);
+                else 
+                    progress.SetTypeImmediate(ProgressType.Cleared);
             }
             else
             {
-                if (module.Stages[i] == focusID) progress.SetType(ProgressType.Active);
-                else progress.SetType(ProgressType.Locked);
+                if (i == index) 
+                    progress.SetTypeImmediate(ProgressType.Active);
+                else 
+                    progress.SetTypeImmediate(ProgressType.Locked);
             }
         }
+
+        prevFocusIndex = index;
+    }
+
+    public void UpdateProgress(
+        ModuleData module,
+        int focusID
+    )
+    {
+        int index = module.Stages.IndexOf(focusID);
+
+        if (prevFocusIndex == index) return;
+
+        if (index < module.StageIndex) progresses[index].SetType(ProgressType.Replay);
+        else progresses[index].SetType(ProgressType.Active);
+
+        if (prevFocusIndex < module.StageIndex) progresses[prevFocusIndex].SetType(ProgressType.Cleared);
+        else progresses[prevFocusIndex].SetType(ProgressType.Locked);
+
+        prevFocusIndex = index;
     }
 
     public void RemoveProgress()

@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
         // 이건 아래의 StageStartTrans로 처리함
         UI.RemoveTool();
         UI.SetTool(stage.ToolCounts);
-        UI.SetProgress(CurrentModule, stage.ID);
+        UI.UpdateProgress(CurrentModule, stage.ID);
 
         Audio.ResetBGM();
 
@@ -177,6 +177,8 @@ public class GameManager : MonoBehaviour
                 }
 
                 Grid.BlockPlacer.BlockHoverCheck();
+
+                UI.MenuEnable();
             }
         ));
     }
@@ -270,6 +272,7 @@ public class GameManager : MonoBehaviour
 
     public void BackGame()
     {
+        UI.MenuDisappear();
         UI.MenuDisable();
         UI.DisableAllChat();
 
@@ -280,6 +283,9 @@ public class GameManager : MonoBehaviour
             () =>
             {
                 Grid.RemoveCurrentStage();
+
+                UI.ClearPanelDisappear();
+                UI.StageNextDisappear();
 
                 UI.WorldMapAppear(CurrentModule.ID);
             }
@@ -400,8 +406,18 @@ public class GameManager : MonoBehaviour
 
         State = GameState.Paused;
         int index = module.StageIndex == module.Stages.Count ? 0 : module.StageIndex;
+        UI.SetProgress(CurrentModule, index);
 
-        StartStage(StageLibrary[module.Stages[index]]);
+        RegisterTransitionEventCallBack(
+            TransitionEvent.AllCovered,
+            () =>
+            {
+                UI.WorldMapDisappear();
+                StartStage(StageLibrary[module.Stages[index]]);
+            }
+        );
+
+        UI.PlayWorldMapTransition();
         //UI.ModuleDisappear(
         //    () =>
         //    StartStage(StageLibrary[module.Stages[index]])

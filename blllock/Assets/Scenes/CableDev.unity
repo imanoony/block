@@ -5268,8 +5268,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b3ac80fc2070a74bb1e6ef99be09ceb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meta: {fileID: 1552114177}
   axis: 0
-  modules:
+  moduleObjects:
   - {fileID: 458455830}
   - {fileID: 1002980302}
   - {fileID: 2657064719612419764}
@@ -5282,6 +5283,8 @@ MonoBehaviour:
   overscrollResistance: 0.35
   maxOverscroll: 0.5
   maxSpeed: 1.2
+  metaChangeThreshold: 0.3
+  metaAppearThreshold: 0.2
 --- !u!114 &1149089251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5331,6 +5334,7 @@ GameObject:
   - component: {fileID: 1157263278}
   - component: {fileID: 1157263280}
   - component: {fileID: 1157263279}
+  - component: {fileID: 1157263281}
   m_Layer: 5
   m_Name: ArrowRight
   m_TagString: Untagged
@@ -5395,6 +5399,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1157263277}
   m_CullTransparentMesh: 1
+--- !u!114 &1157263281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157263277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 638683225}
+          m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+          m_MethodName: ModuleNext
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
 --- !u!1 &1160257486
 GameObject:
   m_ObjectHideFlags: 0
@@ -5923,7 +5956,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3366327570003636113, guid: 840ab49188a8d0a408597e503b2e5850, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1717338264}
   m_SourcePrefab: {fileID: 100100000, guid: 840ab49188a8d0a408597e503b2e5850, type: 3}
 --- !u!224 &1552114176 stripped
 RectTransform:
@@ -6521,6 +6557,23 @@ RectTransform:
   m_AnchoredPosition: {x: -50, y: -50}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 1, y: 1}
+--- !u!1 &1717338261 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3366327570003636113, guid: 840ab49188a8d0a408597e503b2e5850, type: 3}
+  m_PrefabInstance: {fileID: 1552114175}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &1717338264
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717338261}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1774148904
 GameObject:
   m_ObjectHideFlags: 0
@@ -7525,6 +7578,7 @@ GameObject:
   - component: {fileID: 1950881818}
   - component: {fileID: 1950881820}
   - component: {fileID: 1950881819}
+  - component: {fileID: 1950881821}
   m_Layer: 5
   m_Name: ArrowLeft
   m_TagString: Untagged
@@ -7589,6 +7643,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1950881817}
   m_CullTransparentMesh: 1
+--- !u!114 &1950881821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950881817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 638683225}
+          m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+          m_MethodName: ModulePrev
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
 --- !u!1 &1980980996
 GameObject:
   m_ObjectHideFlags: 0

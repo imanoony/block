@@ -50,4 +50,29 @@ public class UIProgress : MonoBehaviour
 
         Type = type;
     }
+
+    public void SetTypeImmediate(ProgressType type)
+    {
+        switch (type)
+        {
+            case ProgressType.Locked: 
+                animator.Play(active2locked);
+                animator.Update(1f);
+                break;
+            case ProgressType.Active:
+                animator.Play(locked2Active);
+                animator.Update(1f);
+                break;
+            case ProgressType.Cleared:
+                animator.Play(active2Cleared);
+                animator.Update(1f);
+                break;
+            case ProgressType.Replay:
+                animator.Play(cleared2Replay);
+                animator.Update(1f);
+                break;
+        }
+
+        Type = type;
+    }
 }
