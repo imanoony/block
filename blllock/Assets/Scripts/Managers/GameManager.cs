@@ -14,161 +14,6 @@ public enum Rotate
     Rotate270 = 270 
 }
 
-public static class Utils
-{
-    public const float GRID_IDLE = 10f;
-    public const float BLOCK_Z = -2f;
-    public const int BLOCK_SORT_NORMAL = 20;
-    public const int BLOCK_SORT_ACTION = 30;
-    public const int BLOCK_SORT_DRAG = 40;
-    public const int SCALE_FACTOR = 625;
-    public const int DENOMINATOR = 100;
-    public const int TILE_SPACING = 100;
-    public const int GRID_TEXT_SPACING = 30;
-    public const int PORT_OFFSET = 20;
-    public const int PORT_SIZE = 10;
-    public const string RED = "#F25A7B";
-    public const string CHAT_RED = "#FFD0D0";
-    public const string BLUE = "#54DCE3";
-    public const string CHAT_BLUE = "#D0F6FF";
-    public const string BLACK = "#242424";
-    public const string GRAY = "#B8B8B8";
-    public const string GREEN = "#CAFFCA";
-    public const string YELLOW = "#FEFCCD";
-    public const string CLEAR = "#F0F0F0FF";
-    public const string TAG_ROTATE = "#99C79D";
-    public const string TAG_FLIP = "#C29363";
-    public const float CLEAR_ALPHA = 1f;
-    public const float THRESHOLD = 3f;
-    public const int MAX_SNAP_COUNT = 20;
-    public const float TILE_FILL_PERCENT1 = 0.5f;
-    public const float TILE_FILL_PERCENT2 = 0.7f;
-    public const float FILL_THRESHOLD = 9;
-    public const int PPU = 24;
-    public const int MAX_PORT = 8;
-    public static readonly Vector3 BLOCK_SHADOW = new(0.05f, 0.05f, 0);
-    public static readonly Vector3 TAG_SHADOW = new(0.015f, 0.015f, 0);
-    public static readonly Vector3 CABLE_SHADOW =  new(0.03f, 0.03f, 0);
-    public const float SHADOW_ALPHA = 100 / 255f;
-    public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
-    public const int MODULE_MIN = 0;
-    public const int MODULE_MAX = 11;
-    public const int AUDIO_THRESHOLD0 = 2;
-    public const int AUDIO_THRESHOLD1 = 3;
-    public const int AUDIO_THRESHOLD2 = 4;
-    public const int CABLE_ANIM_EDGE_COUNT = 25;
-    public const int CABLE_ANIM_NODE_COUNT = 15;
-    public const int CABLE_ANIM_NODE_CURVE_COUNT = 12;
-    public const float TOOL_OFFSET_X = -80f;
-    public const float TOOL_OFFSET_Y = 120f;
-    public const float PROGRESS_MAX_HEIGHT = 900f;
-    public const float PROGRESS_OFFSET_X = 80f;
-    public const float PROGRESS_OFFSET_Y = 75f;
-    public const char NOT = '~', VERT = '*', HORZ = '+';
-    public const string PARENS = "()";
-    public static bool IsWrappedByParentheses(string s)
-    {
-        if (s.Length < 2 || s[0] != PARENS[0] || s[^1] != PARENS[1]) return false;
-        int depth = 0;
-        for (int i = 0; i < s.Length; i++)
-        {
-            if (s[i] == PARENS[0]) depth++;
-            else if (s[i] == PARENS[1]) depth--;
-
-            if (i < s.Length - 1 && depth == 0) return false;
-        }
-        return depth == 0;
-    }
-    public static void PrintWarning(string message)
-    {
-        Debug.LogWarning($"<color=orange>[{DateTime.Now:HH:mm:ss}] Warning:</color> {message}");
-    }
-    public static void PrintError(string message)
-    {
-        Debug.LogError($"<color=red>[{DateTime.Now:HH:mm:ss}] Error:</color> {message}");
-    }
-    public static void Shuffle<T>(this List<T> list)
-    {
-        for (int i = list.Count - 1; i > 0; i--)
-        {
-            int randomIndex = UnityEngine.Random.Range(0, i + 1); // [0, i] 범위
-            (list[i], list[randomIndex]) = (list[randomIndex], list[i]); // C# 7 튜플 스왑
-        }
-    }
-
-    public static Rect Boundary { get; private set; }
-    public static void SetBoundary(Rect boundary) => Boundary = boundary;
-
-    public static Color CodeToColor(string colorCode)
-    {
-        if (string.IsNullOrWhiteSpace(colorCode)) return Color.white; // default fallback
-
-        Color color;
-        if (ColorUtility.TryParseHtmlString(colorCode, out color)) return color;
-        else { PrintError("[CodeToColor] cannot parse"); return Color.white; }
-    }
-
-    public static Vector3 GetBlockShadowOffset(Vector2 offset, Rotate rotate, bool flipX, bool flipY)
-    {
-        Vector3 off = offset;
-        if (rotate == Rotate.Rotate90) off = new Vector3(-off.y, off.x, 0);
-        else if (rotate == Rotate.Rotate180) off = -off;
-        else if (rotate == Rotate.Rotate270) off = new Vector3(off.y, -off.x, 0);
-
-        if (flipX) off.x = -off.x;
-        else if (flipY) off.y = -off.y;
-        return off;
-    }
-
-    public static Vector3 GetCableShadowOffset(Vector2 offset, Rotate rotate)
-    {
-        Vector3 off = offset;
-        if (rotate == Rotate.Rotate90) off = new Vector3(-off.y, off.x, 0);
-        else if (rotate == Rotate.Rotate180) off = -off;
-        else if (rotate == Rotate.Rotate270) off = new Vector3(off.y, -off.x, 0);
-
-        return off;
-    }
-
-    public static bool IsAdjacentGrids(Vector2Int a, Vector2Int b)
-    {
-        if (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) != 1)
-            return false;
-
-        return true;
-    }
-    
-    public static (Vector2Int, Vector2Int) SortPositions(Vector2Int a, Vector2Int b)
-    {
-        Vector2Int A, B;
-
-        if (a.x < b.x || (a.x == b.x && a.y < b.y))
-        {
-            A = a; 
-            B = b;
-        }
-        else
-        {
-            A = b;
-            B = a;
-        }
-
-        return (A, B);
-    }
-
-    public static Edge ToEdge(EdgeType type, Vector2Int a, Vector2Int b)
-    {
-        (Vector2Int A, Vector2Int B) = SortPositions(a, b);
-        if (A.x == B.x) // Horizontal
-        {
-            return new HEdge(new(A.x, A.y), type);
-        }
-        else // Vertical
-        {
-            return new VEdge(new(A.x, A.y), type);
-        }
-    }
-}
 
 public enum GameState { InGame, Paused, ModuleSelect }
 
@@ -194,6 +39,12 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
+
+        BlockLibrary = dataParser.ParseBlockData(blockPath);
+        ModuleLibrary = dataParser.ParseModuleData(modulePath);
+        TutorialLibrary = dataParser.LoadTutorialData(tutorialPath);
+        StageLibrary = dataParser.LoadStageData(stagePath);
+
         Wire = new WireManager();
         Grid = gameObject.GetComponent<GridManager>();
         Tool = gameObject.GetComponent<ToolManager>();
@@ -205,11 +56,6 @@ public class GameManager : MonoBehaviour
         UI.Initialize();
         Audio.Initialize();
         Tool.Initialize();
-
-        BlockLibrary = dataParser.ParseBlockData(blockPath);
-        ModuleLibrary = dataParser.ParseModuleData(modulePath);
-        TutorialLibrary = dataParser.LoadTutorialData(tutorialPath);
-        StageLibrary = dataParser.LoadStageData(stagePath);
 
         //dataParser.LoadData(ModuleLibrary, StageLibrary);
     }
@@ -242,6 +88,15 @@ public class GameManager : MonoBehaviour
                 stages.Add(kvp.Value);
             }
             dataParser.SaveStageData(stages, stagePath);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            UI.PlayWorldMapTransition(true);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            UI.PlayWorldMapTransition(false);
         }
     }
     #endregion
@@ -288,7 +143,7 @@ public class GameManager : MonoBehaviour
         // 이건 아래의 StageStartTrans로 처리함
         UI.RemoveTool();
         UI.SetTool(stage.ToolCounts);
-        UI.SetProgress(CurrentModule, stage.ID);
+        UI.UpdateProgress(CurrentModule, stage.ID);
 
         Audio.ResetBGM();
 
@@ -322,6 +177,8 @@ public class GameManager : MonoBehaviour
                 }
 
                 Grid.BlockPlacer.BlockHoverCheck();
+
+                UI.MenuEnable();
             }
         ));
     }
@@ -415,10 +272,28 @@ public class GameManager : MonoBehaviour
 
     public void BackGame()
     {
+        UI.MenuDisappear();
         UI.MenuDisable();
         UI.DisableAllChat();
 
-        StartCoroutine(StageEndTrans(
+        State = GameState.ModuleSelect;
+
+        RegisterTransitionEventCallBack(
+            TransitionEvent.AllCovered,
+            () =>
+            {
+                Grid.RemoveCurrentStage();
+
+                UI.ClearPanelDisappear();
+                UI.StageNextDisappear();
+
+                UI.WorldMapAppear(CurrentModule.ID);
+            }
+        );
+
+        UI.PlayWorldMapTransition(false);
+
+        /*StartCoroutine(StageEndTrans(
             () =>
             {
                 State = GameState.ModuleSelect;
@@ -438,7 +313,7 @@ public class GameManager : MonoBehaviour
                 int achievement = (int)(100 * (float)CurrentModule.StageIndex / CurrentModule.Stages.Count);
                 string text = $"{CurrentModule.Desc} ({achievement}%)";
                 //UI.SetStageText(text);
-                UI.ModuleAppear();
+                //UI.WorldMapAppear();
 
                 Audio.SoftMute();
 
@@ -447,7 +322,7 @@ public class GameManager : MonoBehaviour
 
                 if (gt != null) gt.ResetGridIdleTime();
             }
-        ));
+        ));*/
     }
 
     public void QuitGame()
@@ -531,12 +406,22 @@ public class GameManager : MonoBehaviour
 
         State = GameState.Paused;
         int index = module.StageIndex == module.Stages.Count ? 0 : module.StageIndex;
+        UI.SetProgress(CurrentModule, index);
 
-        
-        UI.ModuleDisappear(
+        RegisterTransitionEventCallBack(
+            TransitionEvent.AllCovered,
             () =>
-            StartStage(StageLibrary[module.Stages[index]])
+            {
+                UI.WorldMapDisappear();
+                StartStage(StageLibrary[module.Stages[index]]);
+            }
         );
+
+        UI.PlayWorldMapTransition();
+        //UI.ModuleDisappear(
+        //    () =>
+        //    StartStage(StageLibrary[module.Stages[index]])
+        //);
     }
     public void StartModule(int id) => StartModule(ModuleLibrary[id]);
 
@@ -584,4 +469,12 @@ public class GameManager : MonoBehaviour
         onComplete?.Invoke();
     }
     #endregion
+
+    public void RegisterTransitionEventCallBack(
+        TransitionEvent transitionEvent,
+        Action callback
+    )
+    {
+        UI.RegisterTransitionEventCallBack(transitionEvent, callback);
+    }
 }

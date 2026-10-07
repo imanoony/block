@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -16,7 +17,19 @@ public class UIManager : MonoBehaviour
     {
         if (initialized) return;
 
-        module.InitModule();
+        //module.InitModule();
+
+        Dictionary<int, ModuleData> moduleDict = GameManager.Instance.ModuleLibrary;
+        List<KeyValuePair<int, ModuleData>> sorted = moduleDict.OrderBy(kv => kv.Key).ToList();
+
+        moduleIDs = sorted.Select(kv => kv.Key).ToList();
+        moduleData = sorted.Select(kv => kv.Value).ToList();
+        focusedModuleID = 0;
+
+        moduleScroll.Init(moduleIDs.Count);
+        moduleScroll.OnMetaFocusChanged += (i) => moduleMeta.InitModule(moduleDict[i]);
+        moduleScroll.OnBindItem += (module, i) => module.InitModule(moduleDict[i]);
+        moduleMeta.Init();
 
         initialized = true;
     }
@@ -411,11 +424,45 @@ public class UIManager : MonoBehaviour
     public void GridTooltipDisappear() => gridTooltip.gameObject.SetActive(false);
     #endregion
 
-    #region Module UI
-    [Header("Module")]
-    [SerializeField] private UIModule module;
-    public void ModuleAppear() => module.ModuleAppear();
-    public void ModuleDisappear(Action onComplete) => module.ModuleDisappear(onComplete);
+    #region World Map UI
+    [Header("World Map")]
+    [SerializeField] private GameObject worldMapCanvas;
+    [SerializeField] private GameObject worldMapBackground;
+    [SerializeField] private GameObject moduleParent;
+    [SerializeField] private UIModuleScroll moduleScroll;
+    [SerializeField] private UIModuleMeta moduleMeta;
+    [SerializeField] private GameObject arrowLeft;
+    [SerializeField] private GameObject arrowRight;
+
+    private List<ModuleData> moduleData = new();
+    private List<int> moduleIDs = new();
+    private int focusedModuleID = 0;
+    
+    public void WorldMapAppear(int focusedModuleID)
+    {
+        this.focusedModuleID = focusedModuleID;
+
+        worldMapBackground.SetActive(true);
+        moduleParent.SetActive(true);
+        moduleMeta.gameObject.SetActive(true);
+        arrowLeft.SetActive(true);
+        arrowRight.SetActive(true);
+
+        moduleScroll.InitFocus(focusedModuleID);
+        moduleMeta.InitModule(moduleData[moduleIDs.IndexOf(focusedModuleID)]);
+    }
+
+    public void WorldMapDisappear()
+    {
+        worldMapBackground.SetActive(false);
+        moduleParent.SetActive(false);
+        moduleMeta.gameObject.SetActive(false);
+        arrowLeft.SetActive(false);
+        arrowRight.SetActive(false);
+    }
+
+    public void ModuleNext() => moduleScroll.ScrollToNext();
+    public void ModulePrev() => moduleScroll.ScrollToPrev();
     #endregion
 
     #region Tutorial Popup
@@ -468,50 +515,73 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject progressCanvas;
     [SerializeField] private GameObject progressPrefab;
     private List<UIProgress> progresses = new();
+    private int prevFocusIndex;
     public void SetProgress(
         ModuleData module,
-        int focusID
+        int index
     )
     {
-        if (progresses.Count == 0)
+        GameObject progressGo;
+
+        float offsetY = Utils.PROGRESS_OFFSET_Y;
+        float maxHeight = Utils.PROGRESS_MAX_HEIGHT;
+        float totalHeight = offsetY * (module.Stages.Count - 1);
+        if (totalHeight > maxHeight) 
+            offsetY = maxHeight / (module.Stages.Count - 1);
+        float startY = offsetY / 2f * (module.Stages.Count - 1);
+        
+        for (int i = 0; i < module.Stages.Count; i++)
         {
-            GameObject progressGo;
-            float offsetY = Utils.PROGRESS_OFFSET_Y;
-            float maxHeight = Utils.PROGRESS_MAX_HEIGHT;
-            float totalHeight = offsetY * (module.Stages.Count - 1);
-            if (totalHeight > maxHeight) 
-                offsetY = maxHeight / (module.Stages.Count - 1);
-            float startY = offsetY / 2f * (module.Stages.Count - 1);
-            for (int i = 0; i < module.Stages.Count; i++)
-            {
-                progressGo = Instantiate(
-                    progressPrefab, 
-                    progressCanvas.transform
-                );
-                progressGo.GetComponent<RectTransform>().anchoredPosition = new(
-                    Utils.PROGRESS_OFFSET_X,
-                    startY - offsetY * i
-                );
-                progresses.Add(progressGo.GetComponent<UIProgress>());
-            }
+            progressGo = Instantiate(
+                progressPrefab, 
+                progressCanvas.transform
+            );
+            progressGo.GetComponent<RectTransform>().anchoredPosition = new(
+                Utils.PROGRESS_OFFSET_X,
+                startY - offsetY * i
+            );
+            progresses.Add(progressGo.GetComponent<UIProgress>());
         }
 
         UIProgress progress;
         for (int i = 0; i < module.Stages.Count; i++)
         {
-            Debug.Log($"module stage index: {module.StageIndex}");
             progress = progresses[i];
             if (i < module.StageIndex)
             {
-                if (module.Stages[i] == focusID) progress.SetType(ProgressType.Replay);
-                else progress.SetType(ProgressType.Cleared);
+                if (i == index) 
+                    progress.SetTypeImmediate(ProgressType.Replay);
+                else 
+                    progress.SetTypeImmediate(ProgressType.Cleared);
             }
             else
             {
-                if (module.Stages[i] == focusID) progress.SetType(ProgressType.Active);
-                else progress.SetType(ProgressType.Locked);
+                if (i == index) 
+                    progress.SetTypeImmediate(ProgressType.Active);
+                else 
+                    progress.SetTypeImmediate(ProgressType.Locked);
             }
         }
+
+        prevFocusIndex = index;
+    }
+
+    public void UpdateProgress(
+        ModuleData module,
+        int focusID
+    )
+    {
+        int index = module.Stages.IndexOf(focusID);
+
+        if (prevFocusIndex == index) return;
+
+        if (index < module.StageIndex) progresses[index].SetType(ProgressType.Replay);
+        else progresses[index].SetType(ProgressType.Active);
+
+        if (prevFocusIndex < module.StageIndex) progresses[prevFocusIndex].SetType(ProgressType.Cleared);
+        else progresses[prevFocusIndex].SetType(ProgressType.Locked);
+
+        prevFocusIndex = index;
     }
 
     public void RemoveProgress()
@@ -521,6 +591,119 @@ public class UIManager : MonoBehaviour
             Destroy(progresses[i].gameObject);
         }
         progresses.Clear();
+    }
+
+    #endregion
+
+    #region World Map Transition UI
+    [Header("World Map Transition")]
+    [SerializeField] private GameObject transitionCanvas;
+    [SerializeField] private GameObject transitionPrefab;
+    private List<UITransition> transitions = new();
+    private Dictionary<TransitionEvent, Action> transitionEventCallbacks = new();
+
+    private const float transitionHeight = 270f;
+    private Sequence transitionSeq = null;
+
+    public void PlayWorldMapTransition(bool right2left = true)
+    {
+        if (transitionSeq != null) return;
+
+        GameObject transitionGo;
+        UITransition transition;
+
+        Color[] colors = new Color[3] { Color.black, Color.gray, Color.white };
+        float[] delays = new float[4] { 0f, 0.1f, 0.15f, 0.18f };
+        float layerDelay = 0.2f;
+        float duration = 0.7f;
+        Ease ease = Ease.InOutSine;
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                transitionGo = Instantiate(
+                    transitionPrefab, 
+                    transitionCanvas.transform
+                );
+                transition = transitionGo.GetComponent<UITransition>();
+                transition.Init(
+                    transitionHeight * j,
+                    transitionHeight * (3 - j),
+                    colors[i],
+                    duration,
+                    ease,
+                    right2left
+                );
+                transitions.Add(transition);
+            }
+        }
+
+        transitionSeq = DOTween.Sequence();
+        for (int i = 0; i < transitions.Count; i++)
+        {
+            transitionSeq.Insert(delays[i % 4] + layerDelay * (i / 4), transitions[i].PlayHead());
+            transitionSeq.Insert(delays[i % 4] + layerDelay * ((i / 4)+1), transitions[i].PlayTail());
+        }
+
+        transitionSeq.InsertCallback(
+            0,
+            () =>
+            {
+                transitionEventCallbacks.TryGetValue(TransitionEvent.Start, out var startCallback);
+                startCallback?.Invoke();
+            }
+        );
+        transitionSeq.InsertCallback(
+            delays[3] + layerDelay * 3,
+            () =>
+            {
+                transitionEventCallbacks.TryGetValue(TransitionEvent.AllCovered, out var allCoveredCallback);
+                allCoveredCallback?.Invoke();
+            }
+        );
+        transitionSeq.InsertCallback(
+            delays[0] + layerDelay * 3,
+            () =>
+            {
+                transitionEventCallbacks.TryGetValue(TransitionEvent.NextAppeared, out var nextAppearedCallback);
+                nextAppearedCallback?.Invoke();
+            }
+        );
+        transitionSeq.OnComplete(
+            () =>
+            {
+                transitionEventCallbacks.TryGetValue(TransitionEvent.End, out var EndCallback);
+                EndCallback?.Invoke();
+            }
+        );
+
+        transitionSeq.OnKill(
+            () => 
+            {
+                for (int i = 0; i < transitions.Count; i++)
+                {
+                    Destroy(transitions[i].gameObject);
+                }
+                transitions.Clear();
+                transitionSeq = null;
+                transitionEventCallbacks.Clear();
+            }
+        );
+    }
+
+    public void StopWorldMapTransition()
+    {
+        transitionSeq?.Kill();
+    }
+
+    public void RegisterTransitionEventCallBack(
+        TransitionEvent transitionEvent,
+        Action callback
+    )
+    {
+        transitionEventCallbacks.TryGetValue(transitionEvent, out var existing);
+        transitionEventCallbacks[transitionEvent] = existing + callback;
     }
 
     #endregion
