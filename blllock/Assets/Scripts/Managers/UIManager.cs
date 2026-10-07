@@ -26,6 +26,8 @@ public class UIManager : MonoBehaviour
         moduleData = sorted.Select(kv => kv.Value).ToList();
         focusedModuleID = 0;
 
+        moduleScroll.Init(moduleIDs.Count);
+
         initialized = true;
     }
 
@@ -424,6 +426,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject worldMapCanvas;
     [SerializeField] private GameObject worldMapBackground;
     [SerializeField] private GameObject moduleParent;
+    [SerializeField] private UIModuleScroll moduleScroll;
     [SerializeField] private UIModuleMeta moduleMeta;
     [SerializeField] private GameObject arrowLeft;
     [SerializeField] private GameObject arrowRight;
@@ -438,6 +441,7 @@ public class UIManager : MonoBehaviour
 
         worldMapBackground.SetActive(true);
         moduleParent.SetActive(true);
+        moduleScroll.InitFocus(focusedModuleID);
         moduleMeta.gameObject.SetActive(true);
         arrowLeft.SetActive(true);
         arrowRight.SetActive(true);
