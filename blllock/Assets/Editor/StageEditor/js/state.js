@@ -185,6 +185,7 @@ export function emptyStage() {
 		SIndex: [],
 		HBarriers: [],
 		VBarriers: [],
+		FixedBlocks: [],
 		ToolCounts: [],
 	};
 }

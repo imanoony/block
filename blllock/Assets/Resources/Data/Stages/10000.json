@@ -50,6 +50,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": [
                 {
                     "type": 0,
@@ -116,6 +117,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -178,6 +180,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -240,6 +243,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -302,6 +306,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -371,6 +376,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -440,6 +446,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -521,6 +528,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -602,6 +610,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -683,6 +692,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -759,6 +769,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -840,6 +851,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -910,6 +922,7 @@
                     "y": 6
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -978,6 +991,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1014,6 +1028,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1100,6 +1115,7 @@
                     "y": 6
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1179,6 +1195,7 @@
                     "y": 6
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1270,6 +1287,7 @@
                     "y": 7
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1341,6 +1359,7 @@
                     "y": 6
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1417,6 +1436,7 @@
                     "y": 8
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1500,6 +1520,7 @@
                 }
             ],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1602,6 +1623,7 @@
                     "y": 6
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1693,6 +1715,7 @@
                     "y": 5
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1793,6 +1816,7 @@
                     "y": 6
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1883,6 +1907,7 @@
                     "y": 7
                 }
             ],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -1968,6 +1993,7 @@
                 }
             ],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         },
         {
@@ -2059,6 +2085,7 @@
             "SIndex": [],
             "HBarriers": [],
             "VBarriers": [],
+            "FixedBlocks": [],
             "ToolCounts": []
         }
     ]

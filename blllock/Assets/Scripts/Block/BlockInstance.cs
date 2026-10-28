@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
-using UnityEngine.Rendering;
 
 public class BlockInstance : MonoBehaviour
 {
     private BlockData blockData;
+    private BlockTag blockTag;
     [SerializeField] private GameObject tagShadow;
     private bool isDragging = false;
     private int isTweening = 0;
     private GridManager gm;
+
+    // sprite renderers
     private SpriteRenderer sr;
-    private SortingGroup sg;
+    private SpriteRenderer shadowSr;
+
     private Color color = Color.white;
-    private GameObject shadow;
+    [SerializeField] private GameObject shadow;
+    [SerializeField] private GameObject fixedShadow;
     [SerializeField] private GameObject ghostPrefab;
     private GameObject ghost;
     private Vector2 blockPos;
@@ -31,9 +35,11 @@ public class BlockInstance : MonoBehaviour
     public bool HasSpike { get; private set; } = false;
     public void Initialize(
         BlockData blockData, 
+        BlockTag blockTag,
         Sprite sprite, 
         Vector2Int initPos,
         Sprite ghostSprite,
+        Sprite fixedShadowSprite,
         Transform placedRoot,
         bool canRotateCW = false, 
         bool canRotateCCW = false,
@@ -44,6 +50,7 @@ public class BlockInstance : MonoBehaviour
     {
         if (blockData == null) { Utils.PrintError("BlockData는 Null일 수 없음."); return; }
         this.blockData = blockData;
+        this.blockTag = blockTag;
         this.placedRoot = placedRoot;
         this.unplacedRoot = gameObject.transform.parent;
 
@@ -59,10 +66,12 @@ public class BlockInstance : MonoBehaviour
         gm = GameManager.Instance.Grid;
 
         sr = gameObject.GetComponent<SpriteRenderer>();
-        sg = gameObject.GetComponent<SortingGroup>();
+        shadowSr = shadow.GetComponent<SpriteRenderer>();
         sr.sprite = sprite;
         sr.color = color;
-        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+        shadowSr.sprite = sprite;
+
+        SetSortingOrder(Utils.BLOCK_SORT_NORMAL);
 
         PolygonCollider2D poly = gameObject.GetComponent<PolygonCollider2D>();
         poly.pathCount = sprite.GetPhysicsShapeCount();
@@ -73,10 +82,21 @@ public class BlockInstance : MonoBehaviour
             poly.SetPath(i, shape.ToArray());
         }
 
-        // Shadow Sprite 설정
-        shadow = transform.GetChild(0).gameObject;
-        SpriteRenderer shadowSr = shadow.GetComponent<SpriteRenderer>();
-        shadowSr.sprite = sprite;
+        // Fixed Shadow Sprite 및 sr과 shadow 설정
+        if (blockData.IsFixed)
+        {
+            SpriteRenderer fixedShadowSr = fixedShadow.GetComponent<SpriteRenderer>();
+            fixedShadowSr.sprite = fixedShadowSprite;
+            fixedShadowSr.sortingOrder = Utils.BLOCK_SORT_NORMAL - 2;
+            fixedShadow.SetActive(true);
+
+            sr.color = Utils.CodeToColor(Utils.FIXED_BLOCK_TINT);
+            shadow.transform.localPosition = -Utils.FIXED_BLOCK_SHADOW;
+        }
+        else
+        {
+            fixedShadow.SetActive(false);
+        }
 
         if (!Place(gm, initPos))
         {
@@ -124,6 +144,7 @@ public class BlockInstance : MonoBehaviour
     {
         //if (currentCoroutine != null) return;
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isTweening > 0) return;
 
         if (isHovering)
@@ -147,7 +168,7 @@ public class BlockInstance : MonoBehaviour
         if (shadowCo != null) StopCoroutine(shadowCo);
         shadowCo = StartCoroutine(ShadowOffCo(0.3f));
 
-        sg.sortingOrder = Utils.BLOCK_SORT_DRAG;
+        SetSortingOrder(Utils.BLOCK_SORT_DRAG);
     }
 
     public void EndDrag()
@@ -170,7 +191,7 @@ public class BlockInstance : MonoBehaviour
                 Place(gm, blockTilePos);
                 StartCoroutine(PlaceCo(0.25f, blockTilePos, () => { 
                     isTweening--;
-                    sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                    SetSortingOrder(Utils.BLOCK_SORT_NORMAL);
                     CheckHover();
                 }));
                 return;
@@ -180,7 +201,7 @@ public class BlockInstance : MonoBehaviour
                 StartCoroutine(PlaceCo(0.25f, snapPos.Value, () => { 
                     isTweening--;
                     blockPos = transform.position;
-                    sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                    SetSortingOrder(Utils.BLOCK_SORT_NORMAL);
                     CheckHover();
                 }));
                 
@@ -193,7 +214,7 @@ public class BlockInstance : MonoBehaviour
         Place(gm, blockTilePos);
         StartCoroutine(PlaceCo(0.25f, blockTilePos, () => { 
             isTweening--;
-            sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+            SetSortingOrder(Utils.BLOCK_SORT_NORMAL);
             CheckHover();
         }));
     }
@@ -203,6 +224,7 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseDown()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isTweening > 0) return;
 
         downPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -212,6 +234,7 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseUp()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isTweening > 0) return;
     
         if (isDragging)
@@ -237,6 +260,7 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseDrag()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isTweening > 0) return;
 
         if (isDragging)
@@ -318,6 +342,7 @@ public class BlockInstance : MonoBehaviour
         isHovering = true;
         
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isDragging) return;
         if (isTweening > 0) return;
 
@@ -329,6 +354,7 @@ public class BlockInstance : MonoBehaviour
         isHovering = false;
 
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isDragging) return;
         if (isTweening > 0) return;
         //if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
@@ -346,6 +372,13 @@ public class BlockInstance : MonoBehaviour
             if (scaleCo != null) StopCoroutine(scaleCo);
             scaleCo = StartCoroutine(ScaleUpCo(0.4f));
         }
+    }
+
+    private void SetSortingOrder(int sortingOrder)
+    {
+        sr.sortingOrder = sortingOrder;
+        shadowSr.sortingOrder = sr.sortingOrder - 1;
+        blockTag.SetBlockSortingOrder(sr.sortingOrder);
     }
     #endregion
 
@@ -442,6 +475,7 @@ public class BlockInstance : MonoBehaviour
     #region Rotate
     private bool RotateCW()
     {
+        if (blockData.IsFixed) return false;
         if (!CanRotateCW) return false;
 
         if (isPlaced) Unplace(gm);
@@ -463,14 +497,14 @@ public class BlockInstance : MonoBehaviour
             if (CanPlace(gm, (Vector2Int)snapPos))
             {
                 blockTilePos = snapPos.Value;
-                sg.sortingOrder = Utils.BLOCK_SORT_ACTION;
+                SetSortingOrder(Utils.BLOCK_SORT_ACTION);
                 StartCoroutine(RotateCo(
                     isCW: true,
                     () =>
                     {
                         Place(gm, (Vector2Int)snapPos);
                         blockPos = transform.position;
-                        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                        SetSortingOrder(Utils.BLOCK_SORT_NORMAL);
                         isTweening--;
                         CheckHover();
                     }
@@ -488,6 +522,7 @@ public class BlockInstance : MonoBehaviour
     }
     private bool RotateCCW()
     {
+        if (blockData.IsFixed) return false;
         if (!CanRotateCCW) return false;
         
         if (isPlaced) Unplace(gm);
@@ -509,14 +544,14 @@ public class BlockInstance : MonoBehaviour
             if (CanPlace(gm, (Vector2Int)snapPos))
             {
                 blockTilePos = snapPos.Value;
-                sg.sortingOrder = Utils.BLOCK_SORT_ACTION;
+                SetSortingOrder(Utils.BLOCK_SORT_ACTION);
                 StartCoroutine(RotateCo(
                     isCW: false,
                     () =>
                     {
                         Place(gm, (Vector2Int)snapPos);
                         blockPos = transform.position;
-                        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                        SetSortingOrder(Utils.BLOCK_SORT_NORMAL);
                         isTweening--;
                         CheckHover();
                     }
@@ -582,6 +617,7 @@ public class BlockInstance : MonoBehaviour
     #region Flip
     private bool FlipX() // y축 기준 회전
     {
+        if (blockData.IsFixed) return false;
         if (!CanFlipX) return false;
 
         if (isPlaced) Unplace(gm);
@@ -603,13 +639,13 @@ public class BlockInstance : MonoBehaviour
             if (CanPlace(gm, (Vector2Int)snapPos))
             {
                 blockTilePos = snapPos.Value;
-                sg.sortingOrder = Utils.BLOCK_SORT_ACTION;
+                SetSortingOrder(Utils.BLOCK_SORT_ACTION);
                 StartCoroutine(FlipCo(
                     () =>
                     {
                         Place(gm, (Vector2Int)snapPos);
                         blockPos = transform.position;
-                        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                        SetSortingOrder(Utils.BLOCK_SORT_NORMAL);
                         isTweening--;
                         CheckHover();
                     }
@@ -627,6 +663,7 @@ public class BlockInstance : MonoBehaviour
     }
     private bool FlipY() // x축 기준 회전
     {
+        if (blockData.IsFixed) return false;
         if (!CanFlipY) return false;
 
         if (isPlaced) Unplace(gm);
@@ -648,13 +685,13 @@ public class BlockInstance : MonoBehaviour
             if (CanPlace(gm, (Vector2Int)snapPos))
             {
                 blockTilePos = snapPos.Value;
-                sg.sortingOrder = Utils.BLOCK_SORT_ACTION;
+                SetSortingOrder(Utils.BLOCK_SORT_ACTION);
                 StartCoroutine(FlipCo(
                     () =>
                     {
                         Place(gm, (Vector2Int)snapPos);
                         blockPos = transform.position;
-                        sg.sortingOrder = Utils.BLOCK_SORT_NORMAL;
+                        SetSortingOrder(Utils.BLOCK_SORT_NORMAL);
                         isTweening--;
                         CheckHover();
                     }

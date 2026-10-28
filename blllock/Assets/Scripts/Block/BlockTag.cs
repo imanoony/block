@@ -20,6 +20,7 @@ public class BlockTag: MonoBehaviour
     [HideInInspector] public GameObject shadow;
     private GameObject effect;
     private SpriteRenderer sr;
+    private SpriteRenderer shadowSr;
     private SpriteRenderer effectSr;
     private Animator anim;
     [SerializeField] private AnimationClip tagAttachClip;
@@ -33,6 +34,7 @@ public class BlockTag: MonoBehaviour
         shadow = transform.GetChild(0).gameObject;
         effect = transform.GetChild(2).gameObject;
         sr = transform.GetChild(1).GetComponent<SpriteRenderer>();
+        shadowSr = shadow.GetComponent<SpriteRenderer>();
         effectSr = effect.GetComponent<SpriteRenderer>();
         anim = gameObject.GetComponent<Animator>();
 
@@ -66,5 +68,12 @@ public class BlockTag: MonoBehaviour
         seq.AppendInterval(duration);
 
         return seq;
+    }
+
+    public void SetBlockSortingOrder(int sortingOrder)
+    {
+        sr.sortingOrder = sortingOrder + 2;
+        effectSr.sortingOrder = sortingOrder + 3;
+        shadowSr.sortingOrder = sortingOrder + 1;
     }
 }

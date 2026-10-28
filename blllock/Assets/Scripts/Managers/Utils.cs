@@ -26,6 +26,7 @@ public static class Utils
     public const string CLEAR = "#F0F0F0FF";
     public const string TAG_ROTATE = "#99C79D";
     public const string TAG_FLIP = "#C29363";
+    public const string FIXED_BLOCK_TINT = "#E6E6E6";
     public const float CLEAR_ALPHA = 1f;
     public const float THRESHOLD = 3f;
     public const int MAX_SNAP_COUNT = 20;
@@ -37,6 +38,7 @@ public static class Utils
     public static readonly Vector3 BLOCK_SHADOW = new(0.05f, 0.05f, 0);
     public static readonly Vector3 TAG_SHADOW = new(0.015f, 0.015f, 0);
     public static readonly Vector3 CABLE_SHADOW =  new(0.03f, 0.03f, 0);
+    public static readonly Vector3 FIXED_BLOCK_SHADOW = new(0.03f, 0.03f, 0);
     public const float SHADOW_ALPHA = 100 / 255f;
     public const float MODULE_HIGHLIGHT_SCALE = 1.2f;
     public const int MODULE_MIN = 0;
