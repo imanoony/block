@@ -49,7 +49,7 @@ public class GridManager : MonoBehaviour
         {
             if (_tilePlacer == null)
             {
-                _tilePlacer = gameObject.GetComponent<TilePlacer>();
+                _tilePlacer = gameObject.GetComponentInChildren<TilePlacer>();
                 if (_tilePlacer == null)
                     _tilePlacer = gameObject.AddComponent<TilePlacer>();
             }
@@ -63,7 +63,7 @@ public class GridManager : MonoBehaviour
         {
             if (_blockPlacer == null)
             {
-                _blockPlacer = gameObject.GetComponent<BlockPlacer>();
+                _blockPlacer = gameObject.GetComponentInChildren<BlockPlacer>();
                 if (_blockPlacer == null)
                     _blockPlacer = gameObject.AddComponent<BlockPlacer>();
             }
@@ -77,7 +77,7 @@ public class GridManager : MonoBehaviour
         {
             if (_cablePlacer == null)
             {
-                _cablePlacer = gameObject.GetComponent<CablePlacer>();
+                _cablePlacer = gameObject.GetComponentInChildren<CablePlacer>();
                 if (_cablePlacer == null)
                     _cablePlacer = gameObject.AddComponent<CablePlacer>();
             }
@@ -91,7 +91,7 @@ public class GridManager : MonoBehaviour
         {
             if (_resistorPlacer == null)
             {
-                _resistorPlacer = gameObject.GetComponent<ResistorPlacer>();
+                _resistorPlacer = gameObject.GetComponentInChildren<ResistorPlacer>();
                 if (_resistorPlacer == null)
                     _resistorPlacer = gameObject.AddComponent<ResistorPlacer>();
             }

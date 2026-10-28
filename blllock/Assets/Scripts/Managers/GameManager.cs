@@ -46,10 +46,10 @@ public class GameManager : MonoBehaviour
         StageLibrary = dataParser.LoadStageData(stagePath);
 
         Wire = new WireManager();
-        Grid = gameObject.GetComponent<GridManager>();
-        Tool = gameObject.GetComponent<ToolManager>();
-        UI = gameObject.GetComponent<UIManager>();
-        Audio = gameObject.GetComponent<AudioManager>();
+        Grid = gameObject.GetComponentInChildren<GridManager>();
+        Tool = gameObject.GetComponentInChildren<ToolManager>();
+        UI = gameObject.GetComponentInChildren<UIManager>();
+        Audio = gameObject.GetComponentInChildren<AudioManager>();
 
         Wire.Initialize(true);
         Grid.Initialize();
