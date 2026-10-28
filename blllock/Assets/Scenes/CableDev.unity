@@ -2313,6 +2313,18 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6b46489980cb14e4da43cf0a82bf4a44, type: 3}
   - {fileID: 21300000, guid: 83fd16bd71dbb7545a1782960ee3fc71, type: 3}
   - {fileID: 21300000, guid: 7bd5d08eeb8717b4fa68a60072a9e5ee, type: 3}
+  blockFixedShadowSprites:
+  - {fileID: 21300000, guid: 09d9b1ae8fe48724cb9e5af04484d6b0, type: 3}
+  - {fileID: 21300000, guid: 361fdc638402b82498516dc3c18a7211, type: 3}
+  - {fileID: 21300000, guid: 5df3047012e509b4e80f605ef9996bc4, type: 3}
+  - {fileID: 21300000, guid: 361fdc638402b82498516dc3c18a7211, type: 3}
+  - {fileID: 21300000, guid: 5df3047012e509b4e80f605ef9996bc4, type: 3}
+  - {fileID: 21300000, guid: 09d9b1ae8fe48724cb9e5af04484d6b0, type: 3}
+  - {fileID: 21300000, guid: 361fdc638402b82498516dc3c18a7211, type: 3}
+  - {fileID: 21300000, guid: 96d0894f1b9e4394383ef208a8705482, type: 3}
+  - {fileID: 21300000, guid: 09d9b1ae8fe48724cb9e5af04484d6b0, type: 3}
+  - {fileID: 21300000, guid: 361fdc638402b82498516dc3c18a7211, type: 3}
+  - {fileID: 21300000, guid: 7c3a663ec73150243824000b43f067f1, type: 3}
   blockTagSprites:
   - {fileID: 21300000, guid: 0bc1e435c6845804cae11427579dca73, type: 3}
   - {fileID: 21300000, guid: 21e0f529fbbe9484e9792cf403dc93a8, type: 3}

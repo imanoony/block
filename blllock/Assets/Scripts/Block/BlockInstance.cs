@@ -15,7 +15,8 @@ public class BlockInstance : MonoBehaviour
     private SpriteRenderer sr;
     private SortingGroup sg;
     private Color color = Color.white;
-    private GameObject shadow;
+    [SerializeField] private GameObject shadow;
+    [SerializeField] private GameObject fixedShadow;
     [SerializeField] private GameObject ghostPrefab;
     private GameObject ghost;
     private Vector2 blockPos;
@@ -34,6 +35,7 @@ public class BlockInstance : MonoBehaviour
         Sprite sprite, 
         Vector2Int initPos,
         Sprite ghostSprite,
+        Sprite fixedShadowSprite,
         Transform placedRoot,
         bool canRotateCW = false, 
         bool canRotateCCW = false,
@@ -74,9 +76,23 @@ public class BlockInstance : MonoBehaviour
         }
 
         // Shadow Sprite 설정
-        shadow = transform.GetChild(0).gameObject;
         SpriteRenderer shadowSr = shadow.GetComponent<SpriteRenderer>();
         shadowSr.sprite = sprite;
+
+        // Fixed Shadow Sprite 및 sr과 shadow 설정
+        if (blockData.IsFixed)
+        {
+            SpriteRenderer fixedShadowSr = fixedShadow.GetComponent<SpriteRenderer>();
+            fixedShadowSr.sprite = fixedShadowSprite;
+            fixedShadow.SetActive(true);
+
+            sr.color = Utils.CodeToColor(Utils.FIXED_BLOCK_TINT);
+            shadow.transform.localPosition = -Utils.FIXED_BLOCK_SHADOW;
+        }
+        else
+        {
+            fixedShadow.SetActive(false);
+        }
 
         if (!Place(gm, initPos))
         {
@@ -124,6 +140,7 @@ public class BlockInstance : MonoBehaviour
     {
         //if (currentCoroutine != null) return;
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isTweening > 0) return;
 
         if (isHovering)
@@ -203,6 +220,7 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseDown()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isTweening > 0) return;
 
         downPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -212,6 +230,7 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseUp()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isTweening > 0) return;
     
         if (isDragging)
@@ -237,6 +256,7 @@ public class BlockInstance : MonoBehaviour
     private void OnMouseDrag()
     {
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isTweening > 0) return;
 
         if (isDragging)
@@ -318,6 +338,7 @@ public class BlockInstance : MonoBehaviour
         isHovering = true;
         
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isDragging) return;
         if (isTweening > 0) return;
 
@@ -329,6 +350,7 @@ public class BlockInstance : MonoBehaviour
         isHovering = false;
 
         if (GameManager.Instance.State != GameState.InGame) return;
+        if (blockData.IsFixed) return;
         if (isDragging) return;
         if (isTweening > 0) return;
         //if (isPlaced || isDragging || !isHovering || currentCoroutine != null) return;
@@ -442,6 +464,7 @@ public class BlockInstance : MonoBehaviour
     #region Rotate
     private bool RotateCW()
     {
+        if (blockData.IsFixed) return false;
         if (!CanRotateCW) return false;
 
         if (isPlaced) Unplace(gm);
@@ -488,6 +511,7 @@ public class BlockInstance : MonoBehaviour
     }
     private bool RotateCCW()
     {
+        if (blockData.IsFixed) return false;
         if (!CanRotateCCW) return false;
         
         if (isPlaced) Unplace(gm);
@@ -582,6 +606,7 @@ public class BlockInstance : MonoBehaviour
     #region Flip
     private bool FlipX() // y축 기준 회전
     {
+        if (blockData.IsFixed) return false;
         if (!CanFlipX) return false;
 
         if (isPlaced) Unplace(gm);
@@ -627,6 +652,7 @@ public class BlockInstance : MonoBehaviour
     }
     private bool FlipY() // x축 기준 회전
     {
+        if (blockData.IsFixed) return false;
         if (!CanFlipY) return false;
 
         if (isPlaced) Unplace(gm);

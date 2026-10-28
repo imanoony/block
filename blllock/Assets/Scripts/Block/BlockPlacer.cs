@@ -11,6 +11,7 @@ public class BlockPlacer : MonoBehaviour
     [SerializeField] private Sprite[] blockSprites;
     [SerializeField] private Sprite[] sblockSprites;
     [SerializeField] private Sprite[] blockGhostSprites;
+    [SerializeField] private Sprite[] blockFixedShadowSprites;
 
     public Sprite[] BlockSprites => blockSprites;
 
@@ -23,6 +24,7 @@ public class BlockPlacer : MonoBehaviour
 
     private List<GameObject> blockInstances = null;
     private List<BlockTag> blockTags = null;
+    private List<GameObject> fixedBlockInstances = null;
     public void RemoveBlocks()
     {
         if (blockInstances != null)
@@ -31,7 +33,16 @@ public class BlockPlacer : MonoBehaviour
                 Destroy(block);
             blockInstances.Clear();
         }
+
+        if (fixedBlockInstances != null)
+        {
+            foreach (var fixedBlock in fixedBlockInstances)
+                Destroy(fixedBlock);
+            fixedBlockInstances.Clear();
+        }
+
         blockInstances = null;
+        fixedBlockInstances = null;
         blockTags = null;
     }
 
@@ -39,9 +50,10 @@ public class BlockPlacer : MonoBehaviour
     {
         blockInstances = new List<GameObject>();
         blockTags = new List<BlockTag>();
+        fixedBlockInstances = new List<GameObject>();
         blockParent.transform.localPosition = Vector3.zero;
 
-        // 사용할 세 리스트 미리 정리하기
+        // 사용할 리스트 미리 정리하기
         List<int> blocks = stage.Blocks;
         List<int> rotateCW = stage.RotateCWIndex;
         List<int> rotateCCW = stage.RotateCCWIndex;
@@ -49,6 +61,7 @@ public class BlockPlacer : MonoBehaviour
         List<int> flipY = stage.FlipYIndex;
         List<int> spike = stage.SIndex;
         List<Vector2Int> blockPositions = stage.BlockPositions;
+        List<(int id, Vector2Int pos)> fixedBlocks = stage.FixedBlocks;
         if (blockPositions.Count < blocks.Count)
         {
             // 부족한만큼 (0, 0)으로 채워넣기
@@ -63,7 +76,7 @@ public class BlockPlacer : MonoBehaviour
             bool fX = flipX.Contains(i);
             bool fY = flipY.Contains(i);
             bool s = spike.Contains(i);
-            GameObject blockInstance = PlaceBlock(blocks[i], blockPositions[i], rCW, rCCW, fX, fY, s);
+            GameObject blockInstance = PlaceBlock(blocks[i], blockPositions[i], rCW, rCCW, fX, fY, s, false);
             blockInstances.Add(blockInstance);
             if (rCW || rCCW || fX || fY)
             {
@@ -71,6 +84,21 @@ public class BlockPlacer : MonoBehaviour
                 if (blockTag != null)
                     blockTags.Add(blockTag);
             }
+        }
+
+        for (int i = 0; i < fixedBlocks.Count; i++)
+        {
+            GameObject fixedBlockInstance = PlaceBlock(
+                id: fixedBlocks[i].id,
+                pos: fixedBlocks[i].pos,
+                canRotateCW: false,
+                canRotateCCW: false,
+                canFlipX: false,
+                canFlipY: false,
+                hasSpike: false,
+                isFixed: true
+            );
+            fixedBlockInstances.Add(fixedBlockInstance);
         }
     }
 
@@ -81,21 +109,26 @@ public class BlockPlacer : MonoBehaviour
         bool canRotateCCW, 
         bool canFlipX,
         bool canFlipY, 
-        bool hasSpike
+        bool hasSpike,
+        bool isFixed
     )
     {
         GameObject instance = Instantiate(blockPrefab, blockParent.transform);
         BlockData blockData = new BlockData(GameManager.Instance.BlockLibrary[id]);
         BlockInstance blockInstance = instance.GetComponent<BlockInstance>();
         BlockTag blockTag = instance.GetComponentInChildren<BlockTag>();
+
+        if (isFixed) blockData.SetIsFixed(true);
         
         Sprite sprite = hasSpike ? sblockSprites[id] : blockSprites[id];
         Sprite ghostSprite = blockGhostSprites[id];
+        Sprite fixedShadowSprite = blockFixedShadowSprites[id];
         blockInstance.Initialize(
             blockData,
             sprite,
             pos,
             ghostSprite,
+            fixedShadowSprite,
             placedBlockRoot.transform,
             canRotateCW,
             canRotateCCW,

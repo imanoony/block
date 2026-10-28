@@ -17,6 +17,7 @@ public class BlockData
         BlockRotate = Rotate.None;
         BlockFlipX = false;
         HasSpike = false;
+        IsFixed = false;
     }
 
     #region ID & Shape
@@ -164,6 +165,9 @@ public class BlockData
         SpikeTiles = _spikeTiles;
         HasSpike = true;
     }
+
+    public bool IsFixed { get; private set; } = false;
+    public void SetIsFixed(bool isFixed) => IsFixed = isFixed;
     #endregion
 
     #region Grid & Wire
