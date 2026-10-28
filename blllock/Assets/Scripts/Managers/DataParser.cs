@@ -117,6 +117,9 @@ public class TutorialData
 
 public class StageData
 {
+    // Runtime-only source JSON file name without extension.
+    public string SourceFileName;
+
     public int ID;
     public int BgWidth, BgHeight;
     public List<(Vector2Int pos, int width, int height)> Circuits = new();
@@ -482,6 +485,7 @@ public class DataParser
             {
                 raw = rawStages.Stages[i];
                 stage = StageData.FromRaw(raw);
+                stage.SourceFileName = jsonAsset.name;
                 result[stage.ID] = stage;
             }
         }
@@ -489,27 +493,32 @@ public class DataParser
         return result;
     }
 
-    public void SaveStageData(List<StageData> stages, string filename)
+    public void SaveStageData(List<StageData> stages, string foldername)
     {
 #if UNITY_EDITOR
-        int i;
-        StageData.RawStages rawStages = new();
-        List<StageData.Raw> rawList = new();
-        StageData.Raw raw;
-        StageData stage;
-        string path, json;
+        string directory = Path.Combine(Application.dataPath, $"Resources/Data/{foldername}");
+        Directory.CreateDirectory(directory);
 
-        for (i = 0; i < stages.Count; i++)
+        foreach (IGrouping<string, StageData> fileGroup in stages
+            .GroupBy(stage => stage.SourceFileName, StringComparer.OrdinalIgnoreCase))
         {
-            stage = stages[i];
-            raw = StageData.ToRaw(stage);
-            rawList.Add(raw);
-        }
-        rawStages.Stages = rawList;
+            if (string.IsNullOrWhiteSpace(fileGroup.Key))
+            {
+                Debug.LogError($"Stage data contains stages without a source JSON file name (IDs: {string.Join(", ", fileGroup.Select(stage => stage.ID))}). Skipping save for this group.");
+                continue;
+            }
 
-        json = JsonUtility.ToJson(rawStages, true);
-        path = Path.Combine(Application.dataPath, $"Resources/Data/{filename}.json");
-        File.WriteAllText(path, json);
+            StageData.RawStages rawStages = new()
+            {
+                Stages = fileGroup.Select(StageData.ToRaw).ToList()
+            };
+            string json = JsonUtility.ToJson(rawStages, true);
+            string path = Path.Combine(directory, $"{fileGroup.Key}.json");
+            File.WriteAllText(path, json);
+
+            Debug.Log($"[SaveStageData()] path: {path}");
+        }
+
         AssetDatabase.Refresh();
 #endif
     }
