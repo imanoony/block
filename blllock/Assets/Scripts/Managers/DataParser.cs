@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
+#region Module Data
 public class ModuleData
 {
     public int ID { get; private set; }
@@ -50,7 +51,9 @@ public class ModuleData
     }
 
 }
+#endregion
 
+#region Tutorial Data
 public class TutorialData
 {
     public int ID;
@@ -62,7 +65,9 @@ public class TutorialData
         public string Text;
     }
 
-    #region for JSON
+    /// <summary>
+    /// For JSON
+    /// </summary>
     public static TutorialData FromRaw(Raw raw)
     {
         TutorialData tutorial = new()
@@ -112,9 +117,10 @@ public class TutorialData
         public string Gif;
         public string Text;
     }
-    #endregion
 }
+#endregion
 
+#region Stage Data
 public class StageData
 {
     // Runtime-only source JSON file name without extension.
@@ -129,7 +135,9 @@ public class StageData
     public void SetCleared(bool cleared) => IsCleared = cleared;
     public int TutorialID = -1; // 튜토리얼 스테이지인 경우, 해당 튜토리얼 ID (튜토리얼이 아닌 경우 -1)
 
-    #region Blocks
+    /// <summary>
+    /// Blocks
+    /// </summary>
     public List<int> Blocks = new();
     public List<Vector2Int> BlockPositions = new();
     public List<int> RotateCWIndex = new();
@@ -137,18 +145,26 @@ public class StageData
     public List<int> FlipXIndex = new();
     public List<int> FlipYIndex = new();
     public List<int> SIndex = new(); // Spike Blocks 인덱스 리스트
-    #endregion
 
-    #region Barriers
+    /// <summary>
+    /// Barriers
+    /// </summary>
     public List<Vector2Int> HBarriers = new(); // (Grid 좌표계, Tile 좌표계)를 사용한다.
     public List<Vector2Int> VBarriers = new(); // (Tile 좌표계, Grid 좌표계)를 사용한다.
-    #endregion
 
-    #region Tools
+    /// <summary>
+    /// Fixed Block
+    /// </summary>
+    public List<(int id, Vector2Int pos)> FixedBlocks = new();
+
+    /// <summary>
+    /// Tools
+    /// </summary>
     public Dictionary<ToolType, int> ToolCounts = new();
-    #endregion
 
-    #region for JSON
+    /// <summary>
+    /// For JSON
+    /// </summary>
     public static StageData FromRaw(Raw raw)
     {
         StageData stage = new()
@@ -186,6 +202,12 @@ public class StageData
             SIndex = raw.SIndex,
             HBarriers = raw.HBarriers.Select(pos => pos.ToVector2Int()).ToList(),
             VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList(),
+            FixedBlocks = raw.FixedBlocks.Select(
+                fb => (
+                    fb.id,
+                    fb.pos.ToVector2Int()
+                )
+            ).ToList(),
             ToolCounts = raw.ToolCounts.ToDictionary(t => t.type, t => t.count)
         };
         return stage;
@@ -236,6 +258,13 @@ public class StageData
             VBarriers = stage.VBarriers.Select(
                 pos => new RawPos { x = pos.x, y = pos.y }
             ).ToList(),
+            FixedBlocks = stage.FixedBlocks.Select(
+                fb => new RawFixedBlock
+                {
+                    id = fb.id,
+                    pos = new RawPos { x = fb.pos.x, y = fb.pos.y }
+                }
+            ).ToList(),
             ToolCounts = stage.ToolCounts.Select(
                 kvp => new RawToolCount { type = kvp.Key, count = kvp.Value }
             ).ToList(),
@@ -264,6 +293,7 @@ public class StageData
         public List<int> FlipXIndex = new(), FlipYIndex = new();
         public List<int> SIndex = new();
         public List<RawPos> HBarriers = new(), VBarriers = new();
+        public List<RawFixedBlock> FixedBlocks = new();
         public List<RawToolCount> ToolCounts = new();
     }
     [Serializable]
@@ -287,18 +317,23 @@ public class StageData
         public Vector2Int ToVector2Int() => new(x, y);
     }
     [Serializable]
+    public class RawFixedBlock
+    {
+        public int id;
+        public RawPos pos;
+    }
+    [Serializable]
     public class RawToolCount
     {
         public ToolType type;
         public int count;
     }
-    #endregion
 }
-
+#endregion
 
 public class DataParser
 {
-    #region Constant Data
+    #region [Parser] Constant Data
     private const string DataFolder = "Assets/Data";
     private const string ID = "ID", Width = "Width", Height = "Height", Desc = "Desc";
     private const string Tiles = "Tiles", Grids = "Grids", Ports = "Ports", TagPos = "TagPos";
@@ -535,7 +570,7 @@ public class DataParser
     }
     #endregion
 
-    #region Player Data
+    #region [Parser] Player Data
 
     // ModuleData의 StageIndex 불러오기
     // StageData의 IsCleared 불러오기
