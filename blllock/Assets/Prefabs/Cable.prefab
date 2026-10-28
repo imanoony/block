@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 19
   m_Sprite: {fileID: 21300000, guid: 595753e4faedab142b6566235f175429, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_FlipX: 0
@@ -99,7 +99,6 @@ GameObject:
   - component: {fileID: 8769245926376598194}
   - component: {fileID: 6516132386195466407}
   - component: {fileID: 5897947623465694428}
-  - component: {fileID: 2755546852194598759}
   m_Layer: 0
   m_Name: Cable
   m_TagString: Untagged
@@ -166,7 +165,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_Sprite: {fileID: 21300000, guid: 595753e4faedab142b6566235f175429, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -236,15 +235,3 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.625, y: 0.15}
   m_EdgeRadius: 0
---- !u!210 &2755546852194598759
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4262874548272097987}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 20
-  m_SortAtRoot: 1

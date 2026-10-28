@@ -120,11 +120,24 @@ public class BlockPlacer : MonoBehaviour
 
         if (isFixed) blockData.SetIsFixed(true);
         
+        // TODO: 나중에 더 깔끔하게 할 수 있을 듯
+        if (canRotateCW) 
+            blockTag.Initialize(TagType.RotateCW, blockTagSprites[0], blockData.TagPos);
+        else if (canRotateCCW)
+            blockTag.Initialize(TagType.RotateCCW, blockTagSprites[1], blockData.TagPos);
+        else if (canFlipX)
+            blockTag.Initialize(TagType.FlipX, blockTagSprites[2], blockData.TagPos);
+        else if (canFlipY)
+            blockTag.Initialize(TagType.FlipY, blockTagSprites[3], blockData.TagPos);
+        else
+            blockTag.Initialize(TagType.Null, null, new(0, 0));
+        
         Sprite sprite = hasSpike ? sblockSprites[id] : blockSprites[id];
         Sprite ghostSprite = blockGhostSprites[id];
         Sprite fixedShadowSprite = blockFixedShadowSprites[id];
         blockInstance.Initialize(
             blockData,
+            blockTag: blockTag,
             sprite,
             pos,
             ghostSprite,
@@ -137,17 +150,7 @@ public class BlockPlacer : MonoBehaviour
             hasSpike
         );
         
-        // TODO: 나중에 더 깔끔하게 할 수 있을 듯
-        if (canRotateCW) 
-            blockTag.Initialize(TagType.RotateCW, blockTagSprites[0], blockData.TagPos);
-        else if (canRotateCCW)
-            blockTag.Initialize(TagType.RotateCCW, blockTagSprites[1], blockData.TagPos);
-        else if (canFlipX)
-            blockTag.Initialize(TagType.FlipX, blockTagSprites[2], blockData.TagPos);
-        else if (canFlipY)
-            blockTag.Initialize(TagType.FlipY, blockTagSprites[3], blockData.TagPos);
-        else
-            blockTag.Initialize(TagType.Null, null, new(0, 0));
+        
 
         return instance;
     }
