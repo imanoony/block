@@ -6548,6 +6548,12 @@ MonoBehaviour:
   barrierParent: {fileID: 1995904178}
   hBarrierPrefab: {fileID: 5102308025333390099, guid: 5c09aef16f4ed0645a10015662bf380d, type: 3}
   vBarrierPrefab: {fileID: 7919743460152423171, guid: 9485be44bf9454d4aa76048b945f286b, type: 3}
+  tileBarrierPrefab: {fileID: 4338466046501389410, guid: 10c2072e8a7d78c438d98a9f5ccf5882, type: 3}
+  tileBarrierSprites:
+  - {fileID: 1135155250317228913, guid: 62b916e61f4aefa4982c2b2d0ff2c7c4, type: 3}
+  - {fileID: -8727903482942951415, guid: 62b916e61f4aefa4982c2b2d0ff2c7c4, type: 3}
+  - {fileID: 2242297860333483329, guid: 62b916e61f4aefa4982c2b2d0ff2c7c4, type: 3}
+  - {fileID: -7374468730754035850, guid: 62b916e61f4aefa4982c2b2d0ff2c7c4, type: 3}
   CircuitAppearTransDone: 0
   CircuitDisappearTransDone: 0
   TileBoundaryAppearTransDone: 0

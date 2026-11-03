@@ -415,6 +415,8 @@ public class TilePlacer : MonoBehaviour
     [SerializeField] private GameObject barrierParent;
     [SerializeField] private GameObject hBarrierPrefab;
     [SerializeField] private GameObject vBarrierPrefab;
+    [SerializeField] private GameObject tileBarrierPrefab;
+    [SerializeField] private List<Sprite> tileBarrierSprites;
     public void PlaceHBarriers(List<Vector2Int> HBarriers)
     {
         foreach (Vector2Int pos in HBarriers)
@@ -431,6 +433,20 @@ public class TilePlacer : MonoBehaviour
             GameObject barrier = Instantiate(vBarrierPrefab, barrierParent.transform);
             Vector2 topLeft = (Vector2)GetTileTopLeftWorld(pos.x, pos.y);
             barrier.transform.position = new Vector3(topLeft.x, topLeft.y - GetTileSize().y / 2f, barrier.transform.position.z);
+        }
+    }
+    public void PlaceTileBarriers(List<Vector2Int> tileBarriers)
+    {
+        int spriteCount = tileBarrierSprites.Count;
+        foreach (Vector2Int pos in tileBarriers)
+        {
+            GameObject barrier = Instantiate(tileBarrierPrefab, barrierParent.transform);
+            SpriteRenderer barrierSr = barrier.GetComponent<SpriteRenderer>();
+            Sprite barrierSprite = tileBarrierSprites[Random.Range(0, spriteCount)];
+            Vector2 center = (Vector2)GetTileCenterWorld(pos.x, pos.y);
+
+            barrierSr.sprite = barrierSprite;
+            barrier.transform.position = new Vector3(center.x, center.y, barrier.transform.position.z);
         }
     }
     public void RemoveBarriers()
