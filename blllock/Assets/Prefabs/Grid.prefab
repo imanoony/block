@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 18
   m_Sprite: {fileID: 21300000, guid: e6ccb67aa09328f478c7b7cd5257f035, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -162,7 +162,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 18
   m_Sprite: {fileID: 21300000, guid: e6ccb67aa09328f478c7b7cd5257f035, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -184,7 +184,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1451769207227612589}
   - component: {fileID: 4717880672725810908}
-  - component: {fileID: 3306337734775832973}
   - component: {fileID: 1876151491147473772}
   m_Layer: 0
   m_Name: Grid
@@ -225,18 +224,6 @@ MonoBehaviour:
   sr: {fileID: 3050143250692476203}
   animSr: {fileID: 1177940411449844553}
   animFrameCnt: 37
---- !u!210 &3306337734775832973
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7213145987293988837}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 11
-  m_SortAtRoot: 0
 --- !u!58 &1876151491147473772
 CircleCollider2D:
   m_ObjectHideFlags: 0

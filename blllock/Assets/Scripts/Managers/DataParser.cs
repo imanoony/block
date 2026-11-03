@@ -151,6 +151,7 @@ public class StageData
     /// </summary>
     public List<Vector2Int> HBarriers = new(); // (Grid 좌표계, Tile 좌표계)를 사용한다.
     public List<Vector2Int> VBarriers = new(); // (Tile 좌표계, Grid 좌표계)를 사용한다.
+    public List<Vector2Int> TileBarriers = new(); // (Tile 좌표계, Tile 좌표계)를 사용한다.
 
     /// <summary>
     /// Fixed Block
@@ -202,6 +203,7 @@ public class StageData
             SIndex = raw.SIndex,
             HBarriers = raw.HBarriers.Select(pos => pos.ToVector2Int()).ToList(),
             VBarriers = raw.VBarriers.Select(pos => pos.ToVector2Int()).ToList(),
+            TileBarriers = raw.TileBarriers.Select(pos => pos.ToVector2Int()).ToList(),
             FixedBlocks = raw.FixedBlocks.Select(
                 fb => (
                     fb.id,
@@ -258,6 +260,9 @@ public class StageData
             VBarriers = stage.VBarriers.Select(
                 pos => new RawPos { x = pos.x, y = pos.y }
             ).ToList(),
+            TileBarriers = stage.TileBarriers.Select(
+                pos => new RawPos { x = pos.x, y = pos.y }
+            ).ToList(),
             FixedBlocks = stage.FixedBlocks.Select(
                 fb => new RawFixedBlock
                 {
@@ -292,7 +297,9 @@ public class StageData
         public List<int> RotateCWIndex = new(), RotateCCWIndex = new();
         public List<int> FlipXIndex = new(), FlipYIndex = new();
         public List<int> SIndex = new();
-        public List<RawPos> HBarriers = new(), VBarriers = new();
+        public List<RawPos> HBarriers = new();
+        public List<RawPos> VBarriers = new();
+        public List<RawPos> TileBarriers = new();
         public List<RawFixedBlock> FixedBlocks = new();
         public List<RawToolCount> ToolCounts = new();
     }

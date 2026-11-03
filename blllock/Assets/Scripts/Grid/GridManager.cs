@@ -154,6 +154,7 @@ public class GridManager : MonoBehaviour
         // Tile Initialization
         // step 1: Tiles 전체 배열 생성
         // step 2: Circuit 내부 타일 표시, Circuit 테두리 타일을 점유로 설정
+        // step 3: Tile Barrier 위치에 있는 Tiles 검증 후 타일을 점유로 설정
 
         Tiles = new Tile[bgHeight, bgWidth];
         for (int x = 0; x < bgHeight; x++)
@@ -175,6 +176,16 @@ public class GridManager : MonoBehaviour
                     Tiles[x, y].SetType(TileType.Occupied);
                 }
             }
+        }
+
+        foreach (Vector2Int tileBarrier in stage.TileBarriers)
+        {
+            if (Tiles[tileBarrier.x, tileBarrier.y].Type != TileType.Empty)
+            {
+                Debug.LogWarning($"[GridManager] TileBarrier at {tileBarrier} is not Empty. Current Type: {Tiles[tileBarrier.x, tileBarrier.y].Type}");
+                continue;
+            }
+            Tiles[tileBarrier.x, tileBarrier.y].SetType(TileType.Occupied);
         }
 
         // Edge Initialization
@@ -247,8 +258,10 @@ public class GridManager : MonoBehaviour
 
         // 스테이지에 해당하는 가로 배리어 배치
         // 스테이지에 해당하는 세로 배리어 배치
+        // 스테이지에 해당하는 타일 배리어 배치
         TilePlacer.PlaceHBarriers(stage.HBarriers);
         TilePlacer.PlaceVBarriers(stage.VBarriers);
+        TilePlacer.PlaceTileBarriers(stage.TileBarriers);
     }
 
     public void RemoveCurrentStage()

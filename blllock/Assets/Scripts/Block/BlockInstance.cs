@@ -87,7 +87,7 @@ public class BlockInstance : MonoBehaviour
         {
             SpriteRenderer fixedShadowSr = fixedShadow.GetComponent<SpriteRenderer>();
             fixedShadowSr.sprite = fixedShadowSprite;
-            fixedShadowSr.sortingOrder = Utils.BLOCK_SORT_NORMAL - 2;
+            fixedShadowSr.sortingOrder = Utils.BLOCK_SORT_NORMAL - 3;
             fixedShadow.SetActive(true);
 
             sr.color = Utils.CodeToColor(Utils.FIXED_BLOCK_TINT);
