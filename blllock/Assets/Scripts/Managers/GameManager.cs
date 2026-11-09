@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
     #region Data Library
     private DataParser dataParser = new();
     public Dictionary<int, BlockData> BlockLibrary { get; private set; }
-    public Dictionary<int, ModuleData> ModuleLibrary { get; private set; }
+    public Dictionary<(int, int), ModuleData> ModuleLibrary { get; private set; }
     public Dictionary<int, TutorialData> TutorialLibrary { get; private set; }
     public Dictionary<int, StageData> StageLibrary { get; private set; }
     private const string blockPath = "Block", modulePath = "Module", stagePath = "Stages", tutorialPath = "Tutorial";
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(13);
+        StartModule(1, 13);
     }
 
     void Update()
@@ -239,11 +239,11 @@ public class GameManager : MonoBehaviour
             ModuleData module = kvp.Value;
             if (module.IsCleared) continue;
 
-            List<int> conditions = module.Conditions;
+            List<(int, int)> conditions = module.Conditions;
             for (int i = 0; i < conditions.Count; i++)
             {
-                int cond = conditions[i];
-                if (!ModuleLibrary[cond].IsCleared) break;
+                (int condChap, int condId) = conditions[i];
+                if (!ModuleLibrary[(condChap, condId)].IsCleared) break;
                 if (i == conditions.Count - 1) module.Unlock();
             }
         }
@@ -288,7 +288,7 @@ public class GameManager : MonoBehaviour
                 UI.ClearPanelDisappear();
                 UI.StageNextDisappear();
 
-                UI.WorldMapAppear(CurrentModule.ID);
+                UI.WorldMapAppear(CurrentModule.Chapter, CurrentModule.ID);
             }
         );
 
@@ -424,7 +424,7 @@ public class GameManager : MonoBehaviour
         //    StartStage(StageLibrary[module.Stages[index]])
         //);
     }
-    public void StartModule(int id) => StartModule(ModuleLibrary[id]);
+    public void StartModule(int chapter, int id) => StartModule(ModuleLibrary[(chapter, id)]);
 
     #region Transition
 

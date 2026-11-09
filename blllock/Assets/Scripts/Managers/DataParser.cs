@@ -11,9 +11,12 @@ public class ModuleData
 {
     public int ID { get; private set; }
     public void SetID(int id) => ID = id;
+    public int Chapter { get; private set; }
+    public void SetChapter(int chapter) => Chapter = chapter;
+
     public string Desc;
-    public List<int> Conditions { get; private set; } = new();
-    public void SetConditions(List<int> conditions) { Conditions = conditions; }
+    public List<(int, int)> Conditions { get; private set; } = new(); // (chapter, id)
+    public void SetConditions(List<(int, int)> conditions) { Conditions = conditions; }
     public List<int> Stages { get; private set; } = new(); // Stage ID list
 
     // 클리어 하지 못한 최소 스테이지 인덱스
@@ -349,6 +352,7 @@ public class DataParser
     private const string ThumbnailPath = "ThumbnailPath";
     private const string Conditions = "Conditions";
     private const string Stages = "Stages";
+    private const string Chapter = "Chapter";
 
     public Dictionary<int, BlockData> ParseBlockData(string filename)
     {
@@ -413,9 +417,9 @@ public class DataParser
         return result;
     }
 
-    public Dictionary<int, ModuleData> ParseModuleData(string filename)
+    public Dictionary<(int, int), ModuleData> ParseModuleData(string filename)
     {
-        Dictionary<int, ModuleData> result = new();
+        Dictionary<(int, int), ModuleData> result = new();
 
         TextAsset csvAsset = Resources.Load<TextAsset>($"Data/{filename}");
         if (csvAsset == null)
@@ -442,13 +446,18 @@ public class DataParser
                 string value = values[j].Trim();
 
                 if (header == ID.ToLower()) module.SetID(int.Parse(value));
+                else if (header == Chapter.ToLower()) module.SetChapter(int.Parse(value));
                 else if (header == Desc.ToLower()) module.Desc = value;
                 else if (header == ThumbnailPath.ToLower()) module.ThumbnailPath = value;
                 else if (header == Conditions.ToLower())
                 {
-                    List<int> parsed = value
+                    List<(int, int)> parsed = value
                         .Split(';', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(int.Parse)
+                        .Select(item =>
+                        {
+                            string[] parts = item.Trim().Trim('(', ')').Split('.');
+                            return (int.Parse(parts[0]), int.Parse(parts[1]));
+                        })
                         .ToList();
 
                     if (parsed.Count == 0)
@@ -456,6 +465,7 @@ public class DataParser
                         module.Unlock();
                         Debug.Log($"unlock, {module.ID}");
                     }
+
                     module.SetConditions(parsed);
                 }
                 else if (header == Stages.ToLower())
@@ -469,7 +479,7 @@ public class DataParser
                 }
             }
 
-            result[module.ID] = module;
+            result[(module.Chapter, module.ID)] = module;
         }
 
         return result;
@@ -607,11 +617,11 @@ public class DataParser
     }
 
     // ModuleData의 StageIndex 저장하기
-    public void SaveData(Dictionary<int, ModuleData> modules)
+    public void SaveData(Dictionary<(int, int), ModuleData> modules)
     {
-        for (int i = 0; i < modules.Count; i++) 
+        foreach (var kvp in modules)
         {
-            ModuleData module = modules[i];
+            ModuleData module = kvp.Value;
             PlayerPrefs.SetInt(module.ID.ToString(), module.StageIndex);
             PlayerPrefs.SetInt(module.ID.ToString() + nameof(ModuleData.IsCleared), module.IsCleared ? 1 : 0);
             PlayerPrefs.SetInt(module.ID.ToString() + nameof(ModuleData.Unlocked), module.Unlocked ? 1 : 0);

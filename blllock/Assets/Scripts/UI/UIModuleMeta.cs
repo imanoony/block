@@ -13,7 +13,7 @@ public class UIModuleMeta : MonoBehaviour
     private CanvasGroup progressCanvasGroup;
     private List<GameObject> progresses = new();
     
-    private int moduleID = -1;
+    private int moduleIndex = -1;
     private string nameString = "";
     private int progressPercent = 0;
     private int progressCount = 0;
@@ -30,9 +30,9 @@ public class UIModuleMeta : MonoBehaviour
         // TODO    
     }
 
-    public void InitModule(ModuleData module)
+    public void InitModule(ModuleData module, int index)
     {
-        moduleID = module.ID;
+        moduleIndex = index;
         nameString = module.Desc;
         progressCount = module.Stages.Count;
         progressIndex = module.StageIndex;
@@ -80,8 +80,8 @@ public class UIModuleMeta : MonoBehaviour
         progressCanvasGroup.alpha = alpha;
     }
 
-    // return moduleID is same as id
-    public bool CheckModuleID(int id) => moduleID == id;
+    // return moduleIndex is same as index
+    public bool CheckModuleIndex(int index) => moduleIndex == index;
 
     /*public void PlayName(float duration)
     {
