@@ -27,6 +27,30 @@ const hitBlock = (c) => {
   return -1;
 };
 
+const hitFixedBlock = (c) => {
+  const fixedBlocks = State.stage.FixedBlocks || [];
+  for (let i = fixedBlocks.length - 1; i >= 0; i--) {
+    const fixed = fixedBlocks[i];
+    const id = Number(fixed.id ?? fixed.ID);
+    const pos = fixed.pos;
+    const block = BLOCK_DATA[id];
+
+    if (
+      block &&
+      pos &&
+      block.t.some(
+        ([row, col]) =>
+          pos.x + row === c.x &&
+          pos.y + col === c.y,
+      )
+    ) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+
 const toggle = (key, i) => {
   const a = State.stage[key];
   const p = a.indexOf(i);
@@ -140,6 +164,16 @@ export function attachTools(
       return;
     }
 
+    if (t === "fixed-block-paint") {
+      State.stage.FixedBlocks.push({
+        id: State.selectedBlock,
+        pos: c,
+      });
+
+      onCommit();
+      return;
+    }
+
     // -------------------------
     // Input / Output
     // -------------------------
@@ -229,6 +263,14 @@ export function attachTools(
     // -------------------------
 
     if (t === "eraser") {
+      const fixedIndex = hitFixedBlock(c);
+
+      if (fixedIndex >= 0) {
+        State.stage.FixedBlocks.splice(fixedIndex, 1);
+        onCommit();
+        return;
+      }
+
       const bi = hitBlock(c);
 
       // Block

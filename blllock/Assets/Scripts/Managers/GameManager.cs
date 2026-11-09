@@ -120,13 +120,16 @@ public class GameManager : MonoBehaviour
         if (delay != null) { StopCoroutine(delay); delay = null; }
 
         Debug.Log($"START STAGE, ID: {stage.ID}");
+        CurrentStage = stage;
 
         outputCheck = new();
+        for (int i = 0; i < CurrentStage.Outputs.Count; i++)
+            outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
+
         Grid.RemoveCurrentStage();
         Wire.Initialize();
         Tool.InitToolCounts(stage.ToolCounts);
         Grid.InitStage(stage);
-        CurrentStage = stage;
 
         if (stage.IsCleared) UI.StageNextAppear(stage.ID, LastStageID);
         else UI.StageNextDisappear();
@@ -149,8 +152,6 @@ public class GameManager : MonoBehaviour
 
         if (CurrentModule.ID == 0) gt.Initialize(stage.Inputs[0].pos);
 
-        for (int i = 0; i < CurrentStage.Outputs.Count; i++)
-            outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
 
         State = GameState.Paused;
 
