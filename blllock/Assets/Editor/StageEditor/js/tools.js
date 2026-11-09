@@ -236,6 +236,20 @@ export function attachTools(
       return;
     }
 
+    if (t === "tilebarrier-paint") {
+      const tileBarriers = State.stage.TileBarriers;
+      if (
+        !tileBarriers.some(
+          (pos) => pos.x === c.x && pos.y === c.y,
+        )
+      ) {
+        tileBarriers.push({ x: c.x, y: c.y });
+      }
+
+      onCommit();
+      return;
+    }
+
     // -------------------------
     // Block transform
     // -------------------------
@@ -298,6 +312,18 @@ export function attachTools(
             );
         }
 
+        onCommit();
+        return;
+      }
+
+      // Tile barrier
+      const tileBarriers = State.stage.TileBarriers || [];
+      const tileBarrierIndex = tileBarriers.findIndex(
+        (v) => v.x === c.x && v.y === c.y,
+      );
+      if (tileBarrierIndex >= 0) {
+        tileBarriers.splice(tileBarrierIndex, 1);
+        State.stage.TileBarriers = tileBarriers;
         onCommit();
         return;
       }

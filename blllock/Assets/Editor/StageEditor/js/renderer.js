@@ -24,6 +24,7 @@ export function render(ctx, canvas, state, assets, ui) {
     renderBg(ctx, state, assets);
     renderCircuits(ctx, state, assets);
     renderBarriers(ctx, state);
+    renderTileBarriers(ctx, state, assets);
     renderBlocks(ctx, state, assets);
     renderFixedBlocks(ctx, state, assets);
     renderIos(ctx, state);
@@ -129,6 +130,25 @@ function renderBarriers(ctx, state) {
         ctx.stroke();
     }
     ctx.lineWidth = 1;
+}
+
+function renderTileBarriers(ctx, state, assets) {
+    const variants = assets.tileBarriers || [];
+    if (variants.length === 0) return;
+
+    (state.TileBarriers || []).forEach((pos) => {
+        const variantIndex = Math.abs(pos.x * 31 + pos.y * 17) % variants.length;
+        const variant = variants[variantIndex];
+        if (!variant?.ok) return;
+
+        ctx.drawImage(
+            variant.img,
+            pos.y * TILE_SIZE,
+            pos.x * TILE_SIZE,
+            TILE_SIZE,
+            TILE_SIZE,
+        );
+    });
 }
 
 /* RotateCWIndex: [],

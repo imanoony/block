@@ -11,7 +11,8 @@
                 "rotateCCW": "nemocuit-tag-rotateCCW.png",
                 "flipX": "nemocuit-tag-flipX.png",
                 "flipY": "nemocuit-tag-flipY.png"
-            }
+            },
+            "spriteTileBarrier": "/Tile/Barrier/nemocuit-tile-barriers.png"
         },
         "blockCount": 11
     },
