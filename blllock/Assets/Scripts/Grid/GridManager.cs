@@ -101,9 +101,9 @@ public class GridManager : MonoBehaviour
 
     private StageData? stageCache = null;
 
-    public void InitStage(int id) => InitStage(GameManager.Instance.StageLibrary[id]);
+    public void InitStage(int id, int chapter) => InitStage(GameManager.Instance.StageLibrary[id], chapter);
 
-    public void InitStage(StageData stage)
+    public void InitStage(StageData stage, int chapter)
     {
         stageCache = stage;
 
@@ -254,7 +254,7 @@ public class GridManager : MonoBehaviour
         TilePlacer.PlaceCamera();
         TilePlacer.PlaceGrids(Grids);
         TilePlacer.PlaceTileBoundary();
-        BlockPlacer.PlaceBlocks(stage);
+        BlockPlacer.PlaceBlocks(stage, chapter);
 
         // 스테이지에 해당하는 가로 배리어 배치
         // 스테이지에 해당하는 세로 배리어 배치

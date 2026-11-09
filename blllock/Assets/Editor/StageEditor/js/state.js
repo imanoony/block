@@ -71,7 +71,7 @@ function parseBlockCsv(csv) {
 }
 
 export async function loadBlockData() {
-	const response = await fetch("../../Resources/Data/Block.csv");
+	const response = await fetch("../../Resources/Data/Blocks/Block1.csv");
 	if (!response.ok && response.status !== 0) {
 		throw new Error("Could not load Block.csv (HTTP " + response.status + ").");
 	}

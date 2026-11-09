@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
 
-        BlockLibrary = dataParser.ParseBlockData(blockPath);
+        BlockLibrary = dataParser.LoadBlockData(blockPath);
         ModuleLibrary = dataParser.ParseModuleData(modulePath);
         TutorialLibrary = dataParser.LoadTutorialData(tutorialPath);
         StageLibrary = dataParser.LoadStageData(stagePath);
@@ -63,11 +63,11 @@ public class GameManager : MonoBehaviour
 
     #region Data Library
     private DataParser dataParser = new();
-    public Dictionary<int, BlockData> BlockLibrary { get; private set; }
-    public Dictionary<(int, int), ModuleData> ModuleLibrary { get; private set; }
+    public Dictionary<(int, int), BlockData> BlockLibrary { get; private set; } // key: (chapter, block id)
+    public Dictionary<(int, int), ModuleData> ModuleLibrary { get; private set; } // key: (chapter, module id)
     public Dictionary<int, TutorialData> TutorialLibrary { get; private set; }
     public Dictionary<int, StageData> StageLibrary { get; private set; }
-    private const string blockPath = "Block", modulePath = "Module", stagePath = "Stages", tutorialPath = "Tutorial";
+    private const string blockPath = "Blocks", modulePath = "Module", stagePath = "Stages", tutorialPath = "Tutorial";
 
     #endregion
 
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
         Grid.RemoveCurrentStage();
         Wire.Initialize();
         Tool.InitToolCounts(stage.ToolCounts);
-        Grid.InitStage(stage);
+        Grid.InitStage(stage, CurrentModule.Chapter);
 
         if (stage.IsCleared) UI.StageNextAppear(stage.ID, LastStageID);
         else UI.StageNextDisappear();
@@ -265,7 +265,7 @@ public class GameManager : MonoBehaviour
     {
         State = GameState.Paused;
         Grid.RemoveCurrentStage();
-        Grid.InitStage(CurrentStage);
+        Grid.InitStage(CurrentStage, CurrentModule.Chapter);
         State = GameState.InGame;
 
         if (gt != null) gt.ResetGridIdleTime();

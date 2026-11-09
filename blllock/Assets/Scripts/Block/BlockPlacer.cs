@@ -46,7 +46,7 @@ public class BlockPlacer : MonoBehaviour
         blockTags = null;
     }
 
-    public void PlaceBlocks(StageData stage)
+    public void PlaceBlocks(StageData stage, int chapter)
     {
         blockInstances = new List<GameObject>();
         blockTags = new List<BlockTag>();
@@ -76,7 +76,7 @@ public class BlockPlacer : MonoBehaviour
             bool fX = flipX.Contains(i);
             bool fY = flipY.Contains(i);
             bool s = spike.Contains(i);
-            GameObject blockInstance = PlaceBlock(blocks[i], blockPositions[i], rCW, rCCW, fX, fY, s, false);
+            GameObject blockInstance = PlaceBlock(chapter, blocks[i], blockPositions[i], rCW, rCCW, fX, fY, s, false);
             blockInstances.Add(blockInstance);
             if (rCW || rCCW || fX || fY)
             {
@@ -89,6 +89,7 @@ public class BlockPlacer : MonoBehaviour
         for (int i = 0; i < fixedBlocks.Count; i++)
         {
             GameObject fixedBlockInstance = PlaceBlock(
+                chapter: chapter,
                 id: fixedBlocks[i].id,
                 pos: fixedBlocks[i].pos,
                 canRotateCW: false,
@@ -103,6 +104,7 @@ public class BlockPlacer : MonoBehaviour
     }
 
     private GameObject PlaceBlock(
+        int chapter,
         int id, 
         Vector2Int pos, 
         bool canRotateCW,
@@ -114,7 +116,7 @@ public class BlockPlacer : MonoBehaviour
     )
     {
         GameObject instance = Instantiate(blockPrefab, blockParent.transform);
-        BlockData blockData = new BlockData(GameManager.Instance.BlockLibrary[id]);
+        BlockData blockData = new BlockData(GameManager.Instance.BlockLibrary[(chapter, id)]);
         BlockInstance blockInstance = instance.GetComponent<BlockInstance>();
         BlockTag blockTag = instance.GetComponentInChildren<BlockTag>();
 

@@ -354,7 +354,51 @@ public class DataParser
     private const string Stages = "Stages";
     private const string Chapter = "Chapter";
 
-    public Dictionary<int, BlockData> ParseBlockData(string filename)
+    public Dictionary<(int, int), BlockData> LoadBlockData(string foldername)
+    {
+        Dictionary<(int, int), BlockData> result = new();
+        TextAsset[] csvAssets = Resources.LoadAll<TextAsset>("Data/" + foldername);
+
+        if (csvAssets.Length == 0)
+        {
+            Utils.PrintError("No block CSV files found in Resources/Data/" + foldername);
+            return result;
+        }
+
+        const string prefix = "Block";
+        foreach (TextAsset csvAsset in csvAssets)
+        {
+            if (!csvAsset.name.StartsWith(prefix, StringComparison.Ordinal) ||
+                !int.TryParse(csvAsset.name.Substring(prefix.Length), out int chapter))
+            {
+                Utils.PrintWarning("Ignoring block file with unexpected name: " + csvAsset.name);
+                continue;
+            }
+
+            string resourcePath = foldername + "/" + csvAsset.name;
+            Dictionary<int, BlockData> chapterBlocks;
+
+            switch (chapter)
+            {
+                case 1:
+                    chapterBlocks = ParseBlock1Data(resourcePath);
+                    break;
+                case 2:
+                    chapterBlocks = ParseBlock2Data(resourcePath);
+                    break;
+                default:
+                    Utils.PrintWarning("No block parser registered for chapter " + chapter);
+                    continue;
+            }
+
+            foreach (KeyValuePair<int, BlockData> block in chapterBlocks)
+                result[(chapter, block.Key)] = block.Value;
+        }
+
+        return result;
+    }
+
+    public Dictionary<int, BlockData> ParseBlock1Data(string filename)
     {
         Dictionary<int, BlockData> result = new();
 
@@ -414,6 +458,15 @@ public class DataParser
 
             result[block.ID] = block;
         }
+        return result;
+    }
+
+    public Dictionary<int, BlockData> ParseBlock2Data(string filename)
+    {
+        Dictionary<int, BlockData> result = new();
+
+        // TODO
+
         return result;
     }
 
