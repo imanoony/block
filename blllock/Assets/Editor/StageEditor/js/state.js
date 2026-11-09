@@ -3,141 +3,84 @@ export const BG_COLS = 10;
 export const BG_ROWS = 6;
 export const CIRCUIT_COLS = 5;
 export const CIRCUIT_ROWS = 5;
-export const BLOCKS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-export const BLOCK_DATA = {
-    0: { 
-        w: 1, 
-        h: 1, 
-        t: [
-            [0, 0]
-        ],
-		tagPos: {
-			x: 0,
-			y: 0
+export const BLOCKS = [];
+export const BLOCK_DATA = {};
+
+function parseBlockCsv(csv) {
+	const lines = csv
+		.replace(String.fromCharCode(0xFEFF), "")
+		.split(/\r?\n/)
+		.map((line) => line.trim())
+		.filter(Boolean);
+	const blocks = [];
+
+	for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+		const fields = lines[lineIndex].split(",").map((field) => field.trim());
+		if (lineIndex === 0 && fields[0] === "ID") continue;
+		if (fields.length !== 7) {
+			throw new Error("Block.csv line " + (lineIndex + 1) + ": expected 7 columns.");
 		}
-    },
-    1: {
-		w: 2,
-		h: 1,
-		t: [
-			[0, 0],
-			[0, 1],
-		],
-		tagPos: {
-			x: 0,
-			y: 0
+
+		const [rawId, rawWidth, rawHeight, rawTiles, , , rawTagPos] = fields;
+		const id = Number(rawId);
+		const w = Number(rawWidth);
+		const h = Number(rawHeight);
+		const tagPos = rawTagPos.split(";").map(Number);
+
+		if (
+			!Number.isInteger(id) ||
+			!Number.isFinite(w) ||
+			!Number.isFinite(h) ||
+			w <= 0 ||
+			h <= 0 ||
+			tagPos.length !== 2 ||
+			!tagPos.every(Number.isFinite)
+		) {
+			throw new Error("Block.csv line " + (lineIndex + 1) + ": invalid block metadata.");
 		}
-    },
-    2: {
-		w: 3,
-		h: 1,
-		t: [
-			[0, 0],
-			[0, 1],
-			[0, 2],
-		],
-		tagPos: {
-			x: 0,
-			y: 0
+
+		const t = rawTiles.split(";").map((tile) => {
+			const match = tile.match(/^\((-?\d+)\.(-?\d+)\)$/);
+			if (!match) {
+				throw new Error("Block.csv line " + (lineIndex + 1) + ": invalid tile coordinate.");
+			}
+			return [Number(match[1]), Number(match[2])];
+		});
+
+		if (t.length === 0) {
+			throw new Error("Block.csv line " + (lineIndex + 1) + ": block has no tiles.");
 		}
-    },
-    3: {
-		w: 2,
-		h: 1,
-		t: [
-			[0, 0],
-			[0, 1],
-		],
-		tagPos: {
-			x: 0,
-			y: 0
-		}
-    },
-    4: {
-		w: 3,
-		h: 1,
-		t: [
-			[0, 0],
-			[0, 1],
-			[0, 2],
-		],
-		tagPos: {
-			x: 0,
-			y: 0
-		}
-    },
-    5: { 
-		w: 1, 
-		h: 1, 
-		t: [
-			[0, 0]
-		],
-		tagPos: {
-			x: 0,
-			y: 0
-		}
-	},
-    6: {
-		w: 2,
-		h: 1,
-		t: [
-			[0, 0],
-			[0, 1],
-		],
-		tagPos: {
-			x: 0,
-			y: 0
-		}
-    },
-    7: {
-		w: 2,
-		h: 2,
-		t: [
-			[0, 0],
-			[0, 1],
-			[1, 1],
-		],
-		tagPos: {
-			x: 0.45,
-			y: 0.15
-		}
-    },
-    8: { 
-		w: 1, 
-		h: 1, 
-		t: [
-			[0, 0]
-		],
-		tagPos: {
-			x: 0,
-			y: 0
-		}
-	},
-    9: {
-		w: 2,
-		h: 1,
-		t: [
-			[0, 0],
-			[0, 1],
-		],
-		tagPos: {
-			x: 0,
-			y: 0
-		}
-    },
-    10: {
-		w: 1,
-		h: 2,
-		t: [
-			[0, 0],
-			[1, 0],
-		],
-		tagPos: {
-			x: 0,
-			y: 0
-		}
-    },
-};
+
+		blocks.push({
+			id,
+			data: {
+				w,
+				h,
+				t,
+				tagPos: { x: tagPos[0], y: tagPos[1] },
+			},
+		});
+	}
+
+	if (blocks.length === 0) {
+		throw new Error("Block.csv contains no block rows.");
+	}
+
+	blocks.sort((a, b) => a.id - b.id);
+	return blocks;
+}
+
+export async function loadBlockData() {
+	const response = await fetch("../../Resources/Data/Block.csv");
+	if (!response.ok && response.status !== 0) {
+		throw new Error("Could not load Block.csv (HTTP " + response.status + ").");
+	}
+
+	const blocks = parseBlockCsv(await response.text());
+	BLOCKS.splice(0, BLOCKS.length, ...blocks.map(({ id }) => id));
+	for (const id of Object.keys(BLOCK_DATA)) delete BLOCK_DATA[id];
+	for (const { id, data } of blocks) BLOCK_DATA[id] = data;
+}
 
 // ToolCounts can arrive in a few different shapes depending on where the
 // stage data came from (hand-authored JSON, an older export, a map keyed by
