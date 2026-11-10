@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     public ToolManager Tool { get; private set; }
     public UIManager UI { get; private set; }
     public AudioManager Audio { get; private set; }
+    public TimeManager Time { get; private set; }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -50,6 +52,7 @@ public class GameManager : MonoBehaviour
         Tool = gameObject.GetComponentInChildren<ToolManager>();
         UI = gameObject.GetComponentInChildren<UIManager>();
         Audio = gameObject.GetComponentInChildren<AudioManager>();
+        Time = gameObject.GetComponentInChildren<TimeManager>();
 
         Wire.Initialize(true);
         Grid.Initialize();

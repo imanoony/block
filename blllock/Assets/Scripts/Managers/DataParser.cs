@@ -422,6 +422,7 @@ public class DataParser
 
             string[] values = line.Split(',');
             BlockData block = new();
+            block.SetChapter(1);
 
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {

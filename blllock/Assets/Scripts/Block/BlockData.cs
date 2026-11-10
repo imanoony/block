@@ -8,6 +8,7 @@ public class BlockData
     public BlockData(BlockData blockData)
     {
         ID = blockData.ID;
+        Chapter = blockData.Chapter;
         _width = blockData._width;
         _height = blockData._height;
         _tiles = new(blockData._tiles);
@@ -23,6 +24,9 @@ public class BlockData
     #region ID & Shape
     public int ID { get; private set; }
     public void SetID(int id) => ID = id;
+
+    public int Chapter { get; private set; }
+    public void SetChapter(int chapter) => Chapter = chapter;
 
     private int _width;
     public int Width => GetWidth();
@@ -182,6 +186,16 @@ public class BlockData
     public List<PortExpr> Ports { get; private set; }
     public void SetPorts(List<PortExpr> ports) => Ports = ports;
     public List<int> WireIds { get; private set; }
+
+    // chapter 2 only
+    public List<int> Ticks { get; private set; } // active ticks of the corresponding ports
+    public void SetTicks(List<int> ticks) => Ticks = ticks;
+
+    // chapter 3 only
+    // TBD
+
+    // chapter 4 only
+    // TBD
     #endregion
 
     // 블록이 인스턴스화 될 때 각 Port의 Wire들을 Unique하게 만든다

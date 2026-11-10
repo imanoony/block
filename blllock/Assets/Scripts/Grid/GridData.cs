@@ -34,9 +34,18 @@ public class Grid
     public Grid(Vector2Int pos, GridType type) { Pos = pos; Type = type; }
     public void SetType(GridType type) => Type = type;
     public void SetExpr(LogicExpr? expr) => Expr = expr;
-    public bool AddPort(PortExpr port)
+    public bool AddPort(PortExpr port, WireManager wm)
     {
-        //if (Ports.Count >= Utils.MAX_PORT) return false;
+        if (Ports.Contains(port)) return true;
+
+        for (int i = 0; i < Ports.Count; i++)
+        {
+            wm.AddToDict(port, Ports[i]);
+        }
+        if (Expr != null && Type == GridType.Input)
+        {
+            wm.AddToLogic(port, Expr);
+        }
 
         Ports.Add(port);
         WiresLeftUp.Add(port.LeftUp);
@@ -47,10 +56,15 @@ public class Grid
         OnPortsChanged?.Invoke();
         return true;
     }
-    public void RemovePort(PortExpr port)
+    public void RemovePort(PortExpr port, WireManager wm)
     {
         int index = Ports.IndexOf(port);
         if (index < 0) return;
+
+        if (port.LeftUp != null) wm.RemoveWire(port.LeftUp.ID);
+        if (port.LeftDown != null) wm.RemoveWire(port.LeftDown.ID);
+        if (port.RightUp != null) wm.RemoveWire(port.RightUp.ID);
+        if (port.RightDown != null) wm.RemoveWire(port.RightDown.ID);
 
         Ports.RemoveAt(index);
 

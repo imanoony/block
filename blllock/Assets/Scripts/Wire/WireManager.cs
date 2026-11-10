@@ -153,55 +153,112 @@ public class WireManager
     // 내부에 rollback 기능이 없어서 외부에서 반드시 해줘야 함!!!
     // ---------------------------------------------------------------------------
 
-    public bool AddToDict(int w1, int w2) // Wire와 Wire 매핑
+    // REFACTOR: compatibility checks and graph mutations are exposed separately.
+    // These checks do not mutate WireDict or WireLogic.
+    public bool CanAddToDict(int w1, int w2)
     {
         if (!Compatible(w1, w2)) return false;
 
+        Dictionary<int, HashSet<int>> originalDict = WireDict;
+        WireDict = WireDict.ToDictionary(kvp => kvp.Key, kvp => new HashSet<int>(kvp.Value));
+        try
+        {
+            AddToDict(w1, w2);
+            return Check(w1, w2);
+        }
+        finally
+        {
+            WireDict = originalDict;
+        }
+    }
+
+    public bool CanAddToDict(Wire? w1, Wire? w2)
+    {
+        return w1 == null || w2 == null || CanAddToDict(w1.ID, w2.ID);
+    }
+
+    public bool CanAddToDict(PortExpr p1, PortExpr p2)
+    {
+        return CanAddToDict(p1.LeftUp, p2.LeftUp) &&
+               CanAddToDict(p1.LeftDown, p2.LeftDown) &&
+               CanAddToDict(p1.RightUp, p2.RightUp) &&
+               CanAddToDict(p1.RightDown, p2.RightDown);
+    }
+
+    // REFACTOR: registration methods only mutate mappings. Call CanAddTo... first
+    // when validation is required. AddTo... below retain the previous combined behavior.
+    public void AddToDict(int w1, int w2)
+    {
         if (WireDict.ContainsKey(w1)) WireDict[w1].Add(w2);
         else WireDict[w1] = new() { w2 };
         if (WireDict.ContainsKey(w2)) WireDict[w2].Add(w1);
         else WireDict[w2] = new() { w1 };
-
-        return Check(w1, w2);
     }
 
-    public bool AddToDict(Wire? w1, Wire? w2)
+    public void AddToDict(Wire? w1, Wire? w2)
     {
-        if (w1 == null || w2 == null) return true;
-        else return AddToDict(w1.ID, w2.ID);
+        if (w1 == null || w2 == null) return;
+        AddToDict(w1.ID, w2.ID);
     }
-    public bool AddToDict(PortExpr p1, PortExpr p2) // Port와 Port 매핑
+
+    public void AddToDict(PortExpr p1, PortExpr p2)
     {
-        return (
-            AddToDict(p1.LeftUp, p2.LeftUp) &&
-            AddToDict(p1.LeftDown, p2.LeftDown) &&
-            AddToDict(p1.RightUp, p2.RightUp) &&
-            AddToDict(p1.RightDown, p2.RightDown)
-        );
+        AddToDict(p1.LeftUp, p2.LeftUp);
+        AddToDict(p1.LeftDown, p2.LeftDown);
+        AddToDict(p1.RightUp, p2.RightUp);
+        AddToDict(p1.RightDown, p2.RightDown);
     }
-    public bool AddToLogic(int w, VarExpr? var)
+
+    // REFACTOR: logic compatibility checking is separated from assigning WireLogic.
+    public bool CanAddToLogic(int w, VarExpr? var)
     {
         if (var == null) return true;
         if (!Compatible(w, var)) return false;
-        WireLogic[w] = var;
 
-        return Check(w);
+        Dictionary<int, VarExpr> originalLogic = WireLogic;
+        WireLogic = new(WireLogic);
+        try
+        {
+            AddToLogic(w, var);
+            return Check(w);
+        }
+        finally
+        {
+            WireLogic = originalLogic;
+        }
     }
-    public bool AddToLogic(Wire? wire, VarExpr? var)
+
+    public bool CanAddToLogic(Wire? wire, VarExpr? var)
     {
-        if (wire == null) return true;
-        else return AddToLogic(wire.ID, var);
+        return wire == null || CanAddToLogic(wire.ID, var);
     }
 
-    public bool AddToLogic(PortExpr p, LogicExpr l)
+    public bool CanAddToLogic(PortExpr p, LogicExpr l)
     {
         CombExpr comb = l is VarExpr v ? v.ToCombExpr() : (CombExpr)l;
-        return (
-            AddToLogic(p.LeftUp, comb.LeftUp) &&
-            AddToLogic(p.LeftDown, comb.LeftDown) &&
-            AddToLogic(p.RightUp, comb.RightUp) &&
-            AddToLogic(p.RightDown, comb.RightDown)
-        );
+        return CanAddToLogic(p.LeftUp, comb.LeftUp) &&
+               CanAddToLogic(p.LeftDown, comb.LeftDown) &&
+               CanAddToLogic(p.RightUp, comb.RightUp) &&
+               CanAddToLogic(p.RightDown, comb.RightDown);
+    }
+
+    public void AddToLogic(int w, VarExpr? var)
+    {
+        if (var != null) WireLogic[w] = var;
+    }
+
+    public void AddToLogic(Wire? wire, VarExpr? var)
+    {
+        if (wire != null) AddToLogic(wire.ID, var);
+    }
+
+    public void AddToLogic(PortExpr p, LogicExpr l)
+    {
+        CombExpr comb = l is VarExpr v ? v.ToCombExpr() : (CombExpr)l;
+        AddToLogic(p.LeftUp, comb.LeftUp);
+        AddToLogic(p.LeftDown, comb.LeftDown);
+        AddToLogic(p.RightUp, comb.RightUp);
+        AddToLogic(p.RightDown, comb.RightDown);
     }
 
     public VarExpr? EvalCache(int id) => Wires[id].Cache;

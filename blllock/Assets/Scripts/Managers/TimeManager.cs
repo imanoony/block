@@ -11,6 +11,7 @@ public class TimeManager : MonoBehaviour
     public int CurrentTick { get; private set; } = 0;
     
     public event Action<int> OnTick;
+    public event Action OnTickCompleted;
     public bool IsRunning { get; private set; } = false;
 
     public void SetLoopLength(int loopLength)
@@ -21,6 +22,7 @@ public class TimeManager : MonoBehaviour
     void Update()
     {
         if (LoopLength == 0) return;
+        if (!IsRunning) return;
 
         elapsedSeconds += Time.deltaTime;
         while (elapsedSeconds >= tickIntervalSeconds)
@@ -44,5 +46,6 @@ public class TimeManager : MonoBehaviour
     {
         CurrentTick = (CurrentTick + 1) % LoopLength;
         OnTick?.Invoke(CurrentTick);
+        OnTickCompleted?.Invoke();
     }
 }

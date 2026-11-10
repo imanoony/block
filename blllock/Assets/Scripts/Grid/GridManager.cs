@@ -9,7 +9,6 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 
-
 public class GridManager : MonoBehaviour
 {
     // 게임 시작 시 최초 1회만 실행
@@ -262,10 +261,29 @@ public class GridManager : MonoBehaviour
         TilePlacer.PlaceHBarriers(stage.HBarriers);
         TilePlacer.PlaceVBarriers(stage.VBarriers);
         TilePlacer.PlaceTileBarriers(stage.TileBarriers);
+
+        // 틱이 도는 스테이지라면 매 틱마다 Wire EvalAll
+        GameManager.Instance.Time.OnTickCompleted -= TickCompletedHandler;
+        if (chapter == 2)
+        {
+            GameManager.Instance.Time.OnTickCompleted += TickCompletedHandler;
+        }
     }
 
     public void RemoveCurrentStage()
     {
+        // unsubscribe all timer tick event
+        foreach (var kvp in portTickHandlers)
+        {
+            for (int i = 0; i < kvp.Value.Count; i++)
+            {
+                GameManager.Instance.Time.OnTick -= kvp.Value[i];
+            }
+        }
+        portTickHandlers.Clear();
+        GameManager.Instance.Time.OnTickCompleted -= TickCompletedHandler;
+
+
         if (Tiles != null) Tiles = null;
         if (Grids != null) Grids = null;
         
@@ -380,13 +398,21 @@ public class GridManager : MonoBehaviour
         if (!IsValidPort(block, baseTile, GameManager.Instance.Wire)) return false;
 
         // 점유된 그리드에 Port를 추가한다.
-        List<Vector2Int> gridOffsets = block.Grids;
-        for (int i = 0; i < gridOffsets.Count; i++)
+        if (block.Chapter == 1)
         {
-            Vector2Int offset = gridOffsets[i];
-            PortExpr port = block.Ports[i];
-            Grids![offset.x + baseTile.x, offset.y + baseTile.y].AddPort(port);
+            List<Vector2Int> gridOffsets = block.Grids;
+            for (int i = 0; i < gridOffsets.Count; i++)
+            {
+                Vector2Int offset = gridOffsets[i];
+                PortExpr port = block.Ports[i];
+                Grids![offset.x + baseTile.x, offset.y + baseTile.y].AddPort(port, GameManager.Instance.Wire);
+            }
         }
+        else if (block.Chapter == 2)
+        {
+            RegisterPortTickHandlers(block, baseTile);
+        }
+        
 
         // 블록의 portIDs를 Evaluate 한다.
         GameManager.Instance.Wire.EvalAll();
@@ -422,9 +448,14 @@ public class GridManager : MonoBehaviour
         {
             Vector2Int offset = gridOffsets[i];
             PortExpr port = block.Ports[i];
-            Grids![offset.x + baseTile.x, offset.y + baseTile.y].RemovePort(port);
+            Grids![offset.x + baseTile.x, offset.y + baseTile.y].RemovePort(port, GameManager.Instance.Wire);
         }
-        foreach (int id in block.WireIds) GameManager.Instance.Wire.RemoveWire(id);
+        if (block.Chapter == 2)
+        {
+            UnregisterPortTickHandlers(block);
+        }
+        
+        //foreach (int id in block.WireIds) GameManager.Instance.Wire.RemoveWire(id);
 
         CheckInvalids();
         GameManager.Instance.Wire.EvalAll();
@@ -523,7 +554,10 @@ public class GridManager : MonoBehaviour
 
     // 블록의 포트를 모두 Compatible -> AddToDict/AddToLogic 한다.
     // 모순 발생 시 Rollback하고 false를 반환한다.
-    // 모순이 발생하지 않으면 포트를 모두 wire manager에 등록하고 true를 반환한다.
+    // 모순이 발생하지 않으면 Rollback하고 true를 반환한다.
+    // 왜 모순과 관계 없이 마지막에 반드시 Rollback을 해야 하는가?
+    // 이 함수는 validity를 체크하는 함수이지, wire mapping을 만드는 함수가 아니기 때문이다.
+    // wire mapping은 다른 곳에서 처리한다.
     private bool IsValidPort(BlockData block, Vector2Int baseGrid, WireManager wire)
     {
         Dictionary<int, Wire> backupWires = wire.Wires.ToDictionary(kvp => kvp.Key, kvp => new Wire(kvp.Value));
@@ -537,26 +571,29 @@ public class GridManager : MonoBehaviour
             Grid grid = Grids![baseGrid.x + offsets[i].x, baseGrid.y + offsets[i].y];
             for (int j = 0; j < grid.Ports.Count; j++)
             {
-                if (!wire.AddToDict(block.Ports[i], grid.Ports[j]))
+                if (!wire.CanAddToDict(block.Ports[i], grid.Ports[j]))
                 {
                     Debug.Log($"[IsValidPort:--invalid--] try: {block.Ports[i]} -> {grid.Ports[j]} | dict: {wire.StringOfWireDict()} | backup: {wire.StringOfWireDict(backupDict)}");
 
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;
                 }
+                wire.AddToDict(block.Ports[i], grid.Ports[j]);
             }
             if (grid.Expr != null && grid.Type == GridType.Input)
             {
-                if (!wire.AddToLogic(block.Ports[i], grid.Expr))
+                if (!wire.CanAddToLogic(block.Ports[i], grid.Expr))
                 {
                     Debug.Log($"[IsValidPort:--invalid--] try: {block.Ports[i]} -> {grid.Expr} | dict: {wire.StringOfWireDict()} | backup dict: {wire.StringOfWireDict(backupDict)} | logic: {wire.StringOfWireLogic()} | backup logic: {wire.StringOfWireLogic(backupLogic)}");
 
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;
                 }
+                wire.AddToLogic(block.Ports[i], grid.Expr);
             }
         }
-
+        
+        wire.RollBack(backupWires, backupDict, backupLogic);
         return true;
     }
 
@@ -708,7 +745,7 @@ public class GridManager : MonoBehaviour
         PortVar port = group.Port;
         foreach (Vector2Int end in group.Ends)
         {
-            Grids![end.x, end.y].AddPort(port);
+            Grids![end.x, end.y].AddPort(port, GameManager.Instance.Wire);
         }
 
         // 케이블 그룹의 portIDs를 Evaluate 한다.
@@ -748,11 +785,11 @@ public class GridManager : MonoBehaviour
         PortVar port = group.Port;
         foreach (Vector2Int end in group.Ends)
         {
-            Grids![end.x, end.y].RemovePort(port);
+            Grids![end.x, end.y].RemovePort(port, GameManager.Instance.Wire);
         }
 
         // Wire Manager의 WireDict, WireLogic을 수정한다.
-        foreach (int id in group.WireIds) GameManager.Instance.Wire.RemoveWire(id);
+        //foreach (int id in group.WireIds) GameManager.Instance.Wire.RemoveWire(id);
 
         CheckInvalids();
         GameManager.Instance.Wire.EvalAll();
@@ -777,7 +814,10 @@ public class GridManager : MonoBehaviour
 
     // 케이블 그룹의 포트를 모두 Compatible -> AddToDict/AddToLogic 한다.
     // 모순 발생 시 Rollback하고 false를 반환한다.
-    // 모순이 발생하지 않으면 포트를 모두 wire manager에 등록하고 true를 반환한다.
+    // 모순이 발생하지 않으면 Rollback하고 true를 반환한다.
+    // 왜 모순과 관계 없이 마지막에 반드시 Rollback을 해야 하는가?
+    // 이 함수는 validity를 체크하는 함수이지, wire mapping을 만드는 함수가 아니기 때문이다.
+    // wire mapping은 다른 곳에서 처리한다.
     private bool IsValidPort(CableGroup group, WireManager wire)
     {
         Dictionary<int, Wire> backupWires = wire.Wires.ToDictionary(kvp => kvp.Key, kvp => new Wire(kvp.Value));
@@ -791,22 +831,25 @@ public class GridManager : MonoBehaviour
             Grid grid = Grids![end.x, end.y];
             for (int i = 0; i < grid.Ports.Count; i++)
             {
-                if (!wire.AddToDict(port, grid.Ports[i]))
+                if (!wire.CanAddToDict(port, grid.Ports[i]))
                 {
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;
                 }
+                wire.AddToDict(port, grid.Ports[i]);
             }
             if (grid.Expr != null && grid.Type == GridType.Input)
             {
-                if (!wire.AddToLogic(port, grid.Expr))
+                if (!wire.CanAddToLogic(port, grid.Expr))
                 {
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;
                 }
+                wire.AddToLogic(port, grid.Expr);
             }
         }
 
+        wire.RollBack(backupWires, backupDict, backupLogic);
         return true;
     }
     #endregion
@@ -835,8 +878,8 @@ public class GridManager : MonoBehaviour
         // 오류가 있을 때 false 반환
         if (!IsValidPort(resistor, GameManager.Instance.Wire)) return false;
     
-        Grids![resistor.A.x, resistor.A.y].AddPort(resistor.PortA);
-        Grids![resistor.B.x, resistor.B.y].AddPort(resistor.PortB);
+        Grids![resistor.A.x, resistor.A.y].AddPort(resistor.PortA, GameManager.Instance.Wire);
+        Grids![resistor.B.x, resistor.B.y].AddPort(resistor.PortB, GameManager.Instance.Wire);
 
         GameManager.Instance.Wire.EvalAll();
 
@@ -870,11 +913,11 @@ public class GridManager : MonoBehaviour
         }
 
         // 점유했던 그리드에서 Port를 제거한다
-        Grids![resistor.A.x, resistor.A.y].RemovePort(resistor.PortA);
-        Grids![resistor.B.x, resistor.B.y].RemovePort(resistor.PortB);
+        Grids![resistor.A.x, resistor.A.y].RemovePort(resistor.PortA, GameManager.Instance.Wire);
+        Grids![resistor.B.x, resistor.B.y].RemovePort(resistor.PortB, GameManager.Instance.Wire);
 
         // Wire Manager의 WireDict, WireLogic을 수정한다.
-        foreach (int id in resistor.WireIds) GameManager.Instance.Wire.RemoveWire(id, true);
+        //foreach (int id in resistor.WireIds) GameManager.Instance.Wire.RemoveWire(id, true);
 
         CheckInvalids();
         GameManager.Instance.Wire.EvalAll();
@@ -914,23 +957,85 @@ public class GridManager : MonoBehaviour
         {
             for (int j = 0; j < grids[i].Ports.Count; j++)
             {
-                if (!wire.AddToDict(ports[i], grids[i].Ports[j]))
+                if (!wire.CanAddToDict(ports[i], grids[i].Ports[j]))
                 {
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;
                 }
+                wire.AddToDict(ports[i], grids[i].Ports[j]);
             }
             if (grids[i].Expr != null && grids[i].Type == GridType.Input)
             {
-                if (!wire.AddToLogic(ports[i], grids[i].Expr!))
+                if (!wire.CanAddToLogic(ports[i], grids[i].Expr!))
                 {
                     wire.RollBack(backupWires, backupDict, backupLogic);
                     return false;
                 }
+                wire.AddToLogic(ports[i], grids[i].Expr!);
             }
         }
 
+        wire.RollBack(backupWires, backupDict, backupLogic);
         return true;
     }
+    #endregion
+
+    #region Tick
+    private readonly Dictionary<BlockData, List<Action<int>>> portTickHandlers = new();
+    private void RegisterPortTickHandlers(BlockData block, Vector2Int baseTile)
+    {
+        UnregisterPortTickHandlers(block);
+
+        if (block.Chapter != 2) return;
+
+        List<Action<int>> handlers = new();
+
+        for (int i = 0; i < block.Grids.Count; i++)
+        {
+            Vector2Int offset = block.Grids[i];
+            Vector2Int gridPos = baseTile + offset;
+            PortExpr port = block.Ports[i];
+            int portTick = block.Ticks[i];
+
+            Action<int> handler = tick =>
+            {
+                Grid grid = Grids![gridPos.x, gridPos.y];
+
+                if (tick == portTick)
+                {
+                    if (!grid.Ports.Contains(port))
+                        grid.AddPort(port, GameManager.Instance.Wire);
+                }
+                else
+                {
+                    grid.RemovePort(port, GameManager.Instance.Wire);
+                }
+            };
+
+            handlers.Add(handler);
+            GameManager.Instance.Time.OnTick += handler;
+            handler(GameManager.Instance.Time.CurrentTick);
+        }
+
+        if (handlers.Count > 0)
+            portTickHandlers[block] = handlers;
+    }
+
+    private void UnregisterPortTickHandlers(BlockData block)
+    {
+        if (!portTickHandlers.TryGetValue(block, out List<Action<int>> handlers))
+            return;
+
+        foreach (Action<int> handler in handlers)
+            GameManager.Instance.Time.OnTick -= handler;
+
+        portTickHandlers.Remove(block);
+    }
+
+    private void TickCompletedHandler()
+    {
+        GameManager.Instance.Wire.EvalAll();
+    }
+
     #endregion
 }
