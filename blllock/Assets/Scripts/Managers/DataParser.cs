@@ -353,6 +353,7 @@ public class DataParser
     private const string Conditions = "Conditions";
     private const string Stages = "Stages";
     private const string Chapter = "Chapter";
+    private const char a = 'a';
 
     public Dictionary<(int, int), BlockData> LoadBlockData(string foldername)
     {
@@ -466,8 +467,71 @@ public class DataParser
     {
         Dictionary<int, BlockData> result = new();
 
-        // TODO
+        // Resources/Data 폴더 기준 경로, 확장자 제외
+        TextAsset csvAsset = Resources.Load<TextAsset>($"Data/{filename}");
+        if (csvAsset == null)
+        {
+            Utils.PrintError($"CSV 파일을 찾을 수 없음: Data/{filename}");
+            return result;
+        }
 
+        // 기존 File.ReadAllLines 대신
+        string[] lines = csvAsset.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        if (lines.Length < 2) return result;
+
+        string[] headers = lines[0].Split(',');
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim();
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            string[] values = line.Split(',');
+            BlockData block = new();
+            block.SetChapter(2);
+
+            for (int j = 0; j < headers.Length && j < values.Length; j++)
+            {
+                if (values[j].Length == 0) continue;
+                string header = headers[j].ToLower();
+
+                if (header == ID.ToLower()) block.SetID(int.Parse(values[j]));
+                else if (header == Width.ToLower()) block.SetWidth(int.Parse(values[j]));
+                else if (header == Height.ToLower()) block.SetHeight(int.Parse(values[j]));
+                else if (header == Tiles.ToLower() || header == Grids.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    List<Vector2Int> vector = new();
+                    for (int k = 0; k < items.Count; k++) vector.Add(ParsePos(items[k]));
+
+                    if (header == Tiles.ToLower()) block.SetTiles(vector);
+                    else block.SetGrids(vector);
+                }
+                else if (header == Ports.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    List<PortExpr> ports = new();
+                    List<int> ticks = new();
+
+                    for (int k = 0; k < items.Count; k++) 
+                    {
+                        ports.Add(new PortVar(items[k]));
+                        ticks.Add(items[k].ToCharArray()[0] - a);
+                    }
+
+                    block.SetPorts(ports);
+                    block.SetTicks(ticks);
+                }
+                else if (header == TagPos.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    float x = float.Parse(items[0]);
+                    float y = float.Parse(items[1]);
+                    block.SetTagPos(new(x, y));
+                }
+            }
+
+            result[block.ID] = block;
+        }
         return result;
     }
 
