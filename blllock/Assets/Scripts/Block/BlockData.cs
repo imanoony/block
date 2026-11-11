@@ -2,6 +2,29 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public class BlockShape
+{
+    public int ID { get; }
+    public int Width { get; }
+    public int Height { get; }
+    public List<Vector2Int> Tiles { get; }
+    public Vector2 TagPos { get; }
+    public BlockShape(
+        int id,
+        int width,
+        int height,
+        List<Vector2Int> tiles,
+        Vector2 tagPos
+    )
+    {
+        ID = id;
+        Width = width;
+        Height = height;
+        Tiles = tiles;
+        TagPos = tagPos;
+    }
+}
+
 public class BlockData
 {
     public BlockData() { }
@@ -27,6 +50,9 @@ public class BlockData
 
     public int Chapter { get; private set; }
     public void SetChapter(int chapter) => Chapter = chapter;
+
+    public int ShapeID { get; private set; }
+    public void SetShapeID(int shapeID) => ShapeID = shapeID;
 
     private int _width;
     public int Width => GetWidth();

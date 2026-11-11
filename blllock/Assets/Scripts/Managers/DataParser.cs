@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -353,9 +354,78 @@ public class DataParser
     private const string Conditions = "Conditions";
     private const string Stages = "Stages";
     private const string Chapter = "Chapter";
+    private const string Shape = "Shape";
     private const char a = 'a';
 
-    public Dictionary<(int, int), BlockData> LoadBlockData(string foldername)
+    public Dictionary<int, BlockShape> LoadBlockShape(string filename)
+    {
+        Dictionary<int, BlockShape> result = new();
+
+        // Resources/Data 폴더 기준 경로, 확장자 제외
+        TextAsset csvAsset = Resources.Load<TextAsset>($"Data/Blocks/{filename}");
+        if (csvAsset == null)
+        {
+            Utils.PrintError($"CSV 파일을 찾을 수 없음: Data/Blocks/{filename}");
+            return result;
+        }
+
+        // 기존 File.ReadAllLines 대신
+        string[] lines = csvAsset.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        if (lines.Length < 2) return result;
+
+        string[] headers = lines[0].Split(',');
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim();
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            string[] values = line.Split(',');
+
+            BlockShape shape;
+            int id = -1, width = -1, height = -1;
+            List<Vector2Int> tiles = new();
+            Vector2 tagPos = Vector2.zero;
+
+            for (int j = 0; j < headers.Length && j < values.Length; j++)
+            {
+                if (values[j].Length == 0) continue;
+                string header = headers[j].ToLower();
+
+                if (header == ID.ToLower()) id = int.Parse(values[j]);
+                else if (header == Width.ToLower()) width = int.Parse(values[j]);
+                else if (header == Height.ToLower()) height = int.Parse(values[j]);
+                else if (header == Tiles.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    List<Vector2Int> vector = new();
+                    for (int k = 0; k < items.Count; k++) vector.Add(ParsePos(items[k]));
+                    tiles = vector;
+                }
+                else if (header == TagPos.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    float x = float.Parse(items[0]);
+                    float y = float.Parse(items[1]);
+                    tagPos = new(x, y);
+                }
+            }
+
+            shape = new(
+                id: id,
+                width: width,
+                height: height,
+                tiles: tiles,
+                tagPos: tagPos
+            );
+            result[id] = shape;
+        }
+        return result;
+    }
+
+    public Dictionary<(int, int), BlockData> LoadBlockData(
+        string foldername, 
+        Dictionary<int, BlockShape> shapeLibrary
+    )
     {
         Dictionary<(int, int), BlockData> result = new();
         TextAsset[] csvAssets = Resources.LoadAll<TextAsset>("Data/" + foldername);
@@ -382,10 +452,10 @@ public class DataParser
             switch (chapter)
             {
                 case 1:
-                    chapterBlocks = ParseBlock1Data(resourcePath);
+                    chapterBlocks = ParseBlock1Data(resourcePath, shapeLibrary);
                     break;
                 case 2:
-                    chapterBlocks = ParseBlock2Data(resourcePath);
+                    chapterBlocks = ParseBlock2Data(resourcePath, shapeLibrary);
                     break;
                 default:
                     Utils.PrintWarning("No block parser registered for chapter " + chapter);
@@ -399,7 +469,10 @@ public class DataParser
         return result;
     }
 
-    public Dictionary<int, BlockData> ParseBlock1Data(string filename)
+    public Dictionary<int, BlockData> ParseBlock1Data(
+        string filename, 
+        Dictionary<int, BlockShape> shapeLibrary
+    )
     {
         Dictionary<int, BlockData> result = new();
 
@@ -431,16 +504,22 @@ public class DataParser
                 string header = headers[j].ToLower();
 
                 if (header == ID.ToLower()) block.SetID(int.Parse(values[j]));
-                else if (header == Width.ToLower()) block.SetWidth(int.Parse(values[j]));
-                else if (header == Height.ToLower()) block.SetHeight(int.Parse(values[j]));
-                else if (header == Tiles.ToLower() || header == Grids.ToLower())
+                else if (header == Shape.ToLower()) 
+                {
+                    block.SetShapeID(int.Parse(values[j]));
+
+                    BlockShape shape = shapeLibrary[block.ShapeID];
+                    block.SetWidth(shape.Width);
+                    block.SetHeight(shape.Height);
+                    block.SetTiles(shape.Tiles);
+                    block.SetTagPos(shape.TagPos);
+                }
+                else if (header == Grids.ToLower())
                 {
                     List<string> items = values[j].Split(';').ToList<string>();
                     List<Vector2Int> vector = new();
                     for (int k = 0; k < items.Count; k++) vector.Add(ParsePos(items[k]));
-
-                    if (header == Tiles.ToLower()) block.SetTiles(vector);
-                    else block.SetGrids(vector);
+                    block.SetGrids(vector);
                 }
                 else if (header == Ports.ToLower())
                 {
@@ -449,13 +528,6 @@ public class DataParser
                     for (int k = 0; k < items.Count; k++) ports.Add(PortExpr.Parse(items[k]));
                     block.SetPorts(ports);
                 }
-                else if (header == TagPos.ToLower())
-                {
-                    List<string> items = values[j].Split(';').ToList<string>();
-                    float x = float.Parse(items[0]);
-                    float y = float.Parse(items[1]);
-                    block.SetTagPos(new(x, y));
-                }
             }
 
             result[block.ID] = block;
@@ -463,7 +535,10 @@ public class DataParser
         return result;
     }
 
-    public Dictionary<int, BlockData> ParseBlock2Data(string filename)
+    public Dictionary<int, BlockData> ParseBlock2Data(
+        string filename,
+        Dictionary<int, BlockShape> shapeLibrary
+    )
     {
         Dictionary<int, BlockData> result = new();
 
@@ -495,16 +570,22 @@ public class DataParser
                 string header = headers[j].ToLower();
 
                 if (header == ID.ToLower()) block.SetID(int.Parse(values[j]));
-                else if (header == Width.ToLower()) block.SetWidth(int.Parse(values[j]));
-                else if (header == Height.ToLower()) block.SetHeight(int.Parse(values[j]));
-                else if (header == Tiles.ToLower() || header == Grids.ToLower())
+                else if (header == Shape.ToLower()) 
+                {
+                    block.SetShapeID(int.Parse(values[j]));
+
+                    BlockShape shape = shapeLibrary[block.ShapeID];
+                    block.SetWidth(shape.Width);
+                    block.SetHeight(shape.Height);
+                    block.SetTiles(shape.Tiles);
+                    block.SetTagPos(shape.TagPos);
+                }
+                else if (header == Grids.ToLower())
                 {
                     List<string> items = values[j].Split(';').ToList<string>();
                     List<Vector2Int> vector = new();
                     for (int k = 0; k < items.Count; k++) vector.Add(ParsePos(items[k]));
-
-                    if (header == Tiles.ToLower()) block.SetTiles(vector);
-                    else block.SetGrids(vector);
+                    block.SetGrids(vector);
                 }
                 else if (header == Ports.ToLower())
                 {
@@ -520,13 +601,6 @@ public class DataParser
 
                     block.SetPorts(ports);
                     block.SetTicks(ticks);
-                }
-                else if (header == TagPos.ToLower())
-                {
-                    List<string> items = values[j].Split(';').ToList<string>();
-                    float x = float.Parse(items[0]);
-                    float y = float.Parse(items[1]);
-                    block.SetTagPos(new(x, y));
                 }
             }
 

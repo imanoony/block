@@ -42,7 +42,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
 
-        BlockLibrary = dataParser.LoadBlockData(blockPath);
+        BlockShapeLibrary = dataParser.LoadBlockShape(blockShapePath);
+        BlockLibrary = dataParser.LoadBlockData(blockPath, BlockShapeLibrary);
         ModuleLibrary = dataParser.ParseModuleData(modulePath);
         TutorialLibrary = dataParser.LoadTutorialData(tutorialPath);
         StageLibrary = dataParser.LoadStageData(stagePath);
@@ -66,11 +67,13 @@ public class GameManager : MonoBehaviour
 
     #region Data Library
     private DataParser dataParser = new();
+    public Dictionary<int, BlockShape> BlockShapeLibrary { get; private set; }
     public Dictionary<(int, int), BlockData> BlockLibrary { get; private set; } // key: (chapter, block id)
     public Dictionary<(int, int), ModuleData> ModuleLibrary { get; private set; } // key: (chapter, module id)
     public Dictionary<int, TutorialData> TutorialLibrary { get; private set; }
     public Dictionary<int, StageData> StageLibrary { get; private set; }
     private const string blockPath = "Blocks", modulePath = "Module", stagePath = "Stages", tutorialPath = "Tutorial";
+    private const string blockShapePath = "BlockShape";
 
     #endregion
 

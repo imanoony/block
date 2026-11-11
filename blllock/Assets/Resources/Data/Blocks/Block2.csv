@@ -1,2 +1,2 @@
-ID,Width,Height,Tiles,Grids,Ports,TagPos
-0,2,2,(0.0);(0.1);(1.0);(1.1),(0.0);(0.2);(2.0);(2.2),a;b;b;a,0;0
+ID,Shape,Grids,Ports
+0,7,(0.0);(0.2);(2.0);(2.2),a;b;b;a
