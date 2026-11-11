@@ -13,7 +13,7 @@ public static class Utils
     public const int DENOMINATOR = 100;
     public const int TILE_SPACING = 100;
     public const int GRID_TEXT_SPACING = 30;
-    public const int PORT_OFFSET = 20;
+    public const float PORT_OFFSET = 0.1875f;
     public const int PORT_SIZE = 10;
     public const string RED = "#F25A7B";
     public const string CHAT_RED = "#FFD0D0";
