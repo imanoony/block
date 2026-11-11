@@ -8,6 +8,7 @@ public class BlockPlacer : MonoBehaviour
     [SerializeField] private GameObject blockPrefab;
     [SerializeField] private GameObject blockParent;
     [SerializeField] private GameObject placedBlockRoot;
+    [SerializeField] private GameObject blockPortPrefab;
     [SerializeField] private Sprite[] blockSprites;
     [SerializeField] private Sprite[] sblockSprites;
     [SerializeField] private Sprite[] blockGhostSprites;
@@ -143,12 +144,40 @@ public class BlockPlacer : MonoBehaviour
         else
             blockTag.Initialize(TagType.Null, null, new(0, 0));
         
-        Sprite sprite = hasSpike ? sblockSprites[id] : blockSprites[id];
-        Sprite ghostSprite = blockGhostSprites[id];
-        Sprite fixedShadowSprite = blockFixedShadowSprites[id];
+        Sprite sprite = blockShapeSprites[blockData.ShapeID];
+        Sprite ghostSprite = blockShapeGhostSprites[blockData.ShapeID];
+        Sprite fixedShadowSprite = blockShapeFixedShadowSprites[blockData.ShapeID];
+
+        blockData.Instantiate();
+
+        List<BlockPort> blockPorts = new();
+        BlockPort blockPort;
+        GameObject blockPortInstance;
+        int portTick;
+        for (int i = 0; i < blockData.Ports.Count; i++)
+        {
+            blockPortInstance = Instantiate(blockPortPrefab, instance.transform.GetChild(0));
+            blockPort = blockPortInstance.GetComponent<BlockPort>();
+
+            if (chapter == 2) portTick = blockData.Ticks[i];
+            else portTick = -1;
+
+            blockPort.Initialize(
+                grid: blockData.Grids[i],
+                port: blockData.Ports[i],
+                blockTiles: blockData.Tiles,
+                blockWidth: blockData.Width,
+                blockHeight: blockData.Height,
+                tick: portTick
+            );
+
+            blockPorts.Add(blockPort);
+        }
+
         blockInstance.Initialize(
             blockData,
             blockTag: blockTag,
+            blockPorts: blockPorts,
             sprite,
             pos,
             ghostSprite,
@@ -160,8 +189,6 @@ public class BlockPlacer : MonoBehaviour
             canFlipY,
             hasSpike
         );
-        
-        
 
         return instance;
     }

@@ -32,6 +32,7 @@ public class BlockData
     {
         ID = blockData.ID;
         Chapter = blockData.Chapter;
+        ShapeID = blockData.ShapeID;
         _width = blockData._width;
         _height = blockData._height;
         _tiles = new(blockData._tiles);
