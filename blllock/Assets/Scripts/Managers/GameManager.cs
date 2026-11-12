@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(1, 13);
+        StartModule(2, 0);
     }
 
     void Update()
@@ -142,6 +142,8 @@ public class GameManager : MonoBehaviour
         if (CurrentModule.Stages[0] != stage.ID) UI.MenuPrevAppear();
         else UI.MenuPrevDisappear();
 
+        if (CurrentModule.Chapter == 2) Time.SetLoopLength(stage.Tick);
+
         //UI.ResetAppear();
         //UI.QuitToBack();
         //UI.SetStageText(stage.Desc);
@@ -186,6 +188,8 @@ public class GameManager : MonoBehaviour
                 Grid.BlockPlacer.BlockHoverCheck();
 
                 UI.MenuEnable();
+
+                Time.StartTick();
             }
         ));
     }
@@ -271,8 +275,10 @@ public class GameManager : MonoBehaviour
     {
         State = GameState.Paused;
         Grid.RemoveCurrentStage();
+        Time.StopTick();
         Grid.InitStage(CurrentStage, CurrentModule.Chapter);
         State = GameState.InGame;
+        Time.StartTick();
 
         if (gt != null) gt.ResetGridIdleTime();
     }
@@ -295,6 +301,8 @@ public class GameManager : MonoBehaviour
                 UI.StageNextDisappear();
 
                 UI.WorldMapAppear(CurrentModule.Chapter, CurrentModule.ID);
+
+                Time.StopTick();
             }
         );
 
@@ -356,6 +364,7 @@ public class GameManager : MonoBehaviour
                 State = GameState.Paused;
                 UI.MenuDisappear();
                 UI.ClearPanelDisappear();
+                Time.StopTick();
                 int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
                 if (CurrentModule.Stages.Count > index + 1) StartStage(CurrentModule.Stages[index + 1]);
                 else BackGame();
@@ -377,6 +386,7 @@ public class GameManager : MonoBehaviour
                 State = GameState.Paused;
                 UI.MenuDisappear();
                 UI.ClearPanelDisappear();
+                Time.StopTick();
                 int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
                 StartStage(CurrentModule.Stages[index - 1]);
             }
@@ -395,6 +405,8 @@ public class GameManager : MonoBehaviour
 
         CurrentModule = module;
         LastStageID = module.Stages[^1];
+
+        Grid.TilePlacer.RemoveBackground();
 
         Audio.SoftUnmute();
 

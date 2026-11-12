@@ -1,0 +1,66 @@
+{
+    "Stages": [
+        {
+            "ID": 50001,
+            "BgWidth": 13,
+            "BgHeight": 8,
+            "Circuits": [
+                {
+                    "width": 5,
+                    "height": 4,
+                    "pos": {
+                        "x": 2,
+                        "y": 4
+                    }
+                }
+            ],
+            "Inputs": [
+                {
+                    "pos": {
+                        "x": 5,
+                        "y": 5
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Outputs": [
+                {
+                    "pos": {
+                        "x": 3,
+                        "y": 6
+                    },
+                    "expr": "X"
+                },
+                {
+                    "pos": {
+                        "x": 6,
+                        "y": 7
+                    },
+                    "expr": "X"
+                }
+            ],
+            "Desc": "",
+            "TutorialID": -1,
+            "Tick": 2,
+            "Blocks": [
+                0
+            ],
+            "BlockPositions": [
+                {
+                    "x": 3,
+                    "y": 1
+                }
+            ],
+            "RotateCWIndex": [],
+            "RotateCCWIndex": [],
+            "FlipXIndex": [],
+            "FlipYIndex": [],
+            "SIndex": [],
+            "HBarriers": [],
+            "VBarriers": [],
+            "TileBarriers": [],
+            "FixedBlocks": [],
+            "ToolCounts": []
+        }
+    ]
+}

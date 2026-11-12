@@ -43,6 +43,9 @@ public class BlockData
         BlockFlipX = false;
         HasSpike = false;
         IsFixed = false;
+
+        // chapter 2 only
+        if (blockData.Ticks != null) Ticks = blockData.Ticks;
     }
 
     #region ID & Shape

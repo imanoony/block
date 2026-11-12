@@ -100,3 +100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c8d73b6efa2da24a952e2c8337da8e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inactiveScale: 0.7
+  inactiveAlpha: 0.5
+  portCoDuration: 0.1

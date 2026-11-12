@@ -138,6 +138,7 @@ public class StageData
     public bool IsCleared { get; private set; } = false;
     public void SetCleared(bool cleared) => IsCleared = cleared;
     public int TutorialID = -1; // 튜토리얼 스테이지인 경우, 해당 튜토리얼 ID (튜토리얼이 아닌 경우 -1)
+    public int Tick = -1;
 
     /// <summary>
     /// Blocks
@@ -186,6 +187,7 @@ public class StageData
             ).ToList(),
             Desc = raw.Desc,
             TutorialID = raw.TutorialID,
+            Tick = raw.Tick,
             Inputs = raw.Inputs.Select(
                 io => (
                     io.pos.ToVector2Int(),
@@ -249,6 +251,7 @@ public class StageData
             ).ToList(),
             Desc = stage.Desc,
             TutorialID = stage.TutorialID,
+            Tick = stage.Tick,
             Blocks = stage.Blocks,
             BlockPositions = stage.BlockPositions.Select(
                 pos => new RawPos { x = pos.x, y = pos.y }
@@ -296,6 +299,7 @@ public class StageData
         public List<RawIO> Inputs = new(), Outputs = new();
         public string Desc;
         public int TutorialID = -1;
+        public int Tick = -1;
         public List<int> Blocks = new();
         public List<RawPos> BlockPositions = new();
         public List<int> RotateCWIndex = new(), RotateCCWIndex = new();
