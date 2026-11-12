@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using System.Collections;
 
 public class BlockPort: MonoBehaviour
 {
@@ -7,6 +10,16 @@ public class BlockPort: MonoBehaviour
     private MaterialPropertyBlock mpb;
 
     private const string PortExpr = "_PortExpr";
+
+    [SerializeField] private float inactiveScale = 0.5f;
+    [SerializeField] private float inactiveAlpha = 0.2f;
+    [SerializeField] private float portCoDuration = 0.1f;
+    private const float activeScale = 1f;
+    private const float activeAlpha = 1f;
+
+    private int portTick = -1;
+
+    private bool initialized = false;
     public void Initialize(
         Vector2Int grid,
         PortExpr port,
@@ -16,6 +29,8 @@ public class BlockPort: MonoBehaviour
         int tick = -1
     )
     {
+        if (initialized) return;
+
         Vector2 gridPos = GetGridPosition(grid, blockWidth, blockHeight);
         float xoffset = GetOffsetX(grid, blockTiles);
         float yoffset = GetOffsetY(grid, blockTiles);
@@ -28,6 +43,24 @@ public class BlockPort: MonoBehaviour
         Vector4 v = Port2Vector4(port);
         mpb.SetVector(PortExpr, v);
         sr.SetPropertyBlock(mpb);
+
+        portTick = tick;
+        if (portTick != -1 && portTick != 0)
+        {
+            gameObject.transform.localScale = new(inactiveScale, inactiveScale);
+            sr.color = new(sr.color.r, sr.color.g, sr.color.b, inactiveAlpha);
+        }
+        if (portTick != -1)
+        {
+            GameManager.Instance.Time.OnTick += PortUpdateTickHandler;
+        }
+
+        initialized = true;
+    }
+
+    void OnDestroy()
+    {
+        GameManager.Instance.Time.OnTick -= PortUpdateTickHandler;
     }
 
     public void SetBlockSortingOrder(int sortingOrder)
@@ -119,4 +152,55 @@ public class BlockPort: MonoBehaviour
         }
         else return new(0, 0, 0, 0);
     }
+
+    #region Transition
+    private void PortUpdateTickHandler(int tick)
+    {
+        if (currentPortCo != null)
+        {
+            StopCoroutine(currentPortCo);
+            currentPortCo = null;
+        }
+
+        currentPortTween?.Kill();
+        currentPortTween = null;
+
+        bool goActive = tick == portTick;
+        currentPortCo = StartCoroutine(PortCo(goActive, portCoDuration));
+    }
+
+    private Coroutine currentPortCo = null;
+    private Sequence currentPortTween = null;
+    private IEnumerator PortCo(
+        bool goActive,
+        float duration,
+        Action onComplete = null
+    )
+    {
+        float targetScale, targetAlpha;
+
+        if (goActive)
+        {
+            targetScale = activeScale;
+            targetAlpha = activeAlpha;
+        }
+        else
+        {
+            targetScale = inactiveScale;
+            targetAlpha = inactiveAlpha;
+        }
+
+        currentPortTween = DOTween.Sequence();
+        currentPortTween.Join(transform.DOScale(targetScale, duration));
+        currentPortTween.Join(sr.DOFade(targetAlpha, duration));
+
+        yield return currentPortTween.WaitForCompletion();
+
+        currentPortTween = null;
+        currentPortCo = null;
+        onComplete?.Invoke();
+        yield break;
+    }
+
+    #endregion
 }
