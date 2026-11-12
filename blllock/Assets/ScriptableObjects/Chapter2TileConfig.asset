@@ -46,3 +46,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6766b1adb546a1144883d718c5aacaf1, type: 2}
   bgResourceWidth: 3
   bgResourceHeight: 3
+  circuitResourceWidth: 3
+  circuitResourceHeight: 7

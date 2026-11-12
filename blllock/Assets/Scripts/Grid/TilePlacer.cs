@@ -1,36 +1,52 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using DG.Tweening;
 using System.Collections;
+using System.Linq;
 
 // Tilemap-based
 public class TilePlacer : MonoBehaviour
 {   
+    [Header("Tile Configs for Chapters")]
+    [SerializeField] private TileConfig chapter1TileConfig;
+    [SerializeField] private TileConfig chapter2TileConfig;
+    [SerializeField] private TileConfig chapter3TileConfig;
+    [SerializeField] private TileConfig chapter4TileConfig;
+
     #region Background Placement
     [Header("Background")]
     [SerializeField] private Tilemap bgTilemap;
-    [SerializeField] private List<TileBase> bgTiles;
-
-    // seamless layout이 10(width) * 6(height)으로 구성되어 있으므로.
-    private const int TileGridWidth = 10;
-    private const int TileGridHeight = 6;
 
     private int bgWidth = -1, bgHeight = -1;
     private int bgOffset = 4;
     private int placedBgMinX, placedBgMaxX;
     private int placedBgMinY, placedBgMaxY;
+    private TileBase[] bgTiles;
+    private int bgResourceWidth, bgResourceHeight;
     private bool hasBackground = false;
-    public void PlaceBackground(int width, int height)
+    public void PlaceBackground(
+        int width, 
+        int height,
+        int chapter
+    )
     {
-        if (bgTiles.Count != TileGridWidth * TileGridHeight)
-        {
-            Utils.PrintError("Invalid background tile count");
-            return;
-        }
+        TileConfig config = chapter == 1 ? chapter1TileConfig :
+                            chapter == 2 ? chapter2TileConfig :
+                            chapter == 3 ? chapter3TileConfig :
+                            chapter == 4 ? chapter4TileConfig :
+                            throw new Exception("PlaceBackground: invalid chapter");
+
+        if (config.bgTiles.Length != config.bgResourceWidth * config.bgResourceHeight)
+            throw new Exception("PlaceBackground: invalid bg config setting");                    
 
         bgWidth = width;
         bgHeight = height;
+
+        bgTiles = config.bgTiles;
+        bgResourceWidth = config.bgResourceWidth;
+        bgResourceHeight = config.bgResourceHeight;
 
         // 카메라 위치 고려해서 수정해야 함
         int minX = -bgOffset;
@@ -115,12 +131,12 @@ public class TilePlacer : MonoBehaviour
 
         for (int y = minY; y <= maxY; y++)
         {
-            tileY = ((y % TileGridHeight) + TileGridHeight) % TileGridHeight;
+            tileY = ((y % bgResourceHeight) + bgResourceHeight) % bgResourceHeight;
             for (int x = minX; x <= maxX; x++)
             {
-                tileX = ((x % TileGridWidth) + TileGridWidth) % TileGridWidth;
+                tileX = ((x % bgResourceWidth) + bgResourceWidth) % bgResourceWidth;
 
-                index = tileY * TileGridWidth + tileX;
+                index = tileY * bgResourceWidth + tileX;
                 tile = bgTiles[index];
                 Vector3Int pos = new(x, y, 0);
                 bgTilemap.SetTile(pos, tile);
@@ -141,17 +157,7 @@ public class TilePlacer : MonoBehaviour
 
     #region Circuit Placement
     [Header("Circuit")]
-    
     [SerializeField] private Tilemap circuitTilemap;
-    [SerializeField] private TileBase circuitCenter;
-    [SerializeField] private TileBase circuitLeft;
-    [SerializeField] private TileBase circuitRight;
-    [SerializeField] private TileBase circuitTop;
-    [SerializeField] private TileBase circuitTopLeft;
-    [SerializeField] private TileBase circuitTopRight;
-    [SerializeField] private TileBase circuitBotton;
-    [SerializeField] private TileBase circuitBottomLeft;
-    [SerializeField] private TileBase circuitBottomRight;
     private Tilemap circuitShadow = null;
     public void RemoveCircuits()
     {
@@ -159,44 +165,80 @@ public class TilePlacer : MonoBehaviour
         if (circuitShadow != null) circuitShadow.ClearAllTiles();
     }
     public void PlaceCircuits(
-        List<(Vector2Int, int, int)> circuits
+        List<(Vector2Int, int, int)> circuits,
+        int chapter
     )
     {
-        if (circuitTilemap == null || circuitCenter == null) 
-        { 
-            Utils.PrintError("Invalid tilemap or tiles"); 
-            return; 
-        }
+        TileConfig config = chapter == 1 ? chapter1TileConfig :
+                            chapter == 2 ? chapter2TileConfig :
+                            chapter == 3 ? chapter3TileConfig :
+                            chapter == 4 ? chapter4TileConfig :
+                            throw new Exception("PlaceCircuits: invalid chapter");
 
         circuitTilemap.gameObject.transform.position = Vector3.zero;
 
         for (int i = 0; i < circuits.Count; i++)
         {
             (Vector2Int start, int width, int height) = circuits[i];
-            PlaceCircuit(start.x, start.y, width, height);
-            PlaceCircuitBoundary(start.x, start.y, width, height);
+            PlaceCircuit(start.x, start.y, width, height, chapter, config);
+            PlaceCircuitBoundary(start.x, start.y, width, height, chapter, config);
         }
     }
     private void PlaceCircuit(
         int startX,
         int startY,
         int width,
-        int height
-    )
+        int height,
+        int chapter,
+        TileConfig config
+    ) // 일단은 하드하게 (임시)
     {
-        if (circuitTilemap == null || circuitCenter == null) 
-        { 
-            Utils.PrintError("Invalid tilemap or tiles"); 
-            return; 
-        }
+        if (circuitTilemap == null)
+            throw new Exception("PlaceCircuit: circuit tilemap is null");
+
+        if (config.circuitTiles.Length != config.circuitResourceHeight * config.circuitResourceWidth)
+            throw new Exception("PlaceCircuit: invalid circuit config setting");
 
         circuitTilemap.gameObject.transform.position = Vector3.zero;
 
-        for (int x = startX; x < startX + height; x++)
+        for (int x = 0; x < height; x++)
         {
-            for (int y = startY; y < startY + width; y++)
+            for (int y = 0; y < width; y++)
             {
-                circuitTilemap.SetTile(TileToCell(x, y), circuitCenter);
+                int index = 0;
+                if (chapter == 1)
+                {
+                    index = 4;
+                }
+                else if (chapter == 2)
+                {
+                    if (x < height / 2)
+                    {
+                        if (x == 0) index = 4;
+                        else if (x == height / 2 - 1) index = 10;
+                        else index = 7;
+                    }
+                    else
+                    {
+                        if (x == height - 1) index = 16;
+                        else if (x == height / 2) index = 13;
+                        else index = 7;
+                    }
+                }
+                else if (chapter == 3)
+                {
+                    // TODO (later)
+                }
+                else if (chapter == 4)
+                {
+                    // TODO (later)
+                }
+                else throw new Exception("PlaceCircuit: invalid chapter");
+
+                circuitTilemap.SetTile(
+                    TileToCell(x + startX, y + startY), 
+                    config.circuitTiles[index]
+                );
             }
         }
     }
@@ -204,38 +246,96 @@ public class TilePlacer : MonoBehaviour
         int startX,
         int startY,
         int width,
-        int height
-    )
+        int height,
+        int chapter,
+        TileConfig config
+    ) // 얘도 일단은 하드하게
     {
-        if (circuitTilemap == null || circuitCenter == null) 
-        { 
-            Utils.PrintError("Invalid tilemap or tiles"); 
-            return; 
-        }
+        if (circuitTilemap == null)
+            throw new Exception("PlaceCircuitBoundary: circuit tilemap is null");
+
+        if (config.circuitTiles.Length != config.circuitResourceHeight * config.circuitResourceWidth)
+            throw new Exception("PlaceCircuitBoundary: invalid circuit config setting");
+
         if (circuitShadow == null)
         {
             circuitShadow = circuitTilemap.gameObject.transform.GetChild(0).GetComponent<Tilemap>();
         }
 
-        for (int x = startX; x < startX + height; x++)
+        for (int x = 0; x < height; x++)
         {
-            circuitTilemap.SetTile(TileToCell(x, startY - 1), circuitLeft);
-            circuitTilemap.SetTile(TileToCell(x, startY + width), circuitRight);
-            circuitShadow.SetTile(TileToCell(x, startY - 1), circuitLeft);
+            int leftIndex = 0, rightIndex = 0;
+            if (chapter == 1)
+            {
+                leftIndex = 3;
+                rightIndex = 5;
+            }
+            else if (chapter == 2)
+            {
+                if (x < height / 2)
+                {
+                    if (x == 0) { leftIndex = 3; rightIndex = 5; }
+                    else if (x == height / 2 - 1) { leftIndex = 9; rightIndex = 11; }
+                    else { leftIndex = 6; rightIndex = 8; }
+                }
+                else
+                {
+                    if (x == height - 1) { leftIndex = 15; rightIndex = 17; }
+                    else if (x == height / 2) { leftIndex = 12; rightIndex = 14; }
+                    else { leftIndex = 6; rightIndex = 8; }
+                }
+            }
+            else if (chapter == 3)
+            {
+                // TODO (later)
+            }
+            else if (chapter == 4)
+            {
+                // TODO (later)
+            }
+            else throw new Exception("PlaceCircuitBoundary: invalid chapter");
+
+            circuitTilemap.SetTile(
+                TileToCell(x + startX, startY - 1), 
+                config.circuitTiles[leftIndex]
+            );
+            circuitTilemap.SetTile(
+                TileToCell(x + startX, startY + width),
+                config.circuitTiles[rightIndex]
+            );
+            circuitShadow.SetTile(
+                TileToCell(x + startX, startY - 1),
+                config.circuitTiles[leftIndex]
+            );
         }
         for (int y = startY; y < startY + width; y++)
         {
-            circuitTilemap.SetTile(TileToCell(startX - 1, y), circuitTop);
-            circuitTilemap.SetTile(TileToCell(startX + height, y), circuitBotton);
-            circuitShadow.SetTile(TileToCell(startX + height, y), circuitBotton);
+            int topIndex = 0, bottomIndex = 0;
+            if (chapter == 1) { topIndex = 1; bottomIndex = 7; }
+            else if (chapter == 2) { topIndex = 1; bottomIndex = 19; }
+            else if (chapter == 3) {}
+            else if (chapter == 4) {}
+            else throw new Exception("PlaceCircuitBoundary: invalid chapter");
+
+            circuitTilemap.SetTile(TileToCell(startX - 1, y), config.circuitTiles[topIndex]);
+            circuitTilemap.SetTile(TileToCell(startX + height, y), config.circuitTiles[bottomIndex]);
+            circuitShadow.SetTile(TileToCell(startX + height, y), config.circuitTiles[bottomIndex]);
         }
-        circuitTilemap.SetTile(TileToCell(startX - 1, startY - 1), circuitTopLeft);
-        circuitTilemap.SetTile(TileToCell(startX - 1, startY + width), circuitTopRight);
-        circuitTilemap.SetTile(TileToCell(startX + height, startY - 1), circuitBottomLeft);
-        circuitTilemap.SetTile(TileToCell(startX + height, startY + width), circuitBottomRight);
-        circuitShadow.SetTile(TileToCell(startX - 1, startY - 1), circuitTopLeft);
-        circuitShadow.SetTile(TileToCell(startX + height, startY - 1), circuitBottomLeft);
-        circuitShadow.SetTile(TileToCell(startX + height, startY + width), circuitBottomRight);
+
+        int topLeftIndex = 0, topRightIndex = 0, bottomLeftIndex = 0, bottomRightIndex = 0;
+        if (chapter == 1) { topLeftIndex = 0; topRightIndex = 2; bottomLeftIndex = 6; bottomRightIndex = 8; }
+        else if (chapter == 2) { topLeftIndex = 0; topRightIndex = 2; bottomLeftIndex = 18; bottomRightIndex = 20; }
+        else if (chapter == 3) {}
+        else if (chapter == 4) {}
+        else throw new Exception("PlaceCircuitBoundary: invalid chapter");
+
+        circuitTilemap.SetTile(TileToCell(startX - 1, startY - 1), config.circuitTiles[topLeftIndex]);
+        circuitTilemap.SetTile(TileToCell(startX - 1, startY + width), config.circuitTiles[topRightIndex]);
+        circuitTilemap.SetTile(TileToCell(startX + height, startY - 1), config.circuitTiles[bottomLeftIndex]);
+        circuitTilemap.SetTile(TileToCell(startX + height, startY + width), config.circuitTiles[bottomRightIndex]);
+        circuitShadow.SetTile(TileToCell(startX - 1, startY - 1), config.circuitTiles[topLeftIndex]);
+        circuitShadow.SetTile(TileToCell(startX + height, startY - 1), config.circuitTiles[bottomLeftIndex]);
+        circuitShadow.SetTile(TileToCell(startX + height, startY + width), config.circuitTiles[bottomRightIndex]);
     }
     #endregion
 
@@ -442,7 +542,7 @@ public class TilePlacer : MonoBehaviour
         {
             GameObject barrier = Instantiate(tileBarrierPrefab, barrierParent.transform);
             SpriteRenderer barrierSr = barrier.GetComponent<SpriteRenderer>();
-            Sprite barrierSprite = tileBarrierSprites[Random.Range(0, spriteCount)];
+            Sprite barrierSprite = tileBarrierSprites[UnityEngine.Random.Range(0, spriteCount)];
             Vector2 center = (Vector2)GetTileCenterWorld(pos.x, pos.y);
 
             barrierSr.sprite = barrierSprite;

@@ -248,8 +248,8 @@ public class GridManager : MonoBehaviour
 
         // 스테이지에 해당하는 타일 배치
         // 스테이지에 해당하는 블록 배치
-        TilePlacer.PlaceBackground(bgWidth, bgHeight);
-        TilePlacer.PlaceCircuits(stage.Circuits);
+        TilePlacer.PlaceBackground(bgWidth, bgHeight, chapter);
+        TilePlacer.PlaceCircuits(stage.Circuits, chapter);
         TilePlacer.PlaceCamera();
         TilePlacer.PlaceGrids(Grids);
         TilePlacer.PlaceTileBoundary();

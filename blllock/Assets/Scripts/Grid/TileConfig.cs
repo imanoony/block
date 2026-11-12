@@ -12,4 +12,7 @@ public class TileConfig : ScriptableObject
 
     public int bgResourceWidth;
     public int bgResourceHeight;
+
+    public int circuitResourceWidth;
+    public int circuitResourceHeight;
 }
