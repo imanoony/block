@@ -117,7 +117,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -139,7 +139,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 400
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -161,7 +161,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 800
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -183,7 +183,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1200
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -205,7 +205,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1600
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -227,7 +227,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2000
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -249,7 +249,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2400
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -271,7 +271,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2800
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -293,7 +293,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3200
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -315,7 +315,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3600
-        y: 2000
+        y: 2800
         width: 400
         height: 400
       alignment: 0
@@ -337,7 +337,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -359,7 +359,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 400
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -381,7 +381,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 800
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -403,7 +403,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1200
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -425,7 +425,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1600
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -447,7 +447,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2000
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -469,7 +469,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2400
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -491,7 +491,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2800
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -513,7 +513,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3200
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -535,7 +535,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3600
-        y: 1600
+        y: 2400
         width: 400
         height: 400
       alignment: 0
@@ -557,7 +557,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -579,7 +579,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 400
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -601,7 +601,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 800
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -623,7 +623,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1200
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -645,7 +645,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1600
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -667,7 +667,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2000
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -689,7 +689,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2400
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -711,7 +711,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2800
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -733,7 +733,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3200
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -755,7 +755,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3600
-        y: 1200
+        y: 2000
         width: 400
         height: 400
       alignment: 0
@@ -777,7 +777,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -799,7 +799,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 400
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -821,7 +821,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 800
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -843,7 +843,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1200
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -865,7 +865,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1600
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -887,7 +887,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2000
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -909,7 +909,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2400
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -931,7 +931,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2800
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -953,7 +953,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3200
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -975,7 +975,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3600
-        y: 800
+        y: 1600
         width: 400
         height: 400
       alignment: 0
@@ -997,7 +997,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1019,7 +1019,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 400
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1041,7 +1041,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 800
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1063,7 +1063,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1200
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1085,7 +1085,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1600
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1107,7 +1107,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2000
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1129,7 +1129,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2400
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1151,7 +1151,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2800
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1173,7 +1173,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3200
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1195,7 +1195,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3600
-        y: 400
+        y: 1200
         width: 400
         height: 400
       alignment: 0
@@ -1217,7 +1217,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1239,7 +1239,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 400
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1261,7 +1261,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 800
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1283,7 +1283,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1200
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1305,7 +1305,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1600
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1327,7 +1327,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2000
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1349,7 +1349,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2400
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1371,7 +1371,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2800
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1393,7 +1393,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3200
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1415,7 +1415,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3600
-        y: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -1428,6 +1428,446 @@ TextureImporter:
       bones: []
       spriteID: 3e736c348b8cfd94d830c303aa7ab524
       internalID: 397886732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb10155632a970f44bf9e56a2d4fa737
+      internalID: 102456262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_61
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6725f4f7c4cb602498343a946fffb3cd
+      internalID: 2022706641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_62
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28f5bbde5e1a9bf4ba56ccf23cfcde2b
+      internalID: 1329672123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_63
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9d09ee350b932f4092fb1cafbad8262
+      internalID: 64831104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_64
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae0710bb5ddc39445b859c3851e977a0
+      internalID: 753262579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_65
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf08841df0d336947838aaae2f595cb9
+      internalID: 1630020754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_66
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 274c5783992bb77478f358bfdb199a3c
+      internalID: 484402893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_67
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b41ec316287490d4b9e3a8023729a246
+      internalID: -1416244295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_68
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 685dd92d0144631488747b83eab02ac7
+      internalID: 994239960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_69
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 833caf71682211543a6c301b4b73a1e3
+      internalID: -869261035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_70
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07afd1e111bb4b446b84bb15398bd2fb
+      internalID: 1556091468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_71
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4aa219a367fd0d49a961e929b812b37
+      internalID: 2086781837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_72
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9d22c87b1dd0e44b8fe97f5bea19c0e
+      internalID: 239734123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_73
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea8b6e65368453c4c82f0dea02af1126
+      internalID: -217239623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_74
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bffa6c871b7c15648ae9ac2bd59e4ca0
+      internalID: -179909797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_75
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f28947d474e923459dee1df125f826f
+      internalID: 1808299393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_76
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 950db93b699e7774f89c289b2c652584
+      internalID: 856246234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_77
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77f181fbbf8694e4d91479dc5a0e7f94
+      internalID: -241396116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_78
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 750d714d644efe74a8e8f98823346eda
+      internalID: -1413192363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nemocuit-circuit2_79
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e912e61e23172044eb669689f4008e1b
+      internalID: -1430350563
       vertices: []
       indices: 
       edges: []
@@ -1446,7 +1886,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":10.0,"y":6.0},"gridSpriteSize":{"x":400.0,"y":400.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":400.0,"y":400.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       nemocuit-circuit2_0: -1536317938583696572
       nemocuit-circuit2_1: 287079578
@@ -1505,7 +1945,27 @@ TextureImporter:
       nemocuit-circuit2_58: 1371155348
       nemocuit-circuit2_59: 397886732
       nemocuit-circuit2_6: 1358138948
+      nemocuit-circuit2_60: 102456262
+      nemocuit-circuit2_61: 2022706641
+      nemocuit-circuit2_62: 1329672123
+      nemocuit-circuit2_63: 64831104
+      nemocuit-circuit2_64: 753262579
+      nemocuit-circuit2_65: 1630020754
+      nemocuit-circuit2_66: 484402893
+      nemocuit-circuit2_67: -1416244295
+      nemocuit-circuit2_68: 994239960
+      nemocuit-circuit2_69: -869261035
       nemocuit-circuit2_7: 76385439
+      nemocuit-circuit2_70: 1556091468
+      nemocuit-circuit2_71: 2086781837
+      nemocuit-circuit2_72: 239734123
+      nemocuit-circuit2_73: -217239623
+      nemocuit-circuit2_74: -179909797
+      nemocuit-circuit2_75: 1808299393
+      nemocuit-circuit2_76: 856246234
+      nemocuit-circuit2_77: -241396116
+      nemocuit-circuit2_78: -1413192363
+      nemocuit-circuit2_79: -1430350563
       nemocuit-circuit2_8: -2111134013
       nemocuit-circuit2_9: 384993808
   mipmapLimitGroupName: 
