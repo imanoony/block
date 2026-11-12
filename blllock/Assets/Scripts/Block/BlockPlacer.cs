@@ -9,10 +9,6 @@ public class BlockPlacer : MonoBehaviour
     [SerializeField] private GameObject blockParent;
     [SerializeField] private GameObject placedBlockRoot;
     [SerializeField] private GameObject blockPortPrefab;
-    [SerializeField] private Sprite[] blockSprites;
-    [SerializeField] private Sprite[] sblockSprites;
-    [SerializeField] private Sprite[] blockGhostSprites;
-    [SerializeField] private Sprite[] blockFixedShadowSprites;
     
     [Tooltip("block sprites whose index is shape id")]
     [SerializeField] private Sprite[] blockShapeSprites;
@@ -23,7 +19,6 @@ public class BlockPlacer : MonoBehaviour
     [Tooltip("block fixed shadow sprites whose index is shape id")]
     [SerializeField] private Sprite[] blockShapeFixedShadowSprites;
     
-    public Sprite[] BlockSprites => blockSprites;
 
     // 우선은 하드하게 넣어두지만 이후 수정 예정
     // 0: RotateCW
