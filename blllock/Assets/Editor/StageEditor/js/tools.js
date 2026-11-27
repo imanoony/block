@@ -27,6 +27,30 @@ const hitBlock = (c) => {
   return -1;
 };
 
+const hitFixedBlock = (c) => {
+  const fixedBlocks = State.stage.FixedBlocks || [];
+  for (let i = fixedBlocks.length - 1; i >= 0; i--) {
+    const fixed = fixedBlocks[i];
+    const id = Number(fixed.id ?? fixed.ID);
+    const pos = fixed.pos;
+    const block = BLOCK_DATA[id];
+
+    if (
+      block &&
+      pos &&
+      block.t.some(
+        ([row, col]) =>
+          pos.x + row === c.x &&
+          pos.y + col === c.y,
+      )
+    ) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+
 const toggle = (key, i) => {
   const a = State.stage[key];
   const p = a.indexOf(i);
@@ -140,6 +164,16 @@ export function attachTools(
       return;
     }
 
+    if (t === "fixed-block-paint") {
+      State.stage.FixedBlocks.push({
+        id: State.selectedBlock,
+        pos: c,
+      });
+
+      onCommit();
+      return;
+    }
+
     // -------------------------
     // Input / Output
     // -------------------------
@@ -202,6 +236,20 @@ export function attachTools(
       return;
     }
 
+    if (t === "tilebarrier-paint") {
+      const tileBarriers = State.stage.TileBarriers;
+      if (
+        !tileBarriers.some(
+          (pos) => pos.x === c.x && pos.y === c.y,
+        )
+      ) {
+        tileBarriers.push({ x: c.x, y: c.y });
+      }
+
+      onCommit();
+      return;
+    }
+
     // -------------------------
     // Block transform
     // -------------------------
@@ -229,6 +277,14 @@ export function attachTools(
     // -------------------------
 
     if (t === "eraser") {
+      const fixedIndex = hitFixedBlock(c);
+
+      if (fixedIndex >= 0) {
+        State.stage.FixedBlocks.splice(fixedIndex, 1);
+        onCommit();
+        return;
+      }
+
       const bi = hitBlock(c);
 
       // Block
@@ -256,6 +312,18 @@ export function attachTools(
             );
         }
 
+        onCommit();
+        return;
+      }
+
+      // Tile barrier
+      const tileBarriers = State.stage.TileBarriers || [];
+      const tileBarrierIndex = tileBarriers.findIndex(
+        (v) => v.x === c.x && v.y === c.y,
+      );
+      if (tileBarrierIndex >= 0) {
+        tileBarriers.splice(tileBarrierIndex, 1);
+        State.stage.TileBarriers = tileBarriers;
         onCommit();
         return;
       }

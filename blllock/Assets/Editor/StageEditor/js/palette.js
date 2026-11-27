@@ -12,12 +12,15 @@ import {
 
 export function initPalette(assets, onCommit) {
 	const root = document.getElementById("block-palette");
+	const fixedRoot = document.getElementById("fixed-block-palette");
 
-	BLOCKS.forEach((id) => {
+	const appendBlockButton = (paletteRoot, id, isFixed) => {
 		const b = document.createElement("button");
 
 		b.className = "tool-btn block-item";
 		b.dataset.id = id;
+
+		if (isFixed) b.classList.add("fixed-block-item");
 
 		// Block preview
 		const preview = document.createElement("img");
@@ -26,7 +29,9 @@ export function initPalette(assets, onCommit) {
 		const blockImg = assets.blocks[id];
 
 		if (blockImg?.ok) {
-		preview.src = blockImg.img.src;
+		preview.src = isFixed
+			? createTintedPreview(blockImg.img)
+			: blockImg.img.src;
 		}
 
 		b.appendChild(preview);
@@ -39,13 +44,16 @@ export function initPalette(assets, onCommit) {
 
 		// Select block
 		b.onclick = () => {
-		State.selectedBlock = id;
-		State.setTool("block-paint");
-		updateActiveButton();
+			State.selectedBlock = id;
+			State.setTool(isFixed ? "fixed-block-paint" : "block-paint");
+			updateActiveButton();
 		};
 
-		root.appendChild(b);
-	});
+		paletteRoot.appendChild(b);
+	};
+
+	BLOCKS.forEach((id) => appendBlockButton(root, id, false));
+	BLOCKS.forEach((id) => appendBlockButton(fixedRoot, id, true));
 
 	// Other tools
 	document.querySelectorAll("[data-tool]").forEach((b) => {
@@ -67,13 +75,14 @@ export function initPalette(assets, onCommit) {
 		});
 
 		// Block buttons
-		root
+		document
 		.querySelectorAll(".block-item")
 		.forEach((b) => {
+			const isFixed = b.classList.contains("fixed-block-item");
 			b.classList.toggle(
-			"is-active",
-			State.tool === "block-paint" &&
-				Number(b.dataset.id) === State.selectedBlock,
+				"is-active",
+				State.tool === (isFixed ? "fixed-block-paint" : "block-paint") &&
+					Number(b.dataset.id) === State.selectedBlock,
 			);
 		});
 	}
@@ -81,6 +90,20 @@ export function initPalette(assets, onCommit) {
 	return {
 		updateActiveButton,
 	};
+}
+
+function createTintedPreview(image) {
+	const canvas = document.createElement("canvas");
+	canvas.width = image.naturalWidth || image.width;
+	canvas.height = image.naturalHeight || image.height;
+	const ctx = canvas.getContext("2d");
+	ctx.drawImage(image, 0, 0);
+	ctx.globalCompositeOperation = "multiply";
+	ctx.fillStyle = "#E6E6E6";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.globalCompositeOperation = "destination-in";
+	ctx.drawImage(image, 0, 0);
+	return canvas.toDataURL();
 }
 
 function drawBlockPreview(canvas, block) {

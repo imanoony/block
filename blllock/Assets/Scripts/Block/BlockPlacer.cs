@@ -8,12 +8,17 @@ public class BlockPlacer : MonoBehaviour
     [SerializeField] private GameObject blockPrefab;
     [SerializeField] private GameObject blockParent;
     [SerializeField] private GameObject placedBlockRoot;
-    [SerializeField] private Sprite[] blockSprites;
-    [SerializeField] private Sprite[] sblockSprites;
-    [SerializeField] private Sprite[] blockGhostSprites;
-    [SerializeField] private Sprite[] blockFixedShadowSprites;
+    [SerializeField] private GameObject blockPortPrefab;
+    
+    [Tooltip("block sprites whose index is shape id")]
+    [SerializeField] private Sprite[] blockShapeSprites;
 
-    public Sprite[] BlockSprites => blockSprites;
+    [Tooltip("block ghost sprites whose index is shape id")]
+    [SerializeField] private Sprite[] blockShapeGhostSprites;
+
+    [Tooltip("block fixed shadow sprites whose index is shape id")]
+    [SerializeField] private Sprite[] blockShapeFixedShadowSprites;
+    
 
     // 우선은 하드하게 넣어두지만 이후 수정 예정
     // 0: RotateCW
@@ -46,7 +51,7 @@ public class BlockPlacer : MonoBehaviour
         blockTags = null;
     }
 
-    public void PlaceBlocks(StageData stage)
+    public void PlaceBlocks(StageData stage, int chapter)
     {
         blockInstances = new List<GameObject>();
         blockTags = new List<BlockTag>();
@@ -76,7 +81,7 @@ public class BlockPlacer : MonoBehaviour
             bool fX = flipX.Contains(i);
             bool fY = flipY.Contains(i);
             bool s = spike.Contains(i);
-            GameObject blockInstance = PlaceBlock(blocks[i], blockPositions[i], rCW, rCCW, fX, fY, s, false);
+            GameObject blockInstance = PlaceBlock(chapter, blocks[i], blockPositions[i], rCW, rCCW, fX, fY, s, false);
             blockInstances.Add(blockInstance);
             if (rCW || rCCW || fX || fY)
             {
@@ -89,6 +94,7 @@ public class BlockPlacer : MonoBehaviour
         for (int i = 0; i < fixedBlocks.Count; i++)
         {
             GameObject fixedBlockInstance = PlaceBlock(
+                chapter: chapter,
                 id: fixedBlocks[i].id,
                 pos: fixedBlocks[i].pos,
                 canRotateCW: false,
@@ -103,6 +109,7 @@ public class BlockPlacer : MonoBehaviour
     }
 
     private GameObject PlaceBlock(
+        int chapter,
         int id, 
         Vector2Int pos, 
         bool canRotateCW,
@@ -114,7 +121,7 @@ public class BlockPlacer : MonoBehaviour
     )
     {
         GameObject instance = Instantiate(blockPrefab, blockParent.transform);
-        BlockData blockData = new BlockData(GameManager.Instance.BlockLibrary[id]);
+        BlockData blockData = new BlockData(GameManager.Instance.BlockLibrary[(chapter, id)]);
         BlockInstance blockInstance = instance.GetComponent<BlockInstance>();
         BlockTag blockTag = instance.GetComponentInChildren<BlockTag>();
 
@@ -132,12 +139,40 @@ public class BlockPlacer : MonoBehaviour
         else
             blockTag.Initialize(TagType.Null, null, new(0, 0));
         
-        Sprite sprite = hasSpike ? sblockSprites[id] : blockSprites[id];
-        Sprite ghostSprite = blockGhostSprites[id];
-        Sprite fixedShadowSprite = blockFixedShadowSprites[id];
+        Sprite sprite = blockShapeSprites[blockData.ShapeID];
+        Sprite ghostSprite = blockShapeGhostSprites[blockData.ShapeID];
+        Sprite fixedShadowSprite = blockShapeFixedShadowSprites[blockData.ShapeID];
+
+        blockData.Instantiate();
+
+        List<BlockPort> blockPorts = new();
+        BlockPort blockPort;
+        GameObject blockPortInstance;
+        int portTick;
+        for (int i = 0; i < blockData.Ports.Count; i++)
+        {
+            blockPortInstance = Instantiate(blockPortPrefab, instance.transform.GetChild(0));
+            blockPort = blockPortInstance.GetComponent<BlockPort>();
+
+            if (chapter == 2) portTick = blockData.Ticks[i];
+            else portTick = -1;
+
+            blockPort.Initialize(
+                grid: blockData.Grids[i],
+                port: blockData.Ports[i],
+                blockTiles: blockData.Tiles,
+                blockWidth: blockData.Width,
+                blockHeight: blockData.Height,
+                tick: portTick
+            );
+
+            blockPorts.Add(blockPort);
+        }
+
         blockInstance.Initialize(
             blockData,
             blockTag: blockTag,
+            blockPorts: blockPorts,
             sprite,
             pos,
             ghostSprite,
@@ -149,8 +184,6 @@ public class BlockPlacer : MonoBehaviour
             canFlipY,
             hasSpike
         );
-        
-        
 
         return instance;
     }

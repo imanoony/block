@@ -58,6 +58,7 @@ Material:
     - _MaskIndex: 0
     m_Colors:
     - _CombExpr: {r: 0, g: 0, b: 0, a: 0}
+    - _Resisted: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &6442447657339685165

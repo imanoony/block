@@ -8,6 +8,7 @@ public class BlockInstance : MonoBehaviour
 {
     private BlockData blockData;
     private BlockTag blockTag;
+    private List<BlockPort> blockPorts;
     [SerializeField] private GameObject tagShadow;
     private bool isDragging = false;
     private int isTweening = 0;
@@ -36,6 +37,7 @@ public class BlockInstance : MonoBehaviour
     public void Initialize(
         BlockData blockData, 
         BlockTag blockTag,
+        List<BlockPort> blockPorts,
         Sprite sprite, 
         Vector2Int initPos,
         Sprite ghostSprite,
@@ -51,10 +53,10 @@ public class BlockInstance : MonoBehaviour
         if (blockData == null) { Utils.PrintError("BlockData는 Null일 수 없음."); return; }
         this.blockData = blockData;
         this.blockTag = blockTag;
+        this.blockPorts = blockPorts;
         this.placedRoot = placedRoot;
         this.unplacedRoot = gameObject.transform.parent;
 
-        this.blockData.Instantiate();
         CanRotateCW = canRotateCW;
         CanRotateCCW = canRotateCCW;
         CanFlipX = canFlipX;
@@ -379,6 +381,13 @@ public class BlockInstance : MonoBehaviour
         sr.sortingOrder = sortingOrder;
         shadowSr.sortingOrder = sr.sortingOrder - 1;
         blockTag.SetBlockSortingOrder(sr.sortingOrder);
+
+        if (blockPorts != null)
+        {
+            for (int i = 0; i < blockPorts.Count; i++) 
+                blockPorts[i].SetBlockSortingOrder(sr.sortingOrder);
+        }
+        
     }
     #endregion
 

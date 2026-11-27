@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,9 +12,12 @@ public class ModuleData
 {
     public int ID { get; private set; }
     public void SetID(int id) => ID = id;
+    public int Chapter { get; private set; }
+    public void SetChapter(int chapter) => Chapter = chapter;
+
     public string Desc;
-    public List<int> Conditions { get; private set; } = new();
-    public void SetConditions(List<int> conditions) { Conditions = conditions; }
+    public List<(int, int)> Conditions { get; private set; } = new(); // (chapter, id)
+    public void SetConditions(List<(int, int)> conditions) { Conditions = conditions; }
     public List<int> Stages { get; private set; } = new(); // Stage ID list
 
     // 클리어 하지 못한 최소 스테이지 인덱스
@@ -134,6 +138,7 @@ public class StageData
     public bool IsCleared { get; private set; } = false;
     public void SetCleared(bool cleared) => IsCleared = cleared;
     public int TutorialID = -1; // 튜토리얼 스테이지인 경우, 해당 튜토리얼 ID (튜토리얼이 아닌 경우 -1)
+    public int Tick = -1;
 
     /// <summary>
     /// Blocks
@@ -182,6 +187,7 @@ public class StageData
             ).ToList(),
             Desc = raw.Desc,
             TutorialID = raw.TutorialID,
+            Tick = raw.Tick,
             Inputs = raw.Inputs.Select(
                 io => (
                     io.pos.ToVector2Int(),
@@ -245,6 +251,7 @@ public class StageData
             ).ToList(),
             Desc = stage.Desc,
             TutorialID = stage.TutorialID,
+            Tick = stage.Tick,
             Blocks = stage.Blocks,
             BlockPositions = stage.BlockPositions.Select(
                 pos => new RawPos { x = pos.x, y = pos.y }
@@ -292,6 +299,7 @@ public class StageData
         public List<RawIO> Inputs = new(), Outputs = new();
         public string Desc;
         public int TutorialID = -1;
+        public int Tick = -1;
         public List<int> Blocks = new();
         public List<RawPos> BlockPositions = new();
         public List<int> RotateCWIndex = new(), RotateCCWIndex = new();
@@ -349,8 +357,126 @@ public class DataParser
     private const string ThumbnailPath = "ThumbnailPath";
     private const string Conditions = "Conditions";
     private const string Stages = "Stages";
+    private const string Chapter = "Chapter";
+    private const string Shape = "Shape";
+    private const char a = 'a';
 
-    public Dictionary<int, BlockData> ParseBlockData(string filename)
+    public Dictionary<int, BlockShape> LoadBlockShape(string filename)
+    {
+        Dictionary<int, BlockShape> result = new();
+
+        // Resources/Data 폴더 기준 경로, 확장자 제외
+        TextAsset csvAsset = Resources.Load<TextAsset>($"Data/Blocks/{filename}");
+        if (csvAsset == null)
+        {
+            Utils.PrintError($"CSV 파일을 찾을 수 없음: Data/Blocks/{filename}");
+            return result;
+        }
+
+        // 기존 File.ReadAllLines 대신
+        string[] lines = csvAsset.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        if (lines.Length < 2) return result;
+
+        string[] headers = lines[0].Split(',');
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim();
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            string[] values = line.Split(',');
+
+            BlockShape shape;
+            int id = -1, width = -1, height = -1;
+            List<Vector2Int> tiles = new();
+            Vector2 tagPos = Vector2.zero;
+
+            for (int j = 0; j < headers.Length && j < values.Length; j++)
+            {
+                if (values[j].Length == 0) continue;
+                string header = headers[j].ToLower();
+
+                if (header == ID.ToLower()) id = int.Parse(values[j]);
+                else if (header == Width.ToLower()) width = int.Parse(values[j]);
+                else if (header == Height.ToLower()) height = int.Parse(values[j]);
+                else if (header == Tiles.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    List<Vector2Int> vector = new();
+                    for (int k = 0; k < items.Count; k++) vector.Add(ParsePos(items[k]));
+                    tiles = vector;
+                }
+                else if (header == TagPos.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    float x = float.Parse(items[0]);
+                    float y = float.Parse(items[1]);
+                    tagPos = new(x, y);
+                }
+            }
+
+            shape = new(
+                id: id,
+                width: width,
+                height: height,
+                tiles: tiles,
+                tagPos: tagPos
+            );
+            result[id] = shape;
+        }
+        return result;
+    }
+
+    public Dictionary<(int, int), BlockData> LoadBlockData(
+        string foldername, 
+        Dictionary<int, BlockShape> shapeLibrary
+    )
+    {
+        Dictionary<(int, int), BlockData> result = new();
+        TextAsset[] csvAssets = Resources.LoadAll<TextAsset>("Data/" + foldername);
+
+        if (csvAssets.Length == 0)
+        {
+            Utils.PrintError("No block CSV files found in Resources/Data/" + foldername);
+            return result;
+        }
+
+        const string prefix = "Block";
+        foreach (TextAsset csvAsset in csvAssets)
+        {
+            if (!csvAsset.name.StartsWith(prefix, StringComparison.Ordinal) ||
+                !int.TryParse(csvAsset.name.Substring(prefix.Length), out int chapter))
+            {
+                Utils.PrintWarning("Ignoring block file with unexpected name: " + csvAsset.name);
+                continue;
+            }
+
+            string resourcePath = foldername + "/" + csvAsset.name;
+            Dictionary<int, BlockData> chapterBlocks;
+
+            switch (chapter)
+            {
+                case 1:
+                    chapterBlocks = ParseBlock1Data(resourcePath, shapeLibrary);
+                    break;
+                case 2:
+                    chapterBlocks = ParseBlock2Data(resourcePath, shapeLibrary);
+                    break;
+                default:
+                    Utils.PrintWarning("No block parser registered for chapter " + chapter);
+                    continue;
+            }
+
+            foreach (KeyValuePair<int, BlockData> block in chapterBlocks)
+                result[(chapter, block.Key)] = block.Value;
+        }
+
+        return result;
+    }
+
+    public Dictionary<int, BlockData> ParseBlock1Data(
+        string filename, 
+        Dictionary<int, BlockShape> shapeLibrary
+    )
     {
         Dictionary<int, BlockData> result = new();
 
@@ -374,6 +500,7 @@ public class DataParser
 
             string[] values = line.Split(',');
             BlockData block = new();
+            block.SetChapter(1);
 
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
@@ -381,16 +508,22 @@ public class DataParser
                 string header = headers[j].ToLower();
 
                 if (header == ID.ToLower()) block.SetID(int.Parse(values[j]));
-                else if (header == Width.ToLower()) block.SetWidth(int.Parse(values[j]));
-                else if (header == Height.ToLower()) block.SetHeight(int.Parse(values[j]));
-                else if (header == Tiles.ToLower() || header == Grids.ToLower())
+                else if (header == Shape.ToLower()) 
+                {
+                    block.SetShapeID(int.Parse(values[j]));
+
+                    BlockShape shape = shapeLibrary[block.ShapeID];
+                    block.SetWidth(shape.Width);
+                    block.SetHeight(shape.Height);
+                    block.SetTiles(shape.Tiles);
+                    block.SetTagPos(shape.TagPos);
+                }
+                else if (header == Grids.ToLower())
                 {
                     List<string> items = values[j].Split(';').ToList<string>();
                     List<Vector2Int> vector = new();
                     for (int k = 0; k < items.Count; k++) vector.Add(ParsePos(items[k]));
-
-                    if (header == Tiles.ToLower()) block.SetTiles(vector);
-                    else block.SetGrids(vector);
+                    block.SetGrids(vector);
                 }
                 else if (header == Ports.ToLower())
                 {
@@ -399,12 +532,79 @@ public class DataParser
                     for (int k = 0; k < items.Count; k++) ports.Add(PortExpr.Parse(items[k]));
                     block.SetPorts(ports);
                 }
-                else if (header == TagPos.ToLower())
+            }
+
+            result[block.ID] = block;
+        }
+        return result;
+    }
+
+    public Dictionary<int, BlockData> ParseBlock2Data(
+        string filename,
+        Dictionary<int, BlockShape> shapeLibrary
+    )
+    {
+        Dictionary<int, BlockData> result = new();
+
+        // Resources/Data 폴더 기준 경로, 확장자 제외
+        TextAsset csvAsset = Resources.Load<TextAsset>($"Data/{filename}");
+        if (csvAsset == null)
+        {
+            Utils.PrintError($"CSV 파일을 찾을 수 없음: Data/{filename}");
+            return result;
+        }
+
+        // 기존 File.ReadAllLines 대신
+        string[] lines = csvAsset.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        if (lines.Length < 2) return result;
+
+        string[] headers = lines[0].Split(',');
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim();
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            string[] values = line.Split(',');
+            BlockData block = new();
+            block.SetChapter(2);
+
+            for (int j = 0; j < headers.Length && j < values.Length; j++)
+            {
+                if (values[j].Length == 0) continue;
+                string header = headers[j].ToLower();
+
+                if (header == ID.ToLower()) block.SetID(int.Parse(values[j]));
+                else if (header == Shape.ToLower()) 
+                {
+                    block.SetShapeID(int.Parse(values[j]));
+
+                    BlockShape shape = shapeLibrary[block.ShapeID];
+                    block.SetWidth(shape.Width);
+                    block.SetHeight(shape.Height);
+                    block.SetTiles(shape.Tiles);
+                    block.SetTagPos(shape.TagPos);
+                }
+                else if (header == Grids.ToLower())
                 {
                     List<string> items = values[j].Split(';').ToList<string>();
-                    float x = float.Parse(items[0]);
-                    float y = float.Parse(items[1]);
-                    block.SetTagPos(new(x, y));
+                    List<Vector2Int> vector = new();
+                    for (int k = 0; k < items.Count; k++) vector.Add(ParsePos(items[k]));
+                    block.SetGrids(vector);
+                }
+                else if (header == Ports.ToLower())
+                {
+                    List<string> items = values[j].Split(';').ToList<string>();
+                    List<PortExpr> ports = new();
+                    List<int> ticks = new();
+
+                    for (int k = 0; k < items.Count; k++) 
+                    {
+                        ports.Add(new PortVar(items[k]));
+                        ticks.Add(items[k].ToCharArray()[0] - a);
+                    }
+
+                    block.SetPorts(ports);
+                    block.SetTicks(ticks);
                 }
             }
 
@@ -413,9 +613,9 @@ public class DataParser
         return result;
     }
 
-    public Dictionary<int, ModuleData> ParseModuleData(string filename)
+    public Dictionary<(int, int), ModuleData> ParseModuleData(string filename)
     {
-        Dictionary<int, ModuleData> result = new();
+        Dictionary<(int, int), ModuleData> result = new();
 
         TextAsset csvAsset = Resources.Load<TextAsset>($"Data/{filename}");
         if (csvAsset == null)
@@ -442,13 +642,18 @@ public class DataParser
                 string value = values[j].Trim();
 
                 if (header == ID.ToLower()) module.SetID(int.Parse(value));
+                else if (header == Chapter.ToLower()) module.SetChapter(int.Parse(value));
                 else if (header == Desc.ToLower()) module.Desc = value;
                 else if (header == ThumbnailPath.ToLower()) module.ThumbnailPath = value;
                 else if (header == Conditions.ToLower())
                 {
-                    List<int> parsed = value
+                    List<(int, int)> parsed = value
                         .Split(';', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(int.Parse)
+                        .Select(item =>
+                        {
+                            string[] parts = item.Trim().Trim('(', ')').Split('.');
+                            return (int.Parse(parts[0]), int.Parse(parts[1]));
+                        })
                         .ToList();
 
                     if (parsed.Count == 0)
@@ -456,6 +661,7 @@ public class DataParser
                         module.Unlock();
                         Debug.Log($"unlock, {module.ID}");
                     }
+
                     module.SetConditions(parsed);
                 }
                 else if (header == Stages.ToLower())
@@ -469,7 +675,7 @@ public class DataParser
                 }
             }
 
-            result[module.ID] = module;
+            result[(module.Chapter, module.ID)] = module;
         }
 
         return result;
@@ -607,11 +813,11 @@ public class DataParser
     }
 
     // ModuleData의 StageIndex 저장하기
-    public void SaveData(Dictionary<int, ModuleData> modules)
+    public void SaveData(Dictionary<(int, int), ModuleData> modules)
     {
-        for (int i = 0; i < modules.Count; i++) 
+        foreach (var kvp in modules)
         {
-            ModuleData module = modules[i];
+            ModuleData module = kvp.Value;
             PlayerPrefs.SetInt(module.ID.ToString(), module.StageIndex);
             PlayerPrefs.SetInt(module.ID.ToString() + nameof(ModuleData.IsCleared), module.IsCleared ? 1 : 0);
             PlayerPrefs.SetInt(module.ID.ToString() + nameof(ModuleData.Unlocked), module.Unlocked ? 1 : 0);

@@ -24,7 +24,9 @@ export function render(ctx, canvas, state, assets, ui) {
     renderBg(ctx, state, assets);
     renderCircuits(ctx, state, assets);
     renderBarriers(ctx, state);
+    renderTileBarriers(ctx, state, assets);
     renderBlocks(ctx, state, assets);
+    renderFixedBlocks(ctx, state, assets);
     renderIos(ctx, state);
     if (ui.dragPreview) renderGhost(ctx, ui.dragPreview.rect);
 }
@@ -130,6 +132,25 @@ function renderBarriers(ctx, state) {
     ctx.lineWidth = 1;
 }
 
+function renderTileBarriers(ctx, state, assets) {
+    const variants = assets.tileBarriers || [];
+    if (variants.length === 0) return;
+
+    (state.TileBarriers || []).forEach((pos) => {
+        const variantIndex = Math.abs(pos.x * 31 + pos.y * 17) % variants.length;
+        const variant = variants[variantIndex];
+        if (!variant?.ok) return;
+
+        ctx.drawImage(
+            variant.img,
+            pos.y * TILE_SIZE,
+            pos.x * TILE_SIZE,
+            TILE_SIZE,
+            TILE_SIZE,
+        );
+    });
+}
+
 /* RotateCWIndex: [],
 		RotateCCWIndex: [],
 		FlipXIndex: [],
@@ -185,6 +206,64 @@ function renderBlocks(ctx, state, assets) {
             }
         }
     );
+}
+
+const FIXED_BLOCK_TINT = "#575757";
+const fixedTintCache = new WeakMap();
+
+function getTintedBlockImage(image) {
+    let tinted = fixedTintCache.get(image);
+    if (tinted) return tinted;
+
+    tinted = document.createElement("canvas");
+    tinted.width = image.naturalWidth || image.width;
+    tinted.height = image.naturalHeight || image.height;
+    const tintCtx = tinted.getContext("2d");
+    tintCtx.drawImage(image, 0, 0);
+    tintCtx.globalCompositeOperation = "multiply";
+    tintCtx.fillStyle = FIXED_BLOCK_TINT;
+    tintCtx.fillRect(0, 0, tinted.width, tinted.height);
+    tintCtx.globalCompositeOperation = "destination-in";
+    tintCtx.drawImage(image, 0, 0);
+    fixedTintCache.set(image, tinted);
+    return tinted;
+}
+
+function renderFixedBlocks(ctx, state, assets) {
+    (state.FixedBlocks || []).forEach((fixedBlock) => {
+        const id = Number(fixedBlock.id ?? fixedBlock.ID);
+        const pos = fixedBlock.pos;
+        const block = BLOCK_DATA[id];
+        const blockImg = assets.blocks[id];
+        if (!block || !pos) return;
+
+        const row = pos.x * TILE_SIZE;
+        const col = pos.y * TILE_SIZE;
+        const width = block.w * TILE_SIZE;
+        const height = block.h * TILE_SIZE;
+
+        if (blockImg?.ok) {
+            ctx.drawImage(
+                getTintedBlockImage(blockImg.img),
+                col,
+                row,
+                width,
+                height,
+            );
+        }
+
+        ctx.save();
+        ctx.fillStyle = "#242424";
+        ctx.font = "10px monospace";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(
+            "fixed",
+            col + width / 2,
+            Math.max(10, row - 2),
+        );
+        ctx.restore();
+    });
 }
 
 function renderIos(ctx, state) {

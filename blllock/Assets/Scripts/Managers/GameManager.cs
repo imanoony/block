@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     public ToolManager Tool { get; private set; }
     public UIManager UI { get; private set; }
     public AudioManager Audio { get; private set; }
+    public TimeManager Time { get; private set; }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -40,7 +42,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 유지됨
 
-        BlockLibrary = dataParser.ParseBlockData(blockPath);
+        BlockShapeLibrary = dataParser.LoadBlockShape(blockShapePath);
+        BlockLibrary = dataParser.LoadBlockData(blockPath, BlockShapeLibrary);
         ModuleLibrary = dataParser.ParseModuleData(modulePath);
         TutorialLibrary = dataParser.LoadTutorialData(tutorialPath);
         StageLibrary = dataParser.LoadStageData(stagePath);
@@ -50,6 +53,7 @@ public class GameManager : MonoBehaviour
         Tool = gameObject.GetComponentInChildren<ToolManager>();
         UI = gameObject.GetComponentInChildren<UIManager>();
         Audio = gameObject.GetComponentInChildren<AudioManager>();
+        Time = gameObject.GetComponentInChildren<TimeManager>();
 
         Wire.Initialize(true);
         Grid.Initialize();
@@ -63,11 +67,13 @@ public class GameManager : MonoBehaviour
 
     #region Data Library
     private DataParser dataParser = new();
-    public Dictionary<int, BlockData> BlockLibrary { get; private set; }
-    public Dictionary<int, ModuleData> ModuleLibrary { get; private set; }
+    public Dictionary<int, BlockShape> BlockShapeLibrary { get; private set; }
+    public Dictionary<(int, int), BlockData> BlockLibrary { get; private set; } // key: (chapter, block id)
+    public Dictionary<(int, int), ModuleData> ModuleLibrary { get; private set; } // key: (chapter, module id)
     public Dictionary<int, TutorialData> TutorialLibrary { get; private set; }
     public Dictionary<int, StageData> StageLibrary { get; private set; }
-    private const string blockPath = "Block", modulePath = "Module", stagePath = "Stages", tutorialPath = "Tutorial";
+    private const string blockPath = "Blocks", modulePath = "Module", stagePath = "Stages", tutorialPath = "Tutorial";
+    private const string blockShapePath = "BlockShape";
 
     #endregion
 
@@ -75,7 +81,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.ModuleSelect;
-        StartModule(13);
+        StartModule(2, 0);
     }
 
     void Update()
@@ -120,18 +126,23 @@ public class GameManager : MonoBehaviour
         if (delay != null) { StopCoroutine(delay); delay = null; }
 
         Debug.Log($"START STAGE, ID: {stage.ID}");
+        CurrentStage = stage;
 
         outputCheck = new();
+        for (int i = 0; i < CurrentStage.Outputs.Count; i++)
+            outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
+
         Grid.RemoveCurrentStage();
         Wire.Initialize();
         Tool.InitToolCounts(stage.ToolCounts);
-        Grid.InitStage(stage);
-        CurrentStage = stage;
+        Grid.InitStage(stage, CurrentModule.Chapter);
 
         if (stage.IsCleared) UI.StageNextAppear(stage.ID, LastStageID);
         else UI.StageNextDisappear();
         if (CurrentModule.Stages[0] != stage.ID) UI.MenuPrevAppear();
         else UI.MenuPrevDisappear();
+
+        if (CurrentModule.Chapter == 2) Time.SetLoopLength(stage.Tick);
 
         //UI.ResetAppear();
         //UI.QuitToBack();
@@ -149,8 +160,6 @@ public class GameManager : MonoBehaviour
 
         if (CurrentModule.ID == 0) gt.Initialize(stage.Inputs[0].pos);
 
-        for (int i = 0; i < CurrentStage.Outputs.Count; i++)
-            outputCheck[new Vector2Int(CurrentStage.Outputs[i].pos.x, CurrentStage.Outputs[i].pos.y)] = false;
 
         State = GameState.Paused;
 
@@ -179,6 +188,8 @@ public class GameManager : MonoBehaviour
                 Grid.BlockPlacer.BlockHoverCheck();
 
                 UI.MenuEnable();
+
+                Time.StartTick();
             }
         ));
     }
@@ -238,11 +249,11 @@ public class GameManager : MonoBehaviour
             ModuleData module = kvp.Value;
             if (module.IsCleared) continue;
 
-            List<int> conditions = module.Conditions;
+            List<(int, int)> conditions = module.Conditions;
             for (int i = 0; i < conditions.Count; i++)
             {
-                int cond = conditions[i];
-                if (!ModuleLibrary[cond].IsCleared) break;
+                (int condChap, int condId) = conditions[i];
+                if (!ModuleLibrary[(condChap, condId)].IsCleared) break;
                 if (i == conditions.Count - 1) module.Unlock();
             }
         }
@@ -264,8 +275,10 @@ public class GameManager : MonoBehaviour
     {
         State = GameState.Paused;
         Grid.RemoveCurrentStage();
-        Grid.InitStage(CurrentStage);
+        Time.StopTick();
+        Grid.InitStage(CurrentStage, CurrentModule.Chapter);
         State = GameState.InGame;
+        Time.StartTick();
 
         if (gt != null) gt.ResetGridIdleTime();
     }
@@ -287,7 +300,9 @@ public class GameManager : MonoBehaviour
                 UI.ClearPanelDisappear();
                 UI.StageNextDisappear();
 
-                UI.WorldMapAppear(CurrentModule.ID);
+                UI.WorldMapAppear(CurrentModule.Chapter, CurrentModule.ID);
+
+                Time.StopTick();
             }
         );
 
@@ -349,6 +364,7 @@ public class GameManager : MonoBehaviour
                 State = GameState.Paused;
                 UI.MenuDisappear();
                 UI.ClearPanelDisappear();
+                Time.StopTick();
                 int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
                 if (CurrentModule.Stages.Count > index + 1) StartStage(CurrentModule.Stages[index + 1]);
                 else BackGame();
@@ -370,6 +386,7 @@ public class GameManager : MonoBehaviour
                 State = GameState.Paused;
                 UI.MenuDisappear();
                 UI.ClearPanelDisappear();
+                Time.StopTick();
                 int index = CurrentModule.Stages.IndexOf(CurrentStage.ID);
                 StartStage(CurrentModule.Stages[index - 1]);
             }
@@ -388,6 +405,8 @@ public class GameManager : MonoBehaviour
 
         CurrentModule = module;
         LastStageID = module.Stages[^1];
+
+        Grid.TilePlacer.RemoveBackground();
 
         Audio.SoftUnmute();
 
@@ -423,7 +442,7 @@ public class GameManager : MonoBehaviour
         //    StartStage(StageLibrary[module.Stages[index]])
         //);
     }
-    public void StartModule(int id) => StartModule(ModuleLibrary[id]);
+    public void StartModule(int chapter, int id) => StartModule(ModuleLibrary[(chapter, id)]);
 
     #region Transition
 

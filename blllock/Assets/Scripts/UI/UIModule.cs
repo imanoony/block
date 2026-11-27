@@ -12,6 +12,7 @@ public class UIModule : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image scrimImage;
 
     private bool isFocused = false;
+    private int moduleChapter = -1;
     private int moduleID = -1;
 
     public void InitModule(ModuleData module)
@@ -19,6 +20,7 @@ public class UIModule : MonoBehaviour, IPointerClickHandler
         if (module.Thumbnail != null)
             image.sprite = module.Thumbnail;
 
+        moduleChapter = module.Chapter;
         moduleID = module.ID;
     }
 
@@ -37,8 +39,9 @@ public class UIModule : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         if (moduleID == -1) return;
+        if (moduleChapter == -1) return;
         if (!isFocused) return;
 
-        GameManager.Instance.StartModule(moduleID);
+        GameManager.Instance.StartModule(moduleChapter, moduleID);
     }
 }

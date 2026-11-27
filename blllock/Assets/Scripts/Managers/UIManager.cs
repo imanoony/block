@@ -19,16 +19,24 @@ public class UIManager : MonoBehaviour
 
         //module.InitModule();
 
-        Dictionary<int, ModuleData> moduleDict = GameManager.Instance.ModuleLibrary;
-        List<KeyValuePair<int, ModuleData>> sorted = moduleDict.OrderBy(kv => kv.Key).ToList();
+        Dictionary<(int, int), ModuleData> moduleDict = GameManager.Instance.ModuleLibrary;
+        List<KeyValuePair<(int, int), ModuleData>> sorted = moduleDict
+            .OrderBy(kv => kv.Key.Item1) // chapter
+            .ThenBy(kv => kv.Key.Item2)  // id
+            .ToList();
 
-        moduleIDs = sorted.Select(kv => kv.Key).ToList();
-        moduleData = sorted.Select(kv => kv.Value).ToList();
+        moduleIDs = sorted
+            .Select(kv => (ChapterId: kv.Key.Item1, Id: kv.Key.Item2))
+            .ToList();
+
+        moduleData = sorted
+            .Select(kv => kv.Value)
+            .ToList();
         focusedModuleID = 0;
 
         moduleScroll.Init(moduleIDs.Count);
-        moduleScroll.OnMetaFocusChanged += (i) => moduleMeta.InitModule(moduleDict[i]);
-        moduleScroll.OnBindItem += (module, i) => module.InitModule(moduleDict[i]);
+        moduleScroll.OnMetaFocusChanged += (i) => moduleMeta.InitModule(moduleDict[moduleIDs[i]], i);
+        moduleScroll.OnBindItem += (module, i) => module.InitModule(moduleDict[moduleIDs[i]]);
         moduleMeta.Init();
 
         initialized = true;
@@ -435,11 +443,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject arrowRight;
 
     private List<ModuleData> moduleData = new();
-    private List<int> moduleIDs = new();
+    private List<(int, int)> moduleIDs = new();
+    private int focusedModuleChapter = 0;
     private int focusedModuleID = 0;
     
-    public void WorldMapAppear(int focusedModuleID)
+    public void WorldMapAppear(int focusedModuleChapter, int focusedModuleID)
     {
+        this.focusedModuleChapter = focusedModuleChapter;
         this.focusedModuleID = focusedModuleID;
 
         worldMapBackground.SetActive(true);
@@ -448,8 +458,9 @@ public class UIManager : MonoBehaviour
         arrowLeft.SetActive(true);
         arrowRight.SetActive(true);
 
-        moduleScroll.InitFocus(focusedModuleID);
-        moduleMeta.InitModule(moduleData[moduleIDs.IndexOf(focusedModuleID)]);
+        int index = moduleIDs.IndexOf((focusedModuleChapter, focusedModuleID));
+        moduleScroll.InitFocus(index);
+        moduleMeta.InitModule(moduleData[index], index);
     }
 
     public void WorldMapDisappear()

@@ -153,6 +153,14 @@ function connectDocument(ctx, canvas, ui, mt) {
 }
 
 async function main() {
+	try {
+		await state.loadBlockData();
+	} catch (error) {
+		console.error(error);
+		alert("Block.csv loading failed: " + error.message);
+		return;
+	}
+
 	const canvas = document.querySelector("#stage-canvas");
 	const ctx = canvas.getContext("2d");
 	const ui = {

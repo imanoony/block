@@ -153,7 +153,7 @@ public class UIModuleScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             if (
                 closeness < metaChangeThreshold && 
-                !meta.CheckModuleID(focus)
+                !meta.CheckModuleIndex(focus)
             )
                 OnMetaFocusChanged?.Invoke(focus);
             meta.SetAlpha(Mathf.Clamp01(-(1/metaAppearThreshold)*closeness + 1));
