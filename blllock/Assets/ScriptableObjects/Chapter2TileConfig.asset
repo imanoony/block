@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Chapter2TileConfig
   m_EditorClassIdentifier: 
   bgTiles:
-  - {fileID: 11400000, guid: 4fc90707baa9a454ca969a52cc52c23d, type: 2}
-  - {fileID: 11400000, guid: 25d9d19d8836d354dafd2324951b4434, type: 2}
-  - {fileID: 11400000, guid: cdea611ac1a91b648913c047a7c58054, type: 2}
-  - {fileID: 11400000, guid: 029340d18e7ffde4ea869ab560fc3d3d, type: 2}
-  - {fileID: 11400000, guid: 490ca7dbbd0d4274cbfc0e841f4a5c6f, type: 2}
-  - {fileID: 11400000, guid: e43c49aeb0c992047b213e60e8823ae8, type: 2}
   - {fileID: 11400000, guid: a3fb2966bc6e68a4d99733547b11de8a, type: 2}
   - {fileID: 11400000, guid: e8f7682eddc00fd45b79f3c9dd12ccda, type: 2}
   - {fileID: 11400000, guid: 86ba524e9e894b241a3aa17371758efe, type: 2}
+  - {fileID: 11400000, guid: 029340d18e7ffde4ea869ab560fc3d3d, type: 2}
+  - {fileID: 11400000, guid: 490ca7dbbd0d4274cbfc0e841f4a5c6f, type: 2}
+  - {fileID: 11400000, guid: e43c49aeb0c992047b213e60e8823ae8, type: 2}
+  - {fileID: 11400000, guid: 4fc90707baa9a454ca969a52cc52c23d, type: 2}
+  - {fileID: 11400000, guid: 25d9d19d8836d354dafd2324951b4434, type: 2}
+  - {fileID: 11400000, guid: cdea611ac1a91b648913c047a7c58054, type: 2}
   circuitTiles:
   - {fileID: 11400000, guid: b0dc06f157f5fb34cb4b5c750ffb16fd, type: 2}
   - {fileID: 11400000, guid: 694875fa3c06bd04fbb64aa0c4f0fb15, type: 2}

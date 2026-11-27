@@ -2,30 +2,30 @@
     "Stages": [
         {
             "ID": 50001,
-            "BgWidth": 13,
-            "BgHeight": 8,
+            "BgWidth": 18,
+            "BgHeight": 12,
             "Circuits": [
                 {
-                    "width": 5,
+                    "width": 8,
                     "height": 4,
                     "pos": {
-                        "x": 2,
-                        "y": 4
+                        "x": 4,
+                        "y": 5
                     }
                 }
             ],
             "Inputs": [
                 {
                     "pos": {
-                        "x": 3,
-                        "y": 6
+                        "x": 5,
+                        "y": 7
                     },
                     "expr": "X"
                 },
                 {
                     "pos": {
                         "x": 5,
-                        "y": 5
+                        "y": 10
                     },
                     "expr": "X"
                 }
